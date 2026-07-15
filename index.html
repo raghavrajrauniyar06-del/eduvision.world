@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="EduVision Consultancy — India's premium education partner. 1500+ courses, free career counselling by CEO Miss Ishika Sharma. Lucknow, UP.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://generativelanguage.googleapis.com; frame-ancestors 'self'; base-uri 'self'; form-action https://api.web3forms.com; object-src 'none'; upgrade-insecure-requests;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>EduVision — Your Future Starts Here</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -1134,6 +1137,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:clamp(4
 }
 
 /* Quick Replies */
+.msg-body{display:flex;flex-direction:column;min-width:0;flex:1;}
 .quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;animation:qr-in .55s cubic-bezier(0.16,1,0.3,1) both;}
 @keyframes qr-in{from{opacity:0;transform:translateY(12px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 .qr-btn{
@@ -2076,10 +2080,7 @@ nav.scrolled {
   transition:opacity .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
 }
-#chatWindow.chat-open{
-  opacity:1;pointer-events:all;
-  transform:translateY(0) scale(1);
-}
+/* Note: opacity/transform for the open state are controlled by #chatWindow.open (see below) */
 
 /* Chat Header */
 .chat-hdr{
@@ -2416,7 +2417,7 @@ nav.scrolled {
       <div class="hero-actions reveal" id="heroBtns">
         <a href="#counselling" class="btn-primary apply-glow">✦ Apply Now</a>
         <a href="#counselling" class="btn-ghost">📞 Book Free Counseling</a>
-        <a href="https://wa.me/916306420146" class="btn-ghost" target="_blank">💬 WhatsApp</a>
+        <a href="https://wa.me/916306420146" class="btn-ghost" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
       </div>
     </div>
     <div class="hero-card reveal" id="heroRight">
@@ -3020,17 +3021,19 @@ section, .container {
 
 /* ══════════════════════════════════════════════════
    CHAT WINDOW — FIXED POPUP, APPEARS IN PLACE
+   NOTE: bottom is NOT hardcoded here — it's set dynamically by
+   positionChatToggleAboveFabDock() in JS so it always sits just
+   above the fab-dock + AI button, regardless of dock height.
 ══════════════════════════════════════════════════ */
 #chatWindow {
   position: fixed !important;
   /* Desktop: anchored bottom-right above button */
   right: 24px !important;
   left: auto !important;
-  bottom: 300px !important;
   top: auto !important;
   width: 360px !important;
   height: 520px !important;
-  max-height: calc(100vh - 320px) !important;
+  max-height: min(560px, calc(100vh - 160px)) !important;
   transform-origin: bottom right !important;
   will-change: transform, opacity !important;
   z-index: 8500 !important;
@@ -3038,7 +3041,7 @@ section, .container {
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-  background: rgba(8,8,10,.95) !important;
+  background: rgba(8,8,10,.97) !important;
   border: 1px solid rgba(201,147,42,.22) !important;
   box-shadow:
     0 24px 60px rgba(0,0,0,.85),
@@ -3074,9 +3077,8 @@ section, .container {
     right: 8px !important;
     left: 8px !important;
     width: auto !important;
-    bottom: 280px !important;
     height: 460px !important;
-    max-height: calc(100svh - 300px) !important;
+    max-height: min(460px, calc(100svh - 180px)) !important;
     border-radius: 18px !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
@@ -3570,7 +3572,7 @@ section, .container {
     </div>
     <div class="partners-cta-row reveal">
       <a href="#counselling" class="btn-primary">🎓 Get Free Admission Guidance →</a>
-      <a href="https://wa.me/916306420146" target="_blank" class="btn-ghost">💬 Chat on WhatsApp</a>
+      <a href="https://wa.me/916306420146" target="_blank" rel="noopener noreferrer" class="btn-ghost">💬 Chat on WhatsApp</a>
     </div>
   </div>
 </section>
@@ -3719,7 +3721,7 @@ section, .container {
           </div>
           <div class="ci-item">
             <div class="ci-ico">💬</div>
-            <div><div class="ci-lbl">WhatsApp</div><div class="ci-val"><a href="https://wa.me/916306420146" target="_blank">+91 63064 20146</a></div></div>
+            <div><div class="ci-lbl">WhatsApp</div><div class="ci-val"><a href="https://wa.me/916306420146" target="_blank" rel="noopener noreferrer">+91 63064 20146</a></div></div>
           </div>
           <div class="ci-item">
             <div class="ci-ico">📧</div>
@@ -3756,7 +3758,7 @@ section, .container {
         </div>
         <div class="ft-tagline">Your Vision, Our Mission. India's trusted education partner — guiding students to brighter futures </div>
         <div class="ft-socials">
-          <a href="https://wa.me/916306420146" class="ft-soc" target="_blank">💬</a>
+          <a href="https://wa.me/916306420146" class="ft-soc" target="_blank" rel="noopener noreferrer">💬</a>
           <a href="tel:+916306420146" class="ft-soc">📞</a>
           <a href="mailto:eduvisionconsultancy190@gmail.com" class="ft-soc">📧</a>
         </div>
@@ -3787,7 +3789,7 @@ section, .container {
         <div class="ft-col-title">Contact</div>
         <ul class="ft-links">
           <li><a href="tel:+916306420146">📞 +91 63064 20146</a></li>
-          <li><a href="https://wa.me/916306420146" target="_blank">💬 WhatsApp Us</a></li>
+          <li><a href="https://wa.me/916306420146" target="_blank" rel="noopener noreferrer">💬 WhatsApp Us</a></li>
           <li><a href="mailto:eduvisionconsultancy190@gmail.com">📧 Email Us</a></li>
           <li><a href="#counselling">✦ Free Counselling</a></li>
           <li><a href="#counselling">📝 Apply Now</a></li>
@@ -3803,7 +3805,7 @@ section, .container {
 
 <!-- FAB DOCK -->
 <div class="fab-dock" id="fabDock">
-  <a href="https://wa.me/916306420146?text=Hi!%20I%20want%20info%20about%20EduVision%20courses" target="_blank" class="fab fab-wa">💬 <span class="fab-text">WhatsApp</span></a>
+  <a href="https://wa.me/916306420146?text=Hi!%20I%20want%20info%20about%20EduVision%20courses" target="_blank" rel="noopener noreferrer" class="fab fab-wa">💬 <span class="fab-text">WhatsApp</span></a>
   <a href="tel:+916306420146" class="fab fab-call">📞 <span class="fab-text">Call Now</span></a>
   <a href="#counselling" class="fab fab-apply apply-glow">✦ <span class="fab-text">Apply Now</span></a>
 </div>
@@ -3851,7 +3853,7 @@ section, .container {
         <option value="gemini">Gemini Live AI (Internet Mode)</option>
       </select>
       <div id="geminiKeyArea" style="display:none;flex-direction:column;gap:8px;">
-        <p class="settings-hint">Get a free key from <a href="https://aistudio.google.com/" target="_blank" style="color:var(--gold);">Google AI Studio</a></p>
+        <p class="settings-hint">Get a free key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Google AI Studio</a></p>
         <label class="settings-label">Gemini API Key</label>
         <input type="password" id="geminiApiKeyInput" class="settings-input" placeholder="Paste your API key here..." />
         <button id="saveSettingsBtn" class="settings-save-btn">Save</button>
@@ -4876,7 +4878,7 @@ if(!isTouch){
   function updateOnlineStatus() {
     if (navigator.onLine) {
       statusDot.style.background = '#22c55e';
-      const engine = localStorage.getItem('eduvision_ai_engine') || 'gemini';
+      const engine = localStorage.getItem('eduvision_ai_engine') || 'local';
       chatHdrSub.textContent = `EduVision AI Career Assistant · ${engine === 'gemini' ? 'Gemini Live' : 'Online'}`;
     } else {
       statusDot.style.background = '#f97316';
@@ -4886,15 +4888,20 @@ if(!isTouch){
   window.addEventListener('online', updateOnlineStatus);
   window.addEventListener('offline', updateOnlineStatus);
 
-  // Auto-load User's API Key
+  // NOTE (security): We no longer auto-inject a shared Gemini API key here.
+  // A previous version hardcoded a real key in this file, which meant anyone
+  // viewing page source could copy it and use it on the developer's quota/billing.
+  // Users can add their OWN free Gemini key via the chat settings panel instead.
   const currentKey = localStorage.getItem('eduvision_gemini_key');
-  if (!currentKey || !currentKey.startsWith('AIza')) {
-    localStorage.setItem('eduvision_gemini_key', 'AIzaSyDI-ytyu5JsmJN2m4wRjIXUImYFwK1Urp0');
-    localStorage.setItem('eduvision_ai_engine', 'gemini');
+  if (currentKey && !currentKey.startsWith('AIza')) {
+    localStorage.removeItem('eduvision_gemini_key');
+  }
+  if (!localStorage.getItem('eduvision_ai_engine')) {
+    localStorage.setItem('eduvision_ai_engine', 'local');
   }
 
   // Settings Panel Initialization
-  const savedEngine = localStorage.getItem('eduvision_ai_engine') || 'gemini';
+  const savedEngine = localStorage.getItem('eduvision_ai_engine') || 'local';
   aiEngineSelect.value = savedEngine;
   if(savedEngine === 'gemini') {
     geminiKeyArea.style.display = 'flex';
@@ -4932,13 +4939,46 @@ if(!isTouch){
     addMsg(`🤖 AI Engine configured to: **${engine === 'gemini' ? 'Gemini Live AI (Internet Mode)' : 'EduVision Local Engine'}**.`, true);
   });
 
+  function escapeChatHtml(str){
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
   function addMsg(text, isBot=true, replies=[]){
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${isBot?'bot':'user'}`;
     if(isBot){
-      msgDiv.innerHTML=`<div class="msg-avatar">🤖</div><div><div class="msg-bubble">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>${replies.length?`<div class="quick-replies">${replies.map(r=>`<button class="qr-btn" onclick="handleQR('${r.replace(/'/g,"\\'")}')">  ${r}</button>`).join('')}</div>`:''}</div>`;
+      const safeText = escapeChatHtml(text).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+      const bodyWrap = document.createElement('div');
+      bodyWrap.className = 'msg-body';
+      const avatar = document.createElement('div');
+      avatar.className = 'msg-avatar';
+      avatar.textContent = '🤖';
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.innerHTML = safeText;
+      bodyWrap.appendChild(bubble);
+      if(replies.length){
+        const repliesWrap = document.createElement('div');
+        repliesWrap.className = 'quick-replies';
+        replies.forEach(r=>{
+          const btn = document.createElement('button');
+          btn.className = 'qr-btn';
+          btn.textContent = r;
+          btn.addEventListener('click', ()=>handleQR(r));
+          repliesWrap.appendChild(btn);
+        });
+        bodyWrap.appendChild(repliesWrap);
+      }
+      msgDiv.appendChild(avatar);
+      msgDiv.appendChild(bodyWrap);
     } else {
-      msgDiv.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-avatar">👤</div>`;
+      const safeText = escapeChatHtml(text);
+      msgDiv.innerHTML=`<div class="msg-bubble">${safeText}</div><div class="msg-avatar">👤</div>`;
     }
     chatBody.appendChild(msgDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -4978,9 +5018,9 @@ if(!isTouch){
   // Main input router
   function handleUserInput(input){
     extractUserInfo(input); // auto-capture name, class, phone, interest from every message
-    const engine = localStorage.getItem('eduvision_ai_engine') || 'gemini';
+    const engine = localStorage.getItem('eduvision_ai_engine') || 'local';
     const key = localStorage.getItem('eduvision_gemini_key');
-    if (engine === 'gemini' && key && navigator.onLine) {
+    if (engine === 'gemini' && key && key.startsWith('AIza') && navigator.onLine) {
       callGeminiWithFallback(input);
     } else {
       handleLocalEngine(input);
@@ -5071,7 +5111,7 @@ if(!isTouch){
     // All models failed — fall back to local engine
     removeTyping();
     geminiHistory.pop();
-    // Silently switch to local engine without annoying user`n    // addMsg(`⚠️ Gemini Live AI error: ${lastErr?.message || 'Unknown error'}. Switching to EduVision Local Engine.`, true);
+    // Silently switch to local engine without bothering the user with a raw API error
     handleLocalEngine(input);
   }
 
@@ -5283,6 +5323,7 @@ if(!isTouch){
 
   function openChat(){
     chatOpen = true;
+    if(typeof positionChatToggleAboveFabDock === 'function') positionChatToggleAboveFabDock();
     chatWindow.classList.add('open');
     chatToggle.classList.add('active-chat');
     chatNotif.style.display='none';
@@ -5447,7 +5488,7 @@ function openSvcModal(key){
       </div>
       <div class="svc-modal-actions">
         <a href="#counselling" class="svc-btn-primary" onclick="closeSvcModal()">✦ Apply Now — Free</a>
-        <a href="https://wa.me/916306420146?text=Hello EduVision! I need info about ${encodeURIComponent(d.title)}" target="_blank" class="svc-btn-ghost">💬 WhatsApp Us</a>
+        <a href="https://wa.me/916306420146?text=Hello EduVision! I need info about ${encodeURIComponent(d.title)}" target="_blank" rel="noopener noreferrer" class="svc-btn-ghost">💬 WhatsApp Us</a>
       </div>
     </div>`;
   modal.style.display = 'flex';
@@ -5559,7 +5600,7 @@ function openUniModal(key) {
     <div class="uni-recruiters">${u.top_recruiters}</div>
     <div class="uni-apply-row">
       <a href="#counselling" class="uni-btn-primary" onclick="closeUniModal()">🎓 Apply via EduVision</a>
-      <a href="https://wa.me/916306420146?text=Hi!%20I%20want%20info%20about%20${encodeURIComponent(u.name)}" target="_blank" class="uni-btn-wa">💬 WhatsApp</a>
+      <a href="https://wa.me/916306420146?text=Hi!%20I%20want%20info%20about%20${encodeURIComponent(u.name)}" target="_blank" rel="noopener noreferrer" class="uni-btn-wa">💬 WhatsApp</a>
     </div>
     <p style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:14px;opacity:.6;">EduVision provides 100% free admission guidance & support 🎓</p>
   `;
