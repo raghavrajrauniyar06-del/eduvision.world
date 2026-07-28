@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Under Development | EduVision</title>
+  <meta name="description" content="This page is currently under development. EduVision - India's premium education partner for course & college admissions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="animations/animations.css">
+  
+  <style>
+    :root {
+      --bg: #06070d;
+      --surface: #0d0f1a;
+      --surface-2: #131625;
+      --gold: #c9932a;
+      --gold-2: #e8b42a;
+      --gold-glow: rgba(201, 147, 42, 0.35);
+      --text: #f0ede8;
+      --text-muted: #9d9b91;
+      --border-gold: rgba(201, 147, 42, 0.25);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Background Effects */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(201, 147, 42, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 147, 42, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 9s ease-in-out infinite alternate;
+    }
+
+    .bg-orb-1 {
+      width: 500px;
+      height: 500px;
+      background: rgba(201, 147, 42, 0.08);
+      top: -150px;
+      right: -100px;
+    }
+
+    .bg-orb-2 {
+      width: 450px;
+      height: 450px;
+      background: rgba(232, 180, 42, 0.06);
+      bottom: -150px;
+      left: -100px;
+      animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 40px) scale(1.12); }
+    }
+
+    /* Header / Nav */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(6, 7, 13, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-gold);
+    }
+
+    .brand-logo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo span {
+      color: var(--gold);
+    }
+
+    /* 404 Main Wrapper */
+    main {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glassmorphism Card Container */
+    .dev-card {
+      background: rgba(13, 15, 26, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-gold);
+      border-radius: 28px;
+      padding: 56px 40px;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 
+        0 24px 60px rgba(0, 0, 0, 0.6), 
+        0 0 35px rgba(201, 147, 42, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .dev-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255, 215, 0, 0.12) 0%, transparent 65%);
+      pointer-events: none;
+      transform: rotate(25deg);
+    }
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201, 147, 42, 0.12);
+      border: 1px solid rgba(201, 147, 42, 0.35);
+      border-radius: 50px;
+      padding: 8px 22px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold-2);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 28px;
+    }
+
+    .badge-tag .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gold-2);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--gold-2);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.7); opacity: 0.5; }
+    }
+
+    .dev-title {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, var(--gold-2), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .dev-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 540px;
+      margin: 0 auto 40px;
+    }
+
+    /* Action Buttons */
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #b8941f);
+      color: #000000;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 28px rgba(201, 147, 42, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 14px 36px rgba(201, 147, 42, 0.6);
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    }
+
+    .btn-secondary {
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border-gold);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: var(--gold);
+      color: var(--gold-2);
+      background: rgba(201, 147, 42, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Responsiveness */
+    @media (max-width: 768px) {
+      header {
+        padding: 16px 24px;
+      }
+      .dev-card {
+        padding: 40px 24px;
+        border-radius: 20px;
+      }
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Grid & Orbs -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- Header Logo -->
+  <header>
+    <a href="index.html" class="brand-logo">
+      EduVision <span>Consultancy</span>
+    </a>
+  </header>
+
+  <!-- Main 404 Section -->
+  <main>
+    <div class="dev-card reveal-up">
+      <div class="badge-tag">
+        <span class="pulse-dot"></span> EduVision Official
+      </div>
+      
+      <h1 class="dev-title">🚧 Under Development</h1>
+      
+      <p class="dev-subtitle">
+        This page is currently under development. We're working hard to bring it online soon.
+      </p>
+
+      <div class="btn-group">
+        <a href="index.html" class="btn-primary">
+          <span>🏠</span> Return to Home
+        </a>
+        <button onclick="window.history.back()" class="btn-secondary">
+          <span>↩️</span> Go Back
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Animation Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="animations/reveal.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap !== 'undefined') {
+        gsap.from('.dev-card', {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          ease: 'power3.out',
+          delay: 0.1
+        });
+      }
+    });
+  </script>
+</body>
+</html>
