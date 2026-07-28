@@ -1655,7 +1655,7 @@ footer{
   .reveal.in,.reveal-left.in,.reveal-right.in{opacity:1!important;}
 
   /* Course cards */
-  .crs-card{width:clamp(150px,42vw,185px)!important;}
+  .crs-card{width:clamp(125px,35vw,145px)!important;padding:10px 8px!important;}
   .slider-outer::before,.slider-outer::after{width:18px!important;}
   .slider-outer::before{background:linear-gradient(90deg,var(--bg) 0%,transparent)!important;}
   .slider-outer::after{background:linear-gradient(-90deg,var(--bg) 0%,transparent)!important;}
@@ -1733,11 +1733,12 @@ footer{
   .marquee-item { padding: 0 20px; font-size: .72rem; }
   
   /* Courses */
-  .courses-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .section-heading { font-size: clamp(1.7rem, 7.5vw, 2.4rem) !important; }
-  .crs-card { width: clamp(155px, 43vw, 185px) !important; padding: 18px 14px 16px !important; }
-  .crs-icon { font-size: 1.9rem !important; margin-bottom: 10px !important; }
-  .crs-name { font-size: .82rem !important; }
+  .courses-header { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 16px !important; }
+  .section-heading { font-size: clamp(1.4rem, 6vw, 2rem) !important; }
+  .crs-card { width: clamp(125px, 35vw, 145px) !important; padding: 10px 8px 8px !important; min-height: auto !important; border-radius: 12px !important; }
+  .crs-icon { font-size: 1.3rem !important; margin-bottom: 4px !important; }
+  .crs-name { font-size: .75rem !important; line-height: 1.2 !important; }
+  .crs-level { font-size: .62rem !important; padding: 2px 6px !important; }
   .crs-hint { display: none; }
 
   /* About */
@@ -5713,9 +5714,7 @@ function makeCard(c){
       <div class="crs-btn">View Details ↗</div>
     </div>
   `;
-  const isLocal = window.location.protocol === 'file:';
-  const cleanName = encodeURIComponent(c.name).toLowerCase();
-  const url = isLocal ? 'course-details.html?course=' + encodeURIComponent(c.name) : '/courses/' + cleanName;
+  const url = 'course-details.html?course=' + encodeURIComponent(c.name);
   el.addEventListener('click',()=>window.open(url, '_blank'));
   return el;
 }
@@ -5764,9 +5763,7 @@ const cmCourse=document.getElementById('cmCourseInput');
 const cmWaBtn=document.getElementById('cmWaBtn');
 
 function openModal(name){
-  const isLocal = window.location.protocol === 'file:';
-  const cleanName = encodeURIComponent(name).toLowerCase();
-  const url = isLocal ? 'course-details.html?course=' + encodeURIComponent(name) : '/courses/' + cleanName;
+  const url = 'course-details.html?course=' + encodeURIComponent(name);
   window.location.href = url;
 }
 
@@ -5896,9 +5893,7 @@ window.closeModal = closeModal;
     syncClear();
     close();
     csResultsInner.innerHTML='';
-    const isLocal = window.location.protocol === 'file:';
-    const cleanName = encodeURIComponent(name).toLowerCase();
-    const url = isLocal ? 'course-details.html?course=' + encodeURIComponent(name) : '/courses/' + cleanName;
+    const url = 'course-details.html?course=' + encodeURIComponent(name);
     window.open(url, '_blank');
   }
   function activateCurrent(){
