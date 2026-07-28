@@ -1,0 +1,599 @@
+/* CSS overrides for GSAP & UI animations (Non-destructive & Ultra-responsive) */
+
+#heroCourseName {
+  display: inline-block;
+  min-width: 150px;
+}
+
+.slide-image {
+  overflow: hidden;
+}
+
+.btn-apply-nav, .btn-cta, .hero-btn-primary, .uni-btn-primary, .svc-btn-primary {
+  transform-origin: center;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Liquid sweep beam effect on main CTAs */
+.btn-apply-nav::after, .btn-cta::after, .hero-btn-primary::after, .btn-apply-form::after, .uni-btn-primary::after, .svc-btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: rotate(25deg);
+  transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-apply-nav:hover::after, .btn-cta:hover::after, .hero-btn-primary:hover::after, .btn-apply-form:hover::after, .uni-btn-primary:hover::after, .svc-btn-primary:hover::after {
+  left: 130%;
+}
+
+.fee-blocks {
+  overflow: hidden;
+}
+
+/* --- TEXT VISIBILITY FIXES --- */
+.hero-banner {
+  color: #ffffff !important;
+}
+.hero-banner h1, .hero-banner p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: initial !important;
+}
+.slide-title, .slide-desc {
+  color: var(--text) !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+/* --- RESTORE SMOOTH SCROLL --- */
+html, body {
+  scroll-behavior: smooth !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM 3D MICRO-ANIMATIONS & HIGH-END HOVER EFFECTS
+   (EduVision 2.0 Main Page + Top University Partner Section)
+═══════════════════════════════════════════════════════════ */
+
+/* 1. Placement Salary Bars */
+.salary-bar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 50px;
+  overflow: hidden;
+  height: 10px;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.salary-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #16a34a, #22c55e, #4ade80) !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.6);
+  transform-origin: left center !important;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+.in-view .salary-bar-fill,
+.salary-bar-fill.in-view,
+.salary-bars.in-view .salary-bar-fill,
+#salaryBars.in-view .salary-bar-fill,
+.salary-section.in-view .salary-bar-fill {
+  animation: growGreenBar 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+#salaryBars > div:nth-child(1) .salary-bar-fill,
+.salary-bars > div:nth-child(1) .salary-bar-fill { animation-delay: 0.1s !important; }
+
+#salaryBars > div:nth-child(2) .salary-bar-fill,
+.salary-bars > div:nth-child(2) .salary-bar-fill { animation-delay: 0.25s !important; }
+
+#salaryBars > div:nth-child(3) .salary-bar-fill,
+.salary-bars > div:nth-child(3) .salary-bar-fill { animation-delay: 0.4s !important; }
+
+#salaryBars > div:nth-child(4) .salary-bar-fill,
+.salary-bars > div:nth-child(4) .salary-bar-fill { animation-delay: 0.55s !important; }
+
+@keyframes growGreenBar {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* 2. 3D Elevation & Perspective Container Setup */
+.partners-grid, .why-grid, .elig-grid, .svc-grid, .courses-grid, .fee-section-wrap, #uniSecRegular, #uniSecOnline, #uniSecDistance {
+  perspective: 1200px;
+}
+
+/* 3. TOP UNIVERSITY PARTNER CARDS & LOGO BOXES - ULTRA 3D LIFT */
+.partner-card, 
+.why-card, 
+.career-card, 
+.scope-card, 
+.stat-card, 
+.svc-card, 
+.about-item, 
+.uni-menu-item,
+#uniSecRegular a, #uniSecRegular div[onclick],
+#uniSecOnline a, #uniSecOnline div[onclick],
+#uniSecDistance a, #uniSecDistance div[onclick] {
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.38s ease, background 0.38s ease !important;
+  will-change: transform, box-shadow;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light sweep shimmer effect on university logo cards */
+.partner-card::before, 
+.why-card::before, 
+.svc-card::before,
+#uniSecRegular a::before, #uniSecRegular div[onclick]::before,
+#uniSecOnline a::before, #uniSecOnline div[onclick]::before,
+#uniSecDistance a::before, #uniSecDistance div[onclick]::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(201,147,42,0.18) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.partner-card:hover::before, 
+.why-card:hover::before, 
+.svc-card:hover::before,
+#uniSecRegular a:hover::before, #uniSecRegular div[onclick]:hover::before,
+#uniSecOnline a:hover::before, #uniSecOnline div[onclick]:hover::before,
+#uniSecDistance a:hover::before, #uniSecDistance div[onclick]:hover::before {
+  opacity: 1;
+  transform: translate(20%, 20%);
+}
+
+.partner-card:hover, 
+.why-card:hover, 
+.career-card:hover, 
+.scope-card:hover, 
+.stat-card:hover, 
+.svc-card:hover,
+#uniSecRegular a:hover, #uniSecRegular div[onclick]:hover,
+#uniSecOnline a:hover, #uniSecOnline div[onclick]:hover,
+#uniSecDistance a:hover, #uniSecDistance div[onclick]:hover {
+  transform: translateY(-9px) scale(1.03) rotateX(2deg) !important;
+  border-color: rgba(201, 147, 42, 0.75) !important;
+  box-shadow: 
+    0 22px 48px rgba(0, 0, 0, 0.65), 
+    0 0 28px rgba(201, 147, 42, 0.35), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 🌟 PERFECT FIT LOGOS (DESKTOP & LAPTOP) 🌟 */
+.partner-logo-wrap {
+  height: 115px !important;
+  min-height: 115px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important;
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.05) !important;
+  overflow: visible !important;
+}
+
+.partner-logo-wrap img {
+  max-width: 96% !important;
+  max-height: 96% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  transform: scale(1.08) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.partner-card:hover .partner-logo-wrap img,
+#uniSecOnline .partner-card:hover .partner-logo-wrap img,
+#uniSecRegular a:hover img, #uniSecRegular div[onclick]:hover img,
+#uniSecDistance a:hover img, #uniSecDistance div[onclick]:hover img {
+  transform: scale(1.18) !important;
+}
+
+/* 4. Icon Dynamic 3D Pop & Rotation */
+.career-icon, .scope-icon, .why-num, .svc-modal-ico {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease !important;
+}
+
+.career-card:hover .career-icon, .scope-card:hover .scope-icon {
+  transform: scale(1.22) rotate(6deg) translateY(-2px);
+}
+
+.why-card:hover .why-num {
+  transform: scale(1.2) translateY(-4px);
+  color: #f0c84a !important;
+  text-shadow: 0 0 15px rgba(240, 200, 74, 0.6);
+}
+
+/* 5. Interactive Pills & Filter Tabs */
+.prog-pill, .skill-chip, .uni-tab, .crs-tab, .partners-badge {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow;
+}
+
+.prog-pill:hover, .skill-chip:hover, .partners-badge:hover {
+  background: rgba(201, 147, 42, 0.22) !important;
+  border-color: var(--gold, #c9932a) !important;
+  color: #f0c84a !important;
+  transform: translateY(-4px) scale(1.08) !important;
+  box-shadow: 0 8px 22px rgba(201, 147, 42, 0.35) !important;
+}
+
+.uni-tab:hover, .crs-tab:hover {
+  transform: translateY(-3px) scale(1.04) !important;
+  box-shadow: 0 8px 25px rgba(201, 147, 42, 0.4) !important;
+}
+
+.career-tag {
+  transition: all 0.3s ease;
+}
+.career-card:hover .career-tag {
+  background: var(--gold, #c9932a) !important;
+  color: #000000 !important;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(201, 147, 42, 0.4);
+}
+
+/* 6. Recruiter Track Continuous Infinite Smooth Marquee */
+#recruiterTrack, .recruiter-track {
+  display: flex;
+  gap: 16px;
+  animation: marqueeGlide 25s linear infinite;
+  will-change: transform;
+}
+
+#recruiterTrack:hover, .recruiter-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeGlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.recruiter-chip {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.recruiter-chip:hover {
+  border-color: var(--gold, #c9932a) !important;
+  color: #f0c84a !important;
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 147, 42, 0.35);
+  background: rgba(201, 147, 42, 0.12) !important;
+}
+
+/* 7. Fee Table Interactive Hover & Highlights */
+.fee-table tbody tr {
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.fee-table tbody tr:hover {
+  background-color: rgba(201, 147, 42, 0.08) !important;
+}
+
+.fee-table tbody tr:hover td {
+  color: #ffffff !important;
+}
+
+.fee-table td.highlight-price, .fee-highlight {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.fee-table tbody tr:hover td.highlight-price {
+  text-shadow: 0 0 12px rgba(201, 147, 42, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   8. ULTRA-SMOOTH 3D SCROLL RISE ANIMATION (BOTTOM-TO-TOP CASCADE)
+═══════════════════════════════════════════════════════════ */
+.reveal, .reveal-up {
+  opacity: 0 !important;
+  transform: translateY(60px) scale(0.93) rotateX(8deg) !important;
+  filter: blur(5px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: opacity, transform, filter;
+  perspective: 1200px;
+}
+
+.reveal.active, .reveal.in-view,
+.reveal-up.active, .reveal-up.in-view {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) rotateX(0deg) !important;
+  filter: blur(0) !important;
+}
+
+/* Staggered Delay for child cards popping up sequentially from bottom */
+.stagger-container > *:nth-child(1), .partners-grid > *:nth-child(1), .uni-logo-grid > *:nth-child(1) { transition-delay: 0.05s !important; }
+.stagger-container > *:nth-child(2), .partners-grid > *:nth-child(2), .uni-logo-grid > *:nth-child(2) { transition-delay: 0.10s !important; }
+.stagger-container > *:nth-child(3), .partners-grid > *:nth-child(3), .uni-logo-grid > *:nth-child(3) { transition-delay: 0.15s !important; }
+.stagger-container > *:nth-child(4), .partners-grid > *:nth-child(4), .uni-logo-grid > *:nth-child(4) { transition-delay: 0.20s !important; }
+.stagger-container > *:nth-child(5), .partners-grid > *:nth-child(5), .uni-logo-grid > *:nth-child(5) { transition-delay: 0.25s !important; }
+.stagger-container > *:nth-child(6), .partners-grid > *:nth-child(6), .uni-logo-grid > *:nth-child(6) { transition-delay: 0.30s !important; }
+.stagger-container > *:nth-child(7), .partners-grid > *:nth-child(7), .uni-logo-grid > *:nth-child(7) { transition-delay: 0.35s !important; }
+.stagger-container > *:nth-child(8), .partners-grid > *:nth-child(8), .uni-logo-grid > *:nth-child(8) { transition-delay: 0.40s !important; }
+
+/* 9. FAQ Accordion Pulse */
+.faq-q {
+  transition: all 0.3s ease;
+}
+.faq-q:hover {
+  color: var(--gold, #c9932a) !important;
+}
+.faq-icon {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-q.open .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* 10. Floating Badge Keyframe Physics */
+@keyframes badgeFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.wwa-badge {
+  animation: badgeFloat 4s ease-in-out infinite;
+}
+
+/* 11. Glowing Border Pulsing Keyframes */
+@keyframes goldGlowPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(201, 147, 42, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(201, 147, 42, 0.5); }
+}
+
+.gold-pulse-box {
+  animation: goldGlowPulse 3s infinite ease-in-out;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   12. MOBILE & TABLET RESPONSIVE OVERRIDES (SOLVES NARROW SQUEEZED CARDS)
+═══════════════════════════════════════════════════════════ */
+.uni-logo-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  margin-bottom: 30px !important;
+}
+
+@media (max-width: 900px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"],
+  #uniSecOnline .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  #uniSecRegular a, #uniSecRegular div[onclick],
+  #uniSecDistance a, #uniSecDistance div[onclick] {
+    height: 105px !important;
+    padding: 6px !important;
+  }
+
+  .partner-logo-wrap {
+    height: 90px !important;
+    min-height: 90px !important;
+    padding: 4px 8px !important;
+  }
+
+  .partner-logo-wrap img {
+    transform: scale(1.02) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"],
+  #uniSecOnline .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  #uniSecRegular a, #uniSecRegular div[onclick],
+  #uniSecDistance a, #uniSecDistance div[onclick] {
+    height: 95px !important;
+    padding: 4px !important;
+  }
+
+  .partner-logo-wrap {
+    height: 80px !important;
+    min-height: 80px !important;
+    padding: 4px 6px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   13. TOUCH DEVICE & MOBILE TACTILE FEEDBACK & ANIMATIONS
+═══════════════════════════════════════════════════════════ */
+@media (hover: none) or (max-width: 768px) {
+  .partner-card:active, 
+  .why-card:active, 
+  .career-card:active, 
+  .scope-card:active, 
+  .stat-card:active, 
+  .svc-card:active,
+  #uniSecRegular a:active, #uniSecRegular div[onclick]:active,
+  #uniSecOnline a:active, #uniSecOnline div[onclick]:active,
+  #uniSecDistance a:active, #uniSecDistance div[onclick]:active {
+    transform: scale(0.96) translateY(2px) !important;
+    border-color: var(--gold, #c9932a) !important;
+    box-shadow: 0 4px 18px rgba(201, 147, 42, 0.45) !important;
+  }
+
+  /* Subtle ambient gold aura pulse for mobile cards so they feel dynamic */
+  .partner-card.in-view,
+  #uniSecRegular a.in-view, #uniSecRegular div[onclick].in-view,
+  #uniSecDistance a.in-view, #uniSecDistance div[onclick].in-view {
+    animation: mobilePulseGlow 4s infinite ease-in-out;
+  }
+}
+
+@keyframes mobilePulseGlow {
+  0%, 100% { border-color: rgba(201, 147, 42, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+  50% { border-color: rgba(201, 147, 42, 0.65); box-shadow: 0 6px 20px rgba(201, 147, 42, 0.25); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   14. ADVANCED 3D DEPTH, HOLOGRAPHIC FOIL & DYNAMIC LIGHT SPOTLIGHT
+═══════════════════════════════════════════════════════════ */
+
+/* 14.1 True Spatial 3D Depth Layering (Laptop & Phone Universal) */
+.partner-card, 
+.why-card, 
+.svc-card, 
+.career-card, 
+.scope-card, 
+.stat-card,
+.uni-card,
+.elig-card,
+.about-item,
+#uniSecRegular a, #uniSecRegular div[onclick],
+#uniSecOnline a, #uniSecOnline div[onclick],
+#uniSecDistance a, #uniSecDistance div[onclick] {
+  perspective: 1000px !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+  will-change: transform;
+}
+
+/* Inner elements pop OUT in 3D Z-Space towards user */
+.partner-card img, 
+.why-card .icon, 
+.svc-card .icon, 
+.uni-card img,
+.elig-icon,
+.career-icon,
+.scope-icon,
+#uniSecRegular img, 
+#uniSecDistance img,
+#uniSecOnline img {
+  transform: translateZ(20px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+}
+
+.partner-card:hover img,
+.uni-card:hover img,
+.elig-card:hover .elig-icon,
+.career-card:hover .career-icon,
+#uniSecRegular a:hover img, #uniSecRegular div[onclick]:hover img,
+#uniSecOnline a:hover img, #uniSecOnline div[onclick]:hover img,
+#uniSecDistance a:hover img, #uniSecDistance div[onclick]:hover img {
+  transform: translateZ(35px) scale(1.10) !important;
+}
+
+/* 14.2 Holographic Liquid Gold Foil Glare Sweeper */
+.partner-card::after,
+.uni-card::after,
+.elig-card::after,
+#uniSecRegular a::after, #uniSecRegular div[onclick]::after,
+#uniSecDistance a::after, #uniSecDistance div[onclick]::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle at center, rgba(255,215,0,0.3) 0%, rgba(201,147,42,0.1) 35%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transform: rotate(25deg);
+  transition: opacity 0.4s ease;
+  z-index: 6;
+}
+
+.partner-card:hover::after,
+.uni-card:hover::after,
+.elig-card:hover::after,
+#uniSecRegular a:hover::after, #uniSecRegular div[onclick]:hover::after,
+#uniSecDistance a:hover::after, #uniSecDistance div[onclick]:hover::after {
+  opacity: 1;
+  animation: holoSweep 2.5s infinite linear;
+}
+
+@keyframes holoSweep {
+  0% { transform: translateY(-25%) rotate(25deg); }
+  50% { transform: translateY(25%) rotate(25deg); }
+  100% { transform: translateY(-25%) rotate(25deg); }
+}
+
+/* 14.3 Rotating 3D Neon Gradient Border Beam */
+.uni-logo-grid a, .uni-logo-grid div[onclick], #uniSecOnline .partner-card, .uni-card, .elig-card {
+  position: relative;
+}
+
+.uni-logo-grid a::before, .uni-logo-grid div[onclick]::before, #uniSecOnline .partner-card::before, .uni-card::before, .elig-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #c9932a, #ffd700, #ea580c, #c9932a);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background-size: 300% 300%;
+  animation: rotateNeonGradient 4s ease infinite;
+}
+
+.uni-logo-grid a:hover::before, .uni-logo-grid div[onclick]:hover::before, #uniSecOnline .partner-card:hover::before, .uni-card:hover::before, .elig-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes rotateNeonGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 14.4 Dynamic Touch & Mouse 3D Spotlight Torch */
+.touch-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 280px;
+  margin-left: -140px;
+  margin-top: -140px;
+  background: radial-gradient(circle, rgba(201, 147, 42, 0.22) 0%, rgba(201, 147, 42, 0.05) 50%, transparent 75%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+  transition: transform 0.05s ease-out, opacity 0.3s ease;
+  opacity: 0;
+  mix-blend-mode: screen;
+}

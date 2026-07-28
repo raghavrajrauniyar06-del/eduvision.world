@@ -1,0 +1,80 @@
+/* University Detail Responsive & Mobile Support CSS */
+.mobile-scroll-hint {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 15px;
+  margin-top: 10px;
+  animation: swipeAnim 1.5s infinite;
+}
+
+@keyframes swipeAnim {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .slide {
+    padding: 30px 20px;
+  }
+  
+  #darkCard {
+    padding: 25px 20px !important;
+    margin-top: 60px !important;
+  }
+  
+  #darkCard h2 {
+    font-size: 1.6rem !important;
+    line-height: 1.3;
+  }
+  
+  #darkCard h2 span {
+    font-size: 1.8rem !important;
+  }
+  
+  #darkCardImg {
+    height: 220px !important;
+    margin-top: -60px !important;
+    transform: perspective(1000px) rotateX(0deg) scale(1) !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .feature-card {
+    flex-direction: column;
+  }
+  
+  .feature-content {
+    padding: 25px 20px;
+    max-width: 100% !important;
+  }
+  
+  .feature-card img {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .mobile-scroll-hint {
+    display: flex;
+  }
+}

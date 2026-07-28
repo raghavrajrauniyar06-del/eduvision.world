@@ -1,0 +1,95 @@
+/* University Fees Table CSS */
+.fee-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--table-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.fee-table th {
+  background: #1c1917;
+  color: #fff;
+  padding: 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.fee-table th:last-child {
+  border-right: none;
+}
+
+.fee-table th.highlight-col {
+  background: var(--gold);
+}
+
+.fee-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border);
+  font-size: 1.05rem;
+  color: var(--text);
+  transition: 0.3s;
+}
+
+.fee-table td:last-child {
+  border-right: none;
+}
+
+.fee-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fee-table tbody tr:hover td {
+  background: rgba(0,0,0,0.02);
+}
+
+.fee-table td:nth-child(1) {
+  font-weight: 600;
+}
+
+.fee-table td.highlight-price {
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.fee-notes {
+  margin-top: 30px;
+  background: rgba(201,147,42,0.05);
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--gold);
+}
+
+.fee-notes ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fee-notes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.fee-notes li::before {
+  content: "•";
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 1;
+}
