@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="EduVision Consultancy — India's premium education partner. 1500+ courses, free career counselling by CEO Miss Ishika Sharma. Lucknow, UP.">
+<meta name="description" content="EduVision — India's premium education partner. 1500+ courses, free career counselling by CEO Miss Ishika Sharma. Sector 69, Gurgaon, Delhi NCR, India.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://*.workers.dev; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'self'; base-uri 'self'; form-action https://api.web3forms.com; object-src 'none'; upgrade-insecure-requests;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -85,6 +85,18 @@ body.clicking #cursor{transform:translate(-50%,-50%) scale(.6);}
 .uni-btn-wa{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:#25d366;}
 .uni-btn-wa:hover{background:rgba(37,211,102,.2);}
 
+/* Hero Trusted Section */
+.hero-trust-section{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);max-width:480px;}
+.trust-heading{font-size:.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.trust-content{display:flex;align-items:center;gap:16px;}
+.trust-avatars{display:flex;align-items:center;}
+.t-av-img{width:36px;height:36px;border-radius:50%;border:2px solid #0d0f1a;object-fit:cover;margin-left:-10px;box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:transform .2s;}
+.t-av-img:first-child{margin-left:0;}
+.t-av-img:hover{transform:scale(1.15) translateY(-2px);z-index:5;}
+.trust-badge-wrap{display:flex;align-items:center;gap:8px;}
+.navy-badge{background:linear-gradient(135deg,#1e2942,#0f172a);border:1px solid rgba(201,147,42,0.3);color:var(--gold-2);font-weight:800;font-size:.78rem;padding:4px 10px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.4);}
+.trust-text{font-size:.85rem;font-weight:600;color:#e2e8f0;}
+
 
 /* ═══ UNIVERSITY PARTNERS ═══ */
 #partners{
@@ -95,13 +107,13 @@ body.clicking #cursor{transform:translate(-50%,-50%) scale(.6);}
 }
 #partners::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(201,147,42,.05),transparent 70%);pointer-events:none;}
 .partners-badge-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0 10px;}
-.partners-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-.partners-badge.green{background:rgba(45,218,110,.1);border:1px solid rgba(45,218,110,.3);color:#2dda6e;}
-.partners-badge.gold{background:rgba(201,147,42,.1);border:1px solid rgba(201,147,42,.3);color:var(--gold-2);}
-.partners-badge.blue{background:rgba(100,160,255,.1);border:1px solid rgba(100,160,255,.3);color:#64a0ff;}
-.partners-programs{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;margin-top:14px;}
-.prog-pill{padding:5px 13px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid var(--border);font-size:.73rem;font-weight:600;color:var(--muted);transition:all .22s;}
-.prog-pill:hover{background:rgba(201,147,42,.1);border-color:rgba(201,147,42,.35);color:var(--gold-2);}
+.partners-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.partners-badge.green{background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;}
+.partners-badge.gold{background:#fefce8;border:1px solid #fef08a;color:#b45309;}
+.partners-badge.blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;}
+.partners-programs{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.prog-pill{padding:6px 15px;border-radius:99px;background:#ffffff;border:1.5px solid #d4d4d8;font-size:.8rem;font-weight:700;color:#27272a;box-shadow:0 2px 6px rgba(0,0,0,.05);transition:all .22s;}
+.prog-pill:hover{background:#fefce8;border-color:#c9932a;color:#9a650d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,147,42,.2);}
 .partners-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px;}
 @media(max-width:960px){.partners-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:580px){.partners-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
@@ -159,21 +171,71 @@ nav{position:fixed!important;z-index:800!important;}
 
 /* ═══ NAVBAR ═══ */
 nav{
-  position:fixed;top:0;left:0;right:0;padding:0 clamp(20px,4vw,48px);height:clamp(70px,9vw,88px);
+  position:fixed;top:0;left:0;right:0;padding:0 clamp(20px,4vw,48px);height:clamp(54px,6vw,64px);
   display:flex;align-items:center;gap:32px;background:transparent;
   opacity:0;transform:translateY(-100%);
-  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out),background .3s,backdrop-filter .3s,box-shadow .3s,height .3s var(--ease-out);
+  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out),background .6s ease-in-out,backdrop-filter .6s ease-in-out,-webkit-backdrop-filter .6s ease-in-out,box-shadow .6s ease-in-out,height .3s var(--ease-out);
 }
 nav.visible{opacity:1;transform:translateY(0);}
-nav.scrolled{background:rgba(9,9,11,.92);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 4px 40px rgba(0,0,0,.4);}
+nav.scrolled{
+  background:rgba(18,14,10,.84) !important;
+  backdrop-filter:blur(20px) saturate(1.5) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.5) !important;
+  border-bottom:1px solid rgba(212,175,55,.2) !important;
+  box-shadow:0 8px 32px rgba(0,0,0,.3) !important;
+}
 .nav-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0;transition:transform .3s var(--ease-out);}
 .nav-logo:hover{transform:scale(1.03);}
 .nav-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#c9932a,#8a6015);display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 16px rgba(201,151,42,.3);}
 .nav-brand{font-size:.95rem;font-weight:700;letter-spacing:.06em;color:#fff;text-transform:uppercase;}
 .nav-brand b{color:var(--gold-2);}
 .nav-links{display:flex;align-items:center;gap:4px;list-style:none;margin-left:auto;}
-.nav-links a{padding:7px 14px;border-radius:8px;font-size:.83rem;font-weight:500;letter-spacing:.02em;color:var(--muted);text-decoration:none;transition:color .25s,background .25s;}
-.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.06);}
+.nav-links a{padding:7px 14px;border-radius:8px;font-size:.85rem;font-weight:700;letter-spacing:.02em;color:#111111;text-decoration:none;transition:color .5s ease-in-out,background .3s;}
+.nav-links a:hover{color:#000000;background:rgba(0,0,0,.08);}
+nav.scrolled .nav-links a{color:#ffffff !important;}
+nav.scrolled .nav-links a:hover{color:var(--gold-2) !important;background:rgba(255,255,255,.1);}
+.nav-highlight-btn {
+  background: linear-gradient(135deg, #fefce8, #fef9c3) !important;
+  border: 1.5px solid #c9932a !important;
+  color: #9a650d !important;
+  font-weight: 800 !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 16px rgba(201, 147, 42, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.3s ease !important;
+}
+.nav-highlight-btn::before {
+  content: '🔔';
+  font-size: 0.9rem;
+  animation: ringBell 2.5s ease-in-out infinite;
+}
+.nav-highlight-btn:hover {
+  background: linear-gradient(135deg, #c9932a, #8a6015) !important;
+  color: #ffffff !important;
+  border-color: #c9932a !important;
+  box-shadow: 0 8px 24px rgba(201, 147, 42, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+nav.scrolled .nav-highlight-btn {
+  background: rgba(201, 147, 42, 0.25) !important;
+  color: #fef08a !important;
+  border-color: rgba(201, 147, 42, 0.6) !important;
+}
+nav.scrolled .nav-highlight-btn:hover {
+  background: linear-gradient(135deg, #c9932a, #8a6015) !important;
+  color: #ffffff !important;
+}
+@keyframes ringBell {
+  0%, 100% { transform: rotate(0deg); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-14deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-10deg); }
+  75% { transform: rotate(0deg); }
+}
 .nav-cta{padding:9px 22px;border-radius:10px;background:linear-gradient(135deg,#c9932a,#8a6015);color:#fff;font-size:.82rem;font-weight:700;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:all .28s;flex-shrink:0;box-shadow:0 4px 20px rgba(201,151,42,.28);white-space:nowrap;}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,151,42,.45);}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
@@ -189,79 +251,173 @@ nav.scrolled{background:rgba(9,9,11,.92);backdrop-filter:blur(24px) saturate(1.8
 #mobileNavClose:hover{background:rgba(255,80,80,.2);color:#fff;}
 
 /* ═══ HERO ═══ */
+/* ═══ HERO (Warm Beige & Champagne Gold Luxury) ═══ */
 #hero{
   min-height:100svh;padding:0;display:flex;align-items:center;position:relative;overflow:hidden;
-  background-color:#0b0a16;
+  background-color:#14100b;
 }
 #hero::before{content:'';position:absolute;inset:0;width:100%;height:100%;left:0;top:0;transform:none;z-index:0;pointer-events:none;
-  background-image:var(--hero-bg-img);
+  background-image:url('champagne_hero_bg.jpg');
   background-size:cover;
-  background-position:60% 27%;
+  background-position:center center;
   background-repeat:no-repeat;
   transform-origin:center center;
-  animation:hero-bg-live 18s ease-in-out infinite;
-  will-change:transform,filter;
+  animation:hero-bg-live 25s ease-in-out infinite;
+  will-change:transform;
 }
 @keyframes hero-bg-live{
-  0%{transform:scale(1);filter:brightness(1) saturate(1);}
-  50%{transform:scale(1.08);filter:brightness(1.12) saturate(1.15);}
-  100%{transform:scale(1);filter:brightness(1) saturate(1);}
+  0%{transform:scale(1);}
+  50%{transform:scale(1.04);}
+  100%{transform:scale(1);}
 }
 @media(prefers-reduced-motion:reduce){#hero::before{animation:none;}}
-@media(max-width:960px){#hero::before{background-position:35% center;}}
-@media(max-width:600px){#hero::before{background-position:40% center;}}
-/* subtle scrim so text stays legible over the artwork at all sizes */
-#hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
-  background:linear-gradient(100deg,rgba(6,5,14,.62) 0%,rgba(6,5,14,.28) 42%,rgba(6,5,14,.05) 62%,transparent 78%);
+@media(max-width:960px){#hero::before{background-position:center center;}}
+/* soft warm gold champagne scrim so background stays bright and gold */
+#hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(100deg,rgba(20,16,11,.45) 0%,rgba(20,16,11,.25) 45%,transparent 80%);
 }
-@media(max-width:960px){#hero::after{background:linear-gradient(180deg,rgba(6,5,14,.55) 0%,rgba(6,5,14,.72) 55%,rgba(6,5,14,.88) 100%);}}
-#heroCanvas{display:none;}
+@media(max-width:960px){#hero::after{background:linear-gradient(180deg,rgba(20,16,11,.4) 0%,rgba(20,16,11,.55) 60%,rgba(20,16,11,.7) 100%);}}
+#heroCanvas{display:block;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 .hero-orb{display:none;}
 .hero-inner{width:var(--container);margin:0 auto;padding:clamp(100px,15vh,160px) 0 clamp(80px,10vh,120px);display:grid;grid-template-columns:1fr 420px;gap:clamp(48px,6vw,80px);align-items:center;position:relative;z-index:2;}
 @media(max-width:960px){.hero-inner{grid-template-columns:1fr;gap:48px;text-align:center;}}
-.hero-left{max-width:660px;}
+.hero-left{max-width:660px;position:relative;z-index:3;}
 @media(max-width:960px){.hero-left{max-width:100%;}}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(201,147,42,.1);border:1px solid rgba(201,147,42,.3);border-radius:99px;padding:6px 16px;font-size:.72rem;font-weight:700;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase;margin-bottom:28px;opacity:0;transform:translateY(16px);transition:all .6s var(--ease-out);}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(26,20,12,.85);border:1.5px solid rgba(212,175,55,.45);border-radius:99px;padding:6px 16px;font-size:.72rem;font-weight:700;letter-spacing:.14em;color:#f7d377;text-transform:uppercase;margin-bottom:28px;opacity:0;transform:translateY(16px);transition:all .6s var(--ease-out);box-shadow:0 4px 15px rgba(0,0,0,.3),0 0 15px rgba(212,175,55,.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
 .hero-eyebrow.r{opacity:1;transform:translateY(0);}
-.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-2);animation:dot-blink 2s ease-in-out infinite;}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#f7d377;animation:dot-blink 2s ease-in-out infinite;}
 @keyframes dot-blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.8rem);font-weight:700;line-height:.95;letter-spacing:-.02em;color:#fff;margin-bottom:28px;opacity:0;transform:translateY(24px);transition:all .7s var(--ease-out) .1s;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.8rem);font-weight:700;line-height:.95;letter-spacing:-.02em;color:#fff;margin-bottom:28px;opacity:0;transform:translateY(24px);transition:all .7s var(--ease-out) .1s;text-shadow:0 3px 15px rgba(0,0,0,.4);}
 .hero-title.r{opacity:1;transform:translateY(0);}
-.hero-title-line-2{font-style:italic;background:linear-gradient(135deg,var(--gold-2) 0%,#f5d060 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:clamp(.9rem,1.8vw,1.05rem);color:var(--muted);line-height:1.75;max-width:520px;margin-bottom:40px;opacity:0;transform:translateY(16px);transition:all .6s var(--ease-out) .25s;}
+.hero-title-line-2{font-style:italic;background:linear-gradient(135deg,#ffffff 0%,#fff2c6 30%,#f7d377 65%,#d4af37 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(.9rem,1.8vw,1.05rem);color:#ffffff;font-weight:500;line-height:1.75;max-width:520px;margin-bottom:40px;opacity:0;transform:translateY(16px);transition:all .6s var(--ease-out) .25s;text-shadow:0 2px 10px rgba(0,0,0,.5);}
 .hero-sub.r{opacity:1;transform:translateY(0);}
 @media(max-width:960px){.hero-sub{max-width:100%;}}
 .hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:all .6s var(--ease-out) .38s;}
 .hero-actions.r{opacity:1;transform:translateY(0);}
 @media(max-width:960px){.hero-actions{justify-content:center;}}
 @media(max-width:480px){.hero-actions{flex-direction:column;width:100%;}}
-.btn-primary{padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9932a,#a0741c);color:#fff;font-size:.88rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .3s var(--ease-out);box-shadow:0 6px 28px rgba(201,151,42,.35);position:relative;overflow:hidden;}
+.btn-primary{padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#d4af37,#a0741c);color:#fff;font-size:.88rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .3s var(--ease-out);box-shadow:0 6px 28px rgba(212,175,55,.4);position:relative;overflow:hidden;}
 .btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);transform:translateX(-150%);transition:transform .5s;}
 .btn-primary:hover::before{transform:translateX(150%);}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,151,42,.5);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(212,175,55,.6);}
 @media(max-width:480px){.btn-primary{width:100%;justify-content:center;}}
-.btn-ghost{padding:13px 28px;border-radius:12px;border:1px solid rgba(255,255,255,.14);color:var(--text);font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .28s;background:rgba(255,255,255,.04);backdrop-filter:blur(8px);}
-.btn-ghost:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08);transform:translateY(-2px);}
+.btn-ghost{padding:13px 28px;border-radius:12px;border:1.5px solid rgba(212,175,55,.45);color:#fff;font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .28s;background:rgba(28,20,12,.88);backdrop-filter:none;-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 20px rgba(0,0,0,.25),0 0 15px rgba(212,175,55,.15);}
+.btn-ghost:hover{border-color:rgba(212,175,55,.8);background:rgba(50,38,22,.85);box-shadow:0 8px 25px rgba(212,175,55,.35);transform:translateY(-2px);}
 @media(max-width:480px){.btn-ghost{width:100%;justify-content:center;}}
-.hero-card{background:linear-gradient(180deg,rgba(54,44,86,.42) 0%,rgba(36,29,62,.5) 45%,rgba(22,18,40,.62) 100%);border:1px solid rgba(201,147,42,.22);border-radius:24px;padding:clamp(24px,4vw,36px);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 24px 60px rgba(6,4,16,.5),inset 0 1px 0 rgba(255,255,255,.09),0 0 0 1px rgba(201,147,42,.1);opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease-out) .4s, transform .7s var(--ease-out) .4s;}
+.hero-card{
+  background: linear-gradient(135deg, rgba(248, 238, 218, 0.88) 0%, rgba(235, 220, 192, 0.84) 50%, rgba(220, 200, 168, 0.90) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.55);
+  border-radius: 24px;
+  padding: clamp(24px,4vw,36px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 1.5px 0 rgba(255, 255, 255, 0.95), 0 0 35px rgba(212, 175, 55, 0.25);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
 .hero-card.r{opacity:1;transform:translateY(0);}
 @media(max-width:960px){.hero-card{max-width:420px;margin:0 auto;}}
-.hero-card-label{font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.hero-card-label::before,.hero-card-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.hero-card-label{
+  font-size: .70rem;
+  font-weight: 800;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #785412;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-card-label::before,.hero-card-label::after{
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(184, 134, 11, 0.5), transparent);
+}
 .hero-stats{display:flex;flex-direction:column;gap:16px;}
-.hero-stat{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);transition:all .3s;cursor:default;}
-.hero-stat:hover{background:rgba(255,255,255,.07);border-color:rgba(201,151,42,.2);}
-.hero-stat-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
-.hero-stat-ico.gold{background:rgba(201,151,42,.15);}
-.hero-stat-ico.blue{background:rgba(201,147,42,.12);}
-.hero-stat-num,.cnt-num{font-size:1.5rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1;}
-.hero-stat-lbl{font-size:.72rem;color:var(--muted);margin-top:2px;}
-.hero-card-divider{height:1px;background:var(--border);margin:20px 0;}
-.hero-ceo{display:flex;align-items:center;gap:12px;}
-.hero-ceo-ava{width:44px;height:44px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#c9932a,#8a6015);display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 16px rgba(201,151,42,.3);}
-.hero-ceo-name{font-size:.82rem;font-weight:700;color:#fff;}
-.hero-ceo-role{font-size:.68rem;color:var(--muted);margin-top:2px;}
-.hero-ceo-badge{margin-left:auto;padding:4px 10px;border-radius:99px;background:rgba(45,218,110,.12);border:1px solid rgba(45,218,110,.25);font-size:.6rem;font-weight:700;letter-spacing:.1em;color:#2dda6e;text-transform:uppercase;white-space:nowrap;}
+.hero-stat{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(245, 232, 205, 0.65) 100%);
+  border: 1px solid rgba(201, 151, 42, 0.38);
+  box-shadow: 0 4px 16px rgba(120, 84, 18, 0.08);
+  transition: all .35s var(--ease-out);
+  cursor: default;
+}
+.hero-stat:hover{
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 236, 212, 0.85) 100%);
+  border-color: rgba(184, 134, 11, 0.65);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(184, 134, 11, 0.22);
+}
+.hero-stat-ico{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(247, 213, 119, 0.45), rgba(212, 175, 55, 0.28));
+  border: 1px solid rgba(184, 134, 11, 0.45);
+  box-shadow: 0 4px 14px rgba(184, 134, 11, 0.18);
+}
+.hero-stat-ico.gold{background: linear-gradient(135deg, rgba(247, 213, 119, 0.50), rgba(212, 175, 55, 0.30));}
+.hero-stat-ico.blue{background: linear-gradient(135deg, rgba(255, 225, 140, 0.50), rgba(180, 140, 40, 0.30));}
+.hero-stat-num,.cnt-num{
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #2c1d07;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.hero-stat-lbl{
+  font-size: .78rem;
+  color: #5c4418;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.hero-card-divider{
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 134, 11, 0.45), transparent);
+  margin: 20px 0;
+}
+.hero-ceo{display:flex;align-items:center;gap:14px;}
+.hero-ceo-ava{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg,#d4af37,#8a6015);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  border: 2px solid rgba(184, 134, 11, 0.7);
+  box-shadow: 0 4px 16px rgba(184, 134, 11, 0.35);
+}
+.hero-ceo-name{font-size:.88rem;font-weight:800;color:#2c1d07;}
+.hero-ceo-role{font-size:.72rem;color:#5c4418;font-weight:500;margin-top:2px;}
+.hero-ceo-badge{
+  margin-left: auto;
+  padding: 6px 14px;
+  border-radius: 99px;
+  background: linear-gradient(135deg, #1fa855 0%, #15803d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(21, 128, 61, 0.35);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
 /* ═══ MARQUEE ═══ */
 .marquee-strip{background:rgba(201,151,42,.06);border-top:1px solid rgba(201,151,42,.12);border-bottom:1px solid rgba(201,151,42,.12);padding:14px 0;overflow:hidden;position:relative;z-index:2;}
@@ -448,12 +604,7 @@ section{padding:var(--section-y) 0;position:relative;}
 .d4{transition-delay:.28s!important;}.d5{transition-delay:.36s!important;}.d6{transition-delay:.44s!important;}
 
 /* ═══ COURSES ═══ */
-#courses{
-  background:
-    radial-gradient(ellipse 55% 40% at 80% 8%,rgba(110,140,220,.055),transparent 70%),
-    radial-gradient(ellipse 50% 35% at 5% 90%,rgba(201,147,42,.03),transparent 70%),
-    linear-gradient(180deg,#0c0e1c 0%,#0a0c19 55%,#0a0c18 100%);
-}
+#courses{background-color:#fdfbf7;background-image:linear-gradient(to bottom,rgba(253,251,247,.88) 0%,rgba(253,251,247,.96) 100%),url('champagne_hero_bg.jpg');background-size:auto,cover;background-position:center center,center 40%;background-repeat:no-repeat;padding:56px 0;border-top:1px solid rgba(0,0,0,.05);position:relative;overflow:visible;box-shadow:none;}
 .courses-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;gap:24px;flex-wrap:wrap;}
 /* ═══ COURSE SEARCH — GOOGLE-INSPIRED PREMIUM (single source of truth) ═══
    Architecture:
@@ -1317,36 +1468,26 @@ footer{
   .gsearch-bar::after { display: none; }
 }
 
-/* Smooth 120Hz scrolling on supported devices */
+/* Smooth multi-refresh rate (60Hz, 90Hz, 120Hz+) scroll optimization without altering animation behaviour */
 @supports (scroll-behavior: smooth) {
   html { scroll-behavior: smooth; }
 }
 @media (max-width: 768px) {
-  html { scroll-behavior: auto; } /* Disable smooth scroll on mobile — causes jank */
+  html { scroll-behavior: auto; } /* Disable default smooth scroll on touch mobile to eliminate touch lag */
 }
 
-/* Better animation and shadow handling on mobile without breaking infinite loops */
-@media (max-width: 768px) {
-  .msg { animation-duration: 0.25s !important; }
-  .typing-bubble { animation: none !important; }
-  /* Remove heavy box-shadow on mobile */
-  .cnt-card, .t-card, .crs-card { box-shadow: none !important; }
-  .qr-btn:hover { box-shadow: none !important; transform: none !important; }
+/* Hardware GPU acceleration layer promotion for 60Hz, 90Hz, 120Hz+ display smoothness */
+.crs-card, .svc-card, .why-card, .t-card, .partner-card, .hero-card, .nav-brand, .gsearch-bar {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Prefers-reduced-motion — respect accessibility */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  #networkCanvas, #heroCanvas, #particleCanvas { display: none !important; }
-}
-
-/* Layer promotion for sliding rows */
-#sliderRow1, #sliderRow2, #testiTrack {
+/* Layer promotion for sliding rows & tracks */
+#sliderRow1, #sliderRow2, #testiTrack, .crs-track {
   will-change: transform;
+  transform: translateZ(0);
+}
   transform: translateZ(0);
 }
 
@@ -1973,8 +2114,9 @@ section::before {
 
 /* Navigation — premium glass */
 nav.scrolled {
-  background: rgba(8,8,10,.9) !important;
-  backdrop-filter: blur(32px) saturate(2) !important;
+  background: rgba(18,14,10,.84) !important;
+  backdrop-filter: blur(20px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
 }
 
 /* Hero eyebrow — animated dot */
@@ -2388,21 +2530,20 @@ nav.scrolled {
   --border: #e2e8f0;
 }
 
-/* Specific Card Overrides (Light Theme inside Cards) */
-#courses .crs-card, #services .svc-card, #why .why-card, #testimonials .t-card, #about .gallery-item, .faq-item {
+/* Specific Card Overrides (Light Theme inside Services, Why, Testimonials, FAQ) */
+#services .svc-card, #why .why-card, #testimonials .t-card, #about .gallery-item, .faq-item {
   background: #ffffff !important;
   border: 1px solid var(--border) !important;
   box-shadow: 0 10px 30px rgba(15,23,42,0.04) !important;
   color: var(--text) !important;
 }
 
-#courses .crs-card:hover, #services .svc-card:hover, #why .why-card:hover, #testimonials .t-card:hover, #about .gallery-item:hover {
+#services .svc-card:hover, #why .why-card:hover, #testimonials .t-card:hover, #about .gallery-item:hover {
   box-shadow: 0 20px 40px rgba(15,23,42,0.08) !important;
   border-color: var(--gold-3) !important;
 }
 
-#courses .crs-name, #services .svc-title, #why .why-title, #testimonials .t-name, .faq-question { color: var(--navy) !important; }
-#courses .crs-level { background: var(--gold-3) !important; color: var(--gold-2) !important; border: 1px solid rgba(212, 175, 55, 0.35) !important; }
+#services .svc-title, #why .why-title, #testimonials .t-name, .faq-question { color: var(--navy) !important; }
 #testimonials .t-quote { color: var(--gold-3) !important; }
 .faq-answer { color: var(--text) !important; }
 
@@ -2548,6 +2689,28 @@ nav.scrolled {
     bottom: 135px !important; /* Aligned with Mobile AI button */
   }
 }
+
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
 </style>
 <style>
 /* Eye-catching University Fee Cards */
@@ -2621,6 +2784,28 @@ nav.scrolled {
   width: fit-content;
   border: 1px solid rgba(212, 175, 55, 0.1);
 }
+
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
 </style>
 <style>
 /* COURSES OVERHAUL (Override existing) */
@@ -2639,7 +2824,7 @@ nav.scrolled {
 }
 .crs-card:hover {
   border-color: var(--gold) !important;
-  box-shadow: 0 15px 35px rgba(201,147,42,0.15) !important;
+  box-shadow: 0 15px 35px rgba(201,147,42,0.2) !important;
   transform: translateY(-8px) !important;
 }
 .crs-img {
@@ -2647,7 +2832,7 @@ nav.scrolled {
   background-size: cover;
   background-position: center;
   position: relative;
-  border-bottom: 1px solid rgba(201,147,42,0.1);
+  border-bottom: 1px solid rgba(201,147,42,0.15);
 }
 .crs-title-overlay {
   position: absolute;
@@ -2655,32 +2840,33 @@ nav.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.8rem;
+  font-size: 1.8rem;
   font-weight: 900;
-  color: var(--gold);
-  text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 0 4px 12px rgba(0,0,0,0.2);
-  letter-spacing: 0.03em;
-  background: rgba(255,255,255,0.15);
+  color: #ffffff !important;
+  text-shadow: 0 3px 10px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.9) !important;
+  letter-spacing: 0.04em;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.25) 100%) !important;
   text-align: center;
-  padding: 10px;
+  padding: 12px;
 }
 .crs-content {
-  padding: 20px 16px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 14px;
+  gap: 12px;
+  background: #ffffff;
 }
 .crs-name-full {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 800;
-  color: var(--gold-2);
+  color: #1c1917 !important;
   line-height: 1.3;
 }
 .crs-duration {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #64748b;
+  color: #57534e !important;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2688,25 +2874,49 @@ nav.scrolled {
 }
 .crs-duration svg {
   width: 14px; height: 14px;
-  fill: currentColor;
+  fill: #9a650d !important;
 }
 .crs-btn {
-  border: 1px solid #0f172a;
+  border: 1.5px solid #c9932a;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   text-align: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #0f172a;
-  transition: all 0.3s;
-  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #9a650d;
+  transition: all 0.3s ease;
+  background: #fefce8;
   width: 100%;
 }
 .crs-card:hover .crs-btn {
-  background: #0f172a;
-  color: #fff;
+  background: #c9932a;
+  color: #000000;
+  border-color: #c9932a;
+  box-shadow: 0 4px 14px rgba(201,147,42,0.4);
 }
 .crs-track { gap: 20px !important; }
+
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
 </style>
   <link rel="stylesheet" href="animations/animations.css">
 </head>
@@ -2896,16 +3106,33 @@ nav.scrolled {
         </a>
       </div>
     </li>
+    <li><a href="latest-updates.html" class="nav-highlight-btn">Latest Updates</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#counselling" class="nav-cta apply-glow">Apply Now</a>
+  <div id="navCtaArea" style="display:inline-flex; align-items:center;">
+    <a href="javascript:void(0)" class="nav-cta apply-glow" id="loginNavBtn" onclick="openPortalSelectionModal()">Login 🔑</a>
+    <div class="user-profile-badge" id="userProfileBadge" onclick="toggleUserDropdown()" style="display:none; align-items:center; gap:8px; padding:6px 14px 6px 8px; border-radius:30px; background:rgba(15,23,42,0.9); border:1px solid rgba(247,211,119,0.4); cursor:pointer; position:relative;">
+      <div class="user-avatar-circle" id="userAvatarChar" style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#fff0c4,#f7d377,#c9932a); color:#070b12; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">R</div>
+      <span class="user-name-label" id="userNameLabel" style="font-size:0.82rem; font-weight:700; color:#fff0c4;">Rahul S.</span>
+      <span style="font-size:0.65rem; color:#f7d377;">▼</span>
+
+      <div class="user-dropdown-menu" id="userDropdownMenu" style="display:none; position:absolute; top:calc(100% + 8px); right:0; width:200px; background:rgba(15,23,42,0.96); backdrop-filter:blur(18px); border:1px solid rgba(247,211,119,0.4); border-radius:14px; padding:8px 0; box-shadow:0 15px 35px rgba(0,0,0,0.6); z-index:1001;">
+        <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">📊 Dashboard</a>
+        <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">📄 My Applications</a>
+        <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">⭐ Saved Courses</a>
+        <div style="height:1px; background:rgba(255,255,255,0.1); margin:6px 0;"></div>
+        <div class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#ef4444; cursor:pointer;" onclick="logoutGlobalUser()">🚪 Logout</div>
+      </div>
+    </div>
+  </div>
   <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
 <div id="mobileNav">
   <button id="mobileNavClose">✕</button>
   <a href="#courses">Courses</a>
+  <a href="latest-updates.html" style="background:linear-gradient(135deg,#c9932a,#8a6015); color:#fff; font-weight:800; border-radius:12px; padding:10px 24px; box-shadow:0 4px 20px rgba(201,147,42,0.4);">🔔 Latest Updates</a>
   <a href="#about">About</a>
   <a href="#services">Services</a>
   <a href="#partners" onclick="filterUniMode('all', document.querySelector('.uni-tab[data-mode=\'all\']')); closeMobileNav();">Universities</a>
@@ -2942,6 +3169,23 @@ nav.scrolled {
         <a href="#counselling" class="btn-primary apply-glow">✦ Apply Now</a>
         <a href="#counselling" class="btn-ghost">📞 Book Free Counseling</a>
         <a href="https://wa.me/916306420146" class="btn-ghost" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+      </div>
+      <div class="hero-trust-section reveal-left" id="heroTrust">
+        <div class="trust-heading">Trusted by Students Across India</div>
+        <div class="trust-content">
+          <div class="trust-avatars">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+            <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=100&auto=format&fit=crop&q=80" alt="Student Profile" class="t-av-img">
+          </div>
+          <div class="trust-badge-wrap">
+            <div class="navy-badge">1K+</div>
+            <span class="trust-text">Happy Students</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="hero-card reveal-right" id="heroRight">
@@ -2989,7 +3233,7 @@ nav.scrolled {
     <div class="marquee-item"><span class="marquee-item-dot"></span>🎓 UGC · NCTE · AICTE · INC Recognised</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>✅ Free Career Counselling</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>💼 <strong>MBA · BCA · Nursing · B.Ed · AI & More</strong></div>
-    <div class="marquee-item"><span class="marquee-item-dot"></span>📍 Lucknow, UP</div>
+    <div class="marquee-item"><span class="marquee-item-dot"></span>📍 Sector 69, Gurgaon, Delhi NCR</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>🌐 Japanese & Chinese Language Courses</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>📞 +91 63064 20146</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>⭐ 5000+ Students Guided</div>
@@ -2997,7 +3241,7 @@ nav.scrolled {
     <div class="marquee-item"><span class="marquee-item-dot"></span>🎓 UGC · NCTE · AICTE · INC Recognised</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>✅ Free Career Counselling</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>💼 <strong>MBA · BCA · Nursing · B.Ed · AI & More</strong></div>
-    <div class="marquee-item"><span class="marquee-item-dot"></span>📍 Lucknow, UP</div>
+    <div class="marquee-item"><span class="marquee-item-dot"></span>📍 Sector 69, Gurgaon, Delhi NCR</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>🌐 Japanese & Chinese Language Courses</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>📞 +91 63064 20146</div>
     <div class="marquee-item"><span class="marquee-item-dot"></span>⭐ 5000+ Students Guided</div>
@@ -3048,6 +3292,8 @@ nav.scrolled {
   </div>
 </section>
 
+
+
 <!-- ═══ ABOUT ═══ -->
 <section id="about">
   <div class="container">
@@ -3056,7 +3302,7 @@ nav.scrolled {
         <div class="section-label">Our Story</div>
         <h2 class="section-heading">Empowering Students<br><span class="gold-word">Across India</span></h2>
         <p style="color:var(--muted);font-size:.9rem;line-height:1.8;margin-top:16px;max-width:480px;">
-          EduVision Consultancy was founded with one mission — to make quality education guidance accessible to every student in India, regardless of background.
+          EduVision was founded with one mission — to make quality education guidance accessible to every student in India, regardless of background.
         </p>
         <div class="about-items">
           <div class="about-item reveal d1">
@@ -3104,7 +3350,7 @@ nav.scrolled {
             <div class="about-ceo-ava" style="overflow:hidden;padding:0;width:70px;height:70px;"><img loading="eager" decoding="async" src="data:image/webp;base64,UklGRpwGAABXRUJQVlA4IJAGAADQIQCdASp4AHgAPpVInEqlpCKrpxN7WXASiWMA1S0WXeR5rinoq23POm6b5u6FcF6ZBL/B3MGYdabbQA/Rfox6E3qkrQvzHllf5U2qZ+PR+FRkPUbkFEo3yDAsTrWpkRQHql/LPv1TqrPaQGMCUVRBVEehDPsPPRJ6dD7U9fmo3GXzop0U8B/v+1gSFRv2sHlOP5oEnNiYVFrgcaJ1RUq9OYvsHjuyzuRHvJoxS3vI4WYjmPIDQNCzeUcg8N/8VgfZL5hB0iubltWth5uDrATTKR4h1SGii7C/1OY6eJwsvr1j+cePhFWRsBsSXJtDPbeTKeE/2AwbUe78jTzpC7iPDMbiUP9BwjGQeBJgE5M6fk7A7cO7QgAA/vrikB4QLv1Css6IStb8TZYCX/9P7zcTE5sb/J+6uBHUfVKvvHH6CVfcML7hrrnGd7x0ENlw/6CdP36X4hQNadkjVS/AI3aUrZe5FGwRvqoAKaXK/iCQAt2U71p/Z2zXjuSCpKps6zRJoDNLfRt2AJrbD4YEjRPo4vUAiwJaFBEC/U1D3upnNUKS610XDTrcr0c7jR7odxOmF0/1zjXc5e9kWYdn3+cCq5XVWeLt0QFRyb3HrTWqcs0dZGuL+REOtrJiJOJIY2lIlhRsZvSQf3OinjvyoW8Us7D/xty1qW9/aBtLsMcSl5ezGeDIYmkHNgrNuOzxEk3VFz2/u9q8uZpjSNtaQEduCUNqomc/UYzAFatqROZRd8UdvATpjbrj7d1dHol9EJR0hwG7RxTOxlThA9+KvfG0HuOsboXEDNVbOt2m06ymM94qwoFcCyTi7B1diD8AMAIJlSrkXpK1DDIf3I7OKfihbIM6rSauf81/XWuyHmSj27rIwDMBC1hxOs/D5vLVGSjtac8drJMIUdK5NkvdYvfkboR8knvCFvGO1JhPYPJtWRuP86ClDqpl5+BrZjGE6bDfVNiAhQusOkAm9qRDA6caIInVCveRR9nKUJIUYG3q+hRs8i48lZw/lbe1JzoCmv7113XbxMeGPN9MG73W7jBsW2ded9RQHKbtauoKqTxlNvL+4SF4d/Rri72D/oZVF7h8Pc0TWf8CsI+fx25Wrq16bbj2r7HvWW9LZJ0keQ2gyFgd7UOCy4wPjYYakqItLmh71K9Mtw/whbwR0YQ2BMQfpMn4dpcUGJ87yecSiKSs/p4pYSp360ZXQU7VDmZelaUPDpK86R73BY5C4a7nZ3uI5uSdAFOLfzyPJoV2k5MWkIVJ2xvAPIJA851KN8NmrF2KJWG7fcrvq19+iRAQ+97+AxamWdyZTk69BCxXAkTvbU0uOzXKexy2ctGQYaQGtVSSWN1hxTX0lbvILQRAqpw8LibPr5tUZsoqhO1/7ldjVf9t5da9pk+8V22yP/ycidZimuubYC96F7++YYHaDTNDvyqtYvEIJHxXek8eq8zSp4V4KAbFaQec9+JYK7j8vWqYQ51jRizDu6U7gzJIlPSbK6g6r8+yQHQkZn1YL4Ecp2vUKEBsGAKik+mhcxSiA9SPatP87x9s3yUoU6uaq425J8fjqIIKmRifI/+oFOR9nEmsa/Ec56M/jK7tPK0RXN1qE2d7Gv4Oa8Mr+zzudMfqy8X10MJsTtt14JBhECAJPAdbWufi8ISk9OQ8onx1F0ZZaL2yCmqw7MrOypZFUYYkLuCx5DUcziGTZcAcFd3iyWUfrZrEfwA/idyjZ4v50f01Qd9fTGifWyDscMBzGMyKPsPChHs6GmAn0FgFMjIiy+VmU4I+DxQoSS4u+QQblqZltjBXy8H+w5ybQzhvJ3GWO0ab4bovXsF1NHHz4N/jI92A1z3/D9P2cnuy//Mp32Qn7NTXRsJNNOsEOCW3+0xdKvhGd1GM0Qa/L7tNvnABoHma5v77vNxoWEUH1IZzXtuE7f6kWBIPat9RWzh/eK1mxpA5XpD5DVlef28V04DoaczyzTOg1QRC2CjJO8QzzKI4MkwO2m4LSWHe2IWRhll7hRnblb9m2FSL4dI/8YHF1OK4h/7vpaiGS3BMSe6z1XzatN+U4/hdyNz/dK7D3E+SO4wu8xSTFXCzYP3uqdjPP9bCHOFjiln8jtO/GDlajyMTd6X4wq3H/dR6EV++L9zxoWWxPuzdQGGHPfeh5KuBDGZQMwHqlyj+QyzoyHLYTeUW4Lx2LAc3Yg2jtBl5H/vAdz05bh7sIpj80JmGq1SobfUR5SwToCJS4HQmZ+tyAAA=" alt="Miss Ishika Sharma" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:inherit;display:block;"></div>
             <div>
               <div class="about-ceo-name">Miss Ishika Sharma</div>
-              <div class="about-ceo-role">CEO & Founder · EduVision Consultancy</div>
+              <div class="about-ceo-role">CEO & Founder · EduVision</div>
             </div>
           </div>
           <div class="about-ceo-quote">
@@ -3125,7 +3371,7 @@ nav.scrolled {
             </div>
             <div class="about-mini-stat">
               <div class="about-mini-num"></div>
-              <div class="about-mini-lbl">Lucknow, Uttar Pradesh</div>
+              <div class="about-mini-lbl">Sector 69, Gurgaon, Delhi NCR, India</div>
             </div>
           </div>
         </div>
@@ -3944,28 +4190,58 @@ section, .container {
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
+
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
 </style>
 <style>
-/* LIGHT/BEIGE THEME OVERRIDE FOR ALL CONTENT SECTIONS */
-#about, #courses, #services, #why, #testimonials, #partners, #counselling, #faq, #contact { background: #fdfbf7 !important; color: #1c1917 !important; }
-#courses { background: linear-gradient(180deg, #050505 0%, #fdfbf7 120px) !important; }
-#about .section-heading, #courses .section-heading, #services .section-heading, #why .section-heading, #testimonials .section-heading, #partners .section-heading, #counselling .section-heading, #faq .section-heading, #contact .section-heading { color: #1c1917 !important; }
-#courses .section-heading { color: #1c1917 !important; mix-blend-mode: normal; position:relative; z-index:2; text-shadow: 0 0 20px rgba(253,251,247,0.8); }
-#about .section-label, #courses .section-label, #services .section-label, #why .section-label, #testimonials .section-label, #partners .section-label, #faq .section-label, #counselling .section-label, #contact .section-label { color: #1c1917 !important; background: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
-#about p, #courses p, #services p, #why p, #testimonials p, #partners p, #counselling p, #faq p, #contact p { color: #57534e !important; }
+/* LIGHT/BEIGE THEME OVERRIDE FOR OTHER CONTENT SECTIONS */
+#courses, #about, #services, #why, #testimonials, #partners, #counselling, #faq, #contact { background: #fdfbf7 !important; color: #1c1917 !important; }
+#courses .section-heading, #about .section-heading, #services .section-heading, #why .section-heading, #testimonials .section-heading, #partners .section-heading, #counselling .section-heading, #faq .section-heading, #contact .section-heading { color: #1c1917 !important; }
+#courses .section-label, #about .section-label, #services .section-label, #why .section-label, #testimonials .section-label, #partners .section-label, #faq .section-label, #counselling .section-label, #contact .section-label { color: #1c1917 !important; background: rgba(0,0,0,0.05) !important; border-color: rgba(0,0,0,0.1) !important; }
+#courses p, #about p, #services p, #why p, #testimonials p, #partners p, #counselling p, #faq p, #contact p { color: #57534e !important; }
 .gold-word { color: #c9932a !important; } /* PROTECT GOLD TEXT */
 
 /* Cards in Light Sections */
-.about-ceo-card, .about-item, #about .gallery-item, #courses .crs-card, #services .svc-card, #why .why-card, #testimonials .t-card, .partner-card, .faq-item, .counsel-form-card { background: #ffffff !important; border: 1px solid #e4e4e7 !important; box-shadow: 0 10px 30px rgba(0,0,0,0.04) !important; color: #1c1917 !important; }
-.about-ceo-card:hover, .about-item:hover, #about .gallery-item:hover, #courses .crs-card:hover, #services .svc-card:hover, #why .why-card:hover, #testimonials .t-card:hover, .partner-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important; border-color: var(--gold-2) !important; }
+.about-ceo-card, .about-item, #about .gallery-item, #services .svc-card, #why .why-card, #testimonials .t-card, .partner-card, .faq-item, .counsel-form-card { background: #ffffff !important; border: 1px solid #e4e4e7 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important; color: #1c1917 !important; }
+.gsearch-bar { background: #ffffff !important; border: 1.5px solid rgba(201,147,42,.3) !important; box-shadow: 0 8px 30px rgba(0,0,0,.06) !important; }
+.gsearch-input { color: #1c1917 !important; }
+.prog-pill { background: #ffffff !important; border: 1.5px solid #d4d4d8 !important; color: #27272a !important; font-weight: 700 !important; box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important; }
+.crs-tab { background: #ffffff !important; border: 1.5px solid #d4d4d8 !important; color: #27272a !important; font-weight: 700 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; }
+.crs-tab:hover { background: #fefce8 !important; border-color: #c9932a !important; color: #9a650d !important; }
+.crs-tab.active { background: var(--gold) !important; border-color: var(--gold) !important; color: #000000 !important; font-weight: 900 !important; box-shadow: 0 6px 20px rgba(201,147,42,0.4) !important; }
+.gsearch-chip { background: #ffffff !important; border: 1.5px solid #d4d4d8 !important; color: #27272a !important; font-weight: 700 !important; box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important; }
+.gsearch-chip:hover, .gsearch-chip.active { background: #fefce8 !important; border-color: #c9932a !important; color: #9a650d !important; }
+.crs-card { background: #ffffff !important; border: 1.5px solid #e4e4e7 !important; box-shadow: 0 4px 18px rgba(0,0,0,0.06) !important; }
+.crs-card:hover { border-color: var(--gold-2) !important; box-shadow: 0 16px 36px rgba(201,147,42,0.25) !important; }
+.partners-badge.green { background: #ecfdf5 !important; border: 1px solid #a7f3d0 !important; color: #047857 !important; }
+.partners-badge.gold { background: #fefce8 !important; border: 1px solid #fef08a !important; color: #b45309 !important; }
+.partners-badge.blue { background: #eff6ff !important; border: 1px solid #bfdbfe !important; color: #1d4ed8 !important; }
+.about-ceo-card:hover, .about-item:hover, #about .gallery-item:hover, #services .svc-card:hover, #why .why-card:hover, #testimonials .t-card:hover, .partner-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important; border-color: var(--gold-2) !important; }
 
 /* Text in Cards */
-.crs-name, .svc-title, .why-title, .t-name, .about-item-title, .about-ceo-name, .about-mini-num, .partner-name, .faq-question, .ff label, .about-ceo-quote { color: #1c1917 !important; }
+.svc-title, .why-title, .t-name, .about-item-title, .about-ceo-name, .about-mini-num, .partner-name, .faq-question, .ff label, .about-ceo-quote { color: #1c1917 !important; }
 .about-ceo-quote { font-weight: 800 !important; }
-.crs-hint, .why-text, .t-role, .t-quote, .about-ceo-role, .about-item-text, .about-mini-lbl, .partner-pkg, .faq-answer, .counsel-perk { color: #57534e !important; }
-.crs-tab { color: #57534e !important; border-color: rgba(0,0,0,0.1) !important; background: rgba(0,0,0,0.03) !important; }
-.crs-tab.active { background: #1c1917 !important; color: #ffffff !important; border-color: #1c1917 !important; box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important; }
-.crs-level { background: #fdfbf7 !important; color: var(--gold-2) !important; border-color: var(--gold-2) !important; }
+.why-text, .t-role, .t-quote, .about-ceo-role, .about-item-text, .about-mini-lbl, .partner-pkg, .faq-answer, .counsel-perk { color: #57534e !important; }
 .ff input, .ff select, .ff textarea { background: #fdfbf7 !important; border: 1px solid #e4e4e7 !important; color: #1c1917 !important; }
 
 /* WHO WE ARE CARD */
@@ -4291,6 +4567,28 @@ section, .container {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
+
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
 </style>
 
 <!-- ═══ WHY EDUVISION ═══ -->
@@ -4375,36 +4673,38 @@ section, .container {
 
       <!-- TOP UNIVERSITY MODE FILTER TABS -->
       <div class="uni-filter-bar" style="display: flex; justify-content: center; align-items: center; gap: 14px; margin: 0 0 25px; flex-wrap: wrap;">
-        <button class="uni-tab active" data-mode="all" onclick="filterUniMode('all', this)" style="padding: 12px 28px; border-radius: 30px; border: 2px solid var(--gold); background: var(--gold); color: #000; font-weight: 900; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(201,147,42,0.5);">✨ All Modes</button>
-        <button class="uni-tab" data-mode="regular" onclick="filterUniMode('regular', this)" style="padding: 12px 28px; border-radius: 30px; border: 2px solid var(--gold); background: #1e1e24; color: #ffffff; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">🏛️ Regular Campus</button>
-        <button class="uni-tab" data-mode="online" onclick="filterUniMode('online', this)" style="padding: 12px 28px; border-radius: 30px; border: 2px solid var(--gold); background: #1e1e24; color: #ffffff; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">💻 Online Mode</button>
-        <button class="uni-tab" data-mode="distance" onclick="filterUniMode('distance', this)" style="padding: 12px 28px; border-radius: 30px; border: 2px solid var(--gold); background: #1e1e24; color: #ffffff; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">🌐 Distance Learning</button>
+        <button class="uni-tab active" data-mode="all" onclick="filterUniMode('all', this)" style="padding: 12px 28px; border-radius: 30px; border: 2px solid var(--gold); background: var(--gold); color: #000000; font-weight: 900; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(201,147,42,0.5);">✨ All Modes</button>
+        <button class="uni-tab" data-mode="regular" onclick="filterUniMode('regular', this)" style="padding: 12px 28px; border-radius: 30px; border: 1.5px solid #d4d4d8; background: #ffffff; color: #1c1917; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">🏛️ Regular Campus</button>
+        <button class="uni-tab" data-mode="online" onclick="filterUniMode('online', this)" style="padding: 12px 28px; border-radius: 30px; border: 1.5px solid #d4d4d8; background: #ffffff; color: #1c1917; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">💻 Online Mode</button>
+        <button class="uni-tab" data-mode="distance" onclick="filterUniMode('distance', this)" style="padding: 12px 28px; border-radius: 30px; border: 1.5px solid #d4d4d8; background: #ffffff; color: #1c1917; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">🌐 Distance Learning</button>
       </div>
 
       <div class="partners-badge-row">
-        <span class="partners-badge green">✅ UGC Approved</span>
-        <span class="partners-badge blue">🏅 NAAC Accredited</span>
-        <span class="partners-badge gold">🌐 Online &amp; Distance</span>
-        <span class="partners-badge green">📋 Govt Recognised</span>
+        <span class="partners-badge green" style="background:#ecfdf5 !important; border:1.5px solid #a7f3d0 !important; color:#047857 !important; font-weight:800 !important;">✅ UGC Approved</span>
+        <span class="partners-badge blue" style="background:#eff6ff !important; border:1.5px solid #bfdbfe !important; color:#1d4ed8 !important; font-weight:800 !important;">🏅 NAAC Accredited</span>
+        <span class="partners-badge gold" style="background:#fefce8 !important; border:1.5px solid #fef08a !important; color:#b45309 !important; font-weight:800 !important;">🌐 Online &amp; Distance</span>
+        <span class="partners-badge green" style="background:#ecfdf5 !important; border:1.5px solid #a7f3d0 !important; color:#047857 !important; font-weight:800 !important;">📋 Govt Recognised</span>
       </div>
       <div class="partners-programs">
-        <span class="prog-pill">MBA</span><span class="prog-pill">BBA</span><span class="prog-pill">MCA</span>
-        <span class="prog-pill">BCA</span><span class="prog-pill">BA</span><span class="prog-pill">MA</span>
-        <span class="prog-pill">B.Com</span><span class="prog-pill">M.Com</span><span class="prog-pill">B.Ed</span>
-        <span class="prog-pill">M.Tech</span><span class="prog-pill">&amp; More</span>
+        <span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">MBA</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">BBA</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">MCA</span>
+        <span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">BCA</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">BA</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">MA</span>
+        <span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">B.Com</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">M.Com</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">B.Ed</span>
+        <span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">M.Tech</span><span class="prog-pill" style="background:#ffffff !important; border:1.5px solid #d4d4d8 !important; color:#1c1917 !important; font-weight:800 !important;">&amp; More</span>
       </div>
 
       <script>
         function filterUniMode(mode, btn) {
           document.querySelectorAll('.uni-tab').forEach(function(b) {
             b.classList.remove('active');
-            b.style.background = '#1e1e24';
-            b.style.color = '#ffffff';
-            b.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            b.style.background = '#ffffff';
+            b.style.color = '#1c1917';
+            b.style.borderColor = '#d4d4d8';
+            b.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
           });
           btn.classList.add('active');
           btn.style.background = 'var(--gold)';
           btn.style.color = '#000000';
+          btn.style.borderColor = 'var(--gold)';
           btn.style.boxShadow = '0 6px 20px rgba(201,147,42,0.5)';
 
           var reg = document.getElementById('uniSecRegular');
@@ -4438,7 +4738,7 @@ section, .container {
       
       <div style="display: flex; gap: 40px; margin-bottom: 50px; flex-wrap: wrap; align-items: stretch;">
         <div style="flex: 1.2; min-width: 300px; font-size: 1.05rem; line-height: 1.8; color: var(--text-muted);">
-          <p style="margin-bottom: 20px;"><strong>EduVision Consultancy</strong> provides expert guidance to help students choose the right learning mode based on their career goals, financial planning, and time availability. We work exclusively with UGC Approved, NAAC Accredited, and Government Recognized universities across Regular, Online, and Distance modes, ensuring students get safe, valid, and career-oriented options.</p>
+          <p style="margin-bottom: 20px;"><strong>EduVision</strong> provides expert guidance to help students choose the right learning mode based on their career goals, financial planning, and time availability. We work exclusively with UGC Approved, NAAC Accredited, and Government Recognized universities across Regular, Online, and Distance modes, ensuring students get safe, valid, and career-oriented options.</p>
           <p>Regular mode is the best choice for students seeking classroom-based learning, campus exposure, and a practical environment. In this mode, students get the complete experience of regular classes, faculty interaction, lab work, and academic activities on the university campus.</p>
         </div>
         <div style="flex: 0.8; min-width: 300px; display: flex; flex-direction: column; gap: 15px; justify-content: center;">
@@ -4916,7 +5216,7 @@ section, .container {
           </div>
           <div class="ci-item">
             <div class="ci-ico">📍</div>
-            <div><div class="ci-lbl">Location</div><div class="ci-val">Lucknow, Uttar Pradesh, India</div></div>
+            <div><div class="ci-lbl">Location</div><div class="ci-val">Sector 69, Gurgaon, Delhi NCR, India</div></div>
           </div>
           <div class="ci-item">
             <div class="ci-ico">🕐</div>
@@ -4926,7 +5226,7 @@ section, .container {
       </div>
       <div class="reveal-right d1">
         <div class="contact-map">
-          <iframe src="https://maps.google.com/maps?q=Lucknow,Uttar+Pradesh,India&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="EduVision Location"></iframe>
+          <iframe src="https://maps.google.com/maps?q=Sector+69,Gurgaon,Delhi+NCR,India&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="EduVision Location"></iframe>
         </div>
       </div>
     </div>
@@ -4984,7 +5284,7 @@ section, .container {
       </div>
     </div>
     <div class="ft-bottom">
-      <div class="ft-copy">© 2026 EduVision Consultancy · Lucknow, UP · All Rights Reserved.</div>
+      <div class="ft-copy">© 2026 EduVision · Sector 69, Gurgaon, Delhi NCR · All Rights Reserved.</div>
       <div class="ft-dev" style="text-align:right;">
         DESIGNER / CTO / DEVELOPER <span>RAGHAV RAJ RAUNIYAR</span>
         <div style="font-size: 0.7rem; font-weight: 500; text-transform: lowercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-top: 4px; text-shadow: none;">raghavrajrauniyar06@gmail.com</div>
@@ -5076,7 +5376,7 @@ section, .container {
     <div class="cm-shimmer-line"></div>
     <div class="cm-body">
       <h2 class="cm-title" id="cmTitle">Course Name</h2>
-      <p class="cm-sub" id="cmSub">EduVision Consultancy · Lucknow, UP</p>
+      <p class="cm-sub" id="cmSub">EduVision · Sector 69, Gurgaon, Delhi NCR</p>
       <div class="cm-pills" id="cmPills"></div>
       <p class="cm-desc" id="cmDesc"></p>
       <div id="cmDetailBtnContainer" style="margin: 15px 0; text-align: left;">
@@ -5470,94 +5770,22 @@ requestAnimationFrame(()=>{
 });
 
 /* ═══════════════════════════════════════════
-   HERO SCROLL DISPERSE — smoothly tracks scroll
-   position (not a binary on/off snap): a little
-   scroll = a little fade/drift, more scroll = more.
-   Direct style writes, rAF-throttled, no CSS
-   transition fighting the value every frame.
+   HERO SOLID VISIBILITY — Hero section & Quick
+   Overview remain 100% solid & stable on scroll.
 ═══════════════════════════════════════════ */
 (function(){
   const leftEls  = ['heroBadge','w1','heroSub','heroBtns'].map(id=>document.getElementById(id)).filter(Boolean);
   const cardEl   = document.getElementById('heroRight');
-  const heroSecEl= document.getElementById('hero');
-  if(!heroSecEl || (!leftEls.length && !cardEl)) return;
-
-  // Promote to their own GPU layer up front so every frame is a pure
-  // compositor update (transform/opacity only) — no layout, no paint.
-  // This is what actually makes the effect track buttery-smooth at
-  // 90Hz/120Hz instead of only "keeping up" at 60Hz.
-  [...leftEls, cardEl].filter(Boolean).forEach(el=>{
-    el.style.willChange = 'transform, opacity';
-    el.style.backfaceVisibility = 'hidden';
+  
+  leftEls.forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
   });
-
-  const DIST = 340; // px of scroll over which the effect fully completes
-  let ticking = false;
-  let lastProgress = -1;
-  let heroOffsetTop = 0;
-
-  function measure(){ heroOffsetTop = heroSecEl.offsetTop; }
-  measure();
-  window.addEventListener('resize', measure, {passive:true});
-
-  let settled = null; // tri-state so the class only toggles on actual crossing
-  function apply(progress){
-    // progress: 0 = fully at hero (settled), 1 = fully dispersed
-    const ease = progress*(2-progress); // gentle ease-out, no sudden snap
-    const op = 1 - ease;
-    leftEls.forEach(el=>{
-      el.style.setProperty('opacity', op, 'important');
-      el.style.setProperty('transform', `translate(${-140*ease}px,${8*ease}px) scale(${1-0.04*ease})`, 'important');
-    });
-    if(cardEl){
-      cardEl.style.setProperty('opacity', op, 'important');
-      cardEl.style.setProperty('transform', `translate(${140*ease}px,${8*ease}px) scale(${1-0.04*ease})`, 'important');
-      // idle float only once fully settled back at the top, so it never
-      // fights the scroll-driven transform above — toggled once on
-      // crossing, not every frame, so it can't fight the inline styles
-      const isSettled = progress < 0.02;
-      if(isSettled !== settled){
-        cardEl.classList.toggle('r', isSettled);
-        settled = isSettled;
-      }
-    }
-  }
-
-  function tick(){
-    // cheap arithmetic only — no layout read every frame
-    const scrolledPast = Math.min(Math.max(window.scrollY - heroOffsetTop, 0), DIST);
-    const progress = scrolledPast / DIST;
-    if(Math.abs(progress-lastProgress) > 0.0015){
-      apply(progress);
-      lastProgress = progress;
-    }
-    ticking = false;
-  }
-
-  function onScroll(){
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(tick);
-  }
-
-  // Only pay for a scroll listener while the hero is anywhere near the
-  // viewport. The moment the user scrolls well past it (courses, about,
-  // footer, etc.) the listener is fully removed — zero cost on the rest
-  // of the site. It's re-attached automatically when scrolling back up.
-  let listening = false;
-  function setListening(on){
-    if(on === listening) return;
-    listening = on;
-    if(on) window.addEventListener('scroll', onScroll, {passive:true});
-    else   window.removeEventListener('scroll', onScroll);
-  }
-  if(window.IntersectionObserver){
-    new IntersectionObserver((entries)=>{
-      setListening(entries[0].isIntersecting);
-      if(entries[0].isIntersecting) onScroll();
-    }, {rootMargin: `${DIST}px 0px ${DIST}px 0px`}).observe(heroSecEl);
-  } else {
-    setListening(true); // fallback for very old browsers
+  
+  if (cardEl) {
+    cardEl.classList.add('r', 'in');
+    cardEl.style.opacity = '1';
+    cardEl.style.transform = 'none';
   }
 })();
 
@@ -5634,6 +5862,7 @@ allTestimonials.forEach(t=>{
    COURSE DATA & MODAL
 ═══════════════════════════════════════════ */
 const courseDB = {
+  'MBBS Abroad':{icon:'🏥',level:'Healthcare',duration:'5 - 6 Years',mode:'Regular (Abroad)',featured:true,badge:'🔥 HOT FEATURED',desc:'Study MBBS in top NMC & WHO recognised medical universities in Russia, Uzbekistan, Kazakhstan & Georgia with low tuition fees & 100% visa support.',hl:['NMC & WHO Recognised','Zero Donation Required','100% English Medium','NEXT & USMLE Guidance','Complete Visa & Flight Support','Direct University Admission']},
   '10th Admission':{icon:'📚',level:'Foundation',duration:'1 Year',mode:'Regular / Distance',desc:'Complete your 10th Board from CBSE, ICSE or State Board with expert guidance. EduVision handles the full admission process, study material and exam prep.',hl:['CBSE / ICSE / State Board','Flexible Admission Dates','Study Material Provided','Expert Faculty Support','100% Govt Recognised','Scholarship Guidance']},
   '12th Admission':{icon:'📖',level:'Foundation',duration:'1 Year',mode:'Regular / Distance',desc:'Class 12 from recognised boards — Science, Commerce, Arts. Distance and regular mode both available. Full board exam guidance included.',hl:['All Streams Available','Distance & Regular Mode','Board Exam Guidance','Career Counselling','Govt Recognised','Fast Admission']},
   'NIOS':{icon:'📋',level:'Open School',duration:'Flexible',mode:'Open / Distance',desc:'National Institute of Open Schooling — flexible secondary & senior secondary. Best for working professionals, dropouts, and second-chance learners.',hl:['Secondary & Sr Secondary','On-Demand Exam','Stream Change Option','Age No Bar','Govt of India Board','Quick Completion']},
@@ -5667,11 +5896,12 @@ const courses = Object.entries(courseDB).map(([name,d])=>({name,icon:d.icon,leve
 
 function makeCard(c){
   const el = document.createElement('div');
-  el.className = 'crs-card';
+  el.className = 'crs-card' + (c.name === 'MBBS Abroad' ? ' crs-card-featured' : '');
   el.setAttribute('data-cat', c.level);
   
   const getImg = (name) => {
     const images = {
+      'MBBS Abroad': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       '10th Admission': 'https://images.unsplash.com/photo-1427504494785-319ce1473799?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       '12th Admission': 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       'NIOS': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
@@ -5710,6 +5940,7 @@ function makeCard(c){
   el.innerHTML=`
     <div class="crs-img" style="background-image:url('${imgUrl}')">
       <div class="crs-title-overlay">${c.name}</div>
+      ${c.name === 'MBBS Abroad' ? '<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:0.68rem;font-weight:800;padding:4px 10px;border-radius:20px;box-shadow:0 4px 15px rgba(239,68,68,0.5);letter-spacing:0.04em;z-index:2;">🔥 HOT FEATURED</div>' : ''}
     </div>
     <div class="crs-content">
       <div class="crs-name-full">${shortDesc}</div>
@@ -6330,7 +6561,7 @@ if(!isTouch){
 
   const allCourses = Object.keys(courseDB);
 
-  // Gemini context — dynamic system prompt
+  // Gemini context — dynamic system prompt (EduVision AI Master Behaviour Prompt)
   function buildSystemPrompt(){
     const u = userData;
     const parts = [];
@@ -6341,7 +6572,48 @@ if(!isTouch){
     if(u.goal) parts.push("Goal: "+u.goal);
     if(u.city) parts.push("City: "+u.city);
     const profile = parts.join('\n');
-    return 'You are "EduVision AI" — a warm, sharp, genuinely helpful AI career guide for EduVision Consultancy, Lucknow, UP, India.\n\nEduVision Details:\n- Tagline: "Your Vision, Our Mission"\n- Founder/CEO: Miss Ishika Sharma (Ishika Ma\'am)\n- CTO & Developer: Raghav Raj Rauniyar\n- Contact: +91 63064 20146 | eduvisionconsultancy190@gmail.com\n- Services: University Admissions (Regular & Distance), Free Counselling, Skill Dev (AI, Digital Marketing), Language Training (Japanese, Chinese), Placement Assistance\n- Courses: 1500+ — 10th, 12th, NIOS, BA, BCom, BSc, BBA, BCA, MBA, MCA, B.Ed, D.El.Ed, Polytechnic, Agriculture, Nursing, Pharmacy and more\n\n'+(profile?'Known User Profile:\n'+profile+'\n\nAlways address by name. Tailor everything to their background.\n\n':'')+'Rules:\n1. Be warm and conversational — like a knowledgeable friend, not a scripted bot.\n2. REMEMBER everything: name, class, interest, goals — and reference it naturally.\n3. If user shares a personal situation or struggle — first ACKNOWLEDGE and briefly SUMMARIZE what they said to prove you listened, then support and encourage them. Defend their choices. Build their confidence.\n4. Reply in whatever language/mix the user uses (English, Hindi, Hinglish). Match their energy.\n5. Keep replies concise — 2-4 sentences max or a tight bullet list.\n6. For fees: mention scholarships & EMI, then ask for number or direct to WhatsApp +91 63064 20146.\n7. ALWAYS end with 2-4 short quick-reply options: [Option 1 | Option 2 | Option 3]';
+
+    return `You are "EduVision AI" — the official AI Admission & Career Counsellor of EduVision.
+
+Your primary goal is to provide students with accurate, helpful, and personalized guidance regarding education, admissions, universities, courses, scholarships, entrance exams, study abroad (MBBS Abroad), and career planning.
+
+EduVision Details:
+- Tagline: "Your Vision, Our Mission"
+- Founder/CEO: Miss Ishika Sharma (Ishika Ma'am)
+- CTO & Developer: Raghav Raj Rauniyar
+- Contact: +91 63064 20146 | eduvisionconsultancy190@gmail.com
+- Services: University Admissions (Regular, Online, Distance), Free Counselling, Skill Dev (AI, Digital Marketing), Language Training (Japanese, Chinese), MBBS Abroad.
+
+MASTER BEHAVIOUR RULES:
+1. GREETINGS & SHORT INPUTS ("Hi", "Hello", "Admission", "MBA", "B.Tech", etc.):
+   - DO NOT output a massive script dump immediately.
+   - First ask 1-2 polite, natural follow-up questions (e.g., qualification, mode: online/regular, budget, or preferred state) to understand their background.
+
+2. UNKNOWN / GENERAL COUNSELLING ("I don't know what to do"):
+   - Never answer directly. Ask: Qualification, Stream, Career goals, Budget, Online or Regular mode, and Working status. Then give tailored recommendations.
+
+3. UNIVERSITY QUERIES:
+   - Provide Overview, Recognition (UGC, AICTE, NAAC grade), Courses, Fees, Eligibility, Placements, Advantages, & Disadvantages.
+   - If EduVision partners with that university (Sandip, SRM, SAGE, Marwadi, JNU, VGU, NIU, Tula's, GNIOT, IIMT, Mangalayatan, Subharti, Silver Oak, Usha Martin, Amity Online, CU Online, Online Manipal, Jain, etc.), state that EduVision is an official admission partner and provides direct admission guidance with zero processing fee.
+
+4. SCHOLARSHIPS & LOANS:
+   - Recommend genuine schemes only: Bihar Student Credit Card Scheme (BSCCS 0% interest up to ₹4 Lakhs), National Scholarship Portal (NSP 2.0), AICTE Laptop Scheme, UP Post-Matric Fee Reimbursement. Explain eligibility, benefits, and documents.
+
+5. STUDY ABROAD / MBBS ABROAD:
+   - Detail top countries (Russia, Uzbekistan, Kazakhstan, Georgia, Philippines), NEET eligibility, 100% English medium, WHO/NMC recognition, visa, cost, and EduVision 1-on-1 support.
+
+6. NON-EDUCATION QUESTIONS (movies, cricket, coding, history, general knowledge):
+   - Answer normally and helpfully. Do not refuse.
+
+7. TONE & ACCURACY:
+   - Human-like, warm, professional, respectful. Never robotic or generic. Never invent fake dates, fees, or rankings.
+
+8. ENDING:
+   - Whenever appropriate, end your response with:
+   "Need personalized admission guidance? EduVision's expert counsellors are here to help you choose the right university and course."
+
+${profile ? 'Known Student Profile:\n' + profile + '\nAddress student by name naturally.\n' : ''}
+End your response with 2-4 quick reply choices in brackets: [Option 1 | Option 2 | Option 3]`;
   }
 
   let geminiHistory = [];
@@ -6657,20 +6929,52 @@ if(!isTouch){
   // Local state machine engine
   function handleLocalEngine(input){
     const lower = input.toLowerCase().trim();
-    // Only detect course triggers for free-text, not for interest/navigation chips
     const isInterestChip = ['Technology & IT','Business Management','Healthcare','Government Jobs','Language Courses',
       'Browse All Courses','WhatsApp Now','Apply Online','Prefer WhatsApp','Fill the form instead'].includes(input.trim());
     if(!isInterestChip) detectCourseAndPageTriggers(input);
+
+    // GREETINGS & SHORT INPUTS INTERCEPTOR (EduVision AI Councillor Master Rule)
+    if(lower === 'hi' || lower === 'hello' || lower === 'hey' || lower === 'namaste'){
+      botState = 'qualification_ask';
+      botSay(`Namaste! 🙏 Welcome to **EduVision**. I am EduVision AI, your personal Admission & Career Counsellor.\n\nTo help you choose the right course and university, could you tell me:\n1️⃣ What is your current qualification?\n2️⃣ Are you looking for Online or Regular mode?`, ['12th Pass', 'Graduate', '10th Pass', 'I don\'t know what to do']);
+      return;
+    }
+
+    if(lower === 'mba' || lower === 'b.tech' || lower === 'btech' || lower === 'bca' || lower === 'bba' || lower === 'mca' || lower === 'admission'){
+      userData.interest = input.toUpperCase();
+      botState = 'course_selected';
+      botSay(`Great interest in **${input.toUpperCase()}**! 🎓\n\nTo recommend the best UGC-approved university & fee structure, could you tell me:\n1️⃣ What is your current qualification & percentage?\n2️⃣ What is your preferred state or Online mode?`, ['Tell me about fees', 'Apply for this course', 'Talk to a counsellor'], 800);
+      return;
+    }
+
+    if(lower.includes('don\'t know') || lower.includes('dont know') || lower.includes('confused') || lower.includes('what to do')){
+      botState = 'qualification_ask';
+      botSay(`Don't worry at all! That's exactly why I'm here. 😊\n\nLet's find the best career path step-by-step:\n1️⃣ What is your highest qualification (10th / 12th / Graduation)?\n2️⃣ Which stream did you study (Science / Commerce / Arts)?\n3️⃣ What is your main goal (Govt Job, High Paying Corporate Job, or Abroad)?`, ['12th Science', '12th Commerce', '12th Arts', 'Graduate']);
+      return;
+    }
+
+    if(lower.includes('mbbs abroad') || lower.includes('mbbs in russia') || lower.includes('study abroad')){
+      botState = 'course_selected';
+      userData.interest = 'MBBS Abroad';
+      botSay(`🏥 **MBBS Abroad Guidance by EduVision:**\n\nTop Countries: **Russia, Uzbekistan, Kazakhstan, Georgia, Philippines**\n✅ 100% English Medium & NMC / WHO Recognised\n✅ Zero Donation & Affordable Fee Structure\n✅ Complete Visa & Admission Support by EduVision\n\nAre you NEET qualified? Share your NEET score or qualification to check your eligibility!` + ENDING_TAGLINE, ['Yes, NEET Qualified', 'Check Fees & Budget', 'Talk to Counsellor']);
+      return;
+    }
+
+    if(lower.includes('scholarship') || lower.includes('credit card') || lower.includes('loan') || lower.includes('bsccs')){
+      botState = 'fees';
+      botSay(`🎓 **Genuine Scholarships & Govt Education Schemes:**\n\n1️⃣ **Bihar Student Credit Card (BSCCS):** 0% Interest education loan up to ₹4 Lakhs for B.Tech, BCA, BBA, B.Sc Nursing, etc.\n2️⃣ **National Scholarship Portal (NSP 2.0):** Merit & Category Fee Waivers\n3️⃣ **AICTE & UP Post-Matric Schemes:** Up to 100% tuition reimbursement\n\nEduVision helps with full documentation & university approval for these schemes!` + ENDING_TAGLINE, ['Yes, arrange a call!', 'WhatsApp for details', 'Show me all courses']);
+      return;
+    }
 
     if(botState === 'welcome'){
       if(lower.includes('10th') || lower.includes('class 10')){
         userData.qualification = '10';
         botState = 'after10';
-        botSay(`Great! You're a 10th student. After 10th, there are wonderful paths ahead!\n\n${botResponses.after10}`, quickReplies.after10);
+        botSay(botResponses.after10, quickReplies.after10);
       } else if(lower.includes('12th') || lower.includes('class 12')){
         userData.qualification = '12';
         botState = 'after12';
-        botSay(`Perfect! 12th is a wonderful milestone! Here are your best options:\n\n${botResponses.after12}`, quickReplies.after12);
+        botSay(botResponses.after12, quickReplies.after12);
       } else if(lower.includes('graduate') || lower.includes('graduation') || lower.includes('degree')){
         userData.qualification = 'graduate';
         botState = 'graduate';
@@ -6707,19 +7011,19 @@ if(!isTouch){
       } else if(lower.includes('technology') || lower.includes('it ') || lower==='it' || lower.includes('tech') || lower.includes('computer') || lower.includes('software') || lower.includes('coding')){
         botState = 'course_selected';
         userData.interest = 'BCA';
-        botSay(`Great choice! 💻 Technology & IT is one of the most exciting fields right now!\n\n**Top IT Courses at EduVision:**\n✅ BCA (Bachelor of Computer Applications) — 3 years\n✅ MCA (Master of Computer Applications) — 2 years\n✅ AI & Machine Learning — Skill course\n✅ Digital Marketing — Skill course\n\nThe IT sector is booming — top companies actively recruit from these programs!\n\nWhich one interests you most?`, ['BCA', 'MCA', 'Artificial Intelligence', 'Digital Marketing']);
+        botSay(`Great choice! 💻 Technology & IT is one of the highest paying fields!\n\n**Top IT Courses at EduVision:**\n✅ BCA (Bachelor of Computer Applications)\n✅ MCA (Master of Computer Applications)\n✅ AI & Machine Learning Certifications\n\nWhich one interests you most?` + ENDING_TAGLINE, ['BCA', 'MCA', 'Artificial Intelligence', 'Digital Marketing']);
       } else if(lower.includes('business') || lower.includes('management') || lower.includes('commerce') || lower.includes('mba') || lower.includes('bba')){
         botState = 'course_selected';
         userData.interest = 'MBA';
-        botSay(`Excellent! 📊 Business & Management opens doors to leadership roles everywhere!\n\n**Top Management Courses at EduVision:**\n✅ BBA (Bachelor of Business Administration) — 3 years\n✅ MBA (Master of Business Administration) — 2 years\n✅ BCom (Bachelor of Commerce) — 3 years\n\nManagement graduates are among the highest earners in India!\n\nWhich program suits you?`, ['BBA', 'MBA', 'BCom']);
+        botSay(`Excellent! 📊 Business & Management opens corporate leadership roles!\n\n**Top Management Programs:**\n✅ BBA (Bachelor of Business Administration)\n✅ MBA (Master of Business Administration)\n✅ BCom (Bachelor of Commerce)\n\nWhich program suits your background?` + ENDING_TAGLINE, ['BBA', 'MBA', 'BCom']);
       } else if(lower.includes('health') || lower.includes('medical') || lower.includes('nurs') || lower.includes('pharma') || lower.includes('doctor')){
         botState = 'course_selected';
         userData.interest = 'Nursing';
-        botSay(`💊 Healthcare is one of the most stable and rewarding careers!\n\n**Healthcare Courses at EduVision:**\n✅ Nursing (GNM / B.Sc Nursing)\n✅ Pharmacy (D.Pharm / B.Pharm)\n✅ BSc (Life Sciences)\n\nHealthcare professionals are always in demand — in India and abroad!\n\nWhich area interests you?`, ['Nursing', 'Pharmacy', 'BSc']);
+        botSay(`💊 Healthcare offers stable and rewarding global careers!\n\n**Healthcare Programs at EduVision:**\n✅ Nursing (GNM / B.Sc Nursing)\n✅ Pharmacy (D.Pharm / B.Pharm)\n✅ MBBS Abroad (Russia, Uzbekistan, etc.)\n\nWhich branch would you like to explore?` + ENDING_TAGLINE, ['Nursing', 'Pharmacy', 'MBBS Abroad']);
       } else if(lower.includes('government') || lower.includes('govt') || lower.includes('sarkari') || lower.includes('ias') || lower.includes('bank') || lower.includes('teacher')){
         botState = 'course_selected';
         userData.interest = 'BA';
-        botSay(`🏛️ Government jobs offer stability, prestige and great benefits!\n\n**Best Courses for Govt Jobs:**\n✅ BA (Bachelor of Arts) — best for IAS/PCS/SSC\n✅ BCom — ideal for Bank PO, SSC CGL\n✅ B.Ed — for Teaching (TET/CTET)\n✅ D.El.Ed — Primary Teacher\n\nWhich stream are you targeting?`, ['BA', 'BCom', 'B.Ed', 'D.El.Ed']);
+        botSay(`🏛️ Best degree courses for Government exam eligibility:\n\n✅ BA (Bachelor of Arts) — ideal for UPSC/SSC\n✅ BCom — ideal for Bank PO\n✅ B.Ed / D.El.Ed — for Teaching Govt Jobs\n\nWhich career stream are you targeting?` + ENDING_TAGLINE, ['BA', 'BCom', 'B.Ed', 'D.El.Ed']);
       } else if(lower.includes('language') || lower.includes('japanese') || lower.includes('chinese') || lower.includes('foreign')){
         botState = 'course_selected';
         userData.interest = 'Japanese Language';
@@ -7204,5 +7508,313 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")closeUniModa
   <script src="animations/counters.js"></script>
   <script src="animations/scroll.js"></script>
   <script src="animations/faq.js"></script>
+  <script>
+    function checkGlobalLoginSession() {
+      const userData = localStorage.getItem('eduvision_user');
+      const loginBtn = document.getElementById('loginNavBtn');
+      const profileBadge = document.getElementById('userProfileBadge');
+      if(userData) {
+        const user = JSON.parse(userData);
+        if(loginBtn) loginBtn.style.display = 'none';
+        if(profileBadge) {
+          profileBadge.style.display = 'inline-flex';
+          const nameLbl = document.getElementById('userNameLabel');
+          const charLbl = document.getElementById('userAvatarChar');
+          if(nameLbl) nameLbl.textContent = user.name || 'Rahul S.';
+          if(charLbl) charLbl.textContent = (user.name || 'R').charAt(0).toUpperCase();
+        }
+      } else {
+        if(loginBtn) loginBtn.style.display = 'inline-flex';
+        if(profileBadge) profileBadge.style.display = 'none';
+      }
+    }
+    function toggleUserDropdown(){
+      const drop = document.getElementById('userDropdownMenu');
+      if(drop) drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+    }
+    function logoutGlobalUser(){
+      localStorage.removeItem('eduvision_user');
+      checkGlobalLoginSession();
+      alert('Logged out successfully.');
+    }
+    document.addEventListener('DOMContentLoaded', checkGlobalLoginSession);
+
+    /* ═══════════════════════════════════════════
+       PORTAL SELECTION ENGINE
+    ═══════════════════════════════════════════ */
+    function openPortalSelectionModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if(overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closePortalModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if(overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handlePortalOverlayClick(e) {
+      if(e.target.id === 'portalModalOverlay') closePortalModal();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closePortalModal();
+    });
+  </script>
+
+  <!-- PORTAL SELECTION MODAL CSS -->
+  <style>
+    .portal-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 13, 0.82);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .portal-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .portal-modal-container {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      border-radius: 24px;
+      padding: 32px 28px;
+      position: relative;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 40px rgba(201, 147, 42, 0.2);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .portal-modal-overlay.active .portal-modal-container {
+      transform: scale(1) translateY(0);
+    }
+    .portal-modal-close {
+      position: absolute;
+      top: 20px; right: 22px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .portal-modal-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+      transform: rotate(90deg);
+    }
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .portal-badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      color: #f7d377;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .portal-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.15), rgba(7, 11, 18, 0));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.85);
+      border-color: rgba(247, 211, 119, 0.55);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(201, 147, 42, 0.22);
+    }
+    .portal-card:hover::before { opacity: 1; }
+
+    .portal-icon-box {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.1) rotate(-5deg);
+      background: rgba(201, 147, 42, 0.35);
+      border-color: #fef08a;
+    }
+    .portal-card-info {
+      flex: 1;
+    }
+    .portal-card-info h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 3px;
+      transition: color 0.25s;
+    }
+    .portal-card:hover .portal-card-info h3 {
+      color: #f7d377;
+    }
+    .portal-card-info p {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+    .portal-arrow {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      transition: all 0.3s ease;
+    }
+    .portal-card:hover .portal-arrow {
+      color: #fef08a;
+      transform: translateX(4px);
+    }
+  
+/* HIGHLIGHTED MBBS ABROAD FEATURED COURSE CARD */
+.crs-card-featured {
+  border: 2px solid #f7d377 !important;
+  box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35), inset 0 0 20px rgba(247, 211, 119, 0.15) !important;
+  transform: scale(1.02);
+}
+.crs-card-featured::before {
+  content: '✨ TOP PICK';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--gold-gradient);
+  color: #070b12;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.4);
+  z-index: 10;
+}
+
+</style>
+
+  <!-- EDUVISION WORLD-CLASS PORTAL SELECTION MODAL -->
+  <div class="portal-modal-overlay" id="portalModalOverlay" onclick="handlePortalOverlayClick(event)">
+    <div class="portal-modal-container" role="dialog" aria-modal="true" aria-labelledby="portalModalTitle">
+      <button class="portal-modal-close" onclick="closePortalModal()" aria-label="Close modal">✕</button>
+
+      <div class="portal-modal-header">
+        <div class="portal-badge-chip">✨ Select Your Portal</div>
+        <h2 class="portal-modal-title" id="portalModalTitle">Choose how you want to continue</h2>
+      </div>
+
+      <div class="portal-cards-list">
+        <!-- 1. Student Portal -->
+        <a href="login.html?portal=student" class="portal-card">
+          <div class="portal-icon-box">🎓</div>
+          <div class="portal-card-info">
+            <h3>Student Portal</h3>
+            <p>Apply, Track Admissions & Access Dashboard</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 2. Counsellor Portal -->
+        <a href="login.html?portal=counsellor" class="portal-card">
+          <div class="portal-icon-box">👨‍🏫</div>
+          <div class="portal-card-info">
+            <h3>Counsellor Portal</h3>
+            <p>Manage Students & Applications</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 3. Associate Partner -->
+        <a href="login.html?portal=partner" class="portal-card">
+          <div class="portal-icon-box">🤝</div>
+          <div class="portal-card-info">
+            <h3>Associate Partner</h3>
+            <p>Partner Dashboard & Lead Management</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 4. Team Leader -->
+        <a href="login.html?portal=teamleader" class="portal-card">
+          <div class="portal-icon-box">👑</div>
+          <div class="portal-card-info">
+            <h3>Team Leader</h3>
+            <p>Team Performance & Operations</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 5. Admin Login -->
+        <a href="login.html?portal=admin" class="portal-card">
+          <div class="portal-icon-box">🛡️</div>
+          <div class="portal-card-info">
+            <h3>Admin Login</h3>
+            <p>System Administration</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
