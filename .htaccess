@@ -1,10 +1,88 @@
+# ==============================================================================
+# EDUVISION ENTERPRISE WEB APPLICATION FIREWALL (WAF) & SECURITY HARDENING
+# ==============================================================================
+
+# 1. DISABLE DIRECTORY INDEXING (PREVENT DIRECTORY BROWSING)
+Options -Indexes -MultiViews
+
+# 2. HIDE SERVER SIGNATURES
+ServerSignature Off
+
+# 3. FORCE HTTPS REDIRECT
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# 4. HTTP SECURITY HEADERS (ENTERPRISE DEFENSE LAYER)
+<IfModule mod_headers.c>
+    # Prevent Clickjacking (disallow framing from foreign domains)
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME-Type Sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS Filter in Legacy Browsers
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Strict Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # HTTP Strict Transport Security (HSTS) - Force SSL for 1 Year
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Permissions Policy (Restrict Hardware Access)
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+
+    # Content Security Policy (CSP) - Allow Trusted CDNs (MSG91, Google Fonts, GSAP, FontAwesome)
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://verify.msg91.com https://verify.phone91.com https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://verify.msg91.com https://verify.phone91.com https:;"
+</IfModule>
+
+# 5. BLOCK ACCESS TO SENSITIVE SYSTEM FILES & CONFIGURATIONS
+<FilesMatch "^\.|\.(htaccess|git|env|bak|config|sql|log|sh|inc|swp|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 6. WAF REWRITE FIREWALL RULES (BLOCK ATTACKS & SCANNER BOTS)
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-# If the request is for a real directory or file, serve it directly
+# A. BLOCK SQL INJECTION (SQLi) ATTACK PATTERNS
+RewriteCond %{QUERY_STRING} (select|insert|update|delete|drop|union|create|alter|truncate|declare|exec)\b [NC,OR]
+RewriteCond %{QUERY_STRING} (/\*|\*/|;|--|#) [NC,OR]
+RewriteCond %{QUERY_STRING} (concat|group_concat|schema|information_schema|benchmark|sleep)\b [NC]
+RewriteRule ^ - [F,L]
+
+# B. BLOCK CROSS-SITE SCRIPTING (XSS) ATTACK PATTERNS
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (javascript:|eval\(|document\.cookie|document\.location|window\.location) [NC,OR]
+RewriteCond %{QUERY_STRING} (onload|onerror|onclick|onmouseover)\s*= [NC]
+RewriteRule ^ - [F,L]
+
+# C. BLOCK PATH TRAVERSAL & REMOTE FILE INCLUSION (RFI/LFI)
+RewriteCond %{QUERY_STRING} (\.\./|\.\.\\) [NC,OR]
+RewriteCond %{QUERY_STRING} (proc/self/environ|etc/passwd|boot\.ini) [NC,OR]
+RewriteCond %{QUERY_STRING} (https?|ftp|php):/ [NC]
+RewriteRule ^ - [F,L]
+
+# D. BLOCK MALICIOUS USER-AGENTS & VULNERABILITY SCANNERS
+RewriteCond %{HTTP_USER_AGENT} (sqlmap|nikto|nmap|acunetix|nessus|openvas|dirbuster|gobuster|w3af|havij|zgrab|masscan|python-urllib|libwww-perl) [NC]
+RewriteRule ^ - [F,L]
+
+# E. ROUTING RULE FOR COURSES
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Rewrite /courses/course_name to course-details.html?course=course_name
 RewriteRule ^courses/([^/]+)/?$ course-details.html?course=$1 [L,QSA]
 </IfModule>
+
+# 7. CUSTOM ERROR PAGES
+ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
+ErrorDocument 500 /404.html
