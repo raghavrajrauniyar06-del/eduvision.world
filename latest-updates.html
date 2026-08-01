@@ -1184,7 +1184,22 @@
       font-size: 0.85rem;
       color: #64748b;
     }
-  </style>
+  
+    /* 100% Live Server Failsafe - Instant Visibility & Zero Blur Leak */
+    .reveal, .reveal-up {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+    .modal-backdrop:not(.open), .portal-modal-overlay:not(.active) {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+</style>
 </head>
 <body>
 
@@ -2286,7 +2301,22 @@
       color: #fef08a;
       transform: translateX(4px);
     }
-  </style>
+  
+    /* 100% Live Server Failsafe - Instant Visibility & Zero Blur Leak */
+    .reveal, .reveal-up {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+    .modal-backdrop:not(.open), .portal-modal-overlay:not(.active) {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+</style>
 
   <!-- EDUVISION WORLD-CLASS PORTAL SELECTION MODAL -->
   <div class="portal-modal-overlay" id="portalModalOverlay" onclick="handlePortalOverlayClick(event)">
@@ -2351,5 +2381,27 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Immediate Live Deployment Failsafe Engine
+    (function() {
+      function forceReveal() {
+        var els = document.querySelectorAll('.reveal, .reveal-up');
+        for (var i = 0; i < els.length; i++) {
+          els[i].classList.add('active', 'in-view');
+          els[i].style.opacity = '1';
+          els[i].style.transform = 'none';
+          els[i].style.filter = 'none';
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', forceReveal);
+      } else {
+        forceReveal();
+      }
+      setTimeout(forceReveal, 200);
+      setTimeout(forceReveal, 1000);
+    })();
+  </script>
 </body>
 </html>
