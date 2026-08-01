@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latest Updates & Educational Announcements | EduVision</title>
+  <meta name="description" content="Stay informed with real-time admission alerts, scholarship deadlines, UGC notices, Bihar Student Credit Card schemes, CUET updates, and entrance exam dates across India.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Animations & Styles -->
+  <link rel="stylesheet" href="animations/animations.css">
+
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-dark: #090d16;
+      --gold: #c9932a;
+      --gold-light: #e8b42a;
+      --gold-glow: rgba(201, 147, 42, 0.35);
+      --gold-border: rgba(201, 147, 42, 0.4);
+      --border: rgba(255, 255, 255, 0.12);
+      --bg-dark: #090d16;
+      --surface-dark: #0f172a;
+      --card-bg: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+      --text-white: #ffffff;
+      --text-muted: #cbd5e1;
+      --shadow-sm: 0 4px 20px rgba(0,0,0,0.3);
+      --shadow-md: 0 12px 32px rgba(0,0,0,0.4);
+      --shadow-glow: 0 12px 36px rgba(201,147,42,0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ═══ NAVBAR ═══ */
+    nav#navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(9, 13, 22, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201, 147, 42, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      padding: 12px 5%;
+      background: rgba(9, 13, 22, 0.98) !important;
+      border-bottom-color: rgba(201, 147, 42, 0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 14px rgba(201, 147, 42, 0.4);
+    }
+
+    .nav-brand-text {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-brand-text span {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: #fef08a;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    nav.scrolled .nav-links a {
+      color: #f4f4f5;
+    }
+
+    nav.scrolled .nav-links a:hover {
+      color: #fef08a;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Highlighted Button for Latest Updates */
+    .nav-highlight-btn {
+      background: linear-gradient(135deg, #fefce8, #fef9c3) !important;
+      border: 1.5px solid var(--gold) !important;
+      color: #9a650d !important;
+      font-weight: 800 !important;
+      padding: 7px 18px !important;
+      border-radius: 20px !important;
+      box-shadow: 0 4px 16px rgba(201, 147, 42, 0.25) !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .nav-highlight-btn::before {
+      content: '🔔';
+      font-size: 0.95rem;
+      animation: ringBell 2.5s ease-in-out infinite;
+    }
+
+    .nav-highlight-btn:hover {
+      background: linear-gradient(135deg, var(--gold), #8a6015) !important;
+      color: #ffffff !important;
+      border-color: var(--gold) !important;
+      box-shadow: 0 8px 24px rgba(201, 147, 42, 0.45) !important;
+      transform: translateY(-2px);
+    }
+
+    nav.scrolled .nav-highlight-btn {
+      background: rgba(201, 147, 42, 0.25) !important;
+      color: #fef08a !important;
+      border-color: rgba(201, 147, 42, 0.6) !important;
+    }
+
+    nav.scrolled .nav-highlight-btn:hover {
+      background: linear-gradient(135deg, var(--gold), #8a6015) !important;
+      color: #ffffff !important;
+    }
+
+    @keyframes ringBell {
+      0%, 100% { transform: rotate(0deg); }
+      15% { transform: rotate(14deg); }
+      30% { transform: rotate(-14deg); }
+      45% { transform: rotate(10deg); }
+      60% { transform: rotate(-10deg); }
+      75% { transform: rotate(0deg); }
+    }
+
+    .nav-cta {
+      padding: 10px 24px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 18px rgba(201, 147, 42, 0.35);
+      transition: all 0.28s ease;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(201, 147, 42, 0.5);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2.5px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    nav.scrolled .hamburger span {
+      background: #ffffff;
+    }
+
+    /* Mobile Nav Overlay (GPU Blur Leak Fixed) */
+    #mobileNav {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(9, 13, 22, 0.98);
+      display: none;
+      pointer-events: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #mobileNav.open {
+      display: flex !important;
+      pointer-events: auto !important;
+      transform: translateX(0);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+    }
+
+    #mobileNav a {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 12px;
+      transition: all 0.25s;
+    }
+
+    #mobileNav a.mobile-highlight {
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(201,147,42,0.4);
+    }
+
+    #mobileNavClose {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ═══ PAGE HERO / HEADER ═══ */
+    .page-hero {
+      padding: 130px 5% 45px;
+      background: radial-gradient(ellipse 60% 40% at 50% 20%, rgba(201, 147, 42, 0.15), transparent 70%), var(--bg-dark);
+      text-align: center;
+      position: relative;
+    }
+
+    .breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 6px 16px;
+      border-radius: 99px;
+      border: 1px solid rgba(201, 147, 42, 0.3);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb a {
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--gold);
+    }
+
+    .section-label-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 18px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(201, 147, 42, 0.4);
+      color: #fef08a;
+      margin-bottom: 16px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .gold-word {
+      background: linear-gradient(135deg, #fff0c4, #f7d377, #d4af37, #f0c84a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: goldTextShine 3s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes goldTextShine {
+      to { background-position: 200% center; }
+    }
+
+    .page-hero p {
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+      color: #cbd5e1;
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ═══ FEATURED ALERT BANNER ═══ */
+    .featured-banner-wrap {
+      padding: 0 5% 45px;
+    }
+
+    .featured-banner {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #090d16 100%);
+      border: 1.5px solid rgba(201, 147, 42, 0.5);
+      border-radius: 28px;
+      padding: clamp(28px, 4vw, 45px);
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(201, 147, 42, 0.25);
+    }
+
+    .featured-banner::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201, 147, 42, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .banner-top-tags {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .banner-badge-primary {
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 99px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(201, 147, 42, 0.4);
+    }
+
+    .banner-status-urgent {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .banner-status-urgent::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+      animation: pulseDot 1.5s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.5; }
+    }
+
+    .banner-date {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.75);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .featured-banner h2 {
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .featured-banner h2 span {
+      color: #fef08a;
+    }
+
+    .featured-banner p {
+      font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      max-width: 900px;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .banner-btn-main {
+      padding: 13px 32px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(201, 147, 42, 0.4);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .banner-btn-main:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(201, 147, 42, 0.6);
+      background: linear-gradient(135deg, #e8b42a, var(--gold));
+    }
+
+    .banner-btn-secondary {
+      padding: 13px 26px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .banner-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* ═══ CONTROLS: SEARCH & CATEGORY FILTER BAR ═══ */
+    .controls-wrap {
+      padding: 0 5% 30px;
+    }
+
+    .search-filter-card {
+      background: #0f172a;
+      border: 1.5px solid rgba(201, 147, 42, 0.35);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .search-box-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      stroke: #94a3b8;
+    }
+
+    .search-input-field {
+      width: 100%;
+      padding: 14px 20px 14px 50px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(201, 147, 42, 0.3);
+      background: #1e293b;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #ffffff;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .search-input-field:focus {
+      border-color: var(--gold);
+      background: #0f172a;
+      box-shadow: 0 0 0 4px rgba(201, 147, 42, 0.25);
+    }
+
+    .search-count-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      white-space: nowrap;
+      background: #1e293b;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(201, 147, 42, 0.25);
+    }
+
+    /* Filter Tabs */
+    .filter-tabs-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-btn {
+      padding: 10px 22px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      background: #1e293b;
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .filter-btn:hover {
+      background: rgba(201, 147, 42, 0.2);
+      border-color: var(--gold);
+      color: #fef08a;
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--gold), #8a6015) !important;
+      border-color: var(--gold) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      box-shadow: 0 6px 20px rgba(201, 147, 42, 0.45) !important;
+      animation: activeTabGlow 2.5s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes activeTabGlow {
+      0% { box-shadow: 0 6px 20px rgba(201, 147, 42, 0.4); }
+      100% { box-shadow: 0 10px 28px rgba(201, 147, 42, 0.7); }
+    }
+
+    /* ═══ UPDATES CARDS GRID ═══ */
+    .updates-grid-wrap {
+      padding: 0 5% 80px;
+    }
+
+    .reveal {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    .updates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    @media (max-width: 1024px) {
+      .updates-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* 📱 MOBILE LIST VIEW (ONLY FOR PHONES <= 680px) */
+    @media (max-width: 680px) {
+      .updates-grid-wrap {
+        padding: 0 4% 60px;
+      }
+
+      .updates-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* Hide description on mobile list view by default — opens in modal on click */
+      .card-desc {
+        display: none !important;
+      }
+
+      /* Compact Mobile List Item Card */
+      .update-card {
+        padding: 14px 16px;
+        border-radius: 16px;
+        cursor: pointer;
+        border: 1.5px solid rgba(201, 147, 42, 0.3);
+        background: linear-gradient(145deg, #0f172a 0%, #162032 100%);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .update-card:active {
+        transform: scale(0.98);
+        border-color: var(--gold);
+      }
+
+      .card-meta-header {
+        margin-bottom: 8px;
+        gap: 6px;
+      }
+
+      .category-badge {
+        font-size: 0.65rem;
+        padding: 3px 8px;
+      }
+
+      .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+      }
+
+      .card-title {
+        font-size: 0.95rem;
+        line-height: 1.35;
+        margin-bottom: 8px;
+        color: #ffffff;
+      }
+
+      .card-footer-row {
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .card-pub-date {
+        font-size: 0.72rem;
+      }
+
+      .card-read-btn {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        border-radius: 8px;
+      }
+
+      /* Search & Filters Mobile Optimizations */
+      .controls-wrap {
+        padding: 0 4% 20px;
+      }
+
+      .search-filter-card {
+        padding: 16px;
+        border-radius: 20px;
+      }
+
+      .search-box-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .search-count-badge {
+        text-align: center;
+        padding: 6px 14px;
+        font-size: 0.78rem;
+      }
+
+      .filter-tabs-row {
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+      }
+
+      .filter-tabs-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.78rem;
+        flex-shrink: 0;
+      }
+    }
+
+    /* Individual Announcement Card */
+    .update-card {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+      border: 1.5px solid rgba(201, 147, 42, 0.35);
+      border-radius: 24px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+      transform: translateZ(0);
+    }
+
+    .update-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -75%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transform: rotate(25deg);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+    }
+
+    .update-card:hover::after {
+      transform: translate(350%, 0) rotate(25deg);
+    }
+
+    .update-card:hover {
+      transform: translateY(-8px) scale(1.025) !important;
+      border-color: #c9932a !important;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 25px rgba(201, 147, 42, 0.4) !important;
+    }
+
+    .card-meta-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .category-badge {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(201, 147, 42, 0.4);
+      color: #fef08a;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge.new {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1.5px solid rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    .status-badge.important {
+      background: rgba(59, 130, 246, 0.18);
+      border: 1.5px solid rgba(59, 130, 246, 0.5);
+      color: #93c5fd;
+    }
+
+    .status-badge.urgent {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1.5px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+
+    .status-badge.closing {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1.5px solid rgba(245, 158, 11, 0.5);
+      color: #fde047;
+    }
+
+    .card-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .update-card:hover .card-title {
+      color: #f7d377 !important;
+      text-shadow: 0 0 12px rgba(247, 211, 119, 0.4);
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 22px;
+      flex-grow: 1;
+    }
+
+    .card-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-pub-date {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-read-btn {
+      padding: 9px 20px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      border: none;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(201, 147, 42, 0.35);
+    }
+
+    .card-read-btn:hover {
+      background: linear-gradient(135deg, #e8b42a, var(--gold));
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(201, 147, 42, 0.55);
+      transform: translateY(-2px);
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: #0f172a;
+      border: 1.5px dashed rgba(201, 147, 42, 0.35);
+      border-radius: 24px;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.4rem;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    /* ═══ MODAL DETAIL ENGINE ═══ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(9, 13, 22, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .modal-backdrop.open {
+      display: flex !important;
+      opacity: 1;
+      pointer-events: auto;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .modal-dialog {
+      background: #0f172a;
+      border: 1.5px solid rgba(201, 147, 42, 0.5);
+      border-radius: 28px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(201, 147, 42, 0.25);
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      color: #ffffff;
+    }
+
+    .modal-backdrop.open .modal-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    .modal-header-tags {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .modal-body {
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      line-height: 1.75;
+      margin-bottom: 30px;
+    }
+
+    .modal-body h4 {
+      font-size: 1.1rem;
+      color: #fef08a;
+      margin: 20px 0 10px;
+    }
+
+    .modal-body ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .modal-body li {
+      margin-bottom: 8px;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .modal-btn-apply {
+      padding: 12px 30px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #8a6015);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(201,147,42,0.4);
+      transition: all 0.25s;
+    }
+
+    .modal-btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(201,147,42,0.6);
+    }
+
+    .modal-btn-share {
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .modal-btn-share:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: #090d16;
+      color: #cbd5e1;
+      padding: 60px 5% 30px;
+      border-top: 1px solid rgba(201,147,42,0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    @media (max-width: 900px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-brand h3 {
+      font-size: 1.4rem;
+      color: #ffffff;
+      margin-bottom: 14px;
+      font-weight: 800;
+    }
+
+    .footer-brand h3 span {
+      color: var(--gold);
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #94a3b8;
+      max-width: 320px;
+    }
+
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.25s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🎓</div>
+      <div class="nav-brand-text">Edu<span>Vision</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#courses">Courses</a></li>
+      <li><a href="index.html#partners">Universities</a></li>
+      <li><a href="latest-updates.html?cat=Exams">Exams</a></li>
+      <li><a href="latest-updates.html" class="nav-highlight-btn">Latest Updates</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div id="navCtaArea" style="display:inline-flex; align-items:center;">
+      <a href="javascript:void(0)" class="nav-cta" id="loginNavBtn" onclick="openPortalSelectionModal()">Login 🔑</a>
+      <div class="user-profile-badge" id="userProfileBadge" onclick="toggleUserDropdown()" style="display:none; align-items:center; gap:8px; padding:6px 14px 6px 8px; border-radius:30px; background:rgba(15,23,42,0.9); border:1px solid rgba(247,211,119,0.4); cursor:pointer; position:relative;">
+        <div class="user-avatar-circle" id="userAvatarChar" style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#fff0c4,#f7d377,#c9932a); color:#070b12; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">R</div>
+        <span class="user-name-label" id="userNameLabel" style="font-size:0.82rem; font-weight:700; color:#fff0c4;">Rahul S.</span>
+        <span style="font-size:0.65rem; color:#f7d377;">▼</span>
+
+        <div class="user-dropdown-menu" id="userDropdownMenu" style="display:none; position:absolute; top:calc(100% + 8px); right:0; width:200px; background:rgba(15,23,42,0.96); backdrop-filter:blur(18px); border:1px solid rgba(247,211,119,0.4); border-radius:14px; padding:8px 0; box-shadow:0 15px 35px rgba(0,0,0,0.6); z-index:1001;">
+          <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">📊 Dashboard</a>
+          <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">📄 My Applications</a>
+          <a href="login.html" class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#94a3b8;">⭐ Saved Courses</a>
+          <div style="height:1px; background:rgba(255,255,255,0.1); margin:6px 0;"></div>
+          <div class="user-dropdown-item" style="padding:8px 16px; display:flex; gap:8px; font-size:0.82rem; color:#ef4444; cursor:pointer;" onclick="logoutGlobalUser()">🚪 Logout</div>
+        </div>
+      </div>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div id="mobileNav">
+    <button id="mobileNavClose">✕</button>
+    <a href="index.html">Home</a>
+    <a href="index.html#courses">Courses</a>
+    <a href="index.html#partners">Universities</a>
+    <a href="latest-updates.html" class="mobile-highlight">🔔 Latest Updates</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#counselling" style="color: var(--gold);">Free Counselling</a>
+  </div>
+
+  <!-- ═══ PAGE HERO / HEADER ═══ -->
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span style="color: var(--gold);">Latest Updates & Announcements</span>
+    </div>
+    <br>
+    <div class="section-label-chip">⚡ Real-time Alerts Hub</div>
+    <h1>Educational <span class="gold-word">Updates & Admission</span> Bulletins 📢</h1>
+    <p>Stay informed with official university notices, scholarship deadlines, CUET exam updates, government education loan schemes, and admission dates across India.</p>
+  </section>
+
+  <!-- ═══ FEATURED ALERT BANNER ═══ -->
+  <section class="featured-banner-wrap">
+    <div class="featured-banner reveal">
+      <div class="banner-top-tags">
+        <span class="banner-badge-primary">🏛️ Government Scheme</span>
+        <span class="banner-status-urgent">URGENT ANNOUNCEMENT</span>
+        <span class="banner-date">📅 Updated: July 31, 2026</span>
+      </div>
+      <h2>Bihar Student Credit Card Scheme 2026 — <span>0% Interest Education Loan</span> up to ₹4 Lakhs</h2>
+      <p>Government of Bihar under <i>"Aarthik Hal, Yuvaon Ko Bal"</i> is providing 100% financial assistance for B.Tech, MBA, BCA, BBA, B.Sc Nursing, Polytechnic, & Higher Education with 0% interest for female/disabled students and 1% for male students. Direct admission guidance available through EduVision.</p>
+      <div class="banner-actions">
+        <button class="banner-btn-main" onclick="openUpdateModal('BSCC2026')">
+          <span>Read Full Requirements & Apply</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="banner-btn-secondary" onclick="shareUpdate('Bihar Student Credit Card Scheme 2026', window.location.href)">
+          <span>Share Notice 🔗</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTROLS: SEARCH & CATEGORIES ═══ -->
+  <section class="controls-wrap">
+    <div class="search-filter-card reveal">
+      <div class="search-box-row">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+          </svg>
+          <input type="text" id="searchInput" class="search-input-field" placeholder="Search announcements by university, scheme, exam name (e.g., CUET, Scholarship, UGC)..." autocomplete="off">
+        </div>
+        <div class="search-count-badge" id="searchCount">Showing 12 Bulletins</div>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-tabs-row">
+        <button class="filter-btn active" data-cat="All">✨ All Updates</button>
+        <button class="filter-btn" data-cat="Admissions">🎓 Admissions Open</button>
+        <button class="filter-btn" data-cat="Universities">🏫 Partner Universities</button>
+        <button class="filter-btn" data-cat="MBBS Abroad">🌍 MBBS Abroad</button>
+        <button class="filter-btn" data-cat="Online Programs">💻 Online Degrees</button>
+        <button class="filter-btn" data-cat="Distance Learning">🌐 Distance Education</button>
+        <button class="filter-btn" data-cat="Scholarships">🏅 Scholarships</button>
+        <button class="filter-btn" data-cat="Government Schemes">🏛️ Govt Loan Schemes</button>
+        <button class="filter-btn" data-cat="Exams">📝 Entrance Exams</button>
+        <button class="filter-btn" data-cat="Results">📊 Results & Counselling</button>
+        <button class="filter-btn" data-cat="Important Notices">📜 UGC/AICTE Notices</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ UPDATES GRID ═══ -->
+  <section class="updates-grid-wrap">
+    <div class="updates-grid" id="updatesGrid">
+      <!-- Cards rendered dynamically via JS -->
+    </div>
+  </section>
+
+  <!-- ═══ DETAIL MODAL ═══ -->
+  <div class="modal-backdrop" id="updateModal">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeUpdateModal()">✕</button>
+      <div class="modal-header-tags" id="modalTags">
+        <!-- Tags populated by JS -->
+      </div>
+      <h2 class="modal-title" id="modalTitle">Announcement Details</h2>
+      <div class="modal-meta-row" id="modalMeta">
+        <!-- Date, Source -->
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content -->
+      </div>
+      <div class="modal-actions">
+        <a href="index.html#counselling" class="modal-btn-apply" id="modalApplyBtn">Apply Now / Get Guidance ↗</a>
+        <button class="modal-btn-share" onclick="shareCurrentModal()">Share Notice 🔗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Edu<span>Vision</span></h3>
+        <p>India's premier education consultancy. Empowering students with authentic guidance across 1500+ regular, online & distance learning degree courses from top UGC-approved universities.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#courses">All Programs</a></li>
+          <li><a href="index.html#partners">Partner Universities</a></li>
+          <li><a href="latest-updates.html">Latest Updates</a></li>
+          <li><a href="index.html#counselling">Free Counselling</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Popular Categories</h4>
+        <ul class="footer-links">
+          <li><a href="latest-updates.html?cat=Government Schemes">Government Loan Schemes</a></li>
+          <li><a href="latest-updates.html?cat=Scholarships">National Scholarships</a></li>
+          <li><a href="latest-updates.html?cat=Admissions">Online MBA / MCA 2026</a></li>
+          <li><a href="latest-updates.html?cat=Exams">CUET & MAT Updates</a></li>
+          <li><a href="latest-updates.html?cat=Important Notices">UGC Guidelines</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Corporate Office</h4>
+        <p style="font-size:0.88rem; line-height:1.6; color:#94a3b8;">
+          📍 EduVision Head Office<br>
+          Sector 69, Gurgaon, Delhi NCR, India<br>
+          📞 Helpline: +91 98765 43210<br>
+          ✉️ Support: info@eduvision.in
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 EduVision Consultancy Services. All Rights Reserved. Designed with Excellence.
+    </div>
+  </footer>
+
+  <!-- ═══ JAVASCRIPT ENGINE ═══ -->
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       EXTENSIBLE ANNOUNCEMENTS DATABASE (FUTURE-READY)
+       Add new items by simply adding an object to this array!
+    ═══════════════════════════════════════════════════════════ */
+    const UPDATES_DATA = [
+      /* ═══════════════════════════════════════════════════════════
+         1. GOVERNMENT LOAN & SCHOLARSHIP SCHEMES
+      ═══════════════════════════════════════════════════════════ */
+      {
+        id: 'BSCC2026',
+        category: 'Government Schemes',
+        status: 'urgent',
+        statusText: 'URGENT',
+        title: 'Bihar Student Credit Card Scheme (BSCCS) 2026 — 0% Interest Education Loan up to ₹4 Lakhs',
+        desc: 'Govt of Bihar under Aarthik Hal, Yuvaon Ko Bal provides 100% financial support for B.Tech, MBA, BCA, BBA, B.Sc Nursing, & Polytechnic with 0% interest for female/disabled students.',
+        date: 'August 01, 2026',
+        source: 'Govt of Bihar / MNSSBY Portal (7Nischay)',
+        fullContent: `
+          <p>The <b>Bihar Student Credit Card Scheme (BSCCS)</b> provides financial assistance up to <b>₹4,000,000 (4 Lakhs)</b> for Bihar students passing 12th grade to pursue higher professional education across India.</p>
+          <h4>Key Benefits & Highlights:</h4>
+          <ul>
+            <li><b>Interest Rate:</b> 0% interest for Female, Transgender & PwD candidates; 1% simple interest for Male candidates.</li>
+            <li><b>Covered Expenses:</b> Tuition fees, hostel/mess charges, books, laptop allowance, and monthly living expenses.</li>
+            <li><b>Eligible Degrees:</b> B.Tech, MBA, MCA, BCA, BBA, B.Com, BA, B.Sc Nursing, Polytechnic, Pharmacy, & D.El.Ed.</li>
+            <li><b>Moratorium Period:</b> Repayment begins 1 year after course completion or upon getting employment.</li>
+          </ul>
+          <p>EduVision is an authorized counseling partner providing complete documentation assistance and university selection for BSCCS candidates.</p>
+        `
+      },
+      {
+        id: 'NSP2026',
+        category: 'Scholarships',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'National Scholarship Portal (NSP 2.0) Central Sector Scheme Registrations Open 2026-27',
+        desc: 'Ministry of Education invites online applications for college & university scholarships. Scholarship grant up to ₹20,000/year for meritorious students via DBT.',
+        date: 'July 30, 2026',
+        source: 'Ministry of Education (scholarships.gov.in)',
+        fullContent: `
+          <p>The <b>National Scholarship Portal (NSP 2.0)</b> has opened registrations for the Central Sector Scheme of Scholarships for College and University Students.</p>
+          <h4>Eligibility & Details:</h4>
+          <ul>
+            <li><b>Eligibility:</b> Students scoring above 80th percentile in Class 12 board exams with annual family income below ₹4.5 Lakhs.</li>
+            <li><b>Disbursement:</b> Direct Benefit Transfer (DBT) directly into bank accounts linked with Aadhaar.</li>
+            <li><b>Deadline:</b> Online institute verification desk active. Early registration recommended.</li>
+          </ul>
+        `
+      },
+      {
+        id: 'AICTE2026',
+        category: 'Government Schemes',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'AICTE Digital Hardware & Free Skill Assistance Scheme for Technical Students',
+        desc: 'AICTE launches Digital Learning Hardware Program offering laptops, pre-installed software, and free cloud credits for B.Tech & Diploma engineering students.',
+        date: 'July 28, 2026',
+        source: 'AICTE Official Notice (aicte-india.org)',
+        fullContent: `
+          <p>AICTE has launched the <b>Digital Learning Hardware Initiative</b> to support students from rural and economically weaker backgrounds enrolled in AICTE-approved institutions.</p>
+          <h4>Program Advantages:</h4>
+          <ul>
+            <li>Free laptop distribution with engineering design & coding software pre-loaded.</li>
+            <li>Free 1-year subscription to AWS Cloud Sandbox & premium coding platforms.</li>
+            <li>College AICTE coordinator desk manages verification.</li>
+          </ul>
+        `
+      },
+      {
+        id: 'UPSCHOLAR2026',
+        category: 'Scholarships',
+        status: 'closing',
+        statusText: 'CLOSING SOON',
+        title: 'UP Post-Matric Fee Reimbursement & Scholarship Scheme 2026 — Verification Notice',
+        desc: 'Uttar Pradesh Social Welfare Department releases final deadline alert for Post-Matric tuition fee reimbursement online verification for SC/ST/OBC/General students.',
+        date: 'July 26, 2026',
+        source: 'UP Social Welfare Dept (scholarship.up.gov.in)',
+        fullContent: `
+          <p>Students pursuing B.Tech, MBA, BCA, BBA, B.Ed, B.Pharm, and Nursing in UP recognized colleges must complete biometric authentication and NPCI bank seeding before the closing date.</p>
+        `
+      },
+
+      /* ═══════════════════════════════════════════════════════════
+         2. DEDICATED MBBS ABROAD ADMISSION ALERTS
+      ═══════════════════════════════════════════════════════════ */
+      {
+        id: 'MBBS_RUSSIA2026',
+        category: 'MBBS Abroad',
+        status: 'urgent',
+        statusText: 'URGENT',
+        title: 'MBBS in Russia 2026 Admissions Open — Kazan Federal & Bashkir State Medical University',
+        desc: 'WHO & NMC Recognized Russian Government Medical Universities open 2026 batch. 100% English medium, 6 Years duration, no donation, hassle-free visa with EduVision support.',
+        date: 'August 01, 2026',
+        source: 'EduVision Overseas Medical Desk / Ministry of Health Russia',
+        fullContent: `
+          <p>Apply for <b>MBBS in Russia 2026 Session</b> at top Government Medical Universities approved by the World Health Organization (WHO) and National Medical Commission (NMC India).</p>
+          <h4>Key Highlights:</h4>
+          <ul>
+            <li><b>Top Universities:</b> Kazan Federal University, Bashkir State Medical University, Crimea Federal University, Altai State Medical University.</li>
+            <li><b>Course Duration:</b> 6 Years (5 Years Academic + 1 Year Clinical Internship).</li>
+            <li><b>Language:</b> 100% English Medium instruction throughout all 6 years.</li>
+            <li><b>Eligibility:</b> Minimum 50% marks in 10+2 (PCB) & NEET Qualification.</li>
+            <li><b>EduVision Support:</b> 100% Admission Guarantee, University Apostle, Visa Processing, Flight Group escort, and Hostel Booking.</li>
+          </ul>
+        `
+      },
+      {
+        id: 'MBBS_UZBEK2026',
+        category: 'MBBS Abroad',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'MBBS in Uzbekistan Admissions Open 2026 — Samarkand State & Tashkent Medical Academy',
+        desc: 'Affordable medical education starting at $3,500/year (~₹2.8 Lakhs/yr). WHO & NMC compliant 5+1 year curriculum with Indian mess and hostel facilities.',
+        date: 'July 30, 2026',
+        source: 'Samarkand State Medical University International Office',
+        fullContent: `
+          <p>Uzbekistan has emerged as the most cost-effective medical destination for Indian NEET qualified aspirants seeking quality infrastructure and close proximity to India.</p>
+          <h4>Highlights:</h4>
+          <ul>
+            <li><b>Tuition Fee:</b> ~$3,500 - $4,200 USD per year.</li>
+            <li><b>Indian Environment:</b> Separate hostels for boys & girls with authentic Indian food cooked by Indian chefs.</li>
+            <li><b>NMC Compliance:</b> Meets all NEXT exam guidelines with comprehensive clinical rotation in state hospitals.</li>
+          </ul>
+        `
+      },
+      {
+        id: 'MBBS_KAZAKH2026',
+        category: 'MBBS Abroad',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'MBBS in Kazakhstan 2026 Batch — Astana Medical University & Kazakh National Medical Univ',
+        desc: 'Direct admission for NEET qualified candidates in top Kazakh medical colleges. 5 Years degree program fully aligned with NMC Licensing Exam (NEXT) guidelines.',
+        date: 'July 28, 2026',
+        source: 'Astana Medical University International Relations',
+        fullContent: `
+          <p>Enroll in <b>Astana Medical University</b> or <b>Kazakh National Medical University</b>, Almaty for the 2026-27 academic session.</p>
+          <h4>Features:</h4>
+          <ul>
+            <li>5-Year MBBS Program + 1 Year Internship in India/Kazakhstan.</li>
+            <li>Modern simulation labs, cadaveric dissections, and hospital exposure.</li>
+            <li>Direct flights from New Delhi to Almaty (only 3.5 hours flight time).</li>
+          </ul>
+        `
+      },
+      {
+        id: 'MBBS_GEORGIA2026',
+        category: 'MBBS Abroad',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'MBBS in Georgia 2026 — Tbilisi State Medical University & Batumi Shota Rustaveli',
+        desc: 'European standard medical degree with USMLE & NEXT coaching integrated. High FMGE/NMC pass percentages with 100% English medium lectures.',
+        date: 'July 25, 2026',
+        source: 'Georgia Ministry of Education & Science',
+        fullContent: `
+          <p>Georgia offers European accredited medical education with credit transfer options to Europe and USA. EduVision provides complete visa documentation and admission seat reservation.</p>
+        `
+      },
+      {
+        id: 'MBBS_PHILIPPINES2026',
+        category: 'MBBS Abroad',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'BS-MD / MBBS in Philippines 2026 — Davao Medical School Foundation Admissions Open',
+        desc: 'Study MD degree in English-speaking Philippines with American curriculum pattern. Exceptional FMGE & USMLE pass records with tropical disease clinical exposure.',
+        date: 'July 22, 2026',
+        source: 'Davao Medical School Foundation Admission Bureau',
+        fullContent: `
+          <p>Philippines follows the US education system (BS + MD). Disease spectrum is identical to India, offering optimal hands-on clinical exposure for medical students.</p>
+        `
+      },
+
+      /* ═══════════════════════════════════════════════════════════
+         3. EDUVISION PARTNER UNIVERSITIES — REGULAR CAMPUS ADMISSIONS 2026
+      ═══════════════════════════════════════════════════════════ */
+      {
+        id: 'NIU_REG2026',
+        category: 'Admissions',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Noida International University (NIU) Regular Campus Admission 2026-27 Open',
+        desc: 'Direct Admissions open for B.Tech (CS/AI/ML), B.Sc Nursing, B.Pharm, BPT, BCA, BBA, MBA & Law at 75-acre Yamuna Expressway NCR Campus.',
+        date: 'August 01, 2026',
+        source: 'Noida International University Admission Cell',
+        fullContent: `
+          <p><b>Noida International University (NIU)</b>, UGC recognized and NAAC accredited campus in Greater Noida, announces admissions for 2026-27.</p>
+          <h4>Available Programs:</h4>
+          <ul>
+            <li><b>Engineering & IT:</b> B.Tech (Computer Science, AI & ML, Cyber Security), BCA, MCA.</li>
+            <li><b>Medical & Nursing:</b> B.Sc Nursing, B.Pharm, BPT, Allied Health Sciences.</li>
+            <li><b>Management & Commerce:</b> MBA (Dual Specialization), BBA, B.Com (Hons).</li>
+            <li><b>Scholarship:</b> Up to 100% merit-based scholarship on tuition fees for high scorers in 12th / Graduation.</li>
+          </ul>
+        `
+      },
+      {
+        id: 'SRM_REG2026',
+        category: 'Universities',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'SRM University Delhi-NCR Sonepat Direct Admission 2026 Open',
+        desc: 'Admissions open for B.Tech Computer Science, AI & Data Science, MBA, Law, BBA, & B.Sc at SRM Delhi-NCR campus with top placement records.',
+        date: 'July 31, 2026',
+        source: 'SRM University Delhi-NCR Admission Bureau',
+        fullContent: `
+          <p><b>SRM University Delhi-NCR, Sonepat</b> offers world-class lab facilities, IBM & TCS collaborative courses, and 95%+ campus placement record.</p>
+        `
+      },
+      {
+        id: 'SANDIP_REG2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Sandip University Nashik & Sijoul Campus Admissions 2026 Live',
+        desc: 'Admissions open for B.Tech, MBA, B.Sc Agriculture, B.Pharm, & Law at Sandip University. Bihar Student Credit Card (BSCCS) accepted.',
+        date: 'July 29, 2026',
+        source: 'Sandip University Admissions Office',
+        fullContent: `
+          <p>Sandip University is a premier autonomous institution in Maharashtra & Bihar providing industry-driven skill programs with full loan support under BSCCS.</p>
+        `
+      },
+      {
+        id: 'SAGE_REG2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'SAGE University Indore & Bhopal Campus Admissions 2026 Announced',
+        desc: 'Enroll in B.Tech, MBA, B.Des, BCA, B.Sc Agriculture, & Journalism at SAGE University with Apple & Industry 4.0 Labs.',
+        date: 'July 27, 2026',
+        source: 'SAGE University Admissions',
+        fullContent: `
+          <p>SAGE University offers futuristic specializations in AI, Cloud Computing, Game Design, and Agribusiness with strong placement support.</p>
+        `
+      },
+      {
+        id: 'MARWADI_REG2026',
+        category: 'Universities',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'Marwadi University Rajkot (NAAC A+ Grade) B.Tech & MBA Admissions 2026',
+        desc: 'Gujarat’s prestigious NAAC A+ accredited university opens admissions for B.Tech, MBA, MCA, B.Pharm, & BCA with 100% placement assistance.',
+        date: 'July 25, 2026',
+        source: 'Marwadi University Registrar Desk',
+        fullContent: `
+          <p>Marwadi University holds NAAC A+ accreditation with students from 50+ countries. State-of-the-art supercomputing labs and innovation centers.</p>
+        `
+      },
+      {
+        id: 'JNU_JAIPUR2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Jaipur National University (JNU) Medical, Nursing, B.Ed & B.Tech Admissions 2026',
+        desc: 'JNU Jaipur invites applications for MBBS, B.Sc Nursing, B.Ed, B.Tech, MBA, B.Pharm & Law degree programs for the 2026 academic cycle.',
+        date: 'July 23, 2026',
+        source: 'Jaipur National University Admission Cell',
+        fullContent: `
+          <p>JNU Jaipur is one of Rajasthan's top NAAC accredited private universities with an attached 1000-bed multispecialty teaching hospital for medical & nursing students.</p>
+        `
+      },
+      {
+        id: 'VGU_JAIPUR2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Vivekananda Global University (VGU) Jaipur Admissions 2026 Open',
+        desc: 'NAAC A+ Accredited VGU Jaipur opens forms for B.Tech, B.Arch, B.Sc Agriculture (ICAR Aligned), MBA, BCA, & Hotel Management.',
+        date: 'July 21, 2026',
+        source: 'VGU Jaipur Admission Directorate',
+        fullContent: `
+          <p>VGU Jaipur is known for robotics, renewable energy labs, design studios, and global exchange programs with international universities.</p>
+        `
+      },
+      {
+        id: 'TULAS_DEHRADUN2026',
+        category: 'Universities',
+        status: 'closing',
+        statusText: 'CLOSING SOON',
+        title: 'Tula\'s Institute Dehradun B.Tech, MCA, BBA & Diploma Admissions 2026',
+        desc: 'Top Engineering & Management institute in Dehradun closing early round seats. AICTE & UKTU affiliated with high average salary packages.',
+        date: 'July 19, 2026',
+        source: 'Tula\'s Institute Dehradun Bureau',
+        fullContent: `
+          <p>Nestled in the serene Himalayas, Tula's Institute offers industry certifications with Microsoft, Cisco, & Siemens training hubs.</p>
+        `
+      },
+      {
+        id: 'GNIOT_NOIDA2026',
+        category: 'Admissions',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'GNIOT Group of Institutions Greater Noida B.Tech & MBA Direct Admissions 2026',
+        desc: 'AKTU affiliated & AICTE approved B.Tech (CS/IT/ECE), MBA, PGDM, & BCA admissions open in Knowledge Park II, Greater Noida.',
+        date: 'July 17, 2026',
+        source: 'GNIOT Group Admission Cell',
+        fullContent: `
+          <p>GNIOT provides placement opportunities with 300+ recruiters including Amazon, Wipro, TCS, Cognizant, and Capgemini.</p>
+        `
+      },
+      {
+        id: 'IIMT_MEERUT2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'IIMT University Meerut B.Sc Nursing, B.Pharm, B.Ed & B.Tech Admission 2026',
+        desc: 'Applications open for Nursing (INC Approved), Pharmacy (PCI Approved), Teacher Training (NCTE), B.Tech & Management programs.',
+        date: 'July 15, 2026',
+        source: 'IIMT University Admissions Desk',
+        fullContent: `
+          <p>IIMT University features a vibrant 100-acre campus with dedicated research parks, incubation centers, and full credit card loan scheme support.</p>
+        `
+      },
+      {
+        id: 'MANGALAYATAN_REG2026',
+        category: 'Universities',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'Mangalayatan University Aligarh & Jabalpur Regular Campus Admissions 2026',
+        desc: 'UGC & NAAC A+ Accredited Mangalayatan University offers B.Tech, B.Pharm, B.Sc Agriculture, LL.B, B.Ed, & MBA admissions.',
+        date: 'July 14, 2026',
+        source: 'Mangalayatan University Registrar Office',
+        fullContent: `
+          <p>Mangalayatan University is recognized across India with high student satisfaction in technical, pharmacy, and law disciplines.</p>
+        `
+      },
+      {
+        id: 'SUBHARTI_MEERUT2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Swami Vivekanand Subharti University Meerut Medical, Nursing & Law Admissions 2026',
+        desc: 'NAAC A Grade Subharti University opens admissions for Paramedical, Nursing, B.Ed, LL.B, B.Tech, BBA, & Fine Arts courses.',
+        date: 'July 12, 2026',
+        source: 'Subharti University Admissions',
+        fullContent: `
+          <p>Subharti University houses Chhatrapati Shivaji Subharti Hospital and offers comprehensive professional education with scholarship benefits.</p>
+        `
+      },
+      {
+        id: 'SILVEROAK_GUJARAT2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Silver Oak University Ahmedabad B.Tech, BCA, Aviation & Nursing Admission 2026',
+        desc: 'Gujarat’s premier skill university offers 80+ degree programs including Aeronautical Engineering, IT, Nursing, & Biotechnology.',
+        date: 'July 10, 2026',
+        source: 'Silver Oak University Bureau',
+        fullContent: `
+          <p>Silver Oak University features ISRO training centers, IEEE student chapters, and top IT placements in Ahmedabad.</p>
+        `
+      },
+      {
+        id: 'USHA_MARTIN_RANCHI2026',
+        category: 'Universities',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Usha Martin University Ranchi B.Sc Agriculture, B.Tech, BBA & BCA Admissions 2026',
+        desc: 'Leading private university in Jharkhand opens registrations for B.Tech, Agriculture, Mining Engineering, BCA, BBA, & LL.B.',
+        date: 'July 08, 2026',
+        source: 'Usha Martin University Ranchi Office',
+        fullContent: `
+          <p>Usha Martin University provides modern mining, engineering, and agriculture labs with full state scholarship assistance.</p>
+        `
+      },
+
+      /* ═══════════════════════════════════════════════════════════
+         4. ONLINE & DISTANCE LEARNING DEGREES 2026
+      ═══════════════════════════════════════════════════════════ */
+      {
+        id: 'AMITY_ONLINE2026',
+        category: 'Online Programs',
+        status: 'urgent',
+        statusText: 'URGENT',
+        title: 'Amity University Online MBA, MCA, BBA & BCA July-August 2026 Batch Closing',
+        desc: 'NAAC A+ Accredited Amity Online offers 100% online degrees with WASC USA accreditation, global faculty, & remote proctored exams.',
+        date: 'August 01, 2026',
+        source: 'Amity University Online Admissions',
+        fullContent: `
+          <p>Earn an <b>Amity Online MBA / MCA / BBA</b> with global recognition. Features 100% online live lectures, self-paced LMS, and top placements.</p>
+        `
+      },
+      {
+        id: 'CU_ONLINE2026',
+        category: 'Online Programs',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Chandigarh University Online (CU Online) MBA Dual Specialization & MCA 2026',
+        desc: 'NAAC A+ Grade Chandigarh University Online opens admissions for MBA, MCA, BBA, & BCA with affordable EMI fees starting at ₹3,500/month.',
+        date: 'July 30, 2026',
+        source: 'CU Online Admissions (onlinecu.in)',
+        fullContent: `
+          <p>CU Online degrees are UGC-DEB entitled and recognized worldwide. Features Harvard Business Publishing case studies and placement cell access.</p>
+        `
+      },
+      {
+        id: 'MANIPAL_ONLINE2026',
+        category: 'Online Programs',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'Online Manipal (Manipal University Jaipur) Online MBA, MCA, BBA & BCA 2026 Batch',
+        desc: 'Study online with NAAC A+ accredited Manipal University Jaipur. Coursera certifications included with degree program.',
+        date: 'July 28, 2026',
+        source: 'Online Manipal Directorate',
+        fullContent: `
+          <p>Online Manipal provides industry analytics, BFSI, HR, & AI specializations with mentorship from Manipal alumni network.</p>
+        `
+      },
+      {
+        id: 'SMU_DISTANCE2026',
+        category: 'Distance Learning',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Sikkim Manipal University Distance Education (SMU-DE) BBA & BCA Batch Live',
+        desc: 'SMU Distance Learning opens applications for BBA, BCA, BA, & B.Com programs with flexible self-paced study material & exams.',
+        date: 'July 26, 2026',
+        source: 'SMU Directorate of Distance Education',
+        fullContent: `
+          <p>Sikkim Manipal Distance Education is recognized by UGC-DEB for government and private employment across India.</p>
+        `
+      },
+      {
+        id: 'JAIN_ONLINE2026',
+        category: 'Online Programs',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Jain University Online MBA (Electives in Finance, Marketing, AI) Admission 2026',
+        desc: 'NAAC A++ Grade Jain University Bangalore offers online MBA, MCA, BBA, & B.Com with UK ACCA & LinkedIn Learning integration.',
+        date: 'July 24, 2026',
+        source: 'Jain Online Admissions Desk',
+        fullContent: `
+          <p>Jain Online features 50+ electives, career fairs, and mentorship by Bangalore tech leaders.</p>
+        `
+      },
+      {
+        id: 'UTTARANCHAL_ONLINE2026',
+        category: 'Online Programs',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'Uttaranchal University Online BBA, MBA & MCA Admissions 2026 Open',
+        desc: 'NAAC A+ Accredited Uttaranchal University offers online degree courses with flexible learning modules and digital library access.',
+        date: 'July 22, 2026',
+        source: 'Uttaranchal University Online Bureau',
+        fullContent: `
+          <p>UGC entitled online degrees from Uttaranchal University with semester installment options.</p>
+        `
+      },
+
+      /* ═══════════════════════════════════════════════════════════
+         5. ENTRANCE EXAMS, RESULTS & UGC GUIDELINES
+      ═══════════════════════════════════════════════════════════ */
+      {
+        id: 'CUET2026',
+        category: 'Exams',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'CUET UG 2026 Registration & NTA Form Correction Window Extended',
+        desc: 'NTA extends online application and subject correction window for Common University Entrance Test (CUET UG 2026) for central & deemed universities.',
+        date: 'July 31, 2026',
+        source: 'NTA Official (cuet.nta.nic.in)',
+        fullContent: `
+          <p>NTA grants extra time for candidates to complete form filling and subject selection for CUET UG 2026.</p>
+        `
+      },
+      {
+        id: 'NEET2026',
+        category: 'Results',
+        status: 'urgent',
+        statusText: 'URGENT',
+        title: 'NEET UG 2026 All India Quota & State Medical Counselling Schedule Out',
+        desc: 'MCC releases official Round 1 registration and seat matrix for 15% AIQ MBBS/BDS/BAMS seats. State quota counselling dates published.',
+        date: 'July 29, 2026',
+        source: 'MCC Official (mcc.nic.in)',
+        fullContent: `
+          <p>Qualified NEET candidates must register on MCC portal. EduVision provides expert guidance for government, private, & deemed medical seats.</p>
+        `
+      },
+      {
+        id: 'JEE2026',
+        category: 'Results',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'JEE Main 2026 JoSAA / CSAB Special Round Counselling & Backup Direct B.Tech Seats',
+        desc: 'CSAB Special Round seat allotment live. EduVision activates direct B.Tech CS/AI admission support for JEE rank holders in top partner colleges.',
+        date: 'July 27, 2026',
+        source: 'JoSAA / CSAB Official Desk',
+        fullContent: `
+          <p>Students looking for top private B.Tech colleges alongside CSAB can lock backup seats in Sandip, SRM, NIU, Marwadi, and SAGE Universities.</p>
+        `
+      },
+      {
+        id: 'UGC2026',
+        category: 'Important Notices',
+        status: 'important',
+        statusText: 'IMPORTANT',
+        title: 'UGC Gazette Notification: Online & Distance Degrees 100% Equivalent to Regular On-Campus Degrees',
+        desc: 'UGC re-confirms Section 22 directive that degrees from recognized online/distance universities hold equal validity for Govt Jobs, UPSC & Higher Studies.',
+        date: 'July 25, 2026',
+        source: 'University Grants Commission (UGC Official Gazette)',
+        fullContent: `
+          <p>UGC affirms that ODL and Online degrees are fully valid for Civil Services, State PSCs, Bank PO, and Masters/Ph.D. admissions across India.</p>
+        `
+      },
+      {
+        id: 'MAT2026',
+        category: 'Exams',
+        status: 'new',
+        statusText: 'NEW',
+        title: 'AIMA MAT August 2026 Registration Live — Paper-Based & Computer-Based Tests',
+        desc: 'Registration open for Management Aptitude Test (MAT August 2026) for admission to 600+ B-Schools across India. Apply online.',
+        date: 'July 23, 2026',
+        source: 'AIMA Official (mat.aima.in)',
+        fullContent: `
+          <p>MAT August 2026 exam registration active. EduVision assists in selecting top MAT accepting MBA colleges with fee waivers.</p>
+        `
+      }
+    ];
+
+    /* ═══════════════════════════════════════════════════════════
+       RENDER & FILTER ENGINE
+    ═══════════════════════════════════════════════════════════ */
+    let currentCategory = 'All';
+    let searchQuery = '';
+
+    const updatesGrid = document.getElementById('updatesGrid');
+    const searchInput = document.getElementById('searchInput');
+    const searchCount = document.getElementById('searchCount');
+
+    function renderCards() {
+      const filtered = UPDATES_DATA.filter(item => {
+        const matchesCat = (currentCategory === 'All') || (item.category === currentCategory);
+        const q = searchQuery.toLowerCase();
+        const matchesSearch = !q || 
+          item.title.toLowerCase().includes(q) || 
+          item.desc.toLowerCase().includes(q) || 
+          item.category.toLowerCase().includes(q) ||
+          item.source.toLowerCase().includes(q);
+        return matchesCat && matchesSearch;
+      });
+
+      searchCount.textContent = `Showing ${filtered.length} Bulletins`;
+
+      if (filtered.length === 0) {
+        updatesGrid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No Announcements Found</h3>
+            <p>Try searching for different keywords like "CUET", "Scholarship", "MBA", or select "All Updates".</p>
+          </div>
+        `;
+        return;
+      }
+
+      updatesGrid.innerHTML = filtered.map((item, index) => `
+        <div class="update-card reveal" style="animation-delay: ${index * 40}ms;" onclick="openUpdateModal('${item.id}')" role="button" tabindex="0">
+          <div>
+            <div class="card-meta-header">
+              <span class="category-badge">${item.category}</span>
+              <span class="status-badge ${item.status}">${item.statusText}</span>
+            </div>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.desc}</p>
+          </div>
+          <div class="card-footer-row">
+            <span class="card-pub-date">📅 ${item.date}</span>
+            <button class="card-read-btn" onclick="event.stopPropagation(); openUpdateModal('${item.id}')">
+              <span>Read Details</span> ↗
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter Buttons Listener
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.cat;
+        renderCards();
+      });
+    });
+
+    // Search Input Listener
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderCards();
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       MODAL ENGINE
+    ═══════════════════════════════════════════════════════════ */
+    const updateModal = document.getElementById('updateModal');
+    let activeModalItem = null;
+
+    function openUpdateModal(id) {
+      const item = UPDATES_DATA.find(x => x.id === id);
+      if (!item) return;
+      activeModalItem = item;
+
+      document.getElementById('modalTags').innerHTML = `
+        <span class="category-badge">${item.category}</span>
+        <span class="status-badge ${item.status}">${item.statusText}</span>
+      `;
+
+      document.getElementById('modalTitle').textContent = item.title;
+
+      document.getElementById('modalMeta').innerHTML = `
+        <span>📅 <b>Published:</b> ${item.date}</span>
+        <span>🏛️ <b>Source:</b> ${item.source}</span>
+      `;
+
+      document.getElementById('modalBody').innerHTML = item.fullContent || `<p>${item.desc}</p>`;
+
+      updateModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeUpdateModal() {
+      updateModal.classList.remove('open');
+      document.body.style.overflow = '';
+      activeModalItem = null;
+    }
+
+    updateModal.addEventListener('click', (e) => {
+      if (e.target === updateModal) closeUpdateModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && updateModal.classList.contains('open')) {
+        closeUpdateModal();
+      }
+    });
+
+    function shareUpdate(title, url) {
+      if (navigator.share) {
+        navigator.share({ title: title, url: url }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url || window.location.href);
+        alert('Notice link copied to clipboard! 📋');
+      }
+    }
+
+    function shareCurrentModal() {
+      if (activeModalItem) {
+        shareUpdate(activeModalItem.title, window.location.href + '?id=' + activeModalItem.id);
+      }
+    }
+
+    // Initial Immediate Render
+    renderCards();
+
+    // Check URL parameters for category or direct ID
+    function initParams() {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      const idParam = params.get('id');
+
+      if (catParam) {
+        const matchingBtn = document.querySelector(`.filter-btn[data-cat="${catParam}"]`);
+        if (matchingBtn) {
+          matchingBtn.click();
+        }
+      }
+      if (idParam) {
+        openUpdateModal(idParam);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', initParams);
+    } else {
+      initParams();
+    }
+
+    // Sticky Navbar Scroll
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile Nav Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavClose = document.getElementById('mobileNavClose');
+
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileNavClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+
+    // Global User Session Manager
+    function checkGlobalLoginSession() {
+      const userData = localStorage.getItem('eduvision_user');
+      const loginBtn = document.getElementById('loginNavBtn');
+      const profileBadge = document.getElementById('userProfileBadge');
+      if(userData) {
+        const user = JSON.parse(userData);
+        if(loginBtn) loginBtn.style.display = 'none';
+        if(profileBadge) {
+          profileBadge.style.display = 'inline-flex';
+          const nameLbl = document.getElementById('userNameLabel');
+          const charLbl = document.getElementById('userAvatarChar');
+          if(nameLbl) nameLbl.textContent = user.name || 'Rahul S.';
+          if(charLbl) charLbl.textContent = (user.name || 'R').charAt(0).toUpperCase();
+        }
+      } else {
+        if(loginBtn) loginBtn.style.display = 'inline-flex';
+        if(profileBadge) profileBadge.style.display = 'none';
+      }
+    }
+    function toggleUserDropdown(){
+      const drop = document.getElementById('userDropdownMenu');
+      if(drop) drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+    }
+    function logoutGlobalUser(){
+      localStorage.removeItem('eduvision_user');
+      checkGlobalLoginSession();
+      alert('Logged out successfully.');
+    }
+    document.addEventListener('DOMContentLoaded', checkGlobalLoginSession);
+
+    /* ═══════════════════════════════════════════
+       PORTAL SELECTION ENGINE
+    ═══════════════════════════════════════════ */
+    function openPortalSelectionModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if(overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closePortalModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if(overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handlePortalOverlayClick(e) {
+      if(e.target.id === 'portalModalOverlay') closePortalModal();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closePortalModal();
+    });
+  </script>
+
+  <!-- PORTAL SELECTION MODAL CSS -->
+  <style>
+    .portal-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 13, 0.82);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .portal-modal-overlay.active {
+      display: flex !important;
+      opacity: 1;
+      pointer-events: auto;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+    }
+    .portal-modal-container {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      border-radius: 24px;
+      padding: 32px 28px;
+      position: relative;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 40px rgba(201, 147, 42, 0.2);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .portal-modal-overlay.active .portal-modal-container {
+      transform: scale(1) translateY(0);
+    }
+    .portal-modal-close {
+      position: absolute;
+      top: 20px; right: 22px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .portal-modal-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+      transform: rotate(90deg);
+    }
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .portal-badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      color: #f7d377;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .portal-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.15), rgba(7, 11, 18, 0));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.85);
+      border-color: rgba(247, 211, 119, 0.55);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(201, 147, 42, 0.22);
+    }
+    .portal-card:hover::before { opacity: 1; }
+
+    .portal-icon-box {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.1) rotate(-5deg);
+      background: rgba(201, 147, 42, 0.35);
+      border-color: #fef08a;
+    }
+    .portal-card-info {
+      flex: 1;
+    }
+    .portal-card-info h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 3px;
+      transition: color 0.25s;
+    }
+    .portal-card:hover .portal-card-info h3 {
+      color: #f7d377;
+    }
+    .portal-card-info p {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+    .portal-arrow {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      transition: all 0.3s ease;
+    }
+    .portal-card:hover .portal-arrow {
+      color: #fef08a;
+      transform: translateX(4px);
+    }
+  </style>
+
+  <!-- EDUVISION WORLD-CLASS PORTAL SELECTION MODAL -->
+  <div class="portal-modal-overlay" id="portalModalOverlay" onclick="handlePortalOverlayClick(event)">
+    <div class="portal-modal-container" role="dialog" aria-modal="true" aria-labelledby="portalModalTitle">
+      <button class="portal-modal-close" onclick="closePortalModal()" aria-label="Close modal">✕</button>
+
+      <div class="portal-modal-header">
+        <div class="portal-badge-chip">✨ Select Your Portal</div>
+        <h2 class="portal-modal-title" id="portalModalTitle">Choose how you want to continue</h2>
+      </div>
+
+      <div class="portal-cards-list">
+        <!-- 1. Student Portal -->
+        <a href="login.html?portal=student" class="portal-card">
+          <div class="portal-icon-box">🎓</div>
+          <div class="portal-card-info">
+            <h3>Student Portal</h3>
+            <p>Apply, Track Admissions & Access Dashboard</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 2. Counsellor Portal -->
+        <a href="login.html?portal=counsellor" class="portal-card">
+          <div class="portal-icon-box">👨‍🏫</div>
+          <div class="portal-card-info">
+            <h3>Counsellor Portal</h3>
+            <p>Manage Students & Applications</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 3. Associate Partner -->
+        <a href="login.html?portal=partner" class="portal-card">
+          <div class="portal-icon-box">🤝</div>
+          <div class="portal-card-info">
+            <h3>Associate Partner</h3>
+            <p>Partner Dashboard & Lead Management</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 4. Team Leader -->
+        <a href="login.html?portal=teamleader" class="portal-card">
+          <div class="portal-icon-box">👑</div>
+          <div class="portal-card-info">
+            <h3>Team Leader</h3>
+            <p>Team Performance & Operations</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 5. Admin Login -->
+        <a href="login.html?portal=admin" class="portal-card">
+          <div class="portal-icon-box">🛡️</div>
+          <div class="portal-card-info">
+            <h3>Admin Login</h3>
+            <p>System Administration</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
