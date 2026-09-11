@@ -1590,33 +1590,133 @@
         padding: 10px 26px;
       }
       .game-hud-bar {
-        padding: 0 10px;
+        top: max(10px, env(safe-area-inset-top, 10px));
+        padding: 0 12px;
+        width: 100%;
+        box-sizing: border-box;
       }
       .game-mini-brand {
         display: none;
       }
+      .hud-left-cluster {
+        gap: 8px;
+      }
+      .hud-right-cluster {
+        gap: 8px;
+      }
       .game-stat-pill {
-        padding: 6px 10px;
+        padding: 5px 12px;
         font-size: 0.85rem;
+        border-width: 2.5px;
+        border-radius: 24px;
       }
       .game-stat-pill.score-type .val,
       .game-stat-pill.best-type .val {
         font-size: 1.2rem;
+        min-width: unset;
       }
       .hearts-life-pill {
-        padding: 6px 10px;
+        padding: 5px 10px;
         gap: 4px;
+        border-width: 2.5px;
+        border-radius: 24px;
       }
       .heart-unit {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
       }
       .game-hud-tip {
         display: none;
       }
       .btn-hud-control {
+        position: relative;
         width: 36px;
         height: 36px;
+        font-size: 0.9rem;
+        border-width: 2.5px;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .game-hud-bar {
+        top: max(8px, env(safe-area-inset-top, 8px));
+        padding: 0 6px;
+      }
+      .hud-left-cluster {
+        gap: 5px;
+      }
+      .hud-right-cluster {
+        gap: 5px;
+      }
+      .game-stat-pill {
+        padding: 4px 8px;
+        gap: 4px;
+        border-radius: 20px;
+        border-width: 2px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      }
+      .game-stat-pill > span:not(.val) {
+        display: none;
+      }
+      .game-stat-pill.score-type .val,
+      .game-stat-pill.best-type .val {
+        font-size: 1.1rem;
+        min-width: unset;
+      }
+      .hearts-life-pill {
+        padding: 4px 7px;
+        gap: 3px;
+        border-radius: 20px;
+        border-width: 2px;
+        box-shadow: 0 3px 8px rgba(244, 63, 94, 0.12);
+      }
+      .heart-unit {
         font-size: 0.95rem;
+      }
+      .btn-hud-control {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+        border-width: 2px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      }
+      .btn-hud-control::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        bottom: -6px;
+        left: -6px;
+        right: -6px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .game-hud-bar {
+        padding: 0 4px;
+      }
+      .hud-left-cluster,
+      .hud-right-cluster {
+        gap: 3px;
+      }
+      .game-stat-pill {
+        padding: 3px 6px;
+        gap: 3px;
+      }
+      .game-stat-pill.score-type .val,
+      .game-stat-pill.best-type .val {
+        font-size: 0.95rem;
+      }
+      .hearts-life-pill {
+        padding: 3px 5px;
+        gap: 2px;
+      }
+      .heart-unit {
+        font-size: 0.82rem;
+      }
+      .btn-hud-control {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
       }
     }
   </style>
