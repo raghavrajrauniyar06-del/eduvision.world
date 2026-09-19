@@ -15214,10 +15214,39 @@ const CTO_FALLBACK_MODULES = [
 ];
 
 // Helper: Save matrix to localStorage and dispatch instant event
+async function pushMasterMatrixToCloud() {
+  try {
+    const payload = {
+      id: '00000000-0000-0000-0000-000000000405',
+      title: 'CTO_MASTER_MATRIX_STATE',
+      message: JSON.stringify(ctoMasterMatrix),
+      priority: 'High',
+      sender_role: 'CTO',
+      sender_name: 'Raghav Raj Rauniyar (CTO Owner)',
+      category: 'MASTER_MATRIX_SYNC',
+      created_at: new Date().toISOString()
+    };
+
+    await fetch(SUPABASE_PROJECT_URL + '/rest/v1/notifications', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('[CTO Master] Cloud push fallback:', e);
+  }
+}
+
 function saveCtoMasterMatrixToLocal() {
   try {
     localStorage.setItem('eduvision_master_permissions', JSON.stringify(ctoMasterMatrix));
     window.dispatchEvent(new CustomEvent('eduvision-permissions-updated', { detail: ctoMasterMatrix }));
+    pushMasterMatrixToCloud();
   } catch(e) {
     console.warn('Failed to save permissions to localStorage:', e);
   }
@@ -15394,20 +15423,30 @@ async function loadCtoMasterMatrix() {
   renderActiveGlobalLocksList();
   syncMasterMatrixToEduPerms();
 
-  // 2. Non-blocking cloud sync from Supabase
+  // 2. Non-blocking direct REST cloud sync from Supabase
   try {
-    const { data, error } = await sb.rpc('rpc_cto_get_master_matrix', { p_admin_id: ctoId });
-    if (!error && data && data.success && data.modules && data.modules.length > 0) {
-      ctoMasterMatrix.modules = data.modules;
-      ctoMasterMatrix.globalLocks = data.global_locks || {};
-      ctoMasterMatrix.rolePermissions = data.role_permissions || [];
-      saveCtoMasterMatrixToLocal();
-      populateEmergencyModuleSelect();
-      updateCtoMetricCounters();
-      renderCtoFeatureMatrix();
-      renderActiveGlobalLocksList();
-      syncMasterMatrixToEduPerms();
-      return;
+    const res = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/notifications?id=eq.00000000-0000-0000-0000-000000000405&select=*`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0 && data[0].message) {
+        const cloudMatrix = JSON.parse(data[0].message);
+        if (cloudMatrix && cloudMatrix.modules && cloudMatrix.modules.length > 0) {
+          ctoMasterMatrix = cloudMatrix;
+          if (!ctoMasterMatrix.userOverrides) ctoMasterMatrix.userOverrides = {};
+          localStorage.setItem('eduvision_master_permissions', JSON.stringify(ctoMasterMatrix));
+          populateEmergencyModuleSelect();
+          updateCtoMetricCounters();
+          renderCtoFeatureMatrix();
+          renderActiveGlobalLocksList();
+          syncMasterMatrixToEduPerms();
+          return;
+        }
+      }
     }
   } catch(err) {}
 
@@ -15771,10 +15810,25 @@ function filterCtoMatrixCategory(cat, btnEl) {
   renderCtoFeatureMatrix();
 }
 
-function handleCtoMatrixSearch(query) {
-  ctoSearchFilter = (query || '').trim();
+let roleMemberSearchQueries = {};
+
+function filterRoleAccordionMembers(roleKey, query) {
+  roleMemberSearchQueries[roleKey] = (query || '').toLowerCase().trim();
+  renderRoleAccordionMembers(roleKey);
+}
+window.filterRoleAccordionMembers = filterRoleAccordionMembers;
+
+function handleCtoSearchFilter(query) {
+  ctoSearchFilter = (query || '').toLowerCase().trim();
   renderCtoFeatureMatrix();
 }
+window.handleCtoSearchFilter = handleCtoSearchFilter;
+
+function handleCtoMatrixSearch(query) {
+  ctoSearchFilter = (query || '').toLowerCase().trim();
+  renderCtoFeatureMatrix();
+}
+window.handleCtoMatrixSearch = handleCtoMatrixSearch;
 
 async function toggleFeatureQuickGlobalLock(featureKey, lockState) {
   await handleFeatureMasterToggle(featureKey, !lockState);
@@ -16126,15 +16180,27 @@ function renderRoleAccordionMembers(roleKey) {
   const container = document.getElementById('roleMembersList_' + roleKey);
   if (!container) return;
 
-  const members = getMembersForRole(roleKey);
+  let members = getMembersForRole(roleKey);
   const rolePerm = drawerWorkingRolePerms[roleKey] || { is_enabled: true };
   const roleDefaultEnabled = rolePerm.is_enabled !== false;
   const overrides = (ctoMasterMatrix.userOverrides && ctoMasterMatrix.userOverrides[currentDrawerFeatureKey]) || {};
 
+  const q = roleMemberSearchQueries[roleKey] || '';
+  if (q) {
+    members = members.filter(m => 
+      (m.name && m.name.toLowerCase().includes(q)) || 
+      (m.id && m.id.toLowerCase().includes(q)) || 
+      (m.role && m.role.toLowerCase().includes(q)) ||
+      (m.branch && m.branch.toLowerCase().includes(q)) ||
+      (m.email && m.email.toLowerCase().includes(q)) ||
+      (m.team_leader_name && m.team_leader_name.toLowerCase().includes(q))
+    );
+  }
+
   if (members.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; color:#94a3b8; font-size:0.78rem; padding:16px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px dashed rgba(255,255,255,0.08);">
-        No members registered under this role.
+        ${q ? 'No members match "' + escapeHtml(q) + '"' : 'No members registered under this role.'}
       </div>
     `;
     return;

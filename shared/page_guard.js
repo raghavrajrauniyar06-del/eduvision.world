@@ -185,7 +185,7 @@
       id: 'portal_student',
       name: 'Student Dashboard Portal',
       type: 'page',
-      pathMatch: ['student/dashboard.html', 'student/complete-profile.html', 'student\\'],
+      pathMatch: ['student/dashboard.html', 'student/complete-profile.html', 'student/', '/student', 'student\\'],
       enabled: true,
       group: 'portals',
       icon: 'fa-user-graduate',
@@ -196,7 +196,7 @@
       id: 'portal_counsellor',
       name: 'Counsellor CRM Portal',
       type: 'page',
-      pathMatch: ['counsellor/dashboard.html', 'counsellor/login.html', 'counsellor\\'],
+      pathMatch: ['counsellor/dashboard.html', 'counsellor/login.html', 'counsellor/', '/counsellor', 'counsellor\\'],
       enabled: true,
       group: 'portals',
       icon: 'fa-headset',
@@ -207,7 +207,7 @@
       id: 'portal_teamleader',
       name: 'Team Leader Management Portal',
       type: 'page',
-      pathMatch: ['teamleader/dashboard.html', 'teamleader/login.html', 'teamleader\\'],
+      pathMatch: ['teamleader/dashboard.html', 'teamleader/login.html', 'teamleader/', '/teamleader', 'teamleader\\'],
       enabled: true,
       group: 'portals',
       icon: 'fa-users-gear',
@@ -218,7 +218,7 @@
       id: 'portal_associate',
       name: 'Associate Partner Portal',
       type: 'page',
-      pathMatch: ['associate/dashboard.html', 'associate/login.html', 'associate\\'],
+      pathMatch: ['associate/dashboard.html', 'associate/login.html', 'associate/', '/associate', 'associate\\'],
       enabled: true,
       group: 'portals',
       icon: 'fa-handshake',
@@ -229,7 +229,7 @@
       id: 'portal_branch',
       name: 'Regional Branch Office Portal',
       type: 'page',
-      pathMatch: ['branch/dashboard.html', 'branch\\'],
+      pathMatch: ['branch/dashboard.html', 'branch/', '/branch', 'branch\\'],
       enabled: true,
       group: 'portals',
       icon: 'fa-sitemap',
@@ -238,21 +238,12 @@
     }
   };
 
-  // Compute Relative 404 URL based on current directory depth
+  // Compute Absolute 404 URL based on current origin
   function compute404Url() {
-    const path = window.location.pathname.replace(/\\/g, '/');
-    const segments = path.split('/').filter(Boolean);
-    
-    // If inside a subfolder (e.g. /universities/xxx.html, /student/dashboard.html, /admin/dashboard.html)
-    if (segments.length > 1) {
-      const upLevels = segments.length - 1;
-      let prefix = '';
-      for (let i = 0; i < upLevels; i++) {
-        prefix += '../';
-      }
-      return prefix + '404.html';
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+      return window.location.origin + '/404.html';
     }
-    return '404.html';
+    return '/404.html';
   }
 
   // Load Controls from LocalStorage with Fallback

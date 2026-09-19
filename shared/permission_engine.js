@@ -357,6 +357,7 @@
     }
 
     // Initialize Engine & Hydrate Permissions from Supabase
+    // Initialize Engine & Hydrate Permissions from Supabase & Cloud Sync
     async init(overrideRole = null, overrideUserId = null) {
       injectPermissionStyles();
       this.detectSession();
@@ -379,92 +380,44 @@
       } catch(e) {
         console.warn('[EduPerms] LocalStorage parse warning:', e);
       }
-      try {
-        const rawLocal = localStorage.getItem('eduvision_master_permissions');
-        if (rawLocal) {
-          const parsed = JSON.parse(rawLocal);
-          if (parsed && parsed.modules && parsed.modules.length > 0) {
-            this.hydrateFromMatrix(parsed);
-          }
-        }
-      } catch(e) {
-        console.warn('[EduPerms] LocalStorage parse warning:', e);
+
+      // 3. Direct Zero-Dependency Cloud Sync from Supabase REST API
+      await this.syncWithCloud();
+
+      // Listen for visibility & live updates
+      if (typeof window !== 'undefined') {
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') this.syncWithCloud();
+        });
+        setInterval(() => this.syncWithCloud(), 10000);
       }
 
-      if (overrideRole) this.currentRole = overrideRole.toLowerCase();
-      if (overrideUserId) this.currentUserId = overrideUserId;
-
-      if (!this.sb && window.supabase) {
-        this.sb = window.supabase.createClient(this.supabaseUrl, this.supabaseKey);
-      }
-
-      try {
-        if (this.sb) {
-          const { data, error } = await this.sb.rpc('rpc_get_client_permissions', { p_role: this.currentRole });
-          if (!error && data && Object.keys(data).length > 0) {
-            this.permissionsMap = data;
-            this.isHydrated = true;
-            this.decorateSidebar();
-            return this.permissionsMap;
-          }
-        }
-      } catch(e) {
-        console.warn('[EduPerms] RPC rpc_get_client_permissions fallback:', e);
-      }
-
-      // Direct Table Fallback Query if RPC not yet deployed
-      try {
-        if (this.sb) {
-          const [modRes, lockRes, roleRes] = await Promise.all([
-            this.sb.from('system_permission_modules').select('*'),
-            this.sb.from('system_global_feature_locks').select('*'),
-            this.sb.from('system_role_permissions').select('*').eq('role_key', this.currentRole)
-          ]);
-
-          if (modRes.data && Array.isArray(modRes.data) && modRes.data.length > 0) {
-            const map = {};
-            const globalLocks = {};
-            (lockRes.data || []).forEach(l => { globalLocks[l.feature_key] = l; });
-            const rolePerms = {};
-            (roleRes.data || []).forEach(r => { rolePerms[r.module_key] = r; });
-
-            modRes.data.forEach(m => {
-              const g = globalLocks[m.module_key] || {};
-              const r = rolePerms[m.module_key] || {};
-              const isGloballyLocked = !!g.is_globally_locked;
-              const isRoleEnabled = (r.is_enabled !== undefined) ? !!r.is_enabled : true;
-              const isRoleLocked = !!r.is_locked;
-              const isAccessible = (!isGloballyLocked && isRoleEnabled && !isRoleLocked);
-
-              map[m.module_key] = {
-                display_name: m.display_name,
-                category: m.category,
-                icon_class: m.icon_class,
-                is_globally_locked: isGloballyLocked,
-                is_role_enabled: isRoleEnabled,
-                is_role_locked: isRoleLocked,
-                is_accessible: isAccessible,
-                locked_by_name: isGloballyLocked ? (g.locked_by_name || 'CTO Raghav') : (r.locked_by_name || 'CTO Raghav'),
-                lock_reason: isGloballyLocked ? (g.lock_reason || 'Global Maintenance Lock') : (r.lock_reason || 'Role Operational Lock'),
-                locked_at: isGloballyLocked ? g.locked_at : r.locked_at,
-                actions: r.actions || { view: true }
-              };
-            });
-
-            this.permissionsMap = map;
-            this.isHydrated = true;
-            this.decorateSidebar();
-            return this.permissionsMap;
-          }
-        }
-      } catch(fallbackErr) {
-        console.warn('[EduPerms] Direct table query fallback:', fallbackErr);
-      }
-
-      // Preserve hydrated localStorage state & base matrix
       this.isHydrated = true;
       this.decorateSidebar();
       return this.permissionsMap;
+    }
+
+    // Direct Supabase REST Matrix Hydration
+    async syncWithCloud() {
+      try {
+        const res = await fetch(`${this.supabaseUrl}/rest/v1/notifications?id=eq.00000000-0000-0000-0000-000000000405&select=*`, {
+          headers: {
+            'apikey': this.supabaseKey,
+            'Authorization': `Bearer ${this.supabaseKey}`
+          }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0 && data[0].message) {
+          const cloudMatrix = JSON.parse(data[0].message);
+          if (cloudMatrix && cloudMatrix.modules) {
+            localStorage.setItem('eduvision_master_permissions', JSON.stringify(cloudMatrix));
+            this.hydrateFromMatrix(cloudMatrix);
+          }
+        }
+      } catch(e) {
+        // Cloud matrix sync is non-blocking
+      }
     }
 
     // Generate clean offline default matrix
