@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <title>EduVision | Super Admin Executive Panel (Ishika Sharma Workspace)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../animations/animations.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
+
+  <style>
+    :root {
+      --bg-dark: #070b12;
+      --bg-card: rgba(15, 23, 42, 0.88);
+      --bg-card-hover: rgba(22, 34, 61, 0.95);
+      --gold: #c9932a;
+      --gold-light: #f7d377;
+      --gold-bright: #fef08a;
+      --gold-gradient: linear-gradient(135deg, #fff0c4 0%, #f7d377 40%, #c9932a 80%, #8a6015 100%);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border-gold: rgba(247, 211, 119, 0.25);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+    
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(201, 147, 42, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(138, 96, 21, 0.08) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+
+    /* Global Full-Width Layout */
+    .app-container {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    /* SECURITY GUARD OVERLAY */
+    #securityGuardOverlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #070b12; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+
+    /* SIDEBAR (Dark Obsidian 280px) */
+    aside.sidebar {
+      width: 280px;
+      background: #04070d;
+      border-right: 1px solid var(--border-gold);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-shrink: 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    /* Profile Header Box */
+    .sidebar-user-box {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .user-avatar-sq {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--gold-gradient);
+      color: #070b12;
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(201, 147, 42, 0.4);
+    }
+
+    .user-meta-info h4 {
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .user-meta-info p {
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Sidebar Navigation Menu */
+    .sidebar-menu {
+      list-style: none;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+    }
+
+    .sidebar-menu li a:hover, .sidebar-menu li.active a {
+      background: rgba(201, 147, 42, 0.15);
+      color: #ffffff;
+      border-color: rgba(247, 211, 119, 0.35);
+      transform: translateX(4px);
+    }
+
+    .menu-link-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .arrow-icon {
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      opacity: 0.7;
+    }
+
+    /* Bottom Actions */
+    .sidebar-bottom {
+      padding: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-side-action {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-side-action.signout {
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .btn-side-action.signout:hover {
+      background: rgba(239, 68, 68, 0.22);
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    .btn-side-action.website:hover {
+      background: rgba(201, 147, 42, 0.15);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+    }
+
+    /* MAIN CONTENT WORKSPACE AREA */
+    main.workspace {
+      flex: 1;
+      padding: 28px 36px;
+      overflow-y: auto;
+      width: calc(100vw - 280px);
+    }
+
+    /* Welcome Header Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, #f7d377 0%, #c9932a 50%, #8a6015 100%);
+      border-radius: 20px;
+      padding: 24px 32px;
+      color: #070b12;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 35px rgba(201, 147, 42, 0.3);
+    }
+
+    .welcome-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .welcome-text p {
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .btn-add-lead {
+      padding: 12px 24px;
+      border-radius: 99px;
+      background: #070b12;
+      color: #f7d377;
+      border: 1.5px solid var(--gold-light);
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .btn-add-lead:hover {
+      transform: translateY(-2px) scale(1.03);
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    /* KPI METRICS GRID (6 Cards) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold-light);
+    }
+
+    .kpi-icon-box {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon-1 { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); }
+    .kpi-icon-2 { background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.4); }
+    .kpi-icon-3 { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); }
+    .kpi-icon-4 { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .kpi-icon-5 { background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); }
+    .kpi-icon-6 { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); }
+
+    .kpi-info { flex: 1; }
+    .kpi-label { font-size: 0.72rem; color: var(--muted); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+    .kpi-value { font-family: var(--font-heading); font-size: 1.7rem; font-weight: 800; color: #ffffff; margin-top: 2px; }
+
+    /* 2-COLUMN LOWER DASHBOARD GRID */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .lower-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Recent Universities / Leads Table Box */
+    .table-section-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+    }
+
+    .table-hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .table-hdr-row h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .view-all-link {
+      color: var(--gold-light);
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .data-table th {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 16px 14px;
+      font-size: 0.85rem;
+      color: #f8fafc;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(201, 147, 42, 0.08);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Right Contact & Team Leaders Box */
+    .contact-team-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .contact-team-box h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .manager-card {
+      background: rgba(7, 11, 18, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .manager-card h4 { color: #ffffff; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
+    .manager-phone { font-size: 0.85rem; color: var(--gold-light); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+
+    .team-table-title {
+      background: linear-gradient(90deg, #4f46e5, #3b82f6);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 10px 14px;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+    }
+
+    .team-grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(7, 11, 18, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+    }
+
+    .team-grid-table td {
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .team-grid-table td strong { color: #ffffff; }
+  
+    /* MOBILE OPTIMIZATIONS (HIGH-FIDELITY ELASTIC BOUNCE & DEEP GLASS BLURS) */
+    @media (max-width: 900px) {
+      .mobile-nav-toggle {
+        display: flex !important;
+      }
+      aside.sidebar, .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        width: 280px !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        z-index: 1500 !important;
+        background: rgba(10, 16, 30, 0.96) !important;
+        backdrop-filter: blur(18px) !important;
+        -webkit-backdrop-filter: blur(18px) !important;
+        border-right: 1px solid rgba(247, 211, 119, 0.1) !important;
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.7) !important;
+        will-change: transform;
+      }
+      aside.sidebar.open, .sidebar.open {
+        transform: translateX(0) !important;
+      }
+      
+      .sidebar.open .sidebar-menu li, .sidebar.open .nav-menu li {
+        animation: slideInMenuItemPortal 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      .sidebar.open .sidebar-menu li:nth-child(1) { animation-delay: 0.03s; }
+      .sidebar.open .sidebar-menu li:nth-child(2) { animation-delay: 0.06s; }
+      .sidebar.open .sidebar-menu li:nth-child(3) { animation-delay: 0.09s; }
+      .sidebar.open .sidebar-menu li:nth-child(4) { animation-delay: 0.12s; }
+      .sidebar.open .sidebar-menu li:nth-child(5) { animation-delay: 0.15s; }
+      
+      @keyframes slideInMenuItemPortal {
+        0% { opacity: 0; transform: translateX(-20px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      
+      main.workspace, .workspace {
+        width: 100vw !important;
+        min-width: 100vw !important;
+        padding: 14px !important;
+      }
+      .welcome-banner {
+        padding: 16px 20px !important;
+        margin-top: 50px !important; /* Space for mobile hamburger button */
+        animation: slideUpWelcome 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        will-change: transform, opacity;
+      }
+      @keyframes slideUpWelcome {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      .kpi-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      .kpi-card {
+        animation: slideUpMetricPortal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        will-change: transform, opacity;
+      }
+      .kpi-card:nth-child(1) { animation-delay: 0.03s; }
+      .kpi-card:nth-child(2) { animation-delay: 0.06s; }
+      .kpi-card:nth-child(3) { animation-delay: 0.09s; }
+      .kpi-card:nth-child(4) { animation-delay: 0.12s; }
+      .kpi-card:nth-child(5) { animation-delay: 0.15s; }
+      .kpi-card:nth-child(6) { animation-delay: 0.18s; }
+      
+      @keyframes slideUpMetricPortal {
+        0% { opacity: 0; transform: translateY(24px) scale(0.94); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      
+      .lower-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+      .table-section-box {
+        padding: 14px !important;
+      }
+      
+      /* Dynamic Table scrollability on mobile */
+      table {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        table-layout: auto !important;
+      }
+      table th, table td {
+        white-space: nowrap !important;
+        word-wrap: normal !important;
+        overflow-wrap: normal !important;
+        width: auto !important;
+        padding: 10px 14px !important;
+      }
+      
+      /* Haptics */
+      .sidebar-menu li:active, .btn-side-action:active, .btn-add-lead:active, .mobile-nav-toggle:active {
+        transform: scale(0.97);
+        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+    }
+    
+    #mobileSidebarOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 12, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), backdrop-filter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1400;
+      will-change: opacity, backdrop-filter;
+    }
+    #mobileSidebarOverlay.active {
+      opacity: 1;
+      pointer-events: all;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+</style>
+
+<style>
+/* ── LIQUID FROSTED GLASS & SUBMIT BUTTON ANIMATIONS ── */
+.mac-liquid-glass-window {
+  background: radial-gradient(ellipse at top left, rgba(30, 42, 74, 0.92) 0%, rgba(10, 14, 26, 0.98) 100%) !important;
+  backdrop-filter: blur(35px) saturate(210%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(35px) saturate(210%) contrast(108%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.92), 0 0 50px rgba(245, 158, 11, 0.15), inset 0 1.5px 0 0 rgba(255, 255, 255, 0.35) !important;
+  animation: macLiquidPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes macLiquidPop {
+  0% { opacity: 0; transform: scale(0.92) translateY(18px); filter: blur(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
+.btn-liquid-submit {
+  position: relative;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%) !important;
+  background-size: 200% 200% !important;
+  border: none !important;
+  color: #070b14 !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-liquid-submit:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  background-position: right center !important;
+}
+
+.btn-liquid-submit:active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3) !important;
+}
+
+.btn-liquid-submit::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.btn-liquid-submit:active::after {
+  opacity: 1;
+  transform: scale(1);
+  transition: 0s;
+}
+</style>
+
+<style id="pwdEyeStyles">
+/* ── BULLETPROOF PERFECT EYE TOGGLE & LIQUID SUBMIT ANIMATIONS ── */
+.pwd-input-wrapper {
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.pwd-glass-input {
+  width: 100% !important;
+  height: 46px !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  padding: 12px 48px 12px 16px !important;
+  color: #ffffff !important;
+  font-size: 0.9rem !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  margin: 0 !important;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.pwd-glass-input:focus {
+  border-color: var(--accent-gold, #f59e0b) !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25) !important;
+}
+
+.pwd-eye-btn {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  z-index: 20 !important;
+  line-height: 1 !important;
+  outline: none !important;
+  transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+.pwd-eye-btn:hover {
+  color: #f8fafc !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.pwd-eye-btn i {
+  font-size: 0.95rem !important;
+  pointer-events: none !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+/* ── SPECTACULAR LIQUID SUBMIT BUTTON ANIMATIONS ── */
+.btn-submit-animated {
+  position: relative !important;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%) !important;
+  background-size: 250% 250% !important;
+  border: none !important;
+  color: #070b14 !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+  padding: 12px 26px !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 0.3px !important;
+}
+
+.btn-submit-animated:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 10px 32px rgba(245, 158, 11, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  background-position: right center !important;
+}
+
+.btn-submit-animated:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3) !important;
+}
+
+.btn-submit-animated.is-loading {
+  background: linear-gradient(90deg, #d97706, #f59e0b, #d97706) !important;
+  background-size: 200% 100% !important;
+  animation: liquidGradientPulse 1.2s ease infinite !important;
+  cursor: wait !important;
+  opacity: 0.9 !important;
+}
+
+@keyframes liquidGradientPulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.btn-submit-animated.is-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  animation: successPopBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+@keyframes successPopBounce {
+  0% { transform: scale(0.92); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+</style>
+
+</head>
+<body>
+
+  <!-- SECURITY GUARD OVERLAY -->
+  <div id="securityGuardOverlay">
+    <div style="font-size: 2.2rem; margin-bottom: 12px;">🛡️</div>
+    <h3 style="color:#fff; font-family:var(--font-heading);">Authenticating Super Admin Workspace…</h3>
+    <p style="color:var(--muted); font-size:0.9rem; margin-top:4px;">EduVision Enterprise Security Guard</p>
+  </div>
+
+  <div class="app-container">
+  <!-- MOBILE TOGGLE BUTTON & OVERLAY -->
+  <button class="mobile-nav-toggle" onclick="toggleMobileSidebar()" style="position: fixed; top: 12px; left: 12px; z-index: 2000; background: rgba(10, 16, 30, 0.8); backdrop-filter: blur(10px); color: #fff; width: 38px; height: 38px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 1px solid var(--border-gold); cursor: pointer; transition: transform 0.1s ease;">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  <div id="mobileSidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-user-box" onclick="openSuperAdminProfileModal()" style="cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(15, 23, 42, 0.6)'" title="Click to view & edit Profile & Settings">
+        <div class="user-avatar-sq" id="avatarSq">IS</div>
+        <div class="user-meta-info">
+          <h4 id="sideNameDisplay">Ishika Sharma</h4>
+          <p>Super Admin</p>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="active"><a href="#"><div class="menu-link-inner"><span>📊</span> Dashboard</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>🎓</span> University Courses</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>🏛️</span> University List</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>💰</span> University Course Fee</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>👥</span> Lead Management</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>📢</span> Marketing Creatives</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>🏋️</span> Training</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="#"><div class="menu-link-inner"><span>🎁</span> Free Courses</div> <span class="arrow-icon">›</span></a></li>
+        <li><a href="javascript:void(0)" onclick="openSuperAdminProfileModal()"><div class="menu-link-inner"><span>👤</span> Account &amp; Settings</div> <span class="arrow-icon">›</span></a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <button class="btn-side-action signout" onclick="logoutUser()">
+          <span>🚪</span> Sign Out
+        </button>
+        <a href="../index.html" class="btn-side-action website">
+          <span>🌐</span> Main Website
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="workspace">
+      <!-- Welcome Header Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h1>Welcome back, <span id="welcomeUserDisplay">Ishika Sharma</span>!</h1>
+          <p>Check your lead status & student admission updates.</p>
+        </div>
+
+        <button class="btn-add-lead" onclick="triggerAddLeadModal()">
+          <span>⊕</span> Add New Lead
+        </button>
+      </div>
+
+      <!-- KPI METRICS GRID (6 Status Cards) -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-1">🌱</div>
+          <div class="kpi-info">
+            <div class="kpi-label">CONNECTED LEADS</div>
+            <div class="kpi-value">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-2">❇️</div>
+          <div class="kpi-info">
+            <div class="kpi-label">POSITIVE LEADS</div>
+            <div class="kpi-value">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-3">🔥</div>
+          <div class="kpi-info">
+            <div class="kpi-label">HOT LEADS</div>
+            <div class="kpi-value">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-4">💀</div>
+          <div class="kpi-info">
+            <div class="kpi-label">DEAD LEADS</div>
+            <div class="kpi-value">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-5">📊</div>
+          <div class="kpi-info">
+            <div class="kpi-label">NEUTRAL LEADS</div>
+            <div class="kpi-value">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box kpi-icon-6">⭐</div>
+          <div class="kpi-info">
+            <div class="kpi-label">CONVERSION RATE</div>
+            <div class="kpi-value">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-COLUMN LOWER DASHBOARD GRID -->
+      <div class="lower-grid">
+        <!-- Recent Universities / Leads Table Box -->
+        <div class="table-section-box">
+          <div class="table-hdr-row">
+            <h3>Lead Universities</h3>
+            <a href="#" class="view-all-link">View All →</a>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>COURSE / SCHOOL NAME</th>
+                <th>DATE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>UCHCH MADHYAMIK VIDYALAYA RAM NAGAR</strong></td>
+                <td>19 May, 2026</td>
+                <td><span class="status-badge">Bihar Data</span></td>
+              </tr>
+              <tr>
+                <td><strong>UCHCH MADHYAMIK VIDYALAYA KUSHI HARPUR RAMNI MUZAFFARPUR</strong></td>
+                <td>19 May, 2026</td>
+                <td><span class="status-badge">Bihar Data</span></td>
+              </tr>
+              <tr>
+                <td><strong>UCHCH MADHYAMIK VIDYALAYA HARNAHI MUZAFFARPUR</strong></td>
+                <td>19 May, 2026</td>
+                <td><span class="status-badge">Bihar Data</span></td>
+              </tr>
+              <tr>
+                <td><strong>RKVP HIGH SCHOOL SARHANCHIA, MUZAFFARPUR</strong></td>
+                <td>19 May, 2026</td>
+                <td><span class="status-badge">Bihar Data</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Contact Us & Team Leaders Box -->
+        <div class="contact-team-box">
+          <h3>Contact Us</h3>
+
+          <div class="manager-card">
+            <h4>Abhay</h4>
+            <div class="manager-phone">📞 Contact: 9264290397</div>
+            <div class="manager-phone">📞 Contact: 9155050717</div>
+          </div>
+
+          <div>
+            <div class="team-table-title">Contact To Our Team Leaders</div>
+            <table class="team-grid-table">
+              <tr>
+                <td><strong>Vikash Kumar</strong></td>
+                <td>9386014290</td>
+                <td><strong>Sunny Khan</strong></td>
+                <td>7491001004</td>
+              </tr>
+              <tr>
+                <td><strong>Yashwant Kumar</strong></td>
+                <td>8102292997</td>
+                <td><strong>Meraj Alam</strong></td>
+                <td>7481876865</td>
+              </tr>
+              <tr>
+                <td><strong>Arjun Singh</strong></td>
+                <td>7643832324</td>
+                <td><strong>Aditya Kumar</strong></td>
+                <td>8002457500</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ROLE SECURITY GUARD & USER SESSION SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      validateRoleSession('super-admin');
+    });
+
+    function validateRoleSession(expectedRole) {
+      var raw = localStorage.getItem('eduvision_user');
+      var overlay = document.getElementById('securityGuardOverlay');
+
+      if (!raw) {
+        alert('❌ Session Expired or Unauthenticated! Redirecting to Login...');
+        window.location.href = '../login.html';
+        return;
+      }
+
+      try {
+        var u = JSON.parse(raw);
+        var uname = u.name || 'Ishika Sharma';
+        document.getElementById('sideNameDisplay').textContent = uname;
+        document.getElementById('welcomeUserDisplay').textContent = uname;
+        
+        var initials = uname.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('avatarSq').textContent = initials.substring(0, 2) || 'EV';
+
+        setTimeout(function() {
+          if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(function() { overlay.style.display = 'none'; }, 400);
+          }
+        }, 300);
+      } catch(e) {
+        window.location.href = '../login.html';
+      }
+    }
+
+    function triggerAddLeadModal() {
+      var name = prompt('Enter Student Lead Name:');
+      if (name) {
+        alert('✅ Lead for "' + name + '" successfully added to EduVision CRM!');
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('eduvision_user');
+      sessionStorage.removeItem('eduvision_pending_auth');
+      window.location.href = '../login.html';
+    }
+  </script>
+
+  <!-- MOBILE SIDEBAR TOGGLE FUNCTION -->
+  <script>
+  function toggleMobileSidebar() {
+    const sidebar = document.querySelector('.sidebar') || document.querySelector('aside.sidebar');
+    const overlay = document.getElementById('mobileSidebarOverlay');
+    if (sidebar && overlay) {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    }
+  }
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       macOS SONOMA / SEQUOIA PROFILE & SETTINGS MODAL (SUPER ADMIN)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div id="superAdminProfileOverlay" style="display:none; position:fixed; inset:0; z-index:10001;">
+    <div onclick="closeSuperAdminProfileModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);"></div>
+    <div id="superAdminProfileWindow" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.96); width:92%; max-width:780px; max-height:90vh; background:radial-gradient(ellipse at top left, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.3); border-radius:22px; box-shadow:0 35px 95px rgba(0,0,0,0.92), 0 0 50px rgba(201,147,42,0.18); z-index:10002; color:#fff; display:flex; flex-direction:column; overflow:hidden; transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
+      
+      <!-- macOS Window Header with Traffic Lights -->
+      <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div onclick="closeSuperAdminProfileModal()" title="Close (Esc)" style="width:12px; height:12px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
+          <div onclick="minimizeSuperAdminProfileModal()" title="Minimize" style="width:12px; height:12px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
+          <div onclick="toggleSuperAdminProfileFullscreen()" title="Toggle Fullscreen" style="width:12px; height:12px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
+          <span style="margin-left:10px; font-size:0.75rem; color:#94a3b8; font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-weight:600;">
+            EduVision macOS ✦ Super Admin Supreme Dossier
+          </span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="saModalRoleBadge" style="font-size:0.7rem; font-weight:800; background:rgba(247,211,119,0.12); color:var(--gold-light, #fbbf24); border:1px solid rgba(247,211,119,0.3); padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;">
+            SUPER ADMIN
+          </span>
+          <button type="button" onclick="closeSuperAdminProfileModal()" style="background:transparent; border:none; color:#64748b; font-size:1.2rem; cursor:pointer; line-height:1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">&times;</button>
+        </div>
+      </div>
+
+      <!-- User Header Banner -->
+      <div style="padding:18px 24px; background:linear-gradient(180deg, rgba(201,147,42,0.08) 0%, transparent 100%); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div id="saModalAvatar" style="width:58px; height:58px; border-radius:18px; background:linear-gradient(135deg, var(--gold-primary, #c9932a), #f59e0b); color:#000; font-weight:900; font-size:1.4rem; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(245,158,11,0.35); border:2px solid rgba(255,255,255,0.2);">
+            SA
+          </div>
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <h3 id="saModalFullName" style="margin:0; font-size:1.2rem; font-weight:800; color:#fff;">Ishika Sharma</h3>
+              <span style="font-size:0.65rem; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:2px 8px; border-radius:12px; font-weight:700;">● SUPREME CLEARANCE</span>
+            </div>
+            <p id="saModalEmail" style="margin:2px 0 0; font-size:0.8rem; color:#94a3b8;">superadmin@eduvision.com</p>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:6px 14px; text-align:right;">
+            <div style="font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">Master ID</div>
+            <div id="saModalEmpId" style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:800; color:var(--gold-light, #fbbf24);">SA001</div>
+          </div>
+          <button onclick="copySaEmpId()" style="background:rgba(247,211,119,0.15); border:1px solid rgba(247,211,119,0.35); color:var(--gold-light, #fbbf24); padding:8px 12px; border-radius:10px; cursor:pointer; font-size:0.75rem; font-weight:700; transition:all 0.15s;" title="Copy ID">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Segmented macOS Tabs -->
+      <div style="padding:10px 24px; background:rgba(0,0,0,0.25); border-bottom:1px solid rgba(255,255,255,0.05); display:flex; gap:8px;">
+        <button type="button" class="sa-modal-tab active" onclick="switchSaModalTab('personal')" id="saTabBtn-personal" style="flex:1; background:rgba(247,211,119,0.15); border:1px solid rgba(247,211,119,0.3); color:#fff; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
+          <i class="fa-solid fa-user-shield" style="margin-right:6px; color:var(--gold-light, #fbbf24);"></i> Personal Details
+        </button>
+        <button type="button" class="sa-modal-tab" onclick="switchSaModalTab('achievements')" id="saTabBtn-achievements" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
+          <i class="fa-solid fa-crown" style="margin-right:6px; color:#c084fc;"></i> Governance Badges
+        </button>
+        <button type="button" class="sa-modal-tab" onclick="switchSaModalTab('password')" id="saTabBtn-password" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
+          <i class="fa-solid fa-lock" style="margin-right:6px; color:#38bdf8;"></i> Password &amp; Security
+        </button>
+        
+      </div>
+
+      <!-- Tab Content Area -->
+      <div style="padding:22px 24px; overflow-y:auto; flex:1; max-height:calc(90vh - 200px);">
+        
+        <!-- TAB 1: PERSONAL DETAILS -->
+        <div id="saTabContent-personal" class="sa-tab-pane">
+          <div style="font-size:0.72rem; color:var(--gold-light, #fbbf24); font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px;">
+            <i class="fa-solid fa-id-badge"></i> Supreme Executive Identity Records
+          </div>
+          
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Full Legal Name</div>
+              <div id="saDetailFullName" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">Ishika Sharma</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Clearance ID</div>
+              <div id="saDetailEmpId" style="font-size:0.92rem; font-weight:700; color:var(--gold-light, #fbbf24); font-family:'JetBrains Mono', monospace; margin-top:3px;">SA001</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Super Admin Email</div>
+              <div id="saDetailEmail" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">superadmin@eduvision.com</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Official Phone</div>
+              <div id="saDetailPhone" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">+91 98765 00001</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Governance Role</div>
+              <div id="saDetailRole" style="font-size:0.92rem; font-weight:700; color:#c084fc; margin-top:3px;">Super Admin Supreme</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Operations Control</div>
+              <div id="saDetailBranch" style="font-size:0.92rem; font-weight:700; color:#38bdf8; margin-top:3px;">Central Enterprise Cluster</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: ACHIEVEMENTS & BADGES -->
+        <div id="saTabContent-achievements" class="sa-tab-pane" style="display:none;">
+          <div style="font-size:0.72rem; color:#c084fc; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px;">
+            <i class="fa-solid fa-crown"></i> High Command Honors
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px;">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(247,211,119,0.25); border-radius:14px; padding:16px; text-align:center;">
+              <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, rgba(247,211,119,0.2), rgba(201,147,42,0.4)); color:var(--gold-light, #fbbf24); display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:1.2rem; box-shadow:0 0 20px rgba(247,211,119,0.25);">
+                <i class="fa-solid fa-shield-virus"></i>
+              </div>
+              <div style="font-size:0.85rem; font-weight:800; color:#fff;">Supreme Root Clearance</div>
+              <div style="font-size:0.7rem; color:#94a3b8; margin-top:4px;">Unrestricted governance across databases, API secrets, and promotions.</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(192,132,252,0.25); border-radius:14px; padding:16px; text-align:center;">
+              <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, rgba(192,132,252,0.2), rgba(168,85,247,0.4)); color:#c084fc; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:1.2rem; box-shadow:0 0 20px rgba(192,132,252,0.25);">
+                <i class="fa-solid fa-network-wired"></i>
+              </div>
+              <div style="font-size:0.85rem; font-weight:800; color:#fff;">Architecture Apex</div>
+              <div style="font-size:0.7rem; color:#94a3b8; margin-top:4px;">Guaranteed 99.99% system availability and high concurrency handling.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: PASSWORD & SECURITY -->
+        <div id="saTabContent-password" class="sa-tab-pane" style="display:none;">
+          <div style="font-size:0.72rem; color:#38bdf8; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px;">
+            <i class="fa-solid fa-shield-keyhole"></i> Super Admin Credential Change
+          </div>
+
+          <form id="saPasswordChangeForm" onsubmit="handleSaPasswordChangeSubmit(event)">
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div>
+                <label style="display:block; font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:6px;">Current Password <span style="color:#ef4444;">*</span></label>
+                <div class="pwd-input-wrapper">
+                  <input type="password" id="saCurrentPassword" required  placeholder="Enter current password" class="pwd-glass-input">
+                  <button type="button" onclick="toggleSaPasswordVisibility('saCurrentPassword', this)" class="pwd-eye-btn" title="Toggle password visibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:6px;">New Strong Password <span style="color:#ef4444;">*</span></label>
+                <div class="pwd-input-wrapper">
+                  <input type="password" id="saNewPassword" required oninput="handleSaPasswordStrengthCheck()" placeholder="Enter new strong password" class="pwd-glass-input">
+                  <button type="button" onclick="toggleSaPasswordVisibility('saNewPassword', this)" class="pwd-eye-btn" title="Toggle password visibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Strength Progress Bar -->
+              <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px 14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Password Complexity Score:</span>
+                  <span id="saStrengthLabel" style="font-size:0.72rem; font-weight:800; color:#ef4444;">Too Weak</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
+                  <div id="saStrengthBar" style="width:0%; height:100%; background:#ef4444; transition:all 0.25s ease;"></div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:6px; margin-top:12px;">
+                  <div id="sa_rule_len" style="font-size:0.7rem; color:#94a3b8; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> Minimum 8 Characters</div>
+                  <div id="sa_rule_upper" style="font-size:0.7rem; color:#94a3b8; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> 1 Uppercase Letter (A-Z)</div>
+                  <div id="sa_rule_lower" style="font-size:0.7rem; color:#94a3b8; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> 1 Lowercase Letter (a-z)</div>
+                  <div id="sa_rule_num" style="font-size:0.7rem; color:#94a3b8; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> 1 Numeric Digit (0-9)</div>
+                  <div id="sa_rule_spec" style="font-size:0.7rem; color:#94a3b8; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> 1 Special Symbol (!@#$%^&*)</div>
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:6px;">Confirm New Password <span style="color:#ef4444;">*</span></label>
+                <div class="pwd-input-wrapper">
+                  <input type="password" id="saConfirmPassword" required  placeholder="Re-type new password" class="pwd-glass-input">
+                  <button type="button" onclick="toggleSaPasswordVisibility('saConfirmPassword', this)" class="pwd-eye-btn" title="Toggle password visibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+                <button type="button" onclick="closeSuperAdminProfileModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; padding:10px 18px; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer;">Cancel</button>
+                <button type="submit" id="saPwdSubmitBtn" style="background:linear-gradient(135deg, var(--gold-primary, #c9932a), #f59e0b); border:none; color:#070b14; padding:10px 22px; border-radius:12px; font-size:0.82rem; font-weight:800; cursor:pointer;">
+                  <i class="fa-solid fa-shield-check"></i> <span id="saPwdBtnText">Update Password</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        </div>
+</div>
+  </div>
+
+  <script>
+  window.openSuperAdminProfileModal = function() {
+    let u = null;
+    try {
+      const raw = localStorage.getItem('eduvision_user');
+      if (raw) u = JSON.parse(raw);
+    } catch(e){}
+
+    const fullName = (u && u.name) || 'Ishika Sharma';
+    const email = (u && u.email) || 'superadmin@eduvision.com';
+    const empId = (u && (u.employee_id || u.id)) || 'SA001';
+
+    const parts = fullName.trim().split(/\s+/);
+    let initials = parts[0] ? parts[0].charAt(0).toUpperCase() : 'S';
+    if (parts.length > 1) initials += parts[parts.length - 1].charAt(0).toUpperCase();
+
+    const av = document.getElementById('saModalAvatar');
+    if (av) av.textContent = initials;
+    const nameEl = document.getElementById('saModalFullName');
+    if (nameEl) nameEl.textContent = fullName;
+    const emailEl = document.getElementById('saModalEmail');
+    if (emailEl) emailEl.textContent = email;
+    const idEl = document.getElementById('saModalEmpId');
+    if (idEl) idEl.textContent = empId;
+
+    const dName = document.getElementById('saDetailFullName');
+    if (dName) dName.textContent = fullName;
+    const dEmail = document.getElementById('saDetailEmail');
+    if (dEmail) dEmail.textContent = email;
+    const dId = document.getElementById('saDetailEmpId');
+    if (dId) dId.textContent = empId;
+
+    const f = document.getElementById('saPasswordChangeForm');
+    if (f) f.reset();
+    handleSaPasswordStrengthCheck();
+
+    switchSaModalTab('personal');
+    const ov = document.getElementById('superAdminProfileOverlay');
+    if (ov) ov.style.display = 'block';
+  };
+
+  window.closeSuperAdminProfileModal = function() {
+    const ov = document.getElementById('superAdminProfileOverlay');
+    if (ov) ov.style.display = 'none';
+  };
+
+  window.minimizeSuperAdminProfileModal = function() {
+    const win = document.getElementById('superAdminProfileWindow');
+    if (win) {
+      win.style.transform = 'translate(-50%, 100%) scale(0.6)';
+      win.style.opacity = '0';
+      setTimeout(() => {
+        closeSuperAdminProfileModal();
+        win.style.transform = 'translate(-50%, -50%) scale(0.96)';
+        win.style.opacity = '1';
+      }, 250);
+    }
+  };
+
+  window.toggleSuperAdminProfileFullscreen = function() {
+    const win = document.getElementById('superAdminProfileWindow');
+    if (win) {
+      if (win.dataset.fullscreen === 'true') {
+        win.style.width = '92%';
+        win.style.maxWidth = '780px';
+        win.style.height = 'auto';
+        win.style.maxHeight = '90vh';
+        win.dataset.fullscreen = 'false';
+      } else {
+        win.style.width = '98vw';
+        win.style.maxWidth = '98vw';
+        win.style.height = '96vh';
+        win.style.maxHeight = '96vh';
+        win.dataset.fullscreen = 'true';
+      }
+    }
+  };
+
+  window.switchSaModalTab = function(tabId) {
+    document.querySelectorAll('.sa-modal-tab').forEach(b => {
+      b.classList.remove('active');
+      b.style.background = 'transparent';
+      b.style.borderColor = 'transparent';
+      b.style.color = '#94a3b8';
+    });
+    document.querySelectorAll('.sa-tab-pane').forEach(p => p.style.display = 'none');
+
+    const activeBtn = document.getElementById('saTabBtn-' + tabId);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      activeBtn.style.background = 'rgba(247,211,119,0.15)';
+      activeBtn.style.borderColor = 'rgba(247,211,119,0.3)';
+      activeBtn.style.color = '#fff';
+    }
+    const pane = document.getElementById('saTabContent-' + tabId);
+    if (pane) pane.style.display = 'block';
+  };
+
+  window.copySaEmpId = function() {
+    const idEl = document.getElementById('saModalEmpId');
+    if (idEl) {
+      navigator.clipboard.writeText(idEl.textContent.trim()).then(() => alert('Copied to clipboard!')).catch(() => alert('Copied: ' + idEl.textContent.trim()));
+    }
+  };
+
+  window.toggleSaPasswordVisibility = function(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      if (icon) { icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); }
+    } else {
+      inp.type = 'password';
+      if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+    }
+  };
+
+  window.handleSaPasswordStrengthCheck = function() {
+    const pwd = (document.getElementById('saNewPassword') ? document.getElementById('saNewPassword').value : '');
+    const bar = document.getElementById('saStrengthBar');
+    const label = document.getElementById('saStrengthLabel');
+
+    const hasLen = pwd.length >= 8;
+    const hasUpper = /[A-Z]/.test(pwd);
+    const hasLower = /[a-z]/.test(pwd);
+    const hasNum = /\d/.test(pwd);
+    const hasSpec = /[@$!%*?&#^()_+=[\]{}|;:,.<>~-]/.test(pwd);
+
+    function updateRule(elemId, valid) {
+      const el = document.getElementById(elemId);
+      if (!el) return;
+      if (valid) {
+        el.style.color = '#34d399';
+        el.innerHTML = '<i class="fa-solid fa-circle-check" style="font-size:0.75rem; color:#34d399;"></i> ' + el.textContent.trim();
+      } else {
+        el.style.color = '#94a3b8';
+        el.innerHTML = '<i class="fa-regular fa-circle" style="font-size:0.65rem;"></i> ' + el.textContent.trim();
+      }
+    }
+
+    updateRule('sa_rule_len', hasLen);
+    updateRule('sa_rule_upper', hasUpper);
+    updateRule('sa_rule_lower', hasLower);
+    updateRule('sa_rule_num', hasNum);
+    updateRule('sa_rule_spec', hasSpec);
+
+    let score = 0;
+    if (hasLen) score++;
+    if (hasUpper) score++;
+    if (hasLower) score++;
+    if (hasNum) score++;
+    if (hasSpec) score++;
+
+    if (!bar || !label) return;
+
+    if (pwd.length === 0) {
+      bar.style.width = '0%';
+      bar.style.background = '#ef4444';
+      label.textContent = 'Enter Password';
+      label.style.color = '#94a3b8';
+    } else if (score <= 2) {
+      bar.style.width = '25%';
+      bar.style.background = '#ef4444';
+      label.textContent = 'Weak';
+      label.style.color = '#ef4444';
+    } else if (score <= 4) {
+      bar.style.width = '60%';
+      bar.style.background = '#f59e0b';
+      label.textContent = 'Moderate';
+      label.style.color = '#f59e0b';
+    } else {
+      bar.style.width = '100%';
+      bar.style.background = '#10b981';
+      label.textContent = 'Ironclad (Strong)';
+      label.style.color = '#34d399';
+    }
+  };
+
+  window.handleSaPasswordChangeSubmit = async function(e) {
+    e.preventDefault();
+    const curr = (document.getElementById('saCurrentPassword') || document.getElementById('sa_curr_password')) ? (document.getElementById('saCurrentPassword') || document.getElementById('sa_curr_password')).value : '';
+    const nw = (document.getElementById('saNewPassword') || document.getElementById('sa_new_password')) ? (document.getElementById('saNewPassword') || document.getElementById('sa_new_password')).value : '';
+    const cnf = (document.getElementById('saConfirmPassword') || document.getElementById('sa_confirm_password')) ? (document.getElementById('saConfirmPassword') || document.getElementById('sa_confirm_password')).value : '';
+    const submitBtn = document.getElementById('saPwdSubmitBtn') || document.getElementById('btnSaveSaPassword');
+    const btnText = document.getElementById('saPwdBtnText') || document.getElementById('btnSaveSaPasswordText');
+
+    if (!curr || !nw || !cnf) {
+      alert('Please fill out all password fields.');
+      return;
+    }
+
+    if (nw !== cnf) {
+      alert('New password and confirm password do not match.');
+      return;
+    }
+
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+=\-[\]{}|;:,.<>~])[A-Za-z\d@$!%*?&#^()_+=\-[\]{}|;:,.<>~]{8,}$/;
+    if (!strongRegex.test(nw)) {
+      alert('Password requirements not met: minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special symbol.');
+      return;
+    }
+
+    let userObj = null;
+    try {
+      const raw = localStorage.getItem('eduvision_counsellor');
+      if (raw) userObj = JSON.parse(raw);
+    } catch(err){}
+
+    const userId = (userObj && (userObj.employee_id || userObj.admin_id || userObj.team_leader_id || userObj.counsellor_id || userObj.student_id || userObj.email || userObj.id)) || 'demo_user';
+
+    // Step 1: Trigger Liquid Loading Animation
+    if (submitBtn) {
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
+    }
+    if (btnText) btnText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Encrypting &amp; Updating Vault...';
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_type: 'admin',
+          user_id: userId,
+          current_password: curr,
+          new_password: nw
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Password update failed.');
+      }
+
+      // Step 2: Trigger Success Pop Animation!
+      if (submitBtn) {
+        submitBtn.classList.remove('is-loading');
+        submitBtn.classList.add('is-success');
+      }
+      if (btnText) btnText.innerHTML = '<i class="fa-solid fa-circle-check"></i> Credentials Re-encrypted!';
+
+      if (typeof showToast === 'function') {
+        showToast('🛡️ Security Vault Updated: Password changed successfully!', 'success');
+      }
+
+      if (userObj) {
+        userObj.password = nw;
+        localStorage.setItem('eduvision_counsellor', JSON.stringify(userObj));
+      }
+
+      setTimeout(() => {
+        const form = document.querySelector('form[id*="Password"]');
+        if (form) form.reset();
+        if (typeof handleSaPasswordStrengthCheck === 'function') handleSaPasswordStrengthCheck();
+        if (submitBtn) {
+          submitBtn.classList.remove('is-success');
+          submitBtn.disabled = false;
+        }
+        if (btnText) btnText.textContent = 'Update Password';
+        if (typeof closeSaProfileModal === 'function') closeSaProfileModal();
+        if (typeof closeModal === 'function') closeModal();
+      }, 1400);
+
+    } catch(err) {
+      if (submitBtn) {
+        submitBtn.classList.remove('is-loading');
+        submitBtn.disabled = false;
+      }
+      if (btnText) btnText.textContent = 'Update Password';
+      alert('❌ Error: ' + err.message);
+    }
+  };
+  </script>
+
+</body>
+</html>

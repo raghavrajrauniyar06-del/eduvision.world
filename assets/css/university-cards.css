@@ -1,0 +1,79 @@
+/* Slide 3 Feature Cards CSS */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.feature-card {
+  background: #222225;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  color: #fff;
+  align-items: stretch;
+  transition: transform 0.3s;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+}
+
+.feature-content {
+  padding: 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.feature-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  background: rgba(255,255,255,0.05);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.feature-list li i {
+  color: #8a2be2;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.feature-desc {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.feature-card img {
+  width: 350px;
+  object-fit: cover;
+}

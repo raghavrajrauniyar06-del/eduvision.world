@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Login - EduVision</title>
+  
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* SUCCESS MODAL ANIMATION */
+    .success-modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 13, 0.92); backdrop-filter: blur(25px);
+      z-index: 10000; display: none; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; transition: opacity 0.35s ease;
+    }
+    .success-modal-overlay.show { display: flex; opacity: 1; }
+    .success-modal-box {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-subtle); border-radius: 24px;
+      padding: 40px 36px; text-align: center; max-width: 420px; width: 100%;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 45px var(--dynamic-shadow, rgba(212, 175, 55, 0.3));
+      transform: scale(0.9); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .success-modal-overlay.show .success-modal-box { transform: scale(1); }
+    .success-icon-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      border: 2px solid var(--dynamic-color, #d4af37);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px var(--dynamic-shadow, rgba(212, 175, 55, 0.4));
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 15px var(--dynamic-shadow, rgba(212, 175, 55, 0.3)); }
+      to { box-shadow: 0 0 35px var(--dynamic-shadow, rgba(212, 175, 55, 0.7)); }
+    }
+    .success-title {
+      font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700;
+      color: #fff; margin-bottom: 8px;
+    }
+    .success-desc { font-size: 0.88rem; color: #94a3b8; margin-bottom: 24px; font-family: 'Inter', sans-serif;}
+    .success-loader {
+      width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px; overflow: hidden;
+    }
+    .success-loader-bar {
+      height: 100%; width: 0%;
+      background: var(--dynamic-color, #d4af37);
+      border-radius: 10px; animation: fillBar 1.5s linear forwards;
+    }
+    @keyframes fillBar { to { width: 100%; } }
+  </style>
+
+  
+
+
+  <!-- INFINITY FLASHLIGHT CSS -->
+  <style>
+    .password-wrapper { position: relative; width: 100%; display: block; overflow: visible !important; margin-bottom: 20px;}
+    .input-field { width: 100%; padding-right: 45px !important; }
+    .eye-btn {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.5);
+        z-index: 10;
+        transition: all 0.3s;
+        font-size: 1.2rem;
+    }
+    .eye-btn:hover { color: rgba(255,255,255,0.8); }
+    .eye-btn.active { color: #FFD700; text-shadow: 0 0 15px #FFD700; }
+    
+    .infinity-ray {
+        position: absolute;
+        right: 35px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 200vw;
+        height: 150vh;
+        background: linear-gradient(to left, rgba(255, 215, 0, 0.9), rgba(255, 215, 0, 0.3) 30%, rgba(255,215,0,0) 80%);
+        clip-path: polygon(100% 50%, 0 0, 0 100%);
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 9;
+        opacity: 1;
+        transform-origin: right center;
+        animation: rayShoot 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+    @keyframes rayShoot {
+        0% { width: 0; opacity: 1; transform: translateY(-50%) scaleY(0.01); filter: brightness(2); }
+        50% { width: 200vw; opacity: 1; transform: translateY(-50%) scaleY(1); filter: brightness(1.5); }
+        100% { width: 200vw; opacity: 1; transform: translateY(-50%) scaleY(1); filter: brightness(1); }
+    }
+  </style>
+  <style>
+    /* Specific overrides for Apple macOS liquid design */
+    body.admin-login-body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif !important;
+      background: #020408 url('../assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed !important;
+      background-size: cover !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      min-height: 100vh !important;
+      overflow-x: hidden !important;
+      position: relative !important;
+      margin: 0 !important;
+    }
+
+    body.admin-login-body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 45%, rgba(2, 4, 8, 0.25) 0%, rgba(2, 4, 8, 0.65) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+      animation: appleCardSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes appleCardSlide {
+      from { opacity: 0; transform: translateY(40px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-container {
+      background: rgba(14, 18, 28, 0.72) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 28px !important;
+      padding: 38px 34px 32px !important;
+      backdrop-filter: blur(45px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(45px) saturate(190%) !important;
+      box-shadow: 
+        0 35px 90px rgba(0, 0, 0, 0.75),
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    .auth-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .auth-header {
+      margin-bottom: 24px;
+      text-align: left !important;
+    }
+
+    .auth-header h1 {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 2.05rem !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+      letter-spacing: -0.025em !important;
+      line-height: 1.15 !important;
+      margin-bottom: 6px !important;
+      background: none !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    .auth-header p {
+      color: #94a3b8 !important;
+      font-size: 0.9rem !important;
+      font-weight: 400 !important;
+      line-height: 1.45 !important;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-field-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: rgba(8, 11, 18, 0.68) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 14px !important;
+      color: #ffffff !important;
+      font-size: 0.95rem !important;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .input-field::placeholder { color: #64748b; font-size: 0.9rem; }
+
+    .input-field:focus {
+      border-color: rgba(255, 255, 255, 0.85) !important;
+      background: rgba(14, 18, 30, 0.85) !important;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .input-field-wrapper:focus-within .input-icon {
+      color: #ffffff;
+    }
+
+    .auth-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 22px;
+      font-size: 0.86rem;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd5e1;
+      cursor: pointer;
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    .remember-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      accent-color: #ffffff;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #e2e8f0 !important;
+      font-weight: 500 !important;
+      cursor: pointer;
+      transition: color 0.2s;
+      font-size: 0.86rem !important;
+    }
+
+    .forgot-link:hover {
+      color: #ffffff !important;
+      text-decoration: underline !important;
+    }
+
+    .btn-submit {
+      width: 100% !important;
+      padding: 14px !important;
+      border: none !important;
+      border-radius: 14px !important;
+      background: #ffffff !important;
+      color: #090d16 !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+      letter-spacing: -0.01em !important;
+      cursor: pointer !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+    }
+
+    .btn-submit:hover {
+      background: #f8fafc !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 28px rgba(255, 255, 255, 0.22) !important;
+    }
+
+    .btn-submit:active { transform: translateY(0) !important; }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+
+    .auth-footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .auth-footer a:hover { color: #ffffff; }
+  </style>
+<style id="apple-vision-liquid-glass">
+
+  /* ═══════════════════════════════════════════════════════════
+     AUTHENTIC APPLE macOS / VisionOS LIQUID GLASS THEME
+     ═══════════════════════════════════════════════════════════ */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif !important;
+    background: #020408 url('../assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  body::before {
+    content: '' !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: radial-gradient(ellipse at 50% 45%, rgba(2, 4, 8, 0.22) 0%, rgba(2, 4, 8, 0.68) 100%) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .login-wrapper {
+    width: 100% !important;
+    max-width: 460px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+    animation: appleCardSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  @keyframes appleCardSlide {
+    from { opacity: 0; transform: translateY(40px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .auth-container {
+    width: 100% !important;
+    background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(10, 14, 24, 0.76) 100%) !important;
+    backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    -webkit-backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    border-radius: 30px !important;
+    padding: 38px 34px 32px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.65),
+      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.45),
+      inset 0 0 45px rgba(255, 255, 255, 0.05),
+      0 40px 100px -15px rgba(0, 0, 0, 0.9),
+      0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+    overflow: hidden !important;
+  }
+
+  /* Specular Top Rim Sheen with Prismatic Glint */
+  .auth-container::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 10% !important;
+    right: 10% !important;
+    height: 1.5px !important;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 1) 50%, rgba(180, 220, 255, 0.9) 65%, transparent 100%) !important;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) !important;
+    pointer-events: none !important;
+    z-index: 20 !important;
+  }
+
+  /* Interactive Specular Glare (follows mouse cursor) */
+  .auth-container::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 30px !important;
+    background: radial-gradient(circle 380px at var(--glare-x, 50%) var(--glare-y, 25%), rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 75%) !important;
+    pointer-events: none !important;
+    z-index: 15 !important;
+    opacity: 0.95 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .auth-header {
+    margin-bottom: 24px !important;
+    text-align: left !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .auth-header h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 2.05rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.025em !important;
+    line-height: 1.15 !important;
+    margin-bottom: 6px !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .auth-header p {
+    color: #94a3b8 !important;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    line-height: 1.45 !important;
+  }
+
+  .input-group {
+    margin-bottom: 16px !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .input-field-wrapper {
+    position: relative !important;
+    width: 100% !important;
+  }
+
+  .input-icon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #94a3b8 !important;
+    font-size: 0.95rem !important;
+    pointer-events: none !important;
+    transition: color 0.2s !important;
+    z-index: 5 !important;
+  }
+
+  /* Liquid Glass Inputs */
+  .input-field {
+    width: 100% !important;
+    padding: 14px 16px 14px 44px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+    backdrop-filter: blur(25px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 1px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    color: #ffffff !important;
+    font-size: 0.95rem !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .input-field:focus {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.18) !important;
+  }
+
+  .auth-controls-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 4px !important;
+    margin-bottom: 22px !important;
+    font-size: 0.86rem !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .remember-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: #cbd5e1 !important;
+    cursor: pointer !important;
+    font-size: 0.85rem !important;
+    user-select: none !important;
+  }
+
+  .remember-label input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 4px !important;
+    accent-color: #ffffff !important;
+    cursor: pointer !important;
+  }
+
+  .forgot-link {
+    color: #e2e8f0 !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: color 0.2s !important;
+    font-size: 0.86rem !important;
+  }
+
+  .forgot-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+  }
+
+  /* Pure Solid White Apple Button with Tactile Press */
+  .btn-submit, .btn-apple-login {
+    width: 100% !important;
+    padding: 14px !important;
+    border: none !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    color: #090d16 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    letter-spacing: -0.01em !important;
+    cursor: pointer !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px #ffffff, 0 0 25px rgba(255, 255, 255, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .btn-submit:hover, .btn-apple-login:hover {
+    background: #f8fafc !important;
+    transform: translateY(-2px) scale(1.015) !important;
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.35), inset 0 1px 1px #ffffff !important;
+  }
+
+  .btn-submit:active, .btn-apple-login:active {
+    transform: scale(0.96) translateY(2px) !important;
+  }
+
+  .auth-footer {
+    text-align: center !important;
+    margin-top: 22px !important;
+    padding-top: 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.82rem !important;
+    color: #64748b !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .auth-footer a {
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    transition: color 0.2s !important;
+  }
+
+  .auth-footer a:hover { color: #ffffff !important; }
+
+</style>
+</head>
+<body class="admin-login-body">
+
+  <div class="login-wrapper">
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>Hello, Admin!</h1>
+        <p>Log in to access executive administration workspace.</p>
+      </div>
+
+      <div id="loginError" style="color:#ef4444; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239,68,68,0.25); border-radius:10px; padding:10px 14px; margin-bottom:16px; display:none; font-size:0.88rem;"></div>
+
+      <form id="adminLoginForm" autocomplete="off">
+        <div class="input-group">
+          <div class="input-field-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="text" id="empId" class="input-field" placeholder="Mobile Number, Email or Admin ID" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-field-wrapper password-wrapper" style="margin-bottom:0;">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="password" class="input-field" required placeholder="Password" style="padding-right: 44px;" autocomplete="current-password">
+            <i class="fa-solid fa-eye eye-btn" onclick="toggleInfinityPassword(this, 'password')"></i>
+          </div>
+        </div>
+
+        <div class="auth-controls-row">
+          <label class="remember-label">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember me</span>
+          </label>
+          <a href="javascript:void(0)" onclick="openRoleForgotModal()" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn-submit" id="loginBtn">Log in</button>
+
+        <div class="auth-footer">
+          <a href="../index.html">← Return to EduVision Homepage</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase Setup & Login Logic -->
+  <script type="module">
+    const supabaseUrl = 'https://ewxvqpyusveiynplzxed.supabase.co';
+    const supabaseKey = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
+    
+    // Initialize Supabase
+    const sb = supabase.createClient(supabaseUrl, supabaseKey);
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const empId = document.getElementById('empId').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      const errDiv = document.getElementById('loginError');
+      
+      btn.disabled = true;
+      btn.innerHTML = 'Authenticating... <i class="fa-solid fa-circle-notch fa-spin"></i>';
+      errDiv.style.display = 'none';
+      
+      try {
+        const rawInput = empId.trim();
+        const digits = rawInput.replace(/\D/g, '');
+        const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+
+        // 1. First check admin_users table
+        let adminOrParts = [
+          `employee_id.eq.${rawInput}`,
+          `email.ilike.${rawInput}`
+        ];
+        if (rawInput.length === 36 && rawInput.includes('-')) {
+          adminOrParts.push(`admin_id.eq.${rawInput}`);
+        }
+        if (last10) {
+          adminOrParts.push(`phone.ilike.*${last10}*`);
+          adminOrParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+        } else if (rawInput.length >= 3) {
+          adminOrParts.push(`phone.ilike.*${rawInput}*`);
+        }
+
+        let { data, error } = await sb
+          .from('admin_users')
+          .select('*')
+          .or(adminOrParts.join(','))
+          .eq('password', password);
+
+        if (error) {
+          console.warn("admin_users query notice:", error);
+          data = null;
+        }
+
+        // 2. If not found in admin_users, check counsellors for CEO/CTO/Admin roles
+        if (!data || data.length === 0) {
+          let cOrParts = [
+            `employee_id.eq.${rawInput}`,
+            `counsellor_id.eq.${rawInput}`,
+            `email.ilike.${rawInput}`
+          ];
+          if (last10) {
+            cOrParts.push(`phone.ilike.*${last10}*`);
+            cOrParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (rawInput.length >= 3) {
+            cOrParts.push(`phone.ilike.*${rawInput}*`);
+          }
+
+          const { data: cData, error: cErr } = await sb
+            .from('counsellors')
+            .select('*')
+            .or(cOrParts.join(','))
+            .eq('password', password);
+
+          if (!cErr && cData && cData.length > 0) {
+            const cUser = cData[0];
+            const roleLower = (cUser.role || '').toLowerCase();
+            if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
+              data = [{
+                admin_id: cUser.counsellor_id,
+                employee_id: cUser.employee_id || cUser.counsellor_id,
+                full_name: cUser.full_name,
+                role: cUser.role,
+                designation: cUser.designation || cUser.role,
+                branch: cUser.branch || 'Head Office',
+                status: cUser.status
+              }];
+            }
+          }
+        }
+
+        // 3. Also check team_leaders for admin-level roles
+        if (!data || data.length === 0) {
+          let tOrParts = [
+            `employee_id.eq.${rawInput}`,
+            `team_leader_id.eq.${rawInput}`,
+            `email.ilike.${rawInput}`
+          ];
+          if (last10) {
+            tOrParts.push(`phone.ilike.*${last10}*`);
+            tOrParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (rawInput.length >= 3) {
+            tOrParts.push(`phone.ilike.*${rawInput}*`);
+          }
+
+          const { data: tData, error: tErr } = await sb
+            .from('team_leaders')
+            .select('*')
+            .or(tOrParts.join(','))
+            .eq('password', password);
+
+          if (!tErr && tData && tData.length > 0) {
+            const tUser = tData[0];
+            const roleLower = (tUser.role || '').toLowerCase();
+            if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
+              data = [{
+                admin_id: tUser.team_leader_id || tUser.employee_id,
+                employee_id: tUser.employee_id,
+                full_name: tUser.full_name,
+                role: tUser.role,
+                designation: tUser.designation || tUser.role,
+                branch: tUser.branch || 'Head Office',
+                status: tUser.status
+              }];
+            }
+          }
+        }
+
+        if (!data || data.length === 0) {
+          throw new Error('Invalid Mobile Number, Email, Admin ID or Password. Access denied.');
+        }
+
+        const user = data[0];
+
+        if (user.status && user.status !== 'Active') {
+          throw new Error('Account is suspended. Contact system administrator.');
+        }
+
+        // Build admin session object
+        const adminSession = {
+          admin_id: user.admin_id || user.employee_id,
+          employee_id: user.employee_id,
+          full_name: user.full_name,
+          role: user.role || 'Admin',
+          designation: user.designation || user.role || 'Administrator',
+          branch: user.branch || 'Head Office'
+        };
+
+        localStorage.setItem('eduvision_admin', JSON.stringify(adminSession));
+          
+        btn.style.background = '#10b981';
+        btn.style.color = '#fff';
+        btn.innerHTML = 'Access Granted <i class="fa-solid fa-check"></i>';
+          
+        let animColor = '#d4af37';
+        const roleLower = (adminSession.role || '').toLowerCase();
+        if (roleLower === 'super admin' || roleLower === 'ceo') animColor = '#ef4444';
+        else if (roleLower === 'cto') animColor = '#7c3aed';
+          
+        showSuccessModal(
+          'Welcome, ' + adminSession.full_name,
+          'Authenticating ' + adminSession.role + ' privileges...',
+          function() {
+            window.location.href = '../welcome.html?redirect=admin/dashboard.html';
+          },
+          animColor
+        );
+      } catch (err) {
+        console.error("Login error:", err);
+        errDiv.textContent = err.message || 'Authentication failed.';
+        errDiv.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = 'Authenticate <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+      }
+    });
+    
+    // Auto redirect if already logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const user = localStorage.getItem('eduvision_admin');
+      if (user) {
+        try {
+          const parsed = JSON.parse(user);
+          if (parsed && parsed.admin_id) {
+            window.location.href = '../welcome.html?redirect=admin/dashboard.html';
+          }
+        } catch(e) {
+          localStorage.removeItem('eduvision_admin');
+        }
+      }
+    });
+
+    function showSuccessModal(titleText, descText, callback, colorHex) {
+      var overlay = document.getElementById('successModalOverlay');
+      var titleEl = document.getElementById('successTitle');
+      var descEl  = document.getElementById('successDesc');
+      var color = colorHex || '#d4af37'; 
+      var shadowColor = color + '66'; 
+      
+      if (overlay) {
+        overlay.style.setProperty('--dynamic-color', color);
+        overlay.style.setProperty('--dynamic-shadow', shadowColor);
+      }
+      
+      if (titleEl) titleEl.textContent = titleText || 'Welcome!';
+      if (descEl)  descEl.textContent  = descText  || 'Authentication successful...';
+      if (overlay) {
+        overlay.classList.add('show');
+        setTimeout(function() { overlay.classList.remove('show'); if (callback) callback(); }, 1600);
+      } else {
+        if (callback) callback();
+      }
+    }
+  </script>
+
+  <!-- SUCCESS ANIMATION OVERLAY -->
+  <div class="success-modal-overlay" id="successModalOverlay">
+    <div class="success-modal-box">
+      <div class="success-icon-circle">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--dynamic-color, #d4af37)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 class="success-title" id="successTitle">Welcome!</h2>
+      <p class="success-desc" id="successDesc">Authentication successful...</p>
+      <div class="success-loader">
+        <div class="success-loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  <!-- INFINITY FLASHLIGHT JS -->
+  <script>
+    function toggleInfinityPassword(btn, inputId) {
+        const input = document.getElementById(inputId);
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        
+        btn.classList.toggle('active');
+        btn.classList.toggle('fa-eye');
+        btn.classList.toggle('fa-eye-slash');
+
+        const wrapper = btn.parentElement;
+        const oldRay = wrapper.querySelector('.infinity-ray');
+
+        if (isPassword) {
+            if (!oldRay) {
+                const ray = document.createElement('div');
+                ray.className = 'infinity-ray';
+                wrapper.appendChild(ray);
+            }
+        } else {
+            if (oldRay) oldRay.remove();
+        }
+    }
+  
+    // ==========================================
+    // ROLE FORGOT PASSWORD CONTROLLER
+    // ==========================================
+    function openRoleForgotModal() {
+      const modal = document.getElementById('roleForgotModal');
+      const inp = document.getElementById('roleForgotInput');
+      const statusEl = document.getElementById('roleForgotStatus');
+      const btn = document.getElementById('btnSendRoleForgot');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔';
+      }
+      if (statusEl) statusEl.textContent = '';
+      if (inp) inp.value = '';
+      if (modal) modal.style.display = 'flex';
+      setTimeout(() => { if (inp) inp.focus(); }, 120);
+    }
+
+    function closeRoleForgotModal() {
+      const modal = document.getElementById('roleForgotModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleSendRoleForgot(portalName, tableName) {
+      const inp = document.getElementById('roleForgotInput');
+      const statusEl = document.getElementById('roleForgotStatus');
+      const btn = document.getElementById('btnSendRoleForgot');
+      const val = inp ? inp.value.trim() : '';
+
+      if (!val) {
+        if (statusEl) { statusEl.textContent = 'Please enter your registered mobile or email.'; statusEl.style.color = '#ef4444'; }
+        if (inp) inp.focus();
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching Account...'; }
+      if (statusEl) { statusEl.textContent = 'Verifying staff records in database...'; statusEl.style.color = '#f7d377'; }
+
+      try {
+        const isEmail = val.includes('@');
+        const col = isEmail ? 'email' : 'phone';
+        const client = (typeof sb !== 'undefined' && sb) ? sb : (typeof supabaseClient !== 'undefined' ? supabaseClient : window.supabase.createClient('https://ewxvqpyusveiynplzxed.supabase.co', 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC'));
+        
+        // Query database table
+        const { data, error } = await client.from(tableName).select('*').ilike(col, val);
+        if (!data || data.length === 0) {
+          throw new Error('No ' + portalName + ' account found with this ' + (isEmail ? 'email address' : 'mobile number') + '.');
+        }
+
+        const rec = data[0];
+        const targetEmail = (rec.email || '').trim().toLowerCase();
+        if (!targetEmail || !targetEmail.includes('@')) {
+          throw new Error('This account does not have a registered email address for OTP delivery.');
+        }
+
+        if (statusEl) {
+          statusEl.textContent = '✓ Account verified (' + (rec.name || rec.full_name || portalName) + ')! Sending 6-digit OTP...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        // Dispatch OTP via Supabase Auth
+        try {
+          await client.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } });
+        } catch(e){}
+
+        // Store pending auth for otp-verify.html
+        sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({
+          identifier: targetEmail,
+          phone: rec.phone || '',
+          name: rec.name || rec.full_name || portalName,
+          mode: 'recovery',
+          role: portalName,
+          portal: portalName
+        }));
+
+        if (statusEl) {
+          statusEl.textContent = '✓ 6-Digit OTP sent to ' + targetEmail + '! Redirecting...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        setTimeout(() => {
+          window.location.href = '../otp-verify.html';
+        }, 700);
+
+      } catch(err) {
+        console.error("Forgot OTP Error:", err);
+        if (statusEl) { statusEl.textContent = '❌ ' + (err.message || 'Failed to send OTP.'); statusEl.style.color = '#ef4444'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔'; }
+      }
+    }
+
+  </script>
+
+  <!-- ADMIN FORGOT PASSWORD MODAL -->
+  <div id="roleForgotModal" style="position:fixed; inset:0; background:rgba(4,9,20,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:999999; display:none; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#0f172a; border:1px solid rgba(247,211,119,0.3); color:#f8fafc; width:100%; max-width:430px; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,0.7); overflow:hidden; font-family:'Plus Jakarta Sans', sans-serif;">
+      
+      <div style="padding:20px 24px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.2rem;">🔑</span>
+          <span style="font-size:1.1rem; font-weight:700; color:#f8fafc;">Admin Master Security Reset</span>
+        </div>
+        <button type="button" onclick="closeRoleForgotModal()" style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:2px 8px; border-radius:50%; line-height:1;">&times;</button>
+      </div>
+
+      <div style="padding:22px 24px;">
+        <p style="margin:0 0 18px; font-size:0.88rem; color:#94a3b8; line-height:1.5;">
+          Enter your registered <strong>Mobile Number</strong> or <strong>Official Email</strong>. We will locate your authorized account and send a 6-digit OTP code to verify your identity.
+        </p>
+
+        <div style="margin-bottom:18px;">
+          <label style="display:block; font-size:0.78rem; font-weight:700; color:#f7d377; margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase;">Registered Mobile No. or Email</label>
+          <input type="text" id="roleForgotInput" placeholder="e.g. registered phone or email" style="width:100%; padding:13px 16px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#ffffff; font-size:0.95rem; outline:none; box-sizing:border-box;">
+        </div>
+
+        <div id="roleForgotStatus" style="font-size:0.85rem; margin-bottom:14px; min-height:18px;"></div>
+
+        <button type="button" id="btnSendRoleForgot" onclick="handleSendRoleForgot('admin', 'admin_users')" style="width:100%; padding:13px; border-radius:12px; border:none; background:linear-gradient(135deg, #f7d377 0%, #c9932a 100%); color:#070b12; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 4px 20px rgba(201,147,42,0.4);">
+          Find Account & Send 6-Digit OTP ➔
+        </button>
+      </div>
+
+      <div style="padding:12px 24px; background:rgba(7,11,18,0.5); border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-size:0.78rem; color:#64748b;">
+        <span>🔒 EduVision Staff Security & Verification</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- APPLE VISIONOS CURSOR SPECULAR GLARE ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        const targets = document.querySelectorAll('.auth-container, .auth-slider-box, .login-wrapper, .admin-login-card');
+        targets.forEach(function(card) {
+          card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            this.style.setProperty('--glare-x', x.toFixed(1) + '%');
+            this.style.setProperty('--glare-y', y.toFixed(1) + '%');
+          });
+        });
+      });
+    })();
+  </script>
+
+<!-- APPLE MAC 120FPS DYNAMIC LIQUID GLASS & CLICK ANIMATION ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        initAppleLiquidGlassEngine();
+      });
+
+      function initAppleLiquidGlassEngine() {
+        // High-Performance 120fps rAF Cursor Glare (Zero Layout Thrashing)
+        const targets = document.querySelectorAll('.portal-modal-container, .auth-container, .auth-slider-box, .portal-modal-box');
+        targets.forEach(function(el) {
+          let cardRect = null;
+          let ticking = false;
+
+          function updateRect() {
+            cardRect = el.getBoundingClientRect();
+          }
+
+          el.addEventListener('mouseenter', updateRect);
+          window.addEventListener('resize', updateRect);
+          window.addEventListener('scroll', updateRect, { passive: true });
+
+          el.addEventListener('mousemove', function(e) {
+            if (!cardRect) updateRect();
+            if (!ticking) {
+              requestAnimationFrame(function() {
+                if (cardRect && cardRect.width > 0) {
+                  const x = ((e.clientX - cardRect.left) / cardRect.width) * 100;
+                  const y = ((e.clientY - cardRect.top) / cardRect.height) * 100;
+                  el.style.setProperty('--glare-x', x.toFixed(1) + '%');
+                  el.style.setProperty('--glare-y', y.toFixed(1) + '%');
+                }
+                ticking = false;
+              });
+              ticking = true;
+            }
+          });
+        });
+
+        // Tactile Apple Click & Smooth Navigation on Portal Cards
+        const cards = document.querySelectorAll('.portal-card');
+        cards.forEach(function(card) {
+          card.addEventListener('click', function(e) {
+            const targetHref = this.getAttribute('href');
+            const hasCustomClick = this.hasAttribute('onclick');
+
+            const rect = this.getBoundingClientRect();
+            const rx = e.clientX - rect.left;
+            const ry = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'mac-click-ripple';
+            ripple.style.left = rx + 'px';
+            ripple.style.top = ry + 'px';
+            this.appendChild(ripple);
+
+            this.classList.add('mac-card-clicked');
+            const icon = this.querySelector('.portal-icon-box');
+            if (icon) icon.classList.add('mac-icon-spring');
+
+            if (targetHref && targetHref !== 'javascript:void(0)' && !hasCustomClick) {
+              e.preventDefault();
+              setTimeout(function() {
+                window.location.href = targetHref;
+              }, 200);
+            } else {
+              setTimeout(function() {
+                card.classList.remove('mac-card-clicked');
+                if (icon) icon.classList.remove('mac-icon-spring');
+                ripple.remove();
+              }, 400);
+            }
+          });
+        });
+      }
+
+      // Smooth Window Opening & Minimizing
+      const origOpen = window.openPortalSelectionModal;
+      window.openPortalSelectionModal = function() {
+        if (typeof origOpen === 'function') origOpen();
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'none';
+            container.style.transform = 'scale(0.92) translateY(24px) translateZ(0)';
+            container.style.opacity = '0';
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                container.style.transition = 'transform 0.40s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease';
+                container.style.transform = 'scale(1) translateY(0) translateZ(0)';
+                container.style.opacity = '1';
+              });
+            });
+          }
+        }
+      };
+
+      const origClose = window.closePortalModal;
+      window.closePortalModal = function() {
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease';
+            container.style.transform = 'scale(0.94) translateY(18px) translateZ(0)';
+            container.style.opacity = '0';
+          }
+          setTimeout(function() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+          }, 260);
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

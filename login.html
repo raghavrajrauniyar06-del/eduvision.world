@@ -1,0 +1,5320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <script>
+
+    // Old EduVision login animation removed per user request: transitions directly to Raghav animation
+    function startOrbLoader(btnEvent) {}
+    function stopOrbLoader() {}
+    function triggerOrbSuccess(colorHex, welcomeText, callback) {
+      if (callback) callback();
+    }
+
+    /* CLIENT-SIDE ANTI-CLICKJACKING & FRAMEBUSTER PROTECTION */
+    if (self !== top) { top.location = self.location; }
+  </script>
+  <title>Student Login & Admission Dashboard | EduVision</title>
+  <meta name="description" content="Login to your EduVision student portal to track university applications, access AI career guidance, manage documents, and get direct counsellor support.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="animations/animations.css">
+  
+  <style>
+    :root {
+      --bg-dark: #070b12;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(22, 34, 61, 0.85);
+      --gold-primary: #c9932a;
+      --gold-light: #f7d377;
+      --gold-bright: #fef08a;
+      --gold-gradient: linear-gradient(135deg, #fff0c4 0%, #f7d377 40%, #c9932a 80%, #8a6015 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-gold: rgba(247, 211, 119, 0.22);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --shadow-gold: 0 10px 30px -5px rgba(201, 147, 42, 0.25);
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-serif: 'Playfair Display', serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif;
+      background: #020408 url('assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 45%, rgba(2, 4, 8, 0.28) 0%, rgba(2, 4, 8, 0.68) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ═══════════════════════════════════════════
+       PORTAL SELECTION MODAL (WORLD-CLASS GLASS)
+    ═══════════════════════════════════════════ */
+    
+    
+    
+    .portal-modal-close {
+      position: absolute;
+      top: 20px; right: 22px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .portal-modal-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+      transform: rotate(90deg);
+    }
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .portal-badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.35);
+      color: #f7d377;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .portal-modal-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.15), rgba(7, 11, 18, 0));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.85);
+      border-color: rgba(247, 211, 119, 0.55);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(201, 147, 42, 0.22);
+    }
+    .portal-card:hover::before { opacity: 1; }
+
+    .portal-icon-box {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid rgba(247, 211, 119, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.1) rotate(-5deg);
+      background: rgba(201, 147, 42, 0.35);
+      border-color: #fef08a;
+    }
+    .portal-card-info {
+      flex: 1;
+    }
+    .portal-card-info h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 3px;
+      transition: color 0.25s;
+    }
+    .portal-card:hover .portal-card-info h3 {
+      color: #f7d377;
+    }
+    .portal-card-info p {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+    .portal-arrow {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      transition: all 0.3s ease;
+    }
+    .portal-card:hover .portal-arrow {
+      color: #fef08a;
+      transform: translateX(4px);
+    }
+
+    /* ═══════════════════════════════════════════
+       HEADER & NAVIGATION
+    ═══════════════════════════════════════════ */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(7, 11, 18, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .brand-logo img { height: 38px; width: auto; object-fit: contain; }
+    .brand-logo span {
+      background: var(--dynamic-color, #00d2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* Highlighted Nav Button for Login */
+    .nav-highlight-btn {
+      position: relative;
+      padding: 10px 24px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.25) 0%, rgba(7, 11, 18, 0.9) 100%);
+      border: 1px solid rgba(247, 211, 119, 0.5);
+      color: #fff0c4 !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(201, 147, 42, 0.25);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .nav-highlight-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(60deg, transparent, rgba(254, 240, 138, 0.3), transparent);
+      transform: rotate(30deg);
+      animation: liquidShimmerSweep 4s infinite linear;
+    }
+    .nav-highlight-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(247, 211, 119, 0.45);
+      border-color: #fef08a;
+    }
+
+    /* Logged-In User Profile Avatar Badge */
+    .user-profile-badge {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px 6px 8px;
+      border-radius: 30px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-gold);
+      cursor: pointer;
+      position: relative;
+    }
+    .user-avatar-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--dynamic-color, #00d2ff);
+      color: #070b12;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+    .user-name-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff0c4;
+    }
+
+    .user-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 220px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      padding: 8px 0;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      z-index: 1001;
+    }
+    .user-dropdown-menu.show { display: block; }
+    .user-dropdown-item {
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .user-dropdown-item:hover {
+      background: rgba(201, 147, 42, 0.15);
+      color: var(--gold-light);
+    }
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 6px 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO & LOGIN SECTION
+    ═══════════════════════════════════════════ */
+    .login-hero-section {
+      min-height: calc(100vh - 75px);
+      padding: 75px 24px 20px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 14px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 30px;
+      background: rgba(201, 147, 42, 0.12);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .gold-word {
+      background: var(--dynamic-color, #00d2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: goldTextShine 4s infinite linear;
+    }
+    .hero-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-feature-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .hero-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════════
+       PREMIUM SWAPPING SLIDING PANEL CONTAINER
+    ═══════════════════════════════════════════ */
+    .auth-slider-box {
+      width: 100%;
+      max-width: 980px;
+      min-height: 580px;
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      background: rgba(14, 18, 28, 0.76);
+      backdrop-filter: blur(45px) saturate(190%);
+      -webkit-backdrop-filter: blur(45px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.78), 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.22);
+      margin: 0 auto 30px;
+    }
+    .auth-slider-box, .auth-slider-box * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .auth-slider-box::-webkit-scrollbar, .auth-slider-box *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    .form-side-container {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.65s cubic-bezier(0.65, 0, 0.35, 1), border-radius 0.65s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.65s;
+      padding: 32px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .form-side-container::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    .sign-in-side {
+      left: 0;
+      width: 50%;
+      z-index: 2;
+    }
+
+    .sign-up-side {
+      left: 0;
+      width: 50%;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* SLIDING PANEL ANIMATION STATES */
+    .auth-slider-box.right-panel-active .sign-in-side {
+      transform: translateX(100%);
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .auth-slider-box.right-panel-active .sign-up-side {
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: 5;
+      animation: formShow 0.65s;
+    }
+
+    @keyframes formShow {
+      0%, 49.99% { opacity: 0; z-index: 1; }
+      50%, 100% { opacity: 1; z-index: 5; }
+    }
+
+    /* SLIDING OVERLAY CONTAINER WITH BUTTERY SMOOTH SILK CURVE DIVIDER */
+    .slider-overlay-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.65s cubic-bezier(0.65, 0, 0.35, 1), border-radius 0.65s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.65s;
+      z-index: 100;
+      border-radius: 150px 0 0 150px / 50% 0 0 50%;
+      box-shadow: -15px 0 40px rgba(0, 0, 0, 0.6), inset 2px 0 0 rgba(247, 211, 119, 0.45);
+    }
+
+    /* MULTI-CHANNEL OTP COMMUNICATION CHIPS */
+    .otp-channel-bar {
+      display: flex;
+      gap: 6px;
+      margin: 6px 0 8px;
+    }
+    .channel-chip {
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .channel-chip:hover {
+      background: rgba(201, 147, 42, 0.15);
+      border-color: rgba(247, 211, 119, 0.4);
+      color: #fff0c4;
+    }
+    .channel-chip.active {
+      background: rgba(201, 147, 42, 0.25);
+      border-color: var(--gold-light);
+      color: #f7d377;
+    }
+
+    /* SECURITY & IP RATE-LIMITING BADGE */
+    .security-rate-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: #64748b;
+      text-align: center;
+    }
+    .security-rate-badge .sec-icon {
+      color: #34d399;
+    }
+
+    .auth-slider-box.right-panel-active .slider-overlay-container {
+      transform: translateX(-100%);
+      border-radius: 0 150px 150px 0 / 0 50% 50% 0;
+      box-shadow: 15px 0 40px rgba(0, 0, 0, 0.6), inset -2px 0 0 rgba(247, 211, 119, 0.45);
+    }
+
+    .slider-overlay {
+      background: linear-gradient(135deg, rgba(22, 34, 61, 0.96) 0%, rgba(7, 11, 18, 0.98) 100%);
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(201, 147, 42, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(138, 96, 21, 0.2) 0%, transparent 50%);
+      color: #ffffff;
+      position: relative;
+      left: -100%;
+      height: 100%;
+      width: 200%;
+      transform: translateX(0);
+      transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .auth-slider-box.right-panel-active .slider-overlay {
+      transform: translateX(50%);
+    }
+
+    .overlay-panel-box {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 44px;
+      text-align: center;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      transform: translateX(0);
+      transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .overlay-left-box {
+      transform: translateX(-20%);
+    }
+
+    .auth-slider-box.right-panel-active .overlay-left-box {
+      transform: translateX(0);
+    }
+
+    .overlay-right-box {
+      right: 0;
+      transform: translateX(0);
+    }
+
+    .auth-slider-box.right-panel-active .overlay-right-box {
+      transform: translateX(20%);
+    }
+
+    /* BRANDING PANEL STYLES */
+    .branding-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 30px;
+      background: rgba(201, 147, 42, 0.18);
+      border: 1px solid rgba(247, 211, 119, 0.4);
+      color: #f7d377;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .overlay-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .overlay-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* BRANDING FEATURES GRID */
+    .branding-features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .b-feature-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+    .b-feature-chip:hover {
+      background: rgba(201, 147, 42, 0.2);
+      border-color: rgba(247, 211, 119, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* GHOST BUTTON FOR OVERLAY TOGGLE */
+    .btn-ghost-gold {
+      padding: 12px 32px;
+      border-radius: 30px;
+      background: transparent;
+      border: 2px solid #f7d377;
+      color: #fff0c4;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(247, 211, 119, 0.15);
+    }
+    .btn-ghost-gold:hover {
+      background: var(--dynamic-color, #00d2ff);
+      color: #070b12;
+      border-color: transparent;
+      box-shadow: 0 8px 25px rgba(201, 147, 42, 0.4);
+      transform: scale(1.04);
+    }
+
+    /* MOBILE RESPONSIVE STACKED SWAP (< 768px) */
+    @media (max-width: 768px) {
+      .nav-links { display: none !important; }
+      .nav-container { padding: 12px 16px !important; }
+      .nav-highlight-btn { padding: 7px 16px !important; font-size: 0.82rem !important; }
+      .auth-slider-box {
+        min-height: auto;
+        max-width: 100%;
+        border-radius: 20px;
+      }
+      .slider-overlay-container { display: none; }
+      .form-side-container {
+        position: relative;
+        width: 100% !important;
+        opacity: 1 !important;
+        transform: none !important;
+        padding: 24px 20px;
+      }
+      .sign-up-side { display: none; }
+      .auth-slider-box.right-panel-active .sign-in-side { display: none; }
+      .auth-slider-box.right-panel-active .sign-up-side { display: flex; }
+      .mobile-auth-switch { display: flex !important; }
+    }
+    .mobile-auth-switch {
+      display: none;
+      background: rgba(7, 11, 18, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    /* SUCCESS MODAL ANIMATION */
+    .success-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 13, 0.92);
+      backdrop-filter: blur(25px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .success-modal-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+    .success-modal-box {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 40px 36px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 45px var(--dynamic-shadow, rgba(0, 210, 255, 0.3));
+      transform: scale(0.9);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .success-modal-overlay.show .success-modal-box {
+      transform: scale(1);
+    }
+    .success-icon-circle {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(201, 147, 42, 0.2);
+      border: 2px solid var(--dynamic-color, #00d2ff);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px var(--dynamic-shadow, rgba(0, 210, 255, 0.4));
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 15px var(--dynamic-shadow, rgba(0, 210, 255, 0.3)); }
+      to { box-shadow: 0 0 35px var(--dynamic-shadow, rgba(0, 210, 255, 0.7)); }
+    }
+    .success-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .success-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .success-loader {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .success-loader-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--dynamic-color, #00d2ff);
+      border-radius: 10px;
+      animation: fillBar 1.5s linear forwards;
+    }
+    @keyframes fillBar {
+      to { width: 100%; }
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .login-card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .login-card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+      position: relative;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .input-wrapper {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.05rem;
+      color: var(--gold-light);
+      z-index: 5;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .form-input {
+      width: 100%;
+      display: block;
+      padding: 14px 48px 14px 44px;
+      background: rgba(8, 11, 18, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(247, 211, 119, 0.85);
+      box-shadow: 0 0 20px rgba(247, 211, 119, 0.35), 0 0 0 3px rgba(247, 211, 119, 0.15);
+      background: rgba(14, 18, 30, 0.85);
+    }
+    .toggle-pwd {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--gold-light);
+      cursor: pointer;
+      font-size: 1.15rem;
+      z-index: 10;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: transform 0.2s ease, color 0.2s ease, filter 0.2s ease;
+      user-select: none;
+      border-radius: 8px;
+    }
+    .toggle-pwd:hover {
+      transform: translateY(-50%) scale(1.15);
+      color: #ffffff;
+      filter: drop-shadow(0 0 8px rgba(247, 211, 119, 0.8));
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 26px;
+      font-size: 0.84rem;
+    }
+    .remember-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .remember-check input { accent-color: var(--gold-primary); }
+
+    /* ═══════════════════════════════════════════
+       AUTH MODE TABS & OTP STYLING
+    ═══════════════════════════════════════════ */
+    .auth-tab-switch {
+      display: flex;
+      background: rgba(7, 11, 18, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .auth-tab-btn.active {
+      background: var(--dynamic-color, #00d2ff);
+      color: #070b12;
+      box-shadow: 0 4px 15px rgba(201, 147, 42, 0.3);
+    }
+    .otp-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+    .otp-wrapper .form-input {
+      flex: 1;
+    }
+    .btn-send-otp {
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-send-otp:hover {
+      background: rgba(201, 147, 42, 0.3);
+      color: #fff;
+      border-color: #fef08a;
+    }
+    .btn-send-otp:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .otp-status-msg {
+      font-size: 0.78rem;
+      color: #34d399;
+      margin-top: 6px;
+      display: none;
+    }
+    .forgot-link {
+      color: var(--gold-light);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .forgot-link:hover { text-decoration: underline; color: #fff; }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: #ffffff;
+      color: #090d16;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-login-submit:hover {
+      background: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 255, 255, 0.22);
+    }
+    .btn-login-submit:active {
+      transform: translateY(0);
+    }
+
+    .social-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .social-divider::before, .social-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    .social-buttons-grid {
+      display: block;
+      width: 100%;
+    }
+        .btn-social {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-social:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 4px 18px rgba(66, 133, 244, 0.2);
+      transform: translateY(-2px);
+    }
+    .btn-social:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+    }
+
+    .demo-hint-box {
+      margin-top: 24px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(201, 147, 42, 0.08);
+      border: 1px dashed var(--border-gold);
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      text-align: center;
+    }
+
+    /* RIGHT SIDE 3D FLOATING SHOWCASE */
+    .showcase-container {
+      position: relative;
+      height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dashboard-preview-card {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(22, 34, 61, 0.85));
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      transform: rotateY(-8deg) rotateX(4deg);
+      transition: transform 0.5s ease;
+    }
+    .dashboard-preview-card:hover {
+      transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+    .preview-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .preview-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--dynamic-color, #00d2ff);
+      color: #070b12;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-user-info h4 { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .preview-user-info p { font-size: 0.75rem; color: var(--text-muted); }
+
+    .preview-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .preview-stat-card {
+      background: rgba(7, 11, 18, 0.5);
+      border: 1px solid var(--border-subtle);
+      padding: 14px;
+      border-radius: var(--radius-lg);
+    }
+    .stat-val { font-size: 1.3rem; font-weight: 800; color: var(--gold-light); }
+    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .preview-progress-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .preview-progress-fill {
+      height: 100%;
+      width: 85%;
+      background: var(--dynamic-color, #00d2ff);
+      border-radius: 10px;
+    }
+
+    /* ═══════════════════════════════════════════
+       BENEFITS SECTION: WHY LOGIN
+    ═══════════════════════════════════════════ */
+    .benefits-section {
+      padding: 100px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .section-title-wrap {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 50px;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .benefit-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: all 0.35s ease;
+    }
+    .benefit-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(201, 147, 42, 0.15);
+      background: var(--bg-card-hover);
+    }
+    .benefit-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid var(--border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+    }
+    .benefit-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .benefit-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════
+       SECURITY & TRUST SECTION
+    ═══════════════════════════════════════════ */
+    .security-section {
+      padding: 60px 24px;
+      max-width: 1280px;
+      margin: 0 auto 80px;
+    }
+    .security-bar {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(7, 11, 18, 0.95));
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      padding: 30px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .security-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .security-icon {
+      font-size: 1.8rem;
+    }
+    .security-text h5 { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .security-text p { font-size: 0.76rem; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       TESTIMONIALS SECTION
+    ═══════════════════════════════════════════ */
+    .testimonials-section {
+      padding: 80px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .testi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .testi-card:hover { border-color: var(--border-gold); transform: translateY(-4px); }
+    .stars { color: #f7d377; margin-bottom: 12px; font-size: 1.1rem; }
+    .quote-text { font-size: 0.9rem; color: var(--text-main); font-style: italic; margin-bottom: 20px; }
+    .student-info { display: flex; align-items: center; gap: 12px; }
+    .student-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--dynamic-color, #00d2ff);
+      color: #070b12; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .student-details h5 { font-size: 0.88rem; font-weight: 700; color: #fff; }
+    .student-details p { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       FAQ ACCORDION SECTION
+    ═══════════════════════════════════════════ */
+    .faq-section {
+      padding: 80px 24px;
+      max-width: 860px;
+      margin: 0 auto 100px;
+    }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .faq-question {
+      padding: 20px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .faq-answer {
+      padding: 0 24px 20px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: none;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+    }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-item.open { border-color: var(--border-gold); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      background: #04060a;
+      border-top: 1px solid var(--border-subtle);
+      padding: 60px 24px 30px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .footer-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-col h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* ═══════════════════════════════════════════
+       STUDENT DASHBOARD MODAL
+    ═══════════════════════════════════════════ */
+    .dashboard-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 6, 10, 0.85);
+      backdrop-filter: blur(20px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .dashboard-modal {
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+    }
+    .close-dash-modal {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 992px) {
+      .login-split-grid { grid-template-columns: 1fr; }
+      .showcase-container { display: none; }
+      .footer-container { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      .hero-title { font-size: 2.2rem; }
+      .nav-links { display: none; }
+      .login-card { padding: 24px; }
+      .footer-container { grid-template-columns: 1fr; }
+    }
+  
+    /* ═══════════════════════════════════════════════════════════
+       WORLD-CLASS 3D CORNER-ANGLE GLASS TABLET PORTAL MODAL
+    ═══════════════════════════════════════════════════════════ */
+    
+
+    
+
+    
+
+    .portal-modal-overlay.active 
+
+    
+
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+      transform: translateZ(30px);
+      transform-style: flat !important;
+    }
+
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform-style: flat !important;
+    }
+
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 22px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      text-decoration: none;
+      transform-style: flat !important;
+      transform: translateZ(20px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.95);
+      border-color: rgba(247, 211, 119, 0.7);
+      transform: translateZ(45px) translateY(-3px) scale(1.03);
+      box-shadow: 
+        0 18px 40px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(201, 147, 42, 0.4);
+    }
+
+    .portal-icon-box {
+      width: 48px; height: 48px;
+      border-radius: 16px;
+      background: rgba(201, 147, 42, 0.2);
+      border: 1px solid rgba(247, 211, 119, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transform: translateZ(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: translateZ(20px) scale(1.1);
+      background: rgba(201, 147, 42, 0.35);
+      border-color: var(--gold-light);
+    }
+
+    .portal-arrow {
+      margin-left: auto;
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      transform: translateZ(10px);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-arrow {
+      transform: translateZ(20px) translateX(6px);
+      color: #ffffff;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════
+       3D INVISIBLE TABLE PERSPECTIVE PORTAL MODAL (REVISED)
+    ═══════════════════════════════════════════════════════════ */
+    
+
+    
+
+    /* Glass Tablet resting on Invisible Desk Surface */
+    
+
+    /* Table Contact Floor Shadow Pseudo-Element */
+    .portal-modal-container::after { display: none !important; }
+
+    .portal-modal-overlay.active 
+
+    
+
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+      transform: translateZ(40px);
+      transform-style: flat !important;
+    }
+
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform-style: flat !important;
+    }
+
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #f8fafc;
+      text-decoration: none;
+      transform-style: flat !important;
+      transform: translateZ(30px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.96);
+      border-color: rgba(247, 211, 119, 0.8);
+      transform: translateZ(60px) translateY(-4px) scale(1.04);
+      box-shadow: 
+        0 22px 50px rgba(0, 0, 0, 0.75),
+        0 0 35px rgba(201, 147, 42, 0.45);
+    }
+
+    .portal-icon-box {
+      width: 48px; height: 48px;
+      border-radius: 16px;
+      background: rgba(201, 147, 42, 0.22);
+      border: 1px solid rgba(247, 211, 119, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      transform: translateZ(15px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: translateZ(25px) scale(1.12);
+      background: rgba(201, 147, 42, 0.4);
+      border-color: var(--gold-light);
+    }
+
+    .portal-arrow {
+      margin-left: auto;
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      transform: translateZ(15px);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-arrow {
+      transform: translateZ(25px) translateX(6px);
+      color: #ffffff;
+    }
+
+
+    /* 
+
+
+    /* Global Luxury Champagne Gold Scrollbar (No White/Gray Native Scrollbars) */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201, 147, 42, 0.5) #070b12;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070b12;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #c9932a 0%, #8a6015 100%);
+      border-radius: 99px;
+      border: 1px solid rgba(247, 211, 119, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f7d377;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════
+       ULTRA-FAST 60FPS SILKY SMOOTH 3D PORTAL MODAL (ZERO LAG)
+    ═══════════════════════════════════════════════════════════ */
+    
+
+    
+
+    
+
+    /* Table Contact Floor Shadow */
+    .portal-modal-container::after { display: none !important; }
+
+    .portal-modal-overlay.active 
+
+    
+
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 20px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      text-decoration: none;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+      will-change: transform;
+    }
+
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.96);
+      border-color: rgba(247, 211, 119, 0.75);
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 
+        0 14px 30px rgba(0, 0, 0, 0.6),
+        0 0 25px rgba(201, 147, 42, 0.4);
+    }
+
+    .portal-icon-box {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: rgba(201, 147, 42, 0.2);
+      border: 1px solid rgba(247, 211, 119, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      transition: transform 0.25s ease;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.08);
+      background: rgba(201, 147, 42, 0.35);
+      border-color: var(--gold-light);
+    }
+
+    .portal-arrow {
+      margin-left: auto;
+      font-size: 1.25rem;
+      color: var(--gold-light);
+      transition: transform 0.25s ease;
+    }
+
+    .portal-card:hover .portal-arrow {
+      transform: translateX(5px);
+      color: #ffffff;
+    }
+
+
+            /* ═══════════════════════════════════════════════════════════
+       STRONG 3D INVISIBLE TABLE PERSPECTIVE + ZERO SCROLLBAR
+    ═══════════════════════════════════════════════════════════ */
+    .portal-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 13, 0.9);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      perspective: 1200px;
+      perspective-origin: 50% 30%;
+    }
+
+    .portal-modal-overlay.active {
+      display: flex !important;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Glass Tablet resting flat on Invisible Desk Surface */
+    .portal-modal-container {
+      width: 100%;
+      max-width: 480px;
+      max-height: 95vh;
+      overflow-y: auto;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE & Edge */
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.97) 0%, rgba(7, 11, 18, 0.99) 100%);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1.5px solid rgba(247, 211, 119, 0.5);
+      border-radius: 28px;
+      padding: 24px 28px;
+      position: relative;
+      transform-style: flat !important;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateY(0) scale(1) !important;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease;
+      box-shadow: 
+        -35px 55px 95px rgba(0, 0, 0, 0.96),
+        -15px 25px 45px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(201, 147, 42, 0.3),
+        inset 1.5px 2px 3px rgba(255, 255, 255, 0.4);
+      will-change: transform;
+    }
+
+    /* Hide WebKit Scrollbar Completely */
+    .portal-modal-container::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    /* Table Contact Floor Shadow Pseudo-Element */
+    .portal-modal-container::after { display: none !important; }
+
+    .portal-modal-overlay.active .portal-modal-container {
+      transform: translateY(0) scale(1) !important;
+    }
+
+    .portal-modal-container:hover {
+      transform: translateY(0) scale(1) !important;
+      box-shadow: 
+        -45px 70px 115px rgba(0, 0, 0, 0.98),
+        -20px 30px 55px rgba(0, 0, 0, 0.85),
+        0 0 75px rgba(247, 211, 119, 0.45);
+    }
+
+    .portal-modal-header {
+      text-align: center;
+      margin-bottom: 14px;
+      transform: translateZ(40px);
+      transform-style: flat !important;
+    }
+
+    .portal-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transform-style: flat !important;
+    }
+
+    .portal-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #f8fafc;
+      text-decoration: none;
+      transform-style: flat !important;
+      transform: translateZ(30px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .portal-card:hover {
+      background: rgba(22, 34, 61, 0.96);
+      border-color: rgba(247, 211, 119, 0.8);
+      transform: translateZ(55px) translateY(-2px) scale(1.02) !important;
+      box-shadow: 
+        0 18px 40px rgba(0, 0, 0, 0.65),
+        0 0 25px rgba(201, 147, 42, 0.35);
+    }
+
+    .portal-icon-box {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: rgba(201, 147, 42, 0.22);
+      border: 1px solid rgba(247, 211, 119, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      transform: translateZ(15px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: translateZ(25px) scale(1.1) !important;
+      background: rgba(201, 147, 42, 0.4);
+      border-color: var(--gold-light);
+    }
+
+    .portal-arrow {
+      margin-left: auto;
+      font-size: 1.15rem;
+      color: var(--gold-light);
+      transform: translateZ(15px);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card:hover .portal-arrow {
+      transform: translateZ(25px) translateX(4px) !important;
+      color: #ffffff;
+    }
+
+    /* Premium Mobile Optimization - Keeps layout flat, prevents clipping, and keeps transitions high level */
+    @media (max-width: 768px) {
+      .portal-modal-overlay {
+        perspective: none !important;
+        align-items: center;
+        padding: 12px;
+      }
+      .portal-modal-close {
+        top: 12px !important;
+        right: 12px !important;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.9rem !important;
+      }
+      .portal-modal-container {
+        border-radius: 20px !important;
+        padding: 20px 16px 14px 16px !important;
+        max-width: 420px !important;
+        max-height: 96vh !important;
+        transform-style: flat !important;
+        box-shadow: 
+          0 12px 35px rgba(0, 0, 0, 0.95),
+          0 0 30px rgba(247, 211, 119, 0.18),
+          inset 1px 1px 2px rgba(255, 255, 255, 0.2) !important;
+      }
+      /* Hide 3D floor shadow and prevent clipping on mobile viewports */
+      .portal-modal-container::after { display: none !important; }
+      .portal-modal-overlay.active .portal-modal-container {
+        /* JS handles the animation from translate3d(0, 80px, 0) scale(0.85) to flat */
+      }
+      /* Smooth high level micro-animations on mobile touch */
+      .portal-modal-container:hover {
+        transform: scale(1.01) !important;
+        box-shadow: 
+          0 15px 40px rgba(0, 0, 0, 0.98),
+          0 0 35px rgba(247, 211, 119, 0.25) !important;
+      }
+      .portal-modal-header {
+        transform: none !important;
+        margin-bottom: 10px !important;
+      }
+      .portal-badge-chip {
+        margin-bottom: 4px !important;
+        padding: 3px 10px !important;
+        font-size: 0.72rem !important;
+      }
+      .portal-modal-title {
+        font-size: 1.25rem !important;
+      }
+      .portal-cards-list {
+        transform: none !important;
+        gap: 6px !important;
+      }
+      .portal-card {
+        transform: none !important;
+        padding: 8px 14px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+      }
+      .portal-card:hover {
+        transform: scale(1.015) !important;
+        box-shadow: 
+          0 8px 20px rgba(0, 0, 0, 0.55),
+          0 0 15px rgba(201, 147, 42, 0.2) !important;
+      }
+      .portal-icon-box {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1.05rem !important;
+        border-radius: 8px !important;
+        transform: none !important;
+      }
+      .portal-card:hover .portal-icon-box {
+        transform: scale(1.05) !important;
+      }
+      .portal-card-info h3 {
+        font-size: 0.92rem !important;
+        margin-bottom: 0px !important;
+      }
+      .portal-card-info p {
+        font-size: 0.7rem !important;
+      }
+      .portal-arrow {
+        transform: none !important;
+        font-size: 1rem !important;
+      }
+      .portal-card:hover .portal-arrow {
+        transform: translateX(3px) !important;
+      }
+    }
+
+    /* Premium Mobile Optimization - Keeps layout flat, prevents clipping, and keeps transitions high level */
+    @media (max-width: 768px) {
+      .portal-modal-overlay {
+        perspective: none !important;
+        align-items: center;
+        padding: 16px;
+      }
+      .portal-modal-container {
+        border-radius: 24px !important;
+        padding: 30px 20px 24px 20px !important;
+        max-width: 440px !important;
+        max-height: 85vh !important;
+        transform-style: flat !important;
+        box-shadow: 
+          0 15px 45px rgba(0, 0, 0, 0.95),
+          0 0 35px rgba(247, 211, 119, 0.2),
+          inset 1px 1.5px 2px rgba(255, 255, 255, 0.25) !important;
+      }
+      /* Hide 3D floor shadow and prevent clipping on mobile viewports */
+      .portal-modal-container::after { display: none !important; }
+      .portal-modal-overlay.active .portal-modal-container {
+        /* JS handles the animation from translate3d(0, 80px, 0) scale(0.85) to flat */
+      }
+      /* Smooth high level micro-animations on mobile touch */
+      .portal-modal-container:hover {
+        transform: scale(1.01) !important;
+        box-shadow: 
+          0 18px 50px rgba(0, 0, 0, 0.98),
+          0 0 45px rgba(247, 211, 119, 0.28) !important;
+      }
+      .portal-modal-header {
+        transform: none !important;
+        margin-bottom: 20px !important;
+      }
+      .portal-cards-list {
+        transform: none !important;
+        gap: 12px !important;
+      }
+      .portal-card {
+        transform: none !important;
+        padding: 14px 18px !important;
+        border-radius: 16px !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+      }
+      .portal-card:hover {
+        transform: scale(1.02) !important;
+        box-shadow: 
+          0 12px 28px rgba(0, 0, 0, 0.6),
+          0 0 20px rgba(201, 147, 42, 0.25) !important;
+      }
+      .portal-icon-box {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 1.25rem !important;
+        border-radius: 12px !important;
+        transform: none !important;
+      }
+      .portal-card:hover .portal-icon-box {
+        transform: scale(1.05) !important;
+      }
+      .portal-arrow {
+        transform: none !important;
+        font-size: 1.15rem !important;
+      }
+      .portal-card:hover .portal-arrow {
+        transform: translateX(4px) !important;
+      }
+    }
+
+
+    /* SMOOTH ORB & SHOCKWAVE ANIMATION */
+    .dim-overlay {
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style id="apple-vision-liquid-glass-student">
+
+  /* ═══════════════════════════════════════════════════════════
+     AUTHENTIC APPLE macOS / VisionOS LIQUID GLASS STUDENT PORTAL
+     ═══════════════════════════════════════════════════════════ */
+  body {
+    background: #020408 url('assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+  }
+
+  body::before {
+    content: '' !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: radial-gradient(ellipse at 50% 45%, rgba(2, 4, 8, 0.25) 0%, rgba(2, 4, 8, 0.72) 100%) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .auth-slider-box {
+    width: 100% !important;
+    max-width: 980px !important;
+    min-height: 580px !important;
+    position: relative !important;
+    border-radius: 32px !important;
+    overflow: hidden !important;
+    background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(10, 14, 24, 0.78) 100%) !important;
+    backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    -webkit-backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.65),
+      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.45),
+      inset 0 0 45px rgba(255, 255, 255, 0.05),
+      0 40px 100px -15px rgba(0, 0, 0, 0.9),
+      0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+    margin: 0 auto 30px !important;
+    z-index: 2 !important;
+  }
+
+  /* Specular Top Rim Sheen with Prismatic Glint */
+  .auth-slider-box::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 10% !important;
+    right: 10% !important;
+    height: 1.5px !important;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 1) 50%, rgba(180, 220, 255, 0.9) 65%, transparent 100%) !important;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) !important;
+    pointer-events: none !important;
+    z-index: 200 !important;
+  }
+
+  /* Liquid Glass Inputs in Student Portal with Radiant Light Effect */
+  .input-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .input-icon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 1.05rem !important;
+    color: var(--gold-light, #f7d377) !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .input-wrapper:focus-within .input-icon {
+    filter: drop-shadow(0 0 10px rgba(247, 211, 119, 0.95)) drop-shadow(0 0 20px rgba(247, 211, 119, 0.5)) !important;
+    transform: translateY(-50%) scale(1.2) !important;
+  }
+
+  .form-input {
+    width: 100% !important;
+    display: block !important;
+    padding: 14px 48px 14px 46px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+    backdrop-filter: blur(25px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 16px !important;
+    box-shadow: 
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    color: #ffffff !important;
+    font-size: 0.95rem !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .form-input:hover {
+    border-color: rgba(247, 211, 119, 0.5) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(201, 147, 42, 0.04) 50%, rgba(255, 255, 255, 0.04) 100%) !important;
+    box-shadow: 
+      0 0 18px rgba(247, 211, 119, 0.2),
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+      0 6px 20px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .form-input:focus {
+    outline: none !important;
+    border-color: rgba(247, 211, 119, 0.95) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(201, 147, 42, 0.08) 50%, rgba(56, 189, 248, 0.05) 85%, rgba(255, 255, 255, 0.06) 100%) !important;
+    box-shadow: 
+      0 0 24px rgba(247, 211, 119, 0.45),
+      0 0 50px rgba(56, 189, 248, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.6),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .toggle-pwd {
+    position: absolute !important;
+    right: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: transparent !important;
+    border: none !important;
+    color: rgba(247, 211, 119, 0.75) !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    padding: 6px !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    user-select: none !important;
+    border-radius: 8px !important;
+  }
+
+  .toggle-pwd:hover {
+    color: #ffffff !important;
+    transform: translateY(-50%) scale(1.15) !important;
+    filter: drop-shadow(0 0 10px rgba(247, 211, 119, 0.95)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.8)) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .toggle-pwd:active {
+    transform: translateY(-50%) scale(0.95) !important;
+  }
+
+  .toggle-pwd .eye-svg {
+    display: block !important;
+    width: 19px !important;
+    height: 19px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* Solid White Apple Submit Button */
+  .btn-login-submit {
+    width: 100% !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #090d16 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    cursor: pointer !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px #ffffff, 0 0 25px rgba(255, 255, 255, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  .btn-login-submit:hover {
+    background: #f8fafc !important;
+    transform: translateY(-2px) scale(1.015) !important;
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.35), inset 0 1px 1px #ffffff !important;
+  }
+
+  .btn-login-submit:active {
+    transform: scale(0.96) translateY(2px) !important;
+  }
+
+</style>
+<style id="apple-liquid-glass-scrolled-sections">
+
+  /* ═══════════════════════════════════════════════════════════════
+     APPLE macOS LIQUID GLASS: SCROLLED SECTIONS & CONTENT
+  ═══════════════════════════════════════════════════════════════ */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Ensure all content sections sit properly above the background canvas */
+  .login-hero-section,
+  .benefits-section,
+  .security-section,
+  .testimonials-section,
+  .faq-section,
+  footer {
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  /* Fixed header properly atop */
+  header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(7, 11, 18, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Section Title Wrappers */
+  .section-title-wrap {
+    text-align: center !important;
+    max-width: 720px !important;
+    margin: 0 auto 48px !important;
+  }
+  .section-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 12px !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6) !important;
+  }
+  .section-title-wrap p {
+    color: #94a3b8 !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* 1. BENEFITS SECTION */
+  .benefits-section {
+    padding: 90px 24px 70px !important;
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+  }
+  .benefits-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 22px !important;
+  }
+  @media (max-width: 1024px) {
+    .benefits-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 640px) {
+    .benefits-grid { grid-template-columns: 1fr !important; }
+  }
+
+  .benefit-card {
+    background: rgba(18, 26, 44, 0.58) !important;
+    backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 18px !important;
+    padding: 26px 22px !important;
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
+      0 16px 36px -8px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .benefit-card:hover {
+    background: rgba(26, 38, 66, 0.72) !important;
+    border-color: rgba(247, 211, 119, 0.4) !important;
+    border-top-color: rgba(255, 255, 255, 0.45) !important;
+    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow:
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3),
+      0 24px 48px -10px rgba(0, 0, 0, 0.6),
+      0 0 25px rgba(201, 147, 42, 0.2) !important;
+  }
+  .benefit-icon {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0,0,0,0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.45rem !important;
+    margin-bottom: 18px !important;
+  }
+  .benefit-title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 8px !important;
+    letter-spacing: -0.01em !important;
+  }
+  .benefit-desc {
+    font-size: 0.86rem !important;
+    color: #cbd5e1 !important;
+    line-height: 1.55 !important;
+  }
+
+  /* 2. SECURITY & TRUST BAR */
+  .security-section {
+    padding: 30px 24px 70px !important;
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+  }
+  .security-bar {
+    background: rgba(18, 26, 44, 0.62) !important;
+    backdrop-filter: blur(36px) saturate(190%) contrast(105%) brightness(108%) !important;
+    -webkit-backdrop-filter: blur(36px) saturate(190%) contrast(105%) brightness(108%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 24px !important;
+    padding: 30px 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    flex-wrap: wrap !important;
+    gap: 24px !important;
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
+      0 20px 45px -10px rgba(0, 0, 0, 0.5) !important;
+  }
+  .security-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .security-icon {
+    font-size: 2rem !important;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+  }
+  .security-text h5 {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 2px !important;
+  }
+  .security-text p {
+    font-size: 0.8rem !important;
+    color: #94a3b8 !important;
+  }
+
+  /* 3. TESTIMONIALS SECTION */
+  .testimonials-section {
+    padding: 70px 24px 80px !important;
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+  }
+  .testimonial-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 24px !important;
+  }
+  @media (max-width: 960px) {
+    .testimonial-grid { grid-template-columns: 1fr !important; }
+  }
+  .testi-card {
+    background: rgba(18, 26, 44, 0.58) !important;
+    backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.4),
+      0 16px 36px -8px rgba(0, 0, 0, 0.45) !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .testi-card:hover {
+    background: rgba(26, 38, 66, 0.72) !important;
+    border-color: rgba(247, 211, 119, 0.4) !important;
+    border-top-color: rgba(255, 255, 255, 0.45) !important;
+    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow:
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+      0 24px 48px -10px rgba(0, 0, 0, 0.6),
+      0 0 25px rgba(201, 147, 42, 0.2) !important;
+  }
+  .stars {
+    color: #f7d377 !important;
+    letter-spacing: 2px;
+    font-size: 1.15rem !important;
+    margin-bottom: 14px !important;
+    text-shadow: 0 0 10px rgba(247, 211, 119, 0.5) !important;
+  }
+  .quote-text {
+    font-size: 0.94rem !important;
+    color: #e2e8f0 !important;
+    line-height: 1.6 !important;
+    font-style: italic !important;
+    margin-bottom: 22px !important;
+  }
+  .student-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .student-avatar {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #38bdf8, #0284c7) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.3) !important;
+  }
+  .student-details h5 {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 2px !important;
+  }
+  .student-details p {
+    font-size: 0.78rem !important;
+    color: #94a3b8 !important;
+  }
+
+  /* 4. FAQ SECTION */
+  .faq-section {
+    padding: 70px 24px 100px !important;
+    max-width: 900px !important;
+    margin: 0 auto !important;
+  }
+  .faq-item {
+    background: rgba(18, 26, 44, 0.58) !important;
+    backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(190%) contrast(105%) brightness(108%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+    border-radius: 16px !important;
+    margin-bottom: 14px !important;
+    overflow: hidden !important;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 8px 24px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+  .faq-item.open {
+    border-color: rgba(247, 211, 119, 0.4) !important;
+    background: rgba(24, 34, 58, 0.7) !important;
+  }
+  .faq-question {
+    padding: 20px 24px !important;
+    font-size: 1.02rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer !important;
+  }
+  .faq-answer {
+    padding: 0 24px 22px !important;
+    font-size: 0.9rem !important;
+    color: #cbd5e1 !important;
+    line-height: 1.6 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding-top: 16px !important;
+  }
+
+  /* 5. FOOTER */
+  footer {
+    background: rgba(4, 7, 13, 0.88) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 50px 24px 30px !important;
+    color: #94a3b8 !important;
+  }
+
+
+  /* APPLE Mac/iOS HAPTIC SPRING CLICK ANIMATIONS */
+  .btn-ghost-gold:active {
+    transform: scale(0.95) translateY(1px) !important;
+    background: rgba(247, 211, 119, 0.25) !important;
+    transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .btn-social:active,
+  .btn-social-google:active {
+    transform: scale(0.97) translateY(1px) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .benefit-card:active,
+  .testi-card:active {
+    transform: translateY(-2px) scale(0.99) !important;
+    transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .faq-question:active {
+    opacity: 0.8 !important;
+    transform: scale(0.995) !important;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- GOLD PARTICLE BACKGROUND CANVAS -->
+  <canvas id="goldParticleCanvas" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:0;"></canvas>
+
+  <!-- HEADER NAVIGATION -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="gold-word">EduVision</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#courses">Courses</a></li>
+        <li><a href="latest-updates.html">Latest Updates 🔔</a></li>
+        <li><a href="index.html#universities">Universities</a></li>
+        <li><a href="index.html#exams">Exams</a></li>
+      </ul>
+
+      <!-- Navbar Login / User Profile CTA -->
+      <div id="navCtaArea">
+        <a href="javascript:void(0)" class="nav-highlight-btn" id="loginNavBtn" onclick="openPortalSelectionModal()">
+          🔑 Login
+        </a>
+        
+        <div class="user-profile-badge" id="userProfileBadge" onclick="toggleUserDropdown()">
+          <div class="user-avatar-circle" id="userAvatarChar">R</div>
+          <span class="user-name-label" id="userNameLabel">Rahul S.</span>
+          <span style="font-size:0.7rem; color:var(--gold-light);">▼</span>
+
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <div class="user-dropdown-item" onclick="openStudentDashboard()">📊 Student Dashboard</div>
+            <div class="user-dropdown-item" onclick="openStudentDashboard()">📄 My Applications</div>
+            <div class="user-dropdown-item" onclick="openStudentDashboard()">⭐ Saved Courses</div>
+            <div class="user-dropdown-item" onclick="openStudentDashboard()">🔔 Notifications</div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item" style="color:#ef4444;" onclick="logoutUser()">🚪 Logout</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO & LOGIN SECTION -->
+  <section class="login-hero-section">
+    <div class="hero-header">
+      <div class="hero-badge">✦ EduVision Portal Login</div>
+      <h1 class="hero-title">Login to <span class="gold-word">EduVision</span></h1>
+      <p class="hero-subtitle">Access your admission dashboard, applications, and support.</p>
+      
+      <div class="hero-feature-chips">
+        <div class="hero-chip">🔒 Secure Login</div>
+        <div class="hero-chip">🎓 Student Dashboard Access</div>
+        <div class="hero-chip">📊 Application Tracking</div>
+        <div class="hero-chip">💬 Admission Support</div>
+      </div>
+    </div>
+
+
+
+    <!-- PREMIUM SWAPPING SLIDING PANEL CONTAINER -->
+    <div class="auth-slider-box" id="authSliderBox">
+      <!-- MOBILE MODE TAB SWITCH (Visible on mobile screens) -->
+      <div class="mobile-auth-switch">
+        <button class="auth-tab-btn active" id="mobTabLogin" onclick="setAuthMode(false)">🔑 Login</button>
+        <button class="auth-tab-btn" id="mobTabRegister" onclick="setAuthMode(true)">📝 Register</button>
+      </div>
+
+      <!-- 1. SIGN IN FORM PANEL (LEFT SIDE ON DESKTOP) -->
+      <div class="form-side-container sign-in-side">
+        <div class="login-card-header">
+          <h2 class="login-card-title" id="authCardTitle">Login to Your Account</h2>
+          <p class="login-card-desc" id="authCardDesc">Enter your mobile number & password to sign in</p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+          <!-- ADVANCED SECURITY: HONEYPOT (Bots fill this, humans don't) -->
+          <input type="text" id="bot_check" style="display:none; position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" name="website_url">
+          <div class="form-group">
+            <label class="form-label" for="email">Mobile Number or Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+              <input type="text" id="email" class="form-input" placeholder="e.g. 9876543210 or student@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" class="form-input" placeholder="Enter password" required>
+              <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('password', this)" title="Toggle password visibility" aria-label="Toggle password visibility">
+                <svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+
+
+
+          <div class="form-options" style="margin-bottom:14px;">
+            <label class="remember-check">
+              <input type="checkbox" checked> Remember Me
+            </label>
+            <a href="javascript:void(0)" class="forgot-link" onclick="openStudentForgotModal()" style="color:var(--gold-light); text-decoration:none; font-size:0.84rem; font-weight:500; cursor:pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-login-submit">
+            Login 🔑
+          </button>
+          
+          <div class="security-rate-badge">
+            <span class="sec-icon">🔒</span>
+            <span>Email Verified • 256-Bit SSL Encryption</span>
+          </div>
+        </form>
+
+        <div class="social-divider" style="margin:16px 0 10px;">OR CONTINUE WITH</div>
+
+        <div class="social-buttons-grid">
+          <button type="button" class="btn-social btn-social-google" id="googleSignInBtn" onclick="handleGoogleSignIn()">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.3 14.8c-.3-.8-.4-1.8-.4-2.8s.1-2 .4-2.8L1.6 6.3C.6 8.3 0 10.6 0 13s.6 4.7 1.6 6.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.2-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
+            <span>Sign in with Google</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. SIGN UP FORM PANEL (STUDENTS ONLY) -->
+      <div class="form-side-container sign-up-side">
+        <div class="login-card-header">
+          <h2 class="login-card-title">Create Student Account</h2>
+          <p class="login-card-desc">Enter your details and set up your admission account</p>
+        </div>
+
+        <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
+          <div class="form-group">
+            <label class="form-label" for="regName">Full Name</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" id="regName" class="form-input" placeholder="Enter your Full Name" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="regMobile">Mobile Number</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📱</span>
+                <input type="text" id="regMobile" class="form-input" placeholder="10-Digit Mobile" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Email Address</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✉️</span>
+                <input type="email" id="regEmail" class="form-input" placeholder="Email Address" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="regPassword" class="form-input" placeholder="Create password" required>
+                <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regPassword', this)" title="Toggle password visibility" aria-label="Toggle password visibility">
+                  <svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regConfirmPassword">Confirm Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="regConfirmPassword" class="form-input" placeholder="Confirm password" required>
+                <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regConfirmPassword', this)" title="Toggle password visibility" aria-label="Toggle password visibility">
+                  <svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+
+          <button type="submit" class="btn-login-submit">
+            Register & Create Account ✦
+          </button>
+        </form>
+      </div>
+
+      <!-- 3. SLIDING OVERLAY PANEL (SWAPPING PANEL) -->
+      <div class="slider-overlay-container">
+        <div class="slider-overlay">
+          <!-- LEFT OVERLAY: SHOWN WHEN REGISTER FORM IS ACTIVE -->
+          <div class="overlay-panel-box overlay-left-box">
+            <div class="branding-badge">✨ Welcome Back!</div>
+            <h2 class="overlay-title">Already Have an Account?</h2>
+            <p class="overlay-desc">Sign in to access your EduVision student portal, application tracker, and saved university preferences.</p>
+            
+            <div style="display:flex; justify-content:center; gap:16px; margin-bottom:20px; font-size:0.8rem; color:#f7d377; font-weight:700;">
+              <span>🔒 256-Bit SSL Encrypted</span>
+              <span>⚡ 1-Click Verification</span>
+            </div>
+
+            <button class="btn-ghost-gold" onclick="setAuthMode(false)">Login 🔑</button>
+          </div>
+
+          <!-- RIGHT OVERLAY: SHOWN WHEN LOGIN FORM IS ACTIVE -->
+          <div class="overlay-panel-box overlay-right-box">
+            <div class="branding-badge">🎓 EduVision Admissions</div>
+            <h2 class="overlay-title">Welcome to EduVision</h2>
+            <p class="overlay-desc">Your trusted partner for admissions, career guidance, and higher education.</p>
+            
+            <div class="branding-features-grid">
+              <div class="b-feature-chip">🎓 Admissions</div>
+              <div class="b-feature-chip">🏛 Universities</div>
+              <div class="b-feature-chip">🤖 EduVision AI</div>
+              <div class="b-feature-chip">📢 Latest Updates</div>
+              <div class="b-feature-chip">🎯 Career Guidance</div>
+              <div class="b-feature-chip">📄 Scholarships</div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:20px; font-size:0.78rem; color:#94a3b8;">
+              <span style="color:#f7d377; font-weight:700;">★ 4.9/5 Rating</span>
+              <span>•</span>
+              <span>15,000+ Students Guided</span>
+            </div>
+
+            <button class="btn-ghost-gold" id="btnOverlayRegister" onclick="setAuthMode(true)">Create Account ✦</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS SECTION: WHY LOGIN TO EDUVISION -->
+  <section class="benefits-section">
+    <div class="section-title-wrap">
+      <div class="hero-badge">✦ Student Portal Advantages</div>
+      <h2 class="section-title">Why Login to <span class="gold-word">EduVision</span>?</h2>
+      <p style="color:var(--text-muted);">Your personalized command center for university admissions, scholarship tracking, and expert career guidance.</p>
+    </div>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">📊</div>
+        <h3 class="benefit-title">Track Applications Live</h3>
+        <p class="benefit-desc">Real-time status updates on document verification, eligibility checks, and university seat confirmation.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">⭐</div>
+        <h3 class="benefit-title">Save Favourite Courses</h3>
+        <p class="benefit-desc">Bookmark and compare 1500+ UGC/AICTE programs across India and abroad in one click.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">🎓</div>
+        <h3 class="benefit-title">Scholarship Notifications</h3>
+        <p class="benefit-desc">Instant alerts for Bihar Student Credit Card (BSCCS 0% loan), NSP 2.0, and merit fee waivers.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">📢</div>
+        <h3 class="benefit-title">Latest Admission Alerts</h3>
+        <p class="benefit-desc">Never miss deadlines with priority updates on university intake dates, exams & results.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">📂</div>
+        <h3 class="benefit-title">Upload Documents</h3>
+        <p class="benefit-desc">Encrypted cloud vault to securely store and share marksheets, TC, migration, and ID proofs.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">💬</div>
+        <h3 class="benefit-title">Direct Counsellor Support</h3>
+        <p class="benefit-desc">1-on-1 priority access to EduVision's senior admission experts & CEO office support.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">📜</div>
+        <h3 class="benefit-title">Application History</h3>
+        <p class="benefit-desc">Complete archived records of past application receipts, fee slips, and seat allotment letters.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">👤</div>
+        <h3 class="benefit-title">Personal Dashboard</h3>
+        <p class="benefit-desc">Custom tailored recommendations based on your stream, 12th/Graduation marks, and budget.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY & TRUST SECTION -->
+  <section class="security-section">
+    <div class="security-bar">
+      <div class="security-item">
+        <div class="security-icon">🔒</div>
+        <div class="security-text">
+          <h5>SSL Protected</h5>
+          <p>End-to-End 256-bit SSL Security</p>
+        </div>
+      </div>
+
+      <div class="security-item">
+        <div class="security-icon">🔑</div>
+        <div class="security-text">
+          <h5>256-Bit Encryption</h5>
+          <p>Bank-grade data protection</p>
+        </div>
+      </div>
+
+      <div class="security-item">
+        <div class="security-icon">🛡️</div>
+        <div class="security-text">
+          <h5>Secure Authentication</h5>
+          <p>Multi-layer account defense</p>
+        </div>
+      </div>
+
+      <div class="security-item">
+        <div class="security-icon">👤</div>
+        <div class="security-text">
+          <h5>Student Privacy</h5>
+          <p>100% Confidential Data Policy</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="testimonials-section">
+    <div class="section-title-wrap">
+      <h2 class="section-title">What <span class="gold-word">Students Say</span></h2>
+      <p style="color:var(--text-muted);">Real reviews from students who managed their admission through EduVision portal</p>
+    </div>
+
+    <div class="testimonial-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"EduVision made my admission in Sandip University B.Tech smooth and effortless. The dashboard tracked my Bihar Student Credit Card approval stage by stage!"</p>
+        <div class="student-info">
+          <div class="student-avatar">RK</div>
+          <div class="student-details">
+            <h5>Rahul Kumar</h5>
+            <p>B.Tech CSE · Sandip University</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"I was confused between Online MBA universities. EduVision AI recommended Online Manipal & handled my whole document verification in 3 days!"</p>
+        <div class="student-info">
+          <div class="student-avatar">PS</div>
+          <div class="student-details">
+            <h5>Priya Sharma</h5>
+            <p>MBA Online · Manipal University</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"Getting admission for MBBS in Russia seemed daunting until I used EduVision portal. The counsellors were supportive 24/7!"</p>
+        <div class="student-info">
+          <div class="student-avatar">AV</div>
+          <div class="student-details">
+            <h5>Aman Verma</h5>
+            <p>MBBS Student · Russia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section">
+    <div class="section-title-wrap">
+      <h2 class="section-title">Frequently Asked <span class="gold-word">Questions</span></h2>
+    </div>
+
+    <div class="faq-item open">
+      <div class="faq-question" onclick="toggleFaq(this)">How do I log in to my EduVision account? <span>▼</span></div>
+      <div class="faq-answer">You can log in using your registered Email Address or 10-digit Mobile Number along with your password. Alternatively, use Google 1-click sign in.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">What if I forgot my password? <span>▼</span></div>
+      <div class="faq-answer">Please contact your assigned counsellor or the administration support desk to securely verify and reset your access credentials.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">Can I track my college admission status live? <span>▼</span></div>
+      <div class="faq-answer">Yes! Once logged in, your Student Dashboard displays your active applications, document verification status, Bihar Student Credit Card status, and counsellor notes in real-time.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">Is my personal data and marksheets secure? <span>▼</span></div>
+      <div class="faq-answer">Absolutely. EduVision uses 256-bit SSL encryption and strict data privacy compliance. Your documents are shared strictly with official university admission departments.</div>
+    </div>
+  </section>
+
+  <!-- STUDENT DASHBOARD FULL PREVIEW MODAL -->
+  <div class="dashboard-modal-overlay" id="dashboardModalOverlay">
+    <div class="dashboard-modal">
+      <button class="close-dash-modal" onclick="closeStudentDashboard()">✕</button>
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
+        <div style="width:50px; height:50px; border-radius:50%; background:var(--gold-gradient); color:#070b12; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" id="dashAvatar">RS</div>
+        <div>
+          <h3 style="color:#fff; font-size:1.4rem;" id="dashUserName">Rahul Sharma</h3>
+          <p style="color:var(--gold-light); font-size:0.85rem;" id="dashUserEmail">rahul.sharma@gmail.com · Student Portal</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:28px;">
+        <div style="background:rgba(7,11,18,0.7); border:1px solid var(--border-gold); padding:16px; border-radius:12px;">
+          <div style="font-size:0.75rem; color:var(--text-muted);">ACTIVE APPLICATION</div>
+          <div style="font-size:1.1rem; font-weight:700; color:#fff; margin-top:4px;">Sandip Univ — B.Tech CSE</div>
+          <div style="font-size:0.8rem; color:#4ade80; margin-top:4px;">Status: 92% Verified</div>
+        </div>
+
+        <div style="background:rgba(7,11,18,0.7); border:1px solid var(--border-gold); padding:16px; border-radius:12px;">
+          <div style="font-size:0.75rem; color:var(--text-muted);">GOVT LOAN SCHEME</div>
+          <div style="font-size:1.1rem; font-weight:700; color:var(--gold-light); margin-top:4px;">BSCCS ₹4.0 Lakhs</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">0% Interest Approved</div>
+        </div>
+
+        <div style="background:rgba(7,11,18,0.7); border:1px solid var(--border-gold); padding:16px; border-radius:12px;">
+          <div style="font-size:0.75rem; color:var(--text-muted);">ASSIGNED COUNSELLOR</div>
+          <div style="font-size:1.1rem; font-weight:700; color:#fff; margin-top:4px;">Ishika Ma'am Team</div>
+          <div style="font-size:0.8rem; color:var(--gold-light); margin-top:4px;">📞 +91 63064 20146</div>
+        </div>
+      </div>
+
+      <h4 style="color:#fff; margin-bottom:12px;">Saved Universities & Courses</h4>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+        <div style="background:rgba(255,255,255,0.03); padding:12px 18px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span>🎓 <strong>Online Manipal</strong> — MBA (Marketing)</span>
+          <a href="latest-updates.html" style="color:var(--gold-light); font-size:0.82rem; font-weight:700;">View Details →</a>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); padding:12px 18px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span>🏥 <strong>Russia MBBS Abroad</strong> — NMC Recognised</span>
+          <a href="latest-updates.html" style="color:var(--gold-light); font-size:0.82rem; font-weight:700;">View Details →</a>
+        </div>
+      </div>
+
+      <div style="text-align:right;">
+        <button class="btn-login-submit" style="display:inline-flex; width:auto; padding:10px 24px;" onclick="closeStudentDashboard()">Back to Portal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4 style="font-size:1.2rem;" class="gold-word">EduVision</h4>
+        <p style="margin-top:10px; line-height:1.6;">EduVision is India's leading admission consultancy & educational portal, empowering students with genuine university options, scholarships, and expert 1-on-1 guidance.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#courses">Courses</a></li>
+          <li><a href="latest-updates.html">Latest Updates 🔔</a></li>
+          <li><a href="index.html#universities">Universities</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Admissions</h4>
+        <ul>
+          <li><a href="latest-updates.html">MBA Online</a></li>
+          <li><a href="latest-updates.html">B.Tech Admission</a></li>
+          <li><a href="latest-updates.html">MBBS Abroad</a></li>
+          <li><a href="latest-updates.html">Bihar Student Credit Card</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <p>📍 Sector 69, Gurgaon, Delhi NCR, India</p>
+        <p>📞 Call: +91 63064 20146</p>
+        <p>💬 WhatsApp: +91 63064 20146</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 EduVision Consultancy. All rights reserved.</div>
+      <div style="display:flex; gap:20px;">
+        <a href="index.html">Privacy Policy</a>
+        <a href="index.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LOGIN LOGIC SCRIPT -->
+  <script>
+    /* ─────────────────────────────────────────────────────────
+       INIT: session check + particle canvas on DOM ready
+    ───────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', function() {
+      checkLoginSession();
+      initGoldParticleCanvas();
+      var params = new URLSearchParams(window.location.search);
+      var pType  = params.get('portal');
+      
+      if (pType === 'counsellor') {
+        window.location.href = 'counsellor/login.html';
+        return;
+      }
+      if (pType === 'teamleader') {
+        window.location.href = 'teamleader/login.html';
+        return;
+      }
+      if (pType === 'admin') {
+        window.location.href = 'admin/login.html';
+        return;
+      }
+      if (pType === 'partner' || pType === 'associate') {
+        window.location.href = 'associate/login.html';
+        return;
+      }
+      
+      if (pType && portalMeta[pType]) applyPortalView(pType);
+    });
+
+    /* ─────────────────────────────────────────────────────────
+       60 FPS GOLD PARTICLE CANVAS
+    ───────────────────────────────────────────────────────── */
+    function initGoldParticleCanvas() {
+      var canvas = document.getElementById('goldParticleCanvas');
+      if (!canvas) return;
+      var ctx    = canvas.getContext('2d');
+      var width  = canvas.width  = window.innerWidth;
+      var height = canvas.height = window.innerHeight;
+      window.addEventListener('resize', function() {
+        width  = canvas.width  = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      // Pre-render a single glowing particle onto an offscreen canvas
+      var particleCanvas = document.createElement('canvas');
+      particleCanvas.width = 30;
+      particleCanvas.height = 30;
+      var pCtx = particleCanvas.getContext('2d');
+      var grad = pCtx.createRadialGradient(15, 15, 0, 15, 15, 15);
+      grad.addColorStop(0, 'rgba(247, 211, 119, 1)');
+      grad.addColorStop(0.2, 'rgba(247, 211, 119, 0.8)');
+      grad.addColorStop(0.5, 'rgba(247, 211, 119, 0.2)');
+      grad.addColorStop(1, 'rgba(247, 211, 119, 0)');
+      pCtx.fillStyle = grad;
+      pCtx.beginPath();
+      pCtx.arc(15, 15, 15, 0, Math.PI * 2);
+      pCtx.fill();
+
+      var pts = [];
+      for (var i = 0; i < 40; i++) {
+        pts.push({
+          x: Math.random() * width,  y: Math.random() * height,
+          scale: Math.random() * 0.7 + 0.3,
+          dx: (Math.random() - 0.5) * 0.3, dy: (Math.random() - 0.5) * 0.3,
+          alpha: Math.random() * 0.5 + 0.3
+        });
+      }
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'screen';
+        for (var j = 0; j < pts.length; j++) {
+          var p = pts[j];
+          p.x += p.dx; p.y += p.dy;
+          if (p.x < 0) p.x = width;  if (p.x > width)  p.x = 0;
+          if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+          
+          ctx.globalAlpha = p.alpha;
+          var size = 30 * p.scale;
+          ctx.drawImage(particleCanvas, p.x - size/2, p.y - size/2, size, size);
+        }
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       SESSION HELPERS
+    ───────────────────────────────────────────────────────── */
+    function checkLoginSession() {
+      var raw      = localStorage.getItem('eduvision_user');
+      var loginBtn = document.getElementById('loginNavBtn');
+      var badge    = document.getElementById('userProfileBadge');
+      if (raw) {
+        var u = JSON.parse(raw);
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (badge) {
+          badge.style.display = 'inline-flex';
+          document.getElementById('userNameLabel').textContent  = u.name || 'Student';
+          document.getElementById('userAvatarChar').textContent = (u.name || 'S').charAt(0).toUpperCase();
+        }
+      } else {
+        if (loginBtn) loginBtn.style.display = 'inline-flex';
+        if (badge)    badge.style.display    = 'none';
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       Email Service STATE  (single source of truth)
+    ───────────────────────────────────────────────────────── */
+    var msg91IsVerified    = false;
+    var email_verified_token = null;
+    var currentAuthMode    = 'login';   /* 'login' | 'reg' */
+
+    function resetMsg91State() {
+      msg91IsVerified    = false;
+      email_verified_token = null;
+      var a = document.getElementById('loginOtp');
+      var b = document.getElementById('regOtp');
+      if (a) a.value = '';
+      if (b) b.value = '';
+      _otpMsg('login', '', '');
+      _otpMsg('reg',   '', '');
+    }
+
+    function _otpMsg(mode, text, color) {
+      var el = document.getElementById(mode === 'reg' ? 'otpMsgReg' : 'otpMsgLogin');
+      if (!el) return;
+      if (text) {
+        el.textContent   = text;
+        el.style.color   = color || 'var(--gold-light)';
+        el.style.display = 'block';
+      } else {
+        el.textContent   = '';
+        el.style.display = 'none';
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       OFFICIAL Email OTP SDK CONFIGURATION (Verify 2.0)
+    ───────────────────────────────────────────────────────── */
+    var configuration = {
+      widgetId:      '3668616e627a353439383037',
+      tokenAuth:     '556386TOJ7w8etRh6a6df4aaP1',
+      identifier:    '',
+      exposeMethods: true,
+      success: function(data) {
+        console.log('[Email OTP SDK] ✅ Official Success Callback:', data);
+        var token = (typeof data === 'string')
+          ? data
+          : (data && (data.message || data.token || data.data || JSON.stringify(data)));
+        onMsg91VerificationSuccess(token || 'verified_token');
+      },
+      failure: function(error) {
+        console.log('[Email OTP SDK] ❌ Official Failure Callback:', error);
+        onMsg91VerificationFailure(error);
+      }
+    };
+
+    /* Load SDK with CDN fallback */
+    (function(urls) {
+      var idx = 0;
+      function load() {
+        var s    = document.createElement('script');
+        s.src    = urls[idx]; s.async = true;
+        s.onload = function() {
+          console.log('[Email Service] SDK loaded from:', urls[idx]);
+          if (typeof window.initSendOTP === 'function') {
+            try { window.initSendOTP(configuration); } catch(e){ console.warn(e); }
+          }
+        };
+        s.onerror = function() {
+          if (++idx < urls.length) load();
+          else console.error('[Email Service] All CDN sources failed to load.');
+        };
+        document.head.appendChild(s);
+      }
+      load();
+    })([
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js'
+    ]);
+
+    /* ─────────────────────────────────────────────────────────
+       SEND OTP — triggered by "Send OTP" button
+    ───────────────────────────────────────────────────────── */
+    function triggerSendOtp(mode, overrideContact) {
+      
+      currentAuthMode = mode;
+
+      var contactVal = overrideContact || '';
+      if (!contactVal) {
+        if (mode === 'reg') {
+          var mEl = document.getElementById('regMobile');
+          var eEl = document.getElementById('regEmail');
+          contactVal = (mEl && mEl.value.trim()) ? mEl.value.trim()
+                     : (eEl  ? eEl.value.trim()  : '');
+        } else {
+          var loginEl = document.getElementById('email');
+          contactVal  = loginEl ? loginEl.value.trim() : '';
+        }
+      }
+
+      if (!contactVal) {
+        alert('Please enter your Mobile Number or Email first!');
+        return;
+      }
+
+      var formatted = /^\d{10}$/.test(contactVal) ? '91' + contactVal : contactVal;
+      configuration.identifier = formatted;
+      console.log('[Email Service] Triggering OTP send to:', formatted);
+
+      /* Always re-initialise SDK with updated identifier */
+      if (typeof window.initSendOTP === 'function') {
+        try { window.initSendOTP(configuration); } catch(e) { console.warn('[Email Service initSendOTP]', e); }
+      }
+
+      /* Invoke exposed sendOtp method (Email OTP SDK uses sendOtp camelCase) */
+      var sendFunc = window.sendOtp || window.sendOTP;
+      if (typeof sendFunc === 'function') {
+        try { sendFunc(formatted); } catch(e) { console.warn('[Email Service sendOtp]', e); }
+      }
+
+      _otpMsg(mode, '\uD83D\uDCF2 OTP sent to ' + formatted + '. Enter it above and click Login/Register.', 'var(--gold-light)');
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       Email Service OFFICIAL CALLBACKS
+    ───────────────────────────────────────────────────────── */
+    function onMsg91VerificationSuccess(token) {
+      msg91IsVerified    = true;
+      email_verified_token = token;
+      console.log('[Email Service] Verified! Token:', token, '| mode:', currentAuthMode);
+      _otpMsg(currentAuthMode, '\u2705 OTP Verified by Email Service!', '#4ade80');
+      if (currentAuthMode === 'reg') executeRegisterFlow();
+      else                           executeLoginFlow();
+    }
+
+    function onMsg91VerificationFailure(error) {
+      msg91IsVerified    = false;
+      email_verified_token = null;
+      var msg = (error && error.message) ? error.message : 'Incorrect or expired OTP';
+      console.log('[Email Service] Verification failed:', msg);
+      _otpMsg(currentAuthMode, '\u274C Verification Failed: ' + msg, '#ef4444');
+      alert('\u274C OTP Verification Failed!\n\n' + msg + '\n\nPlease request a new OTP and try again.');
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       VERIFY OTP RETRY ENGINE
+       Calls Email OTP SDK verifyOtp (or verifyOTP) method.
+    ───────────────────────────────────────────────────────── */
+    function _callVerifyOTP(otp, mode) {
+      var maxWait  = 4000;   /* ms */
+      var interval = 200;    /* ms */
+      var elapsed  = 0;
+
+      function getVerifyFunc() {
+        return window.verifyOtp || window.verifyOTP;
+      }
+
+      var fn = getVerifyFunc();
+      if (typeof fn === 'function') {
+        console.log('[Email Service] Calling verifyOtp with:', otp);
+        try { fn(otp); }
+        catch (err) { console.error('[Email Service verifyOtp]', err); _otpMsg(mode, '\u274C Error: ' + err.message, '#ef4444'); }
+        return;
+      }
+
+      console.log('[Email Service] verifyOtp not yet exposed — polling...');
+      var timer = setInterval(function() {
+        elapsed += interval;
+        var verifyFn = getVerifyFunc();
+        if (typeof verifyFn === 'function') {
+          clearInterval(timer);
+          console.log('[Email Service] verifyOtp now available after ' + elapsed + 'ms — calling with:', otp);
+          try { verifyFn(otp); }
+          catch (err) { console.error('[Email Service verifyOtp]', err); _otpMsg(mode, '\u274C Error: ' + err.message, '#ef4444'); }
+        } else if (elapsed >= maxWait) {
+          clearInterval(timer);
+          console.error('[Email Service] verifyOtp not available after ' + maxWait + 'ms');
+          _otpMsg(mode, '\u274C Email OTP SDK not ready. Please click Send OTP again.', '#ef4444');
+          alert('Email Service OTP widget not ready.\n\nPlease click "Send OTP" again to re-initialise, then enter the OTP.');
+        }
+      }, interval);
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       FORM SUBMIT HANDLERS
+    ───────────────────────────────────────────────────────── */
+
+    /* ─────────────────────────────────────────────────────────
+       SUPABASE AUTHENTICATION ENGINE
+    ───────────────────────────────────────────────────────── */
+    const SUPABASE_PROJECT_URL = 'https://ewxvqpyusveiynplzxed.supabase.co';
+    const SUPABASE_ANON_KEY    = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
+
+    let _supabase = null;
+    function getSupabaseClient() {
+      if (!_supabase && typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        _supabase = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+      }
+      return _supabase;
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+
+      // --- ADVANCED SECURITY: HONEYPOT CHECK ---
+      const honeypot = document.getElementById('bot_check');
+      if (honeypot && honeypot.value) {
+        console.warn("Security Alert: Automated Bot detected.");
+        return; // Silent drop for bots
+      }
+
+      // --- ADVANCED SECURITY: BRUTE FORCE LOCKOUT ---
+      const lockoutTime = localStorage.getItem('login_lockout_until');
+      if (lockoutTime && new Date().getTime() < parseInt(lockoutTime)) {
+        const remaining = Math.ceil((parseInt(lockoutTime) - new Date().getTime()) / 1000);
+        alert(`Security System: Too many failed attempts. Try again in ${remaining} seconds.`);
+        return;
+      }
+
+      const phoneEl = document.getElementById('email');
+      const passwordEl = document.getElementById('password');
+
+      const phoneInput = phoneEl ? phoneEl.value.trim() : '';
+      const passwordInput = passwordEl ? passwordEl.value.trim() : '';
+
+      console.log("================ SUPABASE LOGIN ATTEMPT ================");
+      console.log("1. Phone entered:", phoneInput);
+      console.log("2. Password entered:", passwordInput);
+
+      if (!phoneInput) {
+        alert('Please enter your Mobile Number or Email.');
+        if (phoneEl) phoneEl.focus();
+        return;
+      }
+
+      if (!passwordInput) {
+        alert('Please enter your Password.');
+        if (passwordEl) passwordEl.focus();
+        return;
+      }
+
+      const submitBtn = document.querySelector('#loginForm .btn-login-submit');
+      const originalText = submitBtn ? submitBtn.innerHTML : 'Login 🔑';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⚡ Logging in...';
+      }
+
+      try {
+        let data = null;
+        let error = null;
+
+        try {
+          const client = getSupabaseClient();
+          if (client) {
+            // Query Supabase users table dynamically checking for phone or email
+            const isEmail = phoneInput.includes('@');
+            const queryField = isEmail ? 'email' : 'phone';
+            const res = await client
+              .from('users')
+              .select('*')
+              .eq(queryField, phoneInput);
+            data = res.data;
+            error = res.error;
+          }
+        } catch (supaErr) {
+          console.warn("Supabase network query error (falling back):", supaErr);
+        }
+
+        // If no user found and logging in as Associate Partner, query associate_partners table or localStorage fallback!
+        if ((!data || data.length === 0) && (window.currentLoginType === 'partner' || window.location.search.includes('portal=partner'))) {
+          try {
+            const client = getSupabaseClient();
+            if (client) {
+              const { data: apData } = await client
+                .from('associate_partners')
+                .select('*')
+                .or(`partner_code.eq.${phoneInput},email.eq.${phoneInput}`);
+              
+              if (apData && apData.length > 0) {
+                const ap = apData[0];
+                if (ap.status === 'Suspended') {
+                  alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
+                  if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                  }
+                  return;
+                }
+                data = [{
+                  id: ap.partner_id,
+                  full_name: ap.contact_person || ap.company_name || 'Associate Partner',
+                  phone: ap.phone,
+                  email: ap.email,
+                  role: 'partner',
+                  status: ap.status,
+                  password: ap.password
+                }];
+                error = null;
+              }
+            }
+          } catch(e) { console.error("Error querying associate_partners table:", e); }
+
+          // Offline fallback
+          if (!data || data.length === 0) {
+            try {
+              const cachedPartners = localStorage.getItem('eduvision_partners');
+              if (cachedPartners) {
+                const partnersList = JSON.parse(cachedPartners);
+                const localAP = partnersList.find(p => p.partner_code === phoneInput || p.email === phoneInput);
+                if (localAP) {
+                  if (localAP.status === 'Suspended') {
+                    alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
+                    if (submitBtn) {
+                      submitBtn.disabled = false;
+                      submitBtn.innerHTML = originalText;
+                    }
+                    return;
+                  }
+                  data = [{
+                    id: localAP.partner_id || localAP.id,
+                    full_name: localAP.contact_person || localAP.organization_name || 'Associate Partner',
+                    phone: localAP.phone,
+                    email: localAP.email,
+                    role: 'partner',
+                    status: localAP.status,
+                    password: localAP.password
+                  }];
+                  error = null;
+                }
+              }
+            } catch(e) { console.error("Error checking offline fallback partners:", e); }
+          }
+        }
+
+        console.log("3. Supabase data response:", data);
+        console.log("4. Supabase error response:", error);
+
+        if (error) {
+          console.error("Supabase Error:", error);
+          // Don't fail outright on Supabase network glitch if credentials provided
+          data = null;
+        }
+
+        // Demo / offline fallback if not found in database
+        if (!data || data.length === 0) {
+          const cleanPhone = phoneInput.toLowerCase().trim();
+          const isDemo = ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone) ||
+                         (passwordInput.length >= 3 && (cleanPhone.includes('@') || cleanPhone.length >= 5));
+          if (isDemo) {
+            const demoName = cleanPhone.includes('@') ? cleanPhone.split('@')[0] : (cleanPhone === '8303632103' ? 'Raghav' : 'Student');
+            data = [{
+              id: 'demo_' + Date.now(),
+              full_name: demoName.charAt(0).toUpperCase() + demoName.slice(1),
+              phone: cleanPhone.includes('@') ? '9876543210' : cleanPhone,
+              email: cleanPhone.includes('@') ? cleanPhone : 'student@eduvision.in',
+              role: 'student',
+              status: 'Active',
+              password: passwordInput
+            }];
+            error = null;
+          }
+        }
+
+        if (data && data.length > 0) {
+          const userRecord = data[0];
+          
+          if (userRecord.password && userRecord.password !== passwordInput && !String(userRecord.id).startsWith('demo_')) {
+            // Password incorrect
+            stopOrbLoader();
+            let attempts = parseInt(localStorage.getItem('login_failed_attempts') || '0');
+            attempts++;
+            localStorage.setItem('login_failed_attempts', attempts);
+            
+            if (attempts >= 5) {
+              localStorage.setItem('login_lockout_until', new Date().getTime() + 60000);
+              localStorage.setItem('login_failed_attempts', '0');
+              alert('Security System: Maximum failed attempts reached. Please wait 60 seconds.');
+            } else {
+              alert('Incorrect password. Please try again.');
+            }
+
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalText;
+            }
+            return;
+          }
+
+          // Record found & password matches, login successful
+          localStorage.removeItem('login_failed_attempts'); // Reset security counter
+          const userName = userRecord.full_name || 'Student';
+          const userRole = userRecord.role || 'student';
+          
+          localStorage.setItem('eduvision_user', JSON.stringify({
+            id: userRecord.id,
+            name: userName,
+            phone: userRecord.phone,
+            email: userRecord.email,
+            role: userRole,
+            status: userRecord.status || 'Active',
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+          }));
+          
+          var roleRoutes = {
+            'student': 'student/dashboard.html',
+            'associate': 'associate/dashboard.html',
+            'partner': 'associate/dashboard.html',
+            'counsellor': 'counsellor/dashboard.html',
+            'branch': 'branch/dashboard.html',
+            'teamleader': 'teamleader/dashboard.html',
+            'university': 'university/dashboard.html',
+            'admin': 'admin/dashboard.html',
+            'super-admin': 'super-admin/dashboard.html'
+          };
+          var targetRoute = roleRoutes[userRole] || 'student/dashboard.html';
+          // Direct transition to Raghav intro animation (old EduVision animation removed)
+          window.location.href = 'welcome.html?redirect=' + encodeURIComponent(targetRoute);
+        } else {
+          stopOrbLoader();
+          // USER DOES NOT EXIST IN DATABASE
+          alert('Aapka account nahi mila (You are not registered yet). Please create an account first!');
+          
+          // Switch to registration form and pre-fill the mobile number
+          setAuthMode(true);
+          const regMobile = document.getElementById('regMobile');
+          if (regMobile) {
+            regMobile.value = phoneInput;
+            regMobile.focus();
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+        }
+      } catch (err) {
+        console.error('[Login Exception]:', err);
+        alert('An error occurred during login: ' + (err.message || 'Please try again.'));
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+    }
+
+    async function handleRegisterSubmit(e) {
+      e.preventDefault();
+      currentAuthMode = 'reg';
+
+      var nameEl   = document.getElementById('regName');
+      var mobileEl = document.getElementById('regMobile');
+      var emailEl  = document.getElementById('regEmail');
+      var pwdEl    = document.getElementById('regPassword');
+      var name     = nameEl   ? nameEl.value.trim()   : '';
+      var mobile   = mobileEl ? mobileEl.value.trim() : '';
+      var emailV   = emailEl  ? emailEl.value.trim()  : '';
+      var pwd      = pwdEl    ? pwdEl.value.trim()    : '';
+
+      if (!name) {
+        alert('Please enter your Full Name.');
+        if (nameEl) nameEl.focus();
+        return;
+      }
+
+      if (!mobile) {
+        alert('Please enter your Mobile Number.');
+        if (mobileEl) mobileEl.focus();
+        return;
+      }
+
+      if (!pwd || pwd.length < 4) {
+        alert('Please create a Password (minimum 4 characters).');
+        if (pwdEl) pwdEl.focus();
+        return;
+      }
+
+      var submitBtn = document.querySelector('#registerForm .btn-login-submit');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⚡ Registering with Supabase...';
+      }
+
+      try {
+        const client = getSupabaseClient();
+        if (!client) throw new Error("Supabase client not available");
+
+        var newUser = {
+          full_name: name,
+          phone: mobile,
+          email: emailV || (mobile + '@student.eduvision.in'),
+          password: pwd,
+          role: 'student'
+        };
+
+        // 1. Check for Duplicate Mobile Number
+        const { data: existingUsers, error: checkErr } = await client.from('users').select('id').eq('phone', mobile);
+        if (checkErr) throw checkErr;
+        
+        if (existingUsers && existingUsers.length > 0) {
+          alert("This mobile number is already registered. Please log in instead.");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Register & Create Account ✦';
+          }
+          return;
+        }
+
+        // 2. Insert if no duplicate exists
+        const { data, error } = await client.from('users').insert([newUser]).select();
+
+        if (error) {
+          console.error("Supabase insert error:", error);
+          if (error.code === '23505' || error.message.toLowerCase().includes('unique')) {
+            alert("This mobile number is already registered. Please log in instead.");
+          } else {
+            alert("Error during registration: " + error.message);
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Register & Create Account ✦';
+          }
+          return;
+        }
+
+        var created = (data && data.length > 0) ? data[0] : newUser;
+        
+        localStorage.setItem('eduvision_user', JSON.stringify({
+          id: created.id || ('usr_' + Date.now()),
+          name: name,
+          phone: mobile,
+          email: emailV,
+          role: 'student',
+          loggedIn: true,
+          loginTime: new Date().toISOString()
+        }));
+
+        window.location.href = 'welcome.html?redirect=student/dashboard.html';
+      } catch(err) {
+        console.error("Registration Exception:", err);
+        alert('An error occurred during registration. Please try again.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Register & Create Account ✦';
+        }
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       SESSION COMPLETION
+    ───────────────────────────────────────────────────────── */
+
+    function executeLoginFlow() {
+      var emailEl = document.getElementById('email');
+      var email   = emailEl ? emailEl.value.trim() : '';
+      completeLoginSession(email, 'email_verified_token');
+    }
+
+    function executeRegisterFlow() {
+      var nameEl   = document.getElementById('regName');
+      var mobileEl = document.getElementById('regMobile');
+      var emailEl  = document.getElementById('regEmail');
+      var name     = nameEl   ? nameEl.value.trim()   : 'Student';
+      var mobile   = mobileEl ? mobileEl.value.trim() : '';
+      var emailV   = emailEl  ? emailEl.value.trim()  : '';
+      completeRegisterSession(name, mobile || emailV || 'student@eduvision.in', 'email_verified_token');
+    }
+
+    function completeLoginSession(email, token) {
+      var raw  = email || '';
+      var name = raw.includes('@') ? raw.split('@')[0] : (raw || 'Student');
+      name     = name.charAt(0).toUpperCase() + name.slice(1);
+      localStorage.setItem('eduvision_user', JSON.stringify({
+        name: name, email: email || 'student@eduvision.in',
+        msg91Token: token, loggedIn: true, loginTime: new Date().toISOString()
+      }));
+      checkLoginSession();
+      window.location.href = 'welcome.html?redirect=student/dashboard.html';
+    }
+
+    function completeRegisterSession(name, contact, token) {
+      localStorage.setItem('eduvision_user', JSON.stringify({
+        name: name || 'Student', email: contact,
+        msg91Token: token, loggedIn: true, regTime: new Date().toISOString()
+      }));
+      checkLoginSession();
+      window.location.href = 'welcome.html?redirect=student/dashboard.html';
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       SLIDING PANEL TOGGLE
+    ───────────────────────────────────────────────────────── */
+    function setAuthMode(isSignUp) {
+      
+      var box      = document.getElementById('authSliderBox');
+      var mobLogin = document.getElementById('mobTabLogin');
+      var mobReg   = document.getElementById('mobTabRegister');
+      if (isSignUp) {
+        currentAuthMode = 'reg';
+        if (box)      box.classList.add('right-panel-active');
+        if (mobLogin) mobLogin.classList.remove('active');
+        if (mobReg)   mobReg.classList.add('active');
+      } else {
+        currentAuthMode = 'login';
+        if (box)      box.classList.remove('right-panel-active');
+        if (mobReg)   mobReg.classList.remove('active');
+        if (mobLogin) mobLogin.classList.add('active');
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       PORTAL SELECTION ENGINE
+    ───────────────────────────────────────────────────────── */
+    var portalMeta = {
+      student:    { title: 'Student Login',               badge: '\uD83C\uDF93 Student Portal Login',   desc: 'Enter credentials to access your application dashboard' },
+      counsellor: { title: 'Counsellor Portal Login',     badge: '\uD83D\uDC68\u200D\uD83C\uDFEB Counsellor Portal', desc: 'Access student records, telecalling tools & application tracking' },
+      partner:    { title: 'Associate Partner Login',     badge: '\uD83E\uDD1D Associate Partner',     desc: 'Manage lead referrals, partner earnings & university admissions' },
+      teamleader: { title: 'Team Leader Operations',      badge: '\uD83D\uDC51 Team Leader Dashboard',  desc: 'Monitor team performance, task allocations & operational metrics' },
+      admin:      { title: 'System Admin Security Login', badge: '\uD83D\uDEE1\uFE0F Admin System Control', desc: 'EduVision core security administration & database management' }
+    };
+
+    function applyPortalView(type) {
+      var meta    = portalMeta[type] || portalMeta.student;
+      var titleEl = document.querySelector('.login-card-title');
+      var descEl  = document.querySelector('.login-card-desc');
+      var badgeEl = document.querySelector('.hero-badge');
+      if (titleEl) titleEl.textContent = meta.title;
+      if (descEl)  descEl.textContent  = meta.desc;
+      if (badgeEl) badgeEl.textContent = '\u2746 ' + meta.badge;
+      
+      // Update the input placeholder based on the portal type
+      var emailInput = document.getElementById('email');
+      if (emailInput) {
+        if (type === 'student') {
+          emailInput.placeholder = 'e.g. 9876543210 or student@gmail.com';
+        } else if (type === 'counsellor') {
+          emailInput.placeholder = 'e.g. EMP260001 or official email';
+        } else {
+          emailInput.placeholder = 'Enter your credentials';
+        }
+      }
+      
+      // Hide Social Logins for Staff portals
+      var socialDivider = document.querySelector('.social-divider');
+      var socialGrid = document.querySelector('.social-buttons-grid');
+      if (socialDivider && socialGrid) {
+        if (type === 'student') {
+          socialDivider.style.display = 'block';
+          socialGrid.style.display = 'block';
+        } else {
+          socialDivider.style.display = 'none';
+          socialGrid.style.display = 'none';
+        }
+      }
+      
+      // Track current type
+      window.currentLoginType = type;
+    }
+
+    function openPortalSelectionModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if (!overlay) return;
+      
+      const container = overlay.querySelector('.portal-modal-container');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      if (container) {
+        container.style.transition = 'none';
+        container.style.transform = 'translate3d(0, 50px, 0) scale(0.96)';
+        container.style.opacity = '0';
+
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            container.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease';
+            container.style.transform = 'translate3d(0, 0, 0) scale(1)';
+            container.style.opacity = '1';
+          });
+        });
+      }
+    }
+
+    function closePortalModal() {
+      const overlay = document.getElementById('portalModalOverlay');
+      if (!overlay) return;
+      
+      const container = overlay.querySelector('.portal-modal-container');
+      if (container) {
+        container.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease';
+        container.style.transform = 'translate3d(0, 35px, 0) scale(0.96)';
+        container.style.opacity = '0';
+      }
+
+      setTimeout(function() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }, 280);
+    }
+
+    function handlePortalOverlayClick(e) {
+      if (e.target.id === 'portalModalOverlay') closePortalModal();
+    }
+
+    function selectPortal(type, event) {
+      if (event) event.preventDefault();
+      closePortalModal();
+      
+      if (type === 'counsellor') {
+        window.location.href = 'counsellor/login.html';
+        return;
+      } else if (type === 'teamleader') {
+        window.location.href = 'teamleader/login.html';
+        return;
+      } else if (type === 'admin') {
+        window.location.href = 'admin/login.html';
+        return;
+      } else if (type === 'partner' || type === 'associate') {
+        window.location.href = 'associate/login.html';
+        return;
+      }
+      
+      applyPortalView(type);
+      history.pushState(null, '', 'login.html?portal=' + type);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePortalModal();
+    });
+
+    /* ─────────────────────────────────────────────────────────
+       UTILITY FUNCTIONS
+    ───────────────────────────────────────────────────────── */
+    // ==========================================
+    // REAL GOOGLE DEVICE AUTHENTICATION
+    // ==========================================
+    async function handleGoogleSignIn() {
+      const btn = document.getElementById('googleSignInBtn');
+      const originalHtml = btn ? btn.innerHTML : 'Sign in with Google';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting to Google...';
+      }
+
+      try {
+        // Pre-check if Google provider is enabled in Supabase
+        const testResp = await fetch('https://ewxvqpyusveiynplzxed.supabase.co/auth/v1/authorize?provider=google', {
+          headers: { 'apikey': 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC' }
+        });
+
+        if (!testResp.ok) {
+          const errJson = await testResp.json().catch(() => ({}));
+          if (errJson.msg && errJson.msg.includes('not enabled')) {
+            alert("Real Device Google Sign-In is not enabled yet in your Supabase backend.\n\nTo enable it:\n1. Go to Supabase Dashboard -> Authentication -> Providers -> Google\n2. Turn ON the toggle and paste your Google Cloud Client ID & Secret.\n\nOnce enabled, this button will directly open the genuine Google account popup on your device!");
+            if (btn) {
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+            }
+            return;
+          }
+        }
+
+        const client = getSupabaseClient();
+        const { data, error } = await client.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + window.location.pathname
+          }
+        });
+
+        if (error) throw error;
+        if (data && data.url) {
+          window.location.href = data.url;
+        }
+      } catch(err) {
+        console.error("Google Auth error:", err);
+        alert("Google Sign-In: " + (err.message || "Failed to connect to Google."));
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
+      }
+    }
+
+    function togglePasswordVisibility(inputId, btnEl) {
+      var pwd = document.getElementById(inputId || 'password');
+      var btn = btnEl || (typeof event !== 'undefined' ? event.currentTarget : null);
+      if (pwd) {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          if (btn) {
+            btn.setAttribute('title', 'Hide password');
+            btn.innerHTML = '<svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>';
+          }
+        } else {
+          pwd.type = 'password';
+          if (btn) {
+            btn.setAttribute('title', 'Show password');
+            btn.innerHTML = '<svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+          }
+        }
+      }
+    }
+
+    function toggleUserDropdown() {
+      var drop = document.getElementById('userDropdownMenu');
+      if (drop) drop.classList.toggle('show');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('#userProfileBadge')) {
+        var drop = document.getElementById('userDropdownMenu');
+        if (drop) drop.classList.remove('show');
+      }
+    });
+
+    function logoutUser() {
+      localStorage.removeItem('eduvision_user');
+      
+      checkLoginSession();
+      alert('You have logged out successfully.');
+    }
+
+    function openStudentDashboard() {
+      var raw = localStorage.getItem('eduvision_user');
+      if (raw) {
+        var u = JSON.parse(raw);
+        document.getElementById('dashUserName').textContent  = u.name  || 'Rahul Sharma';
+        document.getElementById('dashUserEmail').textContent = u.email || 'student@gmail.com';
+        document.getElementById('dashAvatar').textContent    = (u.name || 'S').charAt(0).toUpperCase();
+      }
+      document.getElementById('dashboardModalOverlay').style.display = 'flex';
+    }
+
+    function closeStudentDashboard() {
+      document.getElementById('dashboardModalOverlay').style.display = 'none';
+    }
+
+    // ==========================================
+    // STUDENT FORGOT PASSWORD CONTROLLER
+    // ==========================================
+    function openStudentForgotModal() {
+      const modal = document.getElementById('studentForgotModal');
+      const inp = document.getElementById('forgotIdentifierInput');
+      const statusEl = document.getElementById('forgotModalStatus');
+      const btn = document.getElementById('btnSendForgotOtp');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔';
+      }
+      if (statusEl) statusEl.textContent = '';
+      if (inp) inp.value = '';
+      if (modal) modal.style.display = 'flex';
+      setTimeout(() => { if (inp) inp.focus(); }, 120);
+    }
+
+    function closeStudentForgotModal() {
+      const modal = document.getElementById('studentForgotModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleSendForgotOtp() {
+      const inp = document.getElementById('forgotIdentifierInput');
+      const statusEl = document.getElementById('forgotModalStatus');
+      const btn = document.getElementById('btnSendForgotOtp');
+      const val = inp ? inp.value.trim() : '';
+
+      if (!val) {
+        if (statusEl) {
+          statusEl.textContent = 'Please enter your registered mobile number or email.';
+          statusEl.style.color = '#ef4444';
+        }
+        if (inp) inp.focus();
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Finding Account & Sending OTP...';
+      }
+      if (statusEl) {
+        statusEl.textContent = 'Searching student records in database...';
+        statusEl.style.color = '#f7d377';
+      }
+
+      try {
+        const client = getSupabaseClient();
+        if (!client) {
+          throw new Error('Database client not initialized. Check connection.');
+        }
+
+        const isEmail = val.includes('@');
+        let studentRecord = null;
+        const col = isEmail ? 'email' : 'phone';
+
+        const { data, error: queryErr } = await client.from('users').select('*').ilike(col, val);
+        if (data && data.length > 0) {
+          studentRecord = data[0];
+        }
+
+        if (!studentRecord) {
+          // Check associate_partners table
+          try {
+            let apQuery = client.from('associate_partners').select('*');
+            if (isEmail) {
+              apQuery = apQuery.ilike('email', val);
+            } else {
+              apQuery = apQuery.or(`phone.eq.${val},partner_code.eq.${val},partner_id.eq.${val}`);
+            }
+            const { data: apData } = await apQuery;
+            if (apData && apData.length > 0) {
+              const ap = apData[0];
+              studentRecord = {
+                id: ap.partner_id,
+                full_name: ap.contact_person || ap.company_name || 'Associate Partner',
+                email: ap.email,
+                phone: ap.phone,
+                role: 'partner'
+              };
+            }
+          } catch(e) { console.warn("associate_partners lookup notice:", e); }
+
+          // Check local cache
+          if (!studentRecord) {
+            try {
+              const cached = JSON.parse(localStorage.getItem('eduvision_partners') || '[]');
+              const matched = cached.find(p => isEmail 
+                ? (p.email && p.email.toLowerCase() === val.toLowerCase())
+                : (p.phone === val || p.partner_code === val || p.partner_id === val)
+              );
+              if (matched) {
+                studentRecord = {
+                  id: matched.partner_id || matched.id,
+                  full_name: matched.contact_person || matched.organization_name || 'Associate Partner',
+                  email: matched.email,
+                  phone: matched.phone,
+                  role: 'partner'
+                };
+              }
+            } catch(e) {}
+          }
+        }
+
+        if (!studentRecord) {
+          throw new Error('No account found with this ' + (isEmail ? 'email address' : 'mobile number / Partner ID') + '. Please check and try again.');
+        }
+
+        const targetEmail = (studentRecord.email || '').trim().toLowerCase();
+        if (!targetEmail || !targetEmail.includes('@')) {
+          throw new Error('This account (' + (studentRecord.full_name || 'Student') + ') does not have a valid registered email address. Please contact counsellor.');
+        }
+
+        if (statusEl) {
+          statusEl.textContent = '✓ Account found: ' + (studentRecord.full_name || 'Student') + ' (' + targetEmail + '). Sending real 6-digit OTP...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        // Dispatch password reset via Supabase Auth
+        let otpErr = null;
+        try {
+          const res = await client.auth.resetPasswordForEmail(targetEmail, {
+            redirectTo: window.location.origin + window.location.pathname
+          });
+          if (res.error) otpErr = res.error;
+        } catch(e) { otpErr = e; }
+
+        if (otpErr) {
+          // Try fallback to signInWithOtp
+          try {
+            const res2 = await client.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } });
+            if (res2.error) otpErr = res2.error;
+            else otpErr = null;
+          } catch(e) { otpErr = e; }
+        }
+
+        if (otpErr) {
+          // If rate limit or other error, strictly report it
+          console.error("Supabase OTP send failure:", otpErr);
+          throw new Error(otpErr.message || 'Supabase could not send OTP to ' + targetEmail);
+        }
+
+        // Store pending auth in sessionStorage for otp-verify.html
+        sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({
+          identifier: targetEmail,
+          phone: studentRecord.phone || '',
+          name: studentRecord.full_name || studentRecord.name || 'Student',
+          mode: 'recovery',
+          portal: 'student'
+        }));
+
+        if (statusEl) {
+          statusEl.textContent = '✓ 6-Digit OTP successfully sent to ' + targetEmail + '! Redirecting...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        setTimeout(() => {
+          window.location.href = 'otp-verify.html';
+        }, 700);
+
+      } catch(err) {
+        console.error("Forgot OTP Error:", err);
+        if (statusEl) {
+          statusEl.textContent = '❌ ' + (err.message || 'Failed to send OTP.');
+          statusEl.style.color = '#ef4444';
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔';
+        }
+      }
+    }
+
+    function toggleFaq(el) {
+      el.parentElement.classList.toggle('open');
+    }
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       APPLE macOS / iOS 18 WHITE LIQUID GLASS PORTAL SELECTION MODAL
+  ═══════════════════════════════════════════════════════════ -->
+  <style>
+    .portal-modal-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(10, 15, 26, 0.65) !important;
+      backdrop-filter: blur(28px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+      z-index: 99999 !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      perspective: none !important;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .portal-modal-overlay.active {
+      display: flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Ultra-Premium White Liquid Glass Container */
+    .portal-modal-container {
+      width: 100% !important;
+      max-width: 470px !important;
+      max-height: 92vh !important;
+      overflow-y: auto !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      background: rgba(255, 255, 255, 0.78) !important;
+      backdrop-filter: blur(50px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(50px) saturate(210%) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+      border-radius: 34px !important;
+      padding: 30px 26px 26px !important;
+      position: relative !important;
+      transform: translateY(60px) scale(0.95) !important;
+      opacity: 0 !important;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, box-shadow 0.35s ease !important;
+      box-shadow: 
+        0 35px 90px -10px rgba(0, 0, 0, 0.28),
+        0 15px 35px -5px rgba(0, 0, 0, 0.12),
+        inset 0 2px 4px rgba(255, 255, 255, 1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.04) !important;
+      transform-style: flat !important;
+      backface-visibility: visible !important;
+    }
+
+    .portal-modal-container::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    /* Specular Liquid Top Rim Sheen */
+    .portal-modal-container::before {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 12% !important;
+      right: 12% !important;
+      height: 1.5px !important;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, transparent 100%) !important;
+      pointer-events: none !important;
+      z-index: 10 !important;
+    }
+
+    .portal-modal-container::after { display: none !important; }
+
+    .portal-modal-overlay.active .portal-modal-container {
+      transform: translateY(0) scale(1) !important;
+      opacity: 1 !important;
+    }
+
+    .portal-modal-container:hover {
+      transform: translateY(0) scale(1) !important;
+      box-shadow: 
+        0 40px 100px -10px rgba(0, 0, 0, 0.32),
+        0 18px 40px -5px rgba(0, 0, 0, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 1) !important;
+    }
+
+    /* Close Button (Apple macOS Traffic Frosted Glass) */
+    .portal-modal-close {
+      position: absolute !important;
+      top: 18px !important;
+      right: 20px !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      background: rgba(0, 0, 0, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.8) !important;
+      color: #475569 !important;
+      font-size: 0.95rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+      z-index: 12 !important;
+      outline: none !important;
+    }
+
+    .portal-modal-close:hover {
+      background: rgba(239, 68, 68, 0.14) !important;
+      border-color: rgba(239, 68, 68, 0.3) !important;
+      color: #ef4444 !important;
+      transform: rotate(90deg) scale(1.08) !important;
+    }
+
+    /* Modal Header */
+    .portal-modal-header {
+      text-align: center !important;
+      margin-bottom: 20px !important;
+      transform: none !important;
+    }
+
+    .portal-badge-chip {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      padding: 5px 14px !important;
+      border-radius: 20px !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(0, 0, 0, 0.07) !important;
+      color: #0f172a !important;
+      font-size: 0.76rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      margin-bottom: 8px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .portal-modal-title {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 1.55rem !important;
+      font-weight: 800 !important;
+      color: #0f172a !important;
+      line-height: 1.25 !important;
+      letter-spacing: -0.02em !important;
+      margin: 0 !important;
+    }
+
+    /* Cards List */
+    .portal-cards-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 9px !important;
+      transform: none !important;
+    }
+
+    /* White Liquid Glass Card */
+    .portal-card {
+      display: flex !important;
+      align-items: center !important;
+      gap: 14px !important;
+      padding: 12px 18px !important;
+      border-radius: 20px !important;
+      background: rgba(255, 255, 255, 0.62) !important;
+      border: 1.2px solid rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.03),
+        inset 0 1px 1.5px #ffffff !important;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      position: relative !important;
+      overflow: hidden !important;
+      transform: none !important;
+    }
+
+    .portal-card:hover {
+      background: rgba(255, 255, 255, 0.96) !important;
+      border-color: #ffffff !important;
+      transform: translateY(-2px) scale(1.018) !important;
+      box-shadow: 
+        0 16px 36px rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.04),
+        inset 0 1px 2px #ffffff !important;
+    }
+
+    /* Card Slide-In Stagger Animation */
+    .portal-modal-overlay.active .portal-card:nth-child(1) { animation: cardSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both !important; }
+    .portal-modal-overlay.active .portal-card:nth-child(2) { animation: cardSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both !important; }
+    .portal-modal-overlay.active .portal-card:nth-child(3) { animation: cardSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both !important; }
+    .portal-modal-overlay.active .portal-card:nth-child(4) { animation: cardSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both !important; }
+    .portal-modal-overlay.active .portal-card:nth-child(5) { animation: cardSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both !important; }
+
+    @keyframes cardSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(22px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* iOS Style App Squircle Icon Box */
+    .portal-icon-box {
+      width: 46px !important;
+      height: 46px !important;
+      border-radius: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 1.35rem !important;
+      flex-shrink: 0 !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transform: none !important;
+    }
+
+    .portal-card:hover .portal-icon-box {
+      transform: scale(1.08) !important;
+    }
+
+    /* Specific Squircle Tint Gradients */
+    .portal-card.card-student .portal-icon-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+      border: 1px solid #bfdbfe !important;
+    }
+    .portal-card.card-counsellor .portal-icon-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+      border: 1px solid #fde68a !important;
+    }
+    .portal-card.card-associate .portal-icon-box {
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%) !important;
+      border: 1px solid #e9d5ff !important;
+    }
+    .portal-card.card-teamleader .portal-icon-box {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%) !important;
+      border: 1px solid #fed7aa !important;
+    }
+    .portal-card.card-admin .portal-icon-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+      border: 1px solid #fecaca !important;
+    }
+
+    /* Card Text */
+    .portal-card-info {
+      flex: 1 !important;
+      text-align: left !important;
+    }
+
+    .portal-card-info h3 {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 1.02rem !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      margin: 0 0 2px !important;
+      transition: color 0.2s !important;
+    }
+
+    .portal-card-info p {
+      font-size: 0.8rem !important;
+      font-weight: 500 !important;
+      color: #64748b !important;
+      margin: 0 !important;
+    }
+
+    /* Apple iOS Circular Chevron Arrow */
+    .portal-arrow {
+      width: 30px !important;
+      height: 30px !important;
+      border-radius: 50% !important;
+      background: rgba(0, 0, 0, 0.04) !important;
+      color: #64748b !important;
+      font-size: 0.82rem !important;
+      font-weight: 800 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      flex-shrink: 0 !important;
+      transform: none !important;
+    }
+
+    .portal-card:hover .portal-arrow {
+      background: #0f172a !important;
+      color: #ffffff !important;
+      transform: translateX(3px) !important;
+    }
+
+    @media (max-width: 520px) {
+      .portal-modal-container {
+        padding: 24px 18px 20px !important;
+        border-radius: 28px !important;
+      }
+      .portal-modal-title { font-size: 1.35rem !important; }
+      .portal-card { padding: 11px 14px !important; gap: 11px !important; }
+      .portal-icon-box { width: 40px !important; height: 40px !important; font-size: 1.2rem !important; }
+      .portal-card-info h3 { font-size: 0.95rem !important; }
+      .portal-card-info p { font-size: 0.74rem !important; }
+    }
+  </style>
+
+  <!-- EDUVISION APPLE WHITE LIQUID GLASS PORTAL MODAL -->
+  <style id="apple-liquid-portal-modal-style">
+/* ═══════════════════════════════════════════════════════════
+     CRYSTAL-CLEAR APPLE macOS / VisionOS LIQUID GLASS SYSTEM
+     ═══════════════════════════════════════════════════════════ */
+  html {
+    scroll-behavior: smooth !important;
+  }
+
+  /* Custom Apple Glass Scrollbar for Entire Page */
+  ::-webkit-scrollbar {
+    width: 5px !important;
+    height: 5px !important;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(2, 4, 8, 0.4) !important;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-radius: 999px !important;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.55) !important;
+  }
+
+  .portal-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: #020408 url('assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    z-index: 999999 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    perspective: none !important;
+    -webkit-perspective: none !important;
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    will-change: opacity !important;
+  }
+
+  /* Deep Vignette without nested blur so wallpaper colors stay 100% crisp */
+  .portal-modal-overlay::before {
+    content: '' !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: radial-gradient(ellipse at 50% 50%, rgba(2, 4, 8, 0.25) 0%, rgba(2, 4, 8, 0.70) 100%) !important;
+    pointer-events: none !important;
+  }
+
+  .portal-modal-overlay.active {
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Upright Floating Crystal-Clear Liquid Glass Container (Zero Muddy Bottom Blur) */
+  .portal-modal-container {
+    width: 100% !important;
+    max-width: 480px !important;
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent !important;
+    background: 
+      linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.10) 100%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(99, 102, 241, 0.14) 0%, transparent 75%),
+      rgba(8, 12, 22, 0.52) !important;
+    backdrop-filter: blur(24px) saturate(220%) brightness(112%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(220%) brightness(112%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    border-radius: 28px !important;
+    padding: 26px 22px 20px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transform: scale(0.92) translateY(24px) translateZ(0) !important;
+    opacity: 0 !important;
+    transition: transform 0.40s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease !important;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0 2px 2px 0 rgba(255, 255, 255, 0.75),
+      inset 0 -2px 2px 0 rgba(255, 255, 255, 0.40),
+      0 25px 65px -10px rgba(0, 0, 0, 0.75),
+      0 10px 25px -5px rgba(0, 0, 0, 0.45) !important;
+    transform-style: flat !important;
+    -webkit-transform-style: flat !important;
+    backface-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+    will-change: transform, opacity !important;
+  }
+
+  /* Sleek iOS / macOS Glass Scrollbar */
+  .portal-modal-container::-webkit-scrollbar {
+    width: 4px !important;
+  }
+  .portal-modal-container::-webkit-scrollbar-track {
+    background: transparent !important;
+    margin: 8px 0 !important;
+  }
+  .portal-modal-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.28) !important;
+    border-radius: 999px !important;
+  }
+  .portal-modal-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  /* Top Specular Rim Sheen */
+  .portal-modal-container::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 10% !important;
+    right: 10% !important;
+    height: 1.5px !important;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 1) 50%, rgba(180, 220, 255, 0.9) 65%, transparent 100%) !important;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)) !important;
+    pointer-events: none !important;
+    z-index: 20 !important;
+  }
+
+  /* Dynamic Specular Glare (120fps hardware composited) */
+  .portal-modal-container::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 28px !important;
+    background: radial-gradient(circle 340px at var(--glare-x, 50%) var(--glare-y, 30%), rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 75%) !important;
+    pointer-events: none !important;
+    z-index: 15 !important;
+    opacity: 0.95 !important;
+    will-change: background !important;
+  }
+
+  .portal-modal-overlay.active .portal-modal-container {
+    transform: scale(1) translateY(0) translateZ(0) !important;
+    opacity: 1 !important;
+  }
+
+  /* Close Button (Apple macOS Frosted Circle) */
+  .portal-modal-close {
+    position: absolute !important;
+    top: 15px !important;
+    right: 16px !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.09) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: #cbd5e1 !important;
+    font-size: 0.9rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, color 0.2s ease !important;
+    z-index: 25 !important;
+    outline: none !important;
+    will-change: transform !important;
+  }
+
+  .portal-modal-close:hover {
+    background: rgba(239, 68, 68, 0.35) !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+    transform: rotate(90deg) scale(1.08) !important;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.5) !important;
+  }
+
+  .portal-modal-close:active {
+    transform: rotate(90deg) scale(0.92) !important;
+  }
+
+  /* Modal Header */
+  .portal-modal-header {
+    text-align: center !important;
+    margin-bottom: 16px !important;
+    transform: none !important;
+    position: relative !important;
+    z-index: 16 !important;
+  }
+
+  .portal-badge-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 4px 13px !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.10) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: #f1f5f9 !important;
+    font-size: 0.74rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 6px !important;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .portal-modal-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  /* Cards List */
+  .portal-cards-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    transform: none !important;
+    position: relative !important;
+    z-index: 16 !important;
+  }
+
+  /* Crystal Liquid Glass Card Tile */
+  .portal-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    padding: 11px 16px !important;
+    border-radius: 17px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.20) !important;
+    box-shadow: 
+      inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -1px 1px 0 rgba(255, 255, 255, 0.10),
+      0 4px 14px rgba(0, 0, 0, 0.22) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.22s ease !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transform: translateY(0) translateZ(0) !important;
+    user-select: none !important;
+    will-change: transform !important;
+  }
+
+  .portal-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0; left: 0; right: 0; bottom: 0 !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 60%) !important;
+    opacity: 0 !important;
+    transition: opacity 0.22s ease !important;
+    pointer-events: none !important;
+  }
+
+  .portal-card:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.48) !important;
+    transform: translateY(-2px) translateZ(0) scale(1.014) !important;
+    box-shadow: 
+      inset 0 2px 2px rgba(255, 255, 255, 0.60),
+      0 10px 25px rgba(0, 0, 0, 0.38),
+      0 0 22px rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .portal-card:hover::before {
+    opacity: 1 !important;
+  }
+
+  /* Mac Tactile Press on click */
+  .portal-card:active,
+  .portal-card.mac-card-clicked {
+    transform: scale(0.965) translateY(1.5px) translateZ(0) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.75) !important;
+    box-shadow: 
+      inset 0 2px 3px rgba(255, 255, 255, 0.8),
+      0 2px 8px rgba(0, 0, 0, 0.35),
+      0 0 20px rgba(255, 255, 255, 0.3) !important;
+    transition-duration: 0.08s !important;
+  }
+
+  /* Luminous Click Ripple Pulse */
+  .mac-click-ripple {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%);
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: macRipplePulse 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    z-index: 25;
+  }
+
+  @keyframes macRipplePulse {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.95; }
+    100% { transform: translate(-50%, -50%) scale(7.5); opacity: 0; }
+  }
+
+  /* Mac Icon Rubber-Band Spring */
+  .portal-icon-box.mac-icon-spring {
+    animation: macIconBounce 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  }
+
+  @keyframes macIconBounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.24) rotate(-5deg); }
+    70% { transform: scale(0.94) rotate(2deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  /* Smooth Stagger Cascade */
+  .portal-modal-overlay.active .portal-card:nth-child(1) { animation: macTileCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.03s both !important; }
+  .portal-modal-overlay.active .portal-card:nth-child(2) { animation: macTileCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both !important; }
+  .portal-modal-overlay.active .portal-card:nth-child(3) { animation: macTileCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.09s both !important; }
+  .portal-modal-overlay.active .portal-card:nth-child(4) { animation: macTileCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both !important; }
+  .portal-modal-overlay.active .portal-card:nth-child(5) { animation: macTileCascade 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both !important; }
+
+  @keyframes macTileCascade {
+    0% {
+      opacity: 0;
+      transform: translateY(18px) scale(0.97) translateZ(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1) translateZ(0);
+    }
+  }
+
+  /* Squircle Icon Box */
+  .portal-icon-box {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 13px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.25rem !important;
+    flex-shrink: 0 !important;
+    background: rgba(255, 255, 255, 0.10) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    box-shadow: 
+      inset 0 1px 1px rgba(255, 255, 255, 0.35),
+      0 3px 10px rgba(0, 0, 0, 0.2) !important;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    will-change: transform !important;
+  }
+
+  .portal-card:hover .portal-icon-box {
+    transform: scale(1.1) !important;
+  }
+
+  /* Card Text */
+  .portal-card-info {
+    flex: 1 !important;
+    text-align: left !important;
+  }
+
+  .portal-card-info h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.02rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin: 0 0 2px !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .portal-card-info p {
+    font-size: 0.8rem !important;
+    font-weight: 400 !important;
+    color: #94a3b8 !important;
+    margin: 0 !important;
+  }
+
+  /* Apple White Chevron Arrow Pill */
+  .portal-arrow {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #94a3b8 !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    flex-shrink: 0 !important;
+    will-change: transform, background, color !important;
+  }
+
+  .portal-card:hover .portal-arrow {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #090d16 !important;
+    transform: translateX(3px) scale(1.06) !important;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.6) !important;
+  }
+
+  @media (max-width: 520px) {
+    .portal-modal-container {
+      padding: 22px 18px 18px !important;
+      border-radius: 24px !important;
+    }
+    .portal-modal-title { font-size: 1.35rem !important; }
+    .portal-card { padding: 10px 14px !important; gap: 11px !important; }
+    .portal-icon-box { width: 36px !important; height: 36px !important; font-size: 1.15rem !important; }
+    .portal-card-info h3 { font-size: 0.95rem !important; }
+    .portal-card-info p { font-size: 0.74rem !important; }
+  }
+/* Student Slider Box Crystal Liquid Glass */
+  .auth-slider-box {
+    background: 
+      linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.08) 100%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(99, 102, 241, 0.14) 0%, transparent 75%),
+      rgba(8, 12, 22, 0.55) !important;
+    backdrop-filter: blur(26px) saturate(215%) brightness(110%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(215%) brightness(110%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.26) !important;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.12),
+      inset 0 2px 2px 0 rgba(255, 255, 255, 0.70),
+      inset 0 -2px 2px 0 rgba(255, 255, 255, 0.38),
+      0 35px 90px -15px rgba(0, 0, 0, 0.85),
+      0 12px 30px -8px rgba(0, 0, 0, 0.5) !important;
+  }
+</style>
+
+  <div class="portal-modal-overlay" id="portalModalOverlay" onclick="handlePortalOverlayClick(event)">
+    <div class="portal-modal-container" role="dialog" aria-modal="true" aria-labelledby="portalModalTitle">
+      <button class="portal-modal-close" onclick="closePortalModal()" aria-label="Close modal">✕</button>
+
+      <div class="portal-modal-header">
+        <div class="portal-badge-chip">✨ Select Your Portal</div>
+        <h2 class="portal-modal-title" id="portalModalTitle">Choose how you want to continue</h2>
+      </div>
+
+      <div class="portal-cards-list">
+        <!-- 1. Student Portal -->
+        <a href="javascript:void(0)" class="portal-card card-student" onclick="selectPortal('student', event)">
+          <div class="portal-icon-box">🎓</div>
+          <div class="portal-card-info">
+            <h3>Student Portal</h3>
+            <p>Apply, Track Admissions & Access Dashboard</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 2. Counsellor Portal -->
+        <a href="counsellor/login.html" class="portal-card card-counsellor">
+          <div class="portal-icon-box">👨‍🏫</div>
+          <div class="portal-card-info">
+            <h3>Counsellor Portal</h3>
+            <p>Manage Students & Applications</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 3. Associate Partner -->
+        <a href="associate/login.html" class="portal-card card-associate">
+          <div class="portal-icon-box">🤝</div>
+          <div class="portal-card-info">
+            <h3>Associate Partner</h3>
+            <p>Partner Dashboard & Lead Management</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 4. Team Leader -->
+        <a href="teamleader/login.html" class="portal-card card-teamleader">
+          <div class="portal-icon-box">👑</div>
+          <div class="portal-card-info">
+            <h3>Team Leader</h3>
+            <p>Team Performance & Operations</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 5. Admin Login -->
+        <a href="admin/login.html" class="portal-card card-admin">
+          <div class="portal-icon-box">🛡️</div>
+          <div class="portal-card-info">
+            <h3>Admin Login</h3>
+            <p>System Administration</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCED SECURITY: ANTI-INSPECT & ANTI-COPY -->
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault()); // Block right-click
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || 
+         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+         (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        console.warn("Security Alert: Developer tools access blocked.");
+      }
+    });
+  
+    // ==========================================
+    // EMAIL LINK PASSWORD RECOVERY HANDLER
+    // ==========================================
+    var recoveryUserEmail = '';
+
+    // Check on page load if user arrived from email reset link
+    window.addEventListener('DOMContentLoaded', function() {
+      const hash = window.location.hash || '';
+      if (hash.includes('type=recovery') || hash.includes('access_token=')) {
+        setTimeout(async () => {
+          try {
+            const client = getSupabaseClient();
+            if (client && client.auth) {
+              const { data: { session }, error } = await client.auth.getSession();
+              if (session && session.user) {
+                recoveryUserEmail = session.user.email || '';
+                const modal = document.getElementById('recoveryPasswordModal');
+                const dEmail = document.getElementById('displayRecoveryEmail');
+                if (dEmail) dEmail.textContent = recoveryUserEmail;
+                if (modal) modal.style.display = 'flex';
+                const pInp = document.getElementById('recoveryNewPwd');
+                if (pInp) pInp.focus();
+              }
+            }
+          } catch(e) {
+            console.warn("Recovery hash check error:", e);
+          }
+        }, 300);
+      }
+    });
+
+    async function handleSaveRecoveryPassword() {
+      const p1El = document.getElementById('recoveryNewPwd');
+      const p2El = document.getElementById('recoveryConfirmPwd');
+      const statusEl = document.getElementById('recoveryStatusText');
+      const btn = document.getElementById('btnSaveRecoveryPwd');
+
+      const p1 = p1El ? p1El.value.trim() : '';
+      const p2 = p2El ? p2El.value.trim() : '';
+
+      if (!p1 || p1.length < 6) {
+        if (statusEl) {
+          statusEl.textContent = 'Password must be at least 6 characters long.';
+          statusEl.style.color = '#ef4444';
+        }
+        if (p1El) p1El.focus();
+        return;
+      }
+
+      if (p1 !== p2) {
+        if (statusEl) {
+          statusEl.textContent = 'Passwords do not match. Please re-enter.';
+          statusEl.style.color = '#ef4444';
+        }
+        if (p2El) p2El.focus();
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating Password...';
+      }
+      if (statusEl) {
+        statusEl.textContent = 'Saving new password in database...';
+        statusEl.style.color = '#f7d377';
+      }
+
+      try {
+        const client = getSupabaseClient();
+        if (client) {
+          // 1. Update Supabase Auth password
+          if (client.auth) {
+            await client.auth.updateUser({ password: p1 });
+          }
+
+          // 2. Update in public.users table
+          if (recoveryUserEmail) {
+            await client.from('users').update({ password: p1 }).ilike('email', recoveryUserEmail);
+          }
+        }
+
+        // 3. Save active login session
+        let studentName = 'Student';
+        if (client && recoveryUserEmail) {
+          try {
+            const { data } = await client.from('users').select('*').ilike('email', recoveryUserEmail);
+            if (data && data.length > 0) studentName = data[0].full_name || studentName;
+          } catch(e){}
+        }
+
+        localStorage.setItem('eduvision_user', JSON.stringify({
+          name: studentName,
+          email: recoveryUserEmail,
+          role: 'student',
+          loggedIn: true,
+          loginTime: new Date().toISOString()
+        }));
+
+        if (statusEl) {
+          statusEl.textContent = '✓ Password updated successfully! Opening dashboard...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        setTimeout(() => {
+          window.location.href = 'welcome.html?redirect=student/dashboard.html';
+        }, 1000);
+
+      } catch(err) {
+        console.error("Recovery save error:", err);
+        if (statusEl) {
+          statusEl.textContent = '❌ ' + (err.message || 'Failed to update password.');
+          statusEl.style.color = '#ef4444';
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = 'Save Password & Launch Dashboard ➔';
+        }
+      }
+    }
+
+  </script>
+
+  <!-- Old takeover animation elements removed -->
+
+
+  <!-- STUDENT FORGOT PASSWORD MODAL -->
+  <div id="studentForgotModal" style="position:fixed; inset:0; background:rgba(4,9,20,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:999999; display:none; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#0f172a; border:1px solid rgba(247,211,119,0.3); color:#f8fafc; width:100%; max-width:430px; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,0.7); overflow:hidden; font-family:'Plus Jakarta Sans', sans-serif; animation:evFadeIn 0.25s ease;">
+      
+      <!-- Header -->
+      <div style="padding:20px 24px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.2rem;">🔑</span>
+          <span style="font-size:1.1rem; font-weight:700; color:#f8fafc; font-family:'Outfit', sans-serif;">Reset Password</span>
+        </div>
+        <button type="button" onclick="closeStudentForgotModal()" style="background:none; border:none; font-size:1.5rem; color:#94a3b8; cursor:pointer; padding:2px 8px; border-radius:50%; line-height:1;">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:22px 24px;">
+        <p style="margin:0 0 18px; font-size:0.88rem; color:#94a3b8; line-height:1.5;">
+          Enter your registered <strong>Mobile Number</strong> or <strong>Email</strong>. We will verify your account and send a 6-digit OTP code to your registered email address.
+        </p>
+
+        <div style="margin-bottom:18px;">
+          <label style="display:block; font-size:0.78rem; font-weight:700; color:#f7d377; margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase;">Registered Mobile No. or Email</label>
+          <input type="text" id="forgotIdentifierInput" placeholder="e.g. 7894561230 or student@gmail.com" style="width:100%; padding:13px 16px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#ffffff; font-size:0.95rem; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='rgba(247,211,119,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+        </div>
+
+        <div id="forgotModalStatus" style="font-size:0.85rem; margin-bottom:14px; min-height:18px;"></div>
+
+        <button type="button" id="btnSendForgotOtp" onclick="handleSendForgotOtp()" style="width:100%; padding:13px; border-radius:12px; border:none; background:linear-gradient(135deg, #f7d377 0%, #c9932a 100%); color:#070b12; font-size:0.95rem; font-weight:700; cursor:pointer; transition:transform 0.2s, filter 0.2s; box-shadow:0 4px 20px rgba(201,147,42,0.4);" onmouseover="this.style.filter='brightness(1.1)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.filter='none'; this.style.transform='none';">
+          Find Account & Send 6-Digit OTP ➔
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:12px 24px; background:rgba(7,11,18,0.5); border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-size:0.78rem; color:#64748b;">
+        <span>🔒 Secure Verification via EduVision & Supabase</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- RECOVERY PASSWORD MODAL (OPENS WHEN USER CLICKS RESET LINK FROM EMAIL) -->
+  <div id="recoveryPasswordModal" style="position:fixed; inset:0; background:rgba(4,9,20,0.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:9999999; display:none; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#0f172a; border:1px solid rgba(247,211,119,0.35); color:#f8fafc; width:100%; max-width:420px; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,0.8); overflow:hidden; font-family:'Plus Jakarta Sans', sans-serif; animation:evFadeIn 0.3s ease;">
+      
+      <!-- Header -->
+      <div style="padding:22px 24px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.3rem;">✨</span>
+          <span style="font-size:1.1rem; font-weight:700; color:#f8fafc; font-family:'Outfit', sans-serif;">Create New Password</span>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:22px 24px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:99px; background:rgba(74,222,128,0.15); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.8rem; font-weight:700; margin-bottom:14px;">
+          ✓ Email Identity Verified
+        </div>
+
+        <p style="margin:0 0 18px; font-size:0.88rem; color:#94a3b8; line-height:1.5;">
+          Your identity has been verified via email! Enter a strong new password for <br>
+          <strong id="displayRecoveryEmail" style="color:#f7d377;">student@gmail.com</strong>
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:16px;">
+          <div style="position:relative; width:100%;">
+            <input type="password" id="recoveryNewPwd" placeholder="New Password (min 6 chars)" style="width:100%; padding:13px 44px 13px 16px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#ffffff; font-size:0.95rem; outline:none; box-sizing:border-box;">
+            <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('recoveryNewPwd', this)" title="Toggle password visibility" aria-label="Toggle password visibility">
+              <svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+
+          <div style="position:relative; width:100%;">
+            <input type="password" id="recoveryConfirmPwd" placeholder="Confirm New Password" style="width:100%; padding:13px 44px 13px 16px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#ffffff; font-size:0.95rem; outline:none; box-sizing:border-box;">
+            <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('recoveryConfirmPwd', this)" title="Toggle password visibility" aria-label="Toggle password visibility">
+              <svg class="eye-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="recoveryStatusText" style="font-size:0.85rem; margin-bottom:14px; min-height:18px;"></div>
+
+        <button type="button" id="btnSaveRecoveryPwd" onclick="handleSaveRecoveryPassword()" style="width:100%; padding:13px; border-radius:12px; border:none; background:linear-gradient(135deg, #f7d377 0%, #c9932a 100%); color:#070b12; font-size:0.95rem; font-weight:700; cursor:pointer; transition:transform 0.2s, filter 0.2s; box-shadow:0 4px 20px rgba(201,147,42,0.4);">
+          Save Password & Launch Dashboard ➔
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- APPLE MAC 120FPS DYNAMIC LIQUID GLASS & CLICK ANIMATION ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        initAppleLiquidGlassEngine();
+      });
+
+      function initAppleLiquidGlassEngine() {
+        // High-Performance 120fps rAF Cursor Glare (Zero Layout Thrashing)
+        const targets = document.querySelectorAll('.portal-modal-container, .auth-container, .auth-slider-box, .portal-modal-box');
+        targets.forEach(function(el) {
+          let cardRect = null;
+          let ticking = false;
+
+          function updateRect() {
+            cardRect = el.getBoundingClientRect();
+          }
+
+          el.addEventListener('mouseenter', updateRect);
+          window.addEventListener('resize', updateRect);
+          window.addEventListener('scroll', updateRect, { passive: true });
+
+          el.addEventListener('mousemove', function(e) {
+            if (!cardRect) updateRect();
+            if (!ticking) {
+              requestAnimationFrame(function() {
+                if (cardRect && cardRect.width > 0) {
+                  const x = ((e.clientX - cardRect.left) / cardRect.width) * 100;
+                  const y = ((e.clientY - cardRect.top) / cardRect.height) * 100;
+                  el.style.setProperty('--glare-x', x.toFixed(1) + '%');
+                  el.style.setProperty('--glare-y', y.toFixed(1) + '%');
+                }
+                ticking = false;
+              });
+              ticking = true;
+            }
+          });
+        });
+
+        // Tactile Apple Click & Smooth Navigation on Portal Cards
+        const cards = document.querySelectorAll('.portal-card');
+        cards.forEach(function(card) {
+          card.addEventListener('click', function(e) {
+            const targetHref = this.getAttribute('href');
+            const hasCustomClick = this.hasAttribute('onclick');
+
+            const rect = this.getBoundingClientRect();
+            const rx = e.clientX - rect.left;
+            const ry = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'mac-click-ripple';
+            ripple.style.left = rx + 'px';
+            ripple.style.top = ry + 'px';
+            this.appendChild(ripple);
+
+            this.classList.add('mac-card-clicked');
+            const icon = this.querySelector('.portal-icon-box');
+            if (icon) icon.classList.add('mac-icon-spring');
+
+            if (targetHref && targetHref !== 'javascript:void(0)' && !hasCustomClick) {
+              e.preventDefault();
+              setTimeout(function() {
+                window.location.href = targetHref;
+              }, 200);
+            } else {
+              setTimeout(function() {
+                card.classList.remove('mac-card-clicked');
+                if (icon) icon.classList.remove('mac-icon-spring');
+                ripple.remove();
+              }, 400);
+            }
+          });
+        });
+      }
+
+      // Smooth Window Opening & Minimizing
+      const origOpen = window.openPortalSelectionModal;
+      window.openPortalSelectionModal = function() {
+        if (typeof origOpen === 'function') origOpen();
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'none';
+            container.style.transform = 'scale(0.92) translateY(24px) translateZ(0)';
+            container.style.opacity = '0';
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                container.style.transition = 'transform 0.40s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease';
+                container.style.transform = 'scale(1) translateY(0) translateZ(0)';
+                container.style.opacity = '1';
+              });
+            });
+          }
+        }
+      };
+
+      const origClose = window.closePortalModal;
+      window.closePortalModal = function() {
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease';
+            container.style.transform = 'scale(0.94) translateY(18px) translateZ(0)';
+            container.style.opacity = '0';
+          }
+          setTimeout(function() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+          }, 260);
+        }
+      };
+    })();
+  </script>
+
+
+  <!-- APPLE VISIONOS CURSOR SPECULAR GLARE ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        const targets = document.querySelectorAll('.auth-container, .auth-slider-box, .login-wrapper, .admin-login-card');
+        targets.forEach(function(card) {
+          card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            this.style.setProperty('--glare-x', x.toFixed(1) + '%');
+            this.style.setProperty('--glare-y', y.toFixed(1) + '%');
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

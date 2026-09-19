@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Course Details | EduVision</title>
+  <meta name="description" content="Explore detailed course info, top universities, salary packages, duration, eligibility and career opportunities at EduVision Sector 69, Gurgaon, Delhi NCR.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="animations/animations.css">
+  <style>
+    :root{--bg:#06070d;--surface:#0d0f1a;--surface2:#131625;--gold:#d4af37;--gold2:#f5d56a;--text:#f0ece0;--text-muted:#9d9b91;--green:#22c55e;--border:rgba(212,175,55,0.18);}
+    *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+    ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+    .bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(212,175,55,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(212,175,55,0.03)1px,transparent 1px);background-size:60px 60px;transform:translateZ(0);}
+    .bg-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:orbFloat 8s ease-in-out infinite alternate;will-change:transform;}
+    .bg-orb1{width:500px;height:500px;background:rgba(212,175,55,0.06);top:-100px;right:-100px;}
+    .bg-orb2{width:400px;height:400px;background:rgba(124,92,252,0.05);bottom:100px;left:-100px;animation-delay:-3s;}
+    @keyframes orbFloat{from{transform:translate3d(0,0,0) scale(1);}to{transform:translate3d(30px,40px,0) scale(1.1);}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:18px 48px;background:rgba(6,7,13,0.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:border-color 0.3s;transform:translateZ(0);}
+    .nav-brand{font-size:1.6rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;color:var(--text);}.nav-brand span{color:var(--gold);}
+    .nav-actions{display:flex;gap:12px;align-items:center;}
+    .btn-back2{padding:10px 22px;border-radius:50px;font-weight:600;font-size:0.92rem;border:1px solid var(--border);color:var(--text-muted);text-decoration:none;transition:all 0.3s;background:transparent;}
+    .btn-back2:hover{border-color:var(--gold);color:var(--gold);}
+    .btn-cta{padding:10px 26px;border-radius:50px;font-weight:700;font-size:0.92rem;background:linear-gradient(135deg,var(--gold),#b8941f);color:#000;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 20px rgba(212,175,55,0.3);}
+    .btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,175,55,0.5);}
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;z-index:1;}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(212,175,55,0.08)0%,transparent 70%);}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:50px;padding:8px 20px;font-size:0.85rem;font-weight:600;color:var(--gold);margin-bottom:28px;animation:fadeInDown 0.8s ease both;}
+    .hero-badge .dot{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+    .hero-title{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.08;margin-bottom:24px;animation:fadeInDown 0.9s ease 0.1s both;}
+    .course-name{background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% auto;animation:shimmer 3s linear infinite;}
+    @keyframes shimmer{0%{background-position:0%;}100%{background-position:200%;}}
+    .hero-subtitle{font-size:1.25rem;color:var(--text-muted);max-width:640px;line-height:1.7;margin-bottom:48px;animation:fadeInDown 1s ease 0.2s both;}
+    .hero-stats{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;animation:fadeInUp 1s ease 0.3s both;}
+    .hero-stat{text-align:center;}.hero-stat-val{font-size:2.2rem;font-weight:900;color:var(--gold);display:block;}
+    .hero-stat-lbl{font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;}
+    .hero-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeInUp 1s ease 0.4s both;}
+    .hero-btn-primary{padding:16px 40px;border-radius:50px;font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--gold),#b8941f);color:#000;text-decoration:none;transition:all 0.3s;box-shadow:0 8px 30px rgba(212,175,55,0.35);}
+    .hero-btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(212,175,55,0.5);}
+    .hero-btn-secondary{padding:16px 40px;border-radius:50px;font-size:1rem;font-weight:600;border:1px solid var(--border);color:var(--text);text-decoration:none;transition:all 0.3s;background:rgba(255,255,255,0.03);}
+    .hero-btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+    .hero-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);animation:bounce 2s infinite;}
+    .hero-scroll svg{width:28px;height:28px;fill:var(--gold);opacity:0.5;}
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+    .section{padding:100px 24px;position:relative;z-index:1;}.section-inner{max-width:1200px;margin:0 auto;}
+    .section-tag{display:inline-block;background:rgba(212,175,55,0.1);color:var(--gold);font-size:0.78rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:6px 14px;border-radius:50px;border:1px solid rgba(212,175,55,0.25);margin-bottom:16px;}
+    .section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:16px;}.section-title .gold{color:var(--gold);}
+    .section-desc{font-size:1.08rem;color:var(--text-muted);max-width:640px;line-height:1.7;margin-bottom:56px;}
+    .divider{height:1px;background:var(--border);margin:0 auto 56px;}
+    .about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center;}
+    .about-img{border-radius:24px;overflow:hidden;height:460px;position:relative;}
+    .about-img img{width:100%;height:100%;object-fit:cover;}
+    .about-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(6,7,13,0.7)100%);}
+    .about-img-badge{position:absolute;bottom:24px;left:24px;right:24px;background:rgba(13,15,26,0.9);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+    .about-img-badge-icon{font-size:2rem;}.about-img-badge-text strong{display:block;color:var(--gold);font-size:1rem;font-weight:700;}
+    .about-img-badge-text span{font-size:0.82rem;color:var(--text-muted);}
+    .about-list{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
+    .about-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:all 0.3s;}
+    .about-item:hover{border-color:var(--gold);transform:translateX(5px);}
+    .about-item-icon{width:42px;height:42px;min-width:42px;background:linear-gradient(135deg,var(--gold),#b8941f);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    .about-item-text strong{font-size:0.95rem;color:var(--text);font-weight:700;}.about-item-text p{font-size:0.85rem;color:var(--text-muted);margin-top:3px;}
+    .stats-strip{background:linear-gradient(135deg,var(--surface2),var(--surface));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:48px 24px;position:relative;z-index:1;}
+    .stats-strip-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;}
+    .stat-card{text-align:center;padding:24px 16px;border-radius:18px;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.12);transition:all 0.3s;position:relative;overflow:hidden;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));}
+    .stat-card:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 12px 40px rgba(212,175,55,0.15);}
+    .stat-card-icon{font-size:2.2rem;margin-bottom:12px;display:block;}.stat-card-val{font-size:2rem;font-weight:900;color:var(--gold);display:block;}
+    .stat-card-lbl{font-size:0.82rem;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.1em;}
+    .elig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .elig-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 28px;text-align:center;transition:all 0.35s;position:relative;overflow:hidden;}
+    .elig-card:hover{transform:translateY(-8px);border-color:var(--gold);box-shadow:0 20px 50px rgba(212,175,55,0.1);}
+    .elig-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:0.4s;}
+    .elig-card:hover::after{transform:scaleX(1);}
+    .elig-icon{font-size:2.8rem;margin-bottom:16px;}.elig-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+    .elig-desc{font-size:0.88rem;color:var(--text-muted);line-height:1.6;}
+    .timeline{display:flex;flex-direction:column;position:relative;max-width:800px;margin:0 auto;}
+    .timeline::before{content:'';position:absolute;left:48px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),var(--gold2),transparent);}
+    .timeline-item{display:flex;gap:30px;align-items:flex-start;padding-bottom:44px;position:relative;}
+    .timeline-dot{min-width:96px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .timeline-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8941f);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;color:#000;box-shadow:0 0 0 6px rgba(212,175,55,0.12),0 0 0 12px rgba(212,175,55,0.05);position:relative;z-index:1;}
+    .timeline-period{font-size:0.72rem;color:var(--gold);font-weight:600;text-align:center;text-transform:uppercase;letter-spacing:0.05em;}
+    .timeline-content{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 28px;flex:1;transition:0.3s;}
+    .timeline-content:hover{border-color:rgba(212,175,55,0.4);transform:translateX(4px);}
+    .timeline-title{font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+    .timeline-subjects{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .timeline-subject{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);border-radius:50px;padding:4px 12px;font-size:0.78rem;color:var(--gold);}
+    .uni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;}
+    .uni-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;transition:all 0.4s;}
+    .uni-card:hover{transform:translateY(-10px);border-color:var(--gold);box-shadow:0 24px 60px rgba(212,175,55,0.12);}
+    .uni-card-img-wrap{position:relative;overflow:hidden;height:200px;}
+    .uni-card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+    .uni-card:hover .uni-card-img-wrap img{transform:scale(1.05);}
+    .uni-card-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(6,7,13,0.85)100%);}
+    .uni-card-naac{position:absolute;top:14px;right:14px;background:linear-gradient(135deg,var(--gold),#b8941f);color:#000;font-size:0.72rem;font-weight:800;padding:4px 10px;border-radius:50px;}
+    .uni-card-mode{position:absolute;top:14px;left:14px;background:rgba(13,15,26,0.85);border:1px solid var(--border);color:var(--text);font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:50px;backdrop-filter:blur(8px);}
+    .uni-card-body{padding:24px;}.uni-card-logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+    .uni-logo-circle{width:50px;height:50px;border-radius:14px;overflow:hidden;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;}
+    .uni-logo-circle img{width:100%;height:100%;object-fit:contain;padding:4px;}
+    .uni-name{font-size:1.05rem;font-weight:800;color:var(--text);}.uni-location{font-size:0.78rem;color:var(--text-muted);}
+    .uni-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+    .uni-stat{background:rgba(212,175,55,0.06);border-radius:12px;padding:12px 14px;text-align:center;}
+    .uni-stat-val{font-size:1rem;font-weight:800;color:var(--gold);display:block;}.uni-stat-lbl{font-size:0.72rem;color:var(--text-muted);margin-top:3px;}
+    .uni-card-footer{display:flex;gap:10px;padding:0 24px 20px;}
+    .uni-tag{background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.2);color:#a78bfa;font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:50px;}
+    .uni-filter-tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px;justify-content:center;}
+    .uni-tab{padding:12px 24px;border-radius:50px;font-size:0.88rem;font-weight:700;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.3s;background:rgba(255,255,255,0.02);font-family:inherit;}
+    .uni-tab:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+    .uni-tab.active{background:linear-gradient(135deg,var(--gold),#b8941f);color:#000;border-color:var(--gold);box-shadow:0 6px 20px rgba(212,175,55,0.35);}
+    .salary-section{position:relative;}
+    .salary-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(34,197,94,0.04)0%,transparent 70%);}
+    .salary-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:60px;align-items:center;position:relative;z-index:1;}
+    .salary-bars{display:flex;flex-direction:column;gap:20px;}
+    .salary-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .salary-bar-role{font-size:0.9rem;font-weight:600;color:var(--text);}.salary-bar-val{font-size:0.9rem;font-weight:700;color:var(--green);}
+    .salary-bar-track{background:rgba(255,255,255,0.05);border-radius:50px;height:10px;overflow:hidden;}
+    .salary-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#16a34a,var(--green),#4ade80);width:0%;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+    .salary-careers{display:flex;flex-direction:column;gap:16px;}
+    .career-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px 24px;display:flex;gap:16px;align-items:flex-start;transition:0.3s;}
+    .career-card:hover{border-color:var(--gold);transform:translateX(6px);}
+    .career-icon{font-size:1.8rem;min-width:40px;}.career-title{font-size:0.98rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+    .career-desc{font-size:0.84rem;color:var(--text-muted);line-height:1.5;}
+    .career-tag{display:inline-block;margin-top:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:var(--green);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:50px;}
+    .syllabus-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+    .syl-tab{padding:10px 22px;border-radius:50px;font-size:0.88rem;font-weight:600;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:0.3s;background:transparent;font-family:inherit;}
+    .syl-tab.active,.syl-tab:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.08);}
+    .syl-panel{display:none;}.syl-panel.active{display:block;animation:fadeInUp 0.4s ease;}
+    .subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+    .subject-chip{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:10px;transition:0.3s;font-size:0.9rem;}
+    .subject-chip:hover{border-color:var(--gold);color:var(--gold);transform:scale(1.02);}
+    .subject-chip-dot{width:8px;height:8px;min-width:8px;border-radius:50%;background:var(--gold);}
+    .recruiter-scroll{overflow:hidden;padding:20px 0;}
+    .recruiter-track{display:flex;gap:20px;animation:scrollTrack 25s linear infinite;width:max-content;will-change:transform;transform:translateZ(0);}
+    .recruiter-track:hover{animation-play-state:paused;}
+    @keyframes scrollTrack{from{transform:translate3d(0,0,0);}to{transform:translate3d(-50%,0,0);}}
+    .recruiter-chip{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 24px;white-space:nowrap;font-size:0.9rem;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:10px;transition:0.3s;}
+    .recruiter-chip:hover{border-color:var(--gold);color:var(--gold);}
+    .faq-list{display:flex;flex-direction:column;gap:12px;max-width:860px;margin:0 auto;}
+    .faq-item{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .faq-q{padding:22px 28px;font-size:1rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.3s;font-family:inherit;width:100%;background:transparent;color:var(--text);text-align:left;border:none;}
+    .faq-q:hover,.faq-q.open{color:var(--gold);}
+    .faq-icon{font-size:1.4rem;color:var(--gold);transition:transform 0.3s;min-width:24px;text-align:center;}
+    .faq-q.open .faq-icon{transform:rotate(45deg);}
+    .faq-a{padding:0 28px;max-height:0;overflow:hidden;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);color:var(--text-muted);font-size:0.95rem;line-height:1.7;}
+    .faq-a.open{max-height:300px;padding:0 28px 22px;}
+    .apply-section{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:32px;padding:72px 60px;text-align:center;position:relative;overflow:hidden;}
+    .apply-section::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.06)0%,transparent 70%);}
+    .apply-title{font-size:2.4rem;font-weight:900;margin-bottom:12px;}.apply-title span{color:var(--gold);}
+    .apply-subtitle{font-size:1.05rem;color:var(--text-muted);margin-bottom:48px;}
+    .apply-form{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:720px;margin:0 auto;text-align:left;position:relative;z-index:1;}
+    .form-group{display:flex;flex-direction:column;gap:8px;}
+    .form-group label{font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;}
+    .form-group input,.form-group select{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:16px 18px;border-radius:14px;font-family:inherit;font-size:0.95rem;transition:0.3s;outline:none;}
+    .form-group input::placeholder{color:rgba(157,155,145,0.5);}
+    .form-group input:focus,.form-group select:focus{border-color:var(--gold);background:rgba(212,175,55,0.05);}
+    .form-group select option{background:var(--surface);}.form-submit-wrap{grid-column:1/-1;}
+    .btn-apply-form{width:100%;padding:18px;border-radius:14px;font-size:1.05rem;font-weight:800;background:linear-gradient(135deg,var(--gold),#b8941f);color:#000;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 30px rgba(212,175,55,0.3);font-family:inherit;}
+    .btn-apply-form:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(212,175,55,0.5);}
+    .form-success{display:none;padding:24px;border-radius:16px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);font-weight:700;font-size:1.1rem;}
+    footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;position:relative;z-index:1;font-size:0.88rem;color:var(--text-muted);}
+    footer a{color:var(--gold);text-decoration:none;}
+    .reveal, .reveal-up { opacity: 0; transform: translate3d(0, 30px, 0); will-change: transform, opacity; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-left { opacity: 0; transform: translate3d(-30px, 0, 0); will-change: transform, opacity; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-right { opacity: 0; transform: translate3d(30px, 0, 0); will-change: transform, opacity; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible, .reveal.active, .reveal.in-view,
+    .reveal-up.visible, .reveal-up.active, .reveal-up.in-view,
+    .reveal-left.visible, .reveal-left.active, .reveal-left.in-view,
+    .reveal-right.visible, .reveal-right.active, .reveal-right.in-view {
+      opacity: 1 !important;
+      transform: translate3d(0, 0, 0) !important;
+      visibility: visible !important;
+    }
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:1024px){.about-grid,.salary-grid{grid-template-columns:1fr;}.about-img{height:300px;}.stats-strip-inner{grid-template-columns:repeat(2,1fr);}.elig-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){nav{padding:14px 20px;}.nav-brand{font-size:1.2rem;}.hero{padding:100px 20px 60px;}.hero-stats{gap:24px;}.section{padding:70px 20px;}.apply-section{padding:40px 24px;}.apply-form{grid-template-columns:1fr;}.elig-grid{grid-template-columns:1fr;}.stats-strip-inner{grid-template-columns:repeat(2,1fr);}.uni-grid{grid-template-columns:1fr;}footer{flex-direction:column;text-align:center;}}
+  
+    /* Global Luxury Champagne Gold Scrollbar (No White/Gray Native Scrollbars) */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201, 147, 42, 0.5) #070b12;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070b12;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #c9932a 0%, #8a6015 100%);
+      border-radius: 99px;
+      border: 1px solid rgba(247, 211, 119, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f7d377;
+    }
+
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-orb bg-orb1"></div><div class="bg-orb bg-orb2"></div>
+<nav>
+  <a href="index.html" class="nav-brand">EDU<span>VISION</span></a>
+  <div class="nav-actions"><a href="index.html" class="btn-back2">&#8592; Home</a><a href="#apply" class="btn-cta">Apply Free</a></div>
+</nav>
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> EduVision &middot; Sector 69, Gurgaon, Delhi NCR</div>
+  <h1 class="hero-title">Master Your Future in<br><span class="course-name" id="heroCourseName">Loading...</span></h1>
+  <p class="hero-subtitle" id="heroSubtitle">Your complete guide to eligibility, duration, syllabus, fees, top universities, and career opportunities.</p>
+  <div class="hero-stats" id="heroStats"></div>
+  <div class="hero-actions">
+    <a href="#apply" class="hero-btn-primary">&#127891; Get Free Counselling</a>
+    <a href="#universities" class="hero-btn-secondary">Explore Universities &#8595;</a>
+  </div>
+  <div class="hero-scroll"><svg viewBox="0 0 24 24"><path d="M12 16l-6-6h12z"/></svg></div>
+</section>
+<div class="stats-strip"><div class="stats-strip-inner" id="statsStrip"></div></div>
+<section class="section"><div class="section-inner"><div class="about-grid">
+  <div class="reveal-left">
+    <div class="section-tag">About the Course</div>
+    <h2 class="section-title">What is <span class="gold" id="aboutCourseTitle">...</span>?</h2>
+    <p class="section-desc" id="aboutDesc"></p>
+    <div class="about-list" id="aboutList"></div>
+  </div>
+  <div class="about-img reveal-right">
+    <img id="aboutImg" src="" alt="Course" loading="lazy">
+    <div class="about-img-overlay"></div>
+    <div class="about-img-badge">
+      <div class="about-img-badge-icon" id="aboutBadgeIcon">&#127891;</div>
+      <div class="about-img-badge-text"><strong id="aboutBadgeTitle">Professional Degree</strong><span id="aboutBadgeSub">UGC Recognised</span></div>
+    </div>
+  </div>
+</div></div></section>
+<section class="section" style="padding-top:0"><div class="section-inner">
+  <div class="section-tag reveal">Eligibility</div>
+  <h2 class="section-title reveal">Who Can <span class="gold">Apply?</span></h2>
+  <div class="elig-grid" id="eligGrid"></div>
+</div></section>
+<section class="section" style="background:linear-gradient(180deg,transparent,rgba(212,175,55,0.02),transparent)"><div class="section-inner">
+  <div class="section-tag reveal">Program Structure</div>
+  <h2 class="section-title reveal">Year-wise <span class="gold">Timeline</span></h2>
+  <p class="section-desc reveal" id="timelineDesc"></p>
+  <div class="timeline" id="timeline"></div>
+</div></section>
+<section class="section" id="universities"><div class="section-inner">
+  <div class="section-tag reveal">Partner Universities</div>
+  <h2 class="section-title reveal">Top Universities <span class="gold">Offering This Course</span></h2>
+  <p class="section-desc reveal">All universities are UGC-DEB approved &amp; NAAC accredited. EduVision provides 100% free admission guidance.</p>
+  <div class="uni-filter-tabs reveal">
+    <button class="uni-tab active" onclick="filterUni('all', this)">✨ All Modes</button>
+    <button class="uni-tab" onclick="filterUni('Online', this)">💻 Online Universities</button>
+    <button class="uni-tab" onclick="filterUni('Regular', this)">🏛️ Regular / Campus</button>
+    <button class="uni-tab" onclick="filterUni('Distance', this)">📑 Distance Education</button>
+  </div>
+  <div class="uni-grid" id="uniGrid"></div>
+</div></section>
+<section class="section salary-section"><div class="salary-bg"></div><div class="section-inner">
+  <div class="section-tag reveal">Career Outlook</div>
+  <h2 class="section-title reveal">Salary &amp; <span class="gold">Career Opportunities</span></h2>
+  <div class="salary-grid">
+    <div class="salary-chart reveal-left">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;">&#128176; Expected Salary Range</div>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:24px;">Average annual salary by role (LPA)</div>
+        <div class="salary-bars" id="salaryBars"></div>
+      </div>
+      <div style="margin-top:20px;background:var(--surface);border:1px solid rgba(34,197,94,0.25);border-radius:20px;padding:24px;">
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">&#128640; Highest Package Recorded</div>
+        <div style="font-size:2.2rem;font-weight:900;color:var(--green);" id="highestPackage">&#8377;40 LPA</div>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;" id="highestPackageSub">Top recruiter from premier university</div>
+      </div>
+    </div>
+    <div class="salary-careers reveal-right" id="careersList"></div>
+  </div>
+</div></section>
+<section class="section"><div class="section-inner">
+  <div class="section-tag reveal">Curriculum</div>
+  <h2 class="section-title reveal">Semester-wise <span class="gold">Syllabus</span></h2>
+  <div class="syllabus-tabs" id="sylTabs"></div>
+  <div id="sylPanels"></div>
+</div></section>
+<section class="section" style="padding-top:0;overflow:hidden"><div class="section-inner">
+  <div class="section-tag reveal">Industry Partners</div>
+  <h2 class="section-title reveal">Top <span class="gold">Recruiters</span></h2>
+  <div class="divider"></div>
+</div><div class="recruiter-scroll"><div class="recruiter-track" id="recruiterTrack"></div></div></section>
+<section class="section"><div class="section-inner">
+  <div class="section-tag reveal" style="display:block;text-align:center">FAQ</div>
+  <h2 class="section-title reveal" style="text-align:center">Frequently Asked <span class="gold">Questions</span></h2>
+  <div class="faq-list" id="faqList"></div>
+</div></section>
+<section class="section" id="apply"><div class="section-inner"><div class="apply-section reveal">
+  <div class="apply-title">Start Your Journey &ndash; <span>It's Free!</span></div>
+  <div class="apply-subtitle">Fill out the form and our expert counsellors will call you within 24 hours.</div>
+  <form class="apply-form" id="applyForm">
+    <div class="form-group"><label>Full Name</label><input type="text" name="full_name" placeholder="Your full name" required></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" name="mobile" placeholder="+91 00000 00000" required></div>
+    <div class="form-group"><label>City / Location</label><input type="text" name="city" placeholder="e.g. Sector 69, Gurgaon, Delhi NCR" required></div>
+    <div class="form-group"><label>Interested Course</label><input type="text" name="course" id="formCourseName" readonly style="opacity:0.7"></div>
+    <div class="form-group"><label>Preferred Mode</label><select name="mode"><option value="">Select mode</option><option>Regular / Campus</option><option>Online</option><option>Distance</option></select></div>
+    <div class="form-group"><label>Current Education</label><select name="education"><option value="">Select level</option><option>10th Pass</option><option>12th Pass</option><option>Graduate</option><option>Post-Graduate</option></select></div>
+    <div class="form-submit-wrap">
+      <button type="submit" class="btn-apply-form" id="submitBtn">&#128640; Submit &ndash; Get Free Counselling</button>
+      <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:12px;grid-column:1/-1;">*Terms &amp; Conditions: EduVision telephonic call assistance &amp; admission guidance is 100% Free. Course tuition fees &amp; official university charges are payable directly to the respective college.</p>
+    </div>
+  </form>
+  <div class="form-success" id="formSuccess">&#127881; Application submitted! Our counsellor will call you within 24 hours.</div>
+</div></div></section>
+<footer>
+  <div>&#169; 2025 <strong style="color:var(--gold)">EduVision</strong> &middot; Sector 69, Gurgaon, Delhi NCR</div>
+  <div>&#128222; +91 63064 20146 &nbsp;|&nbsp; <a href="mailto:info@eduvisionconsultancy.com">info@eduvisionconsultancy.com</a></div>
+  <div><a href="index.html">&#8592; Back to Home</a></div>
+</footer>
+<script>
+const C={
+"MBBS ABROAD":{fn:"MBBS Abroad (Medical Degree)",hs:[{v:"5-6 Years",l:"Duration"},{v:"NMC & WHO",l:"Recognised"},{v:"100%",l:"English Medium"},{v:"1000+",l:"Students Placed"}],ss:[{i:"&#127891;",v:"5-6 Years",l:"Duration"},{i:"&#127973;",v:"Medical",l:"Level"},{i:"&#128302;",v:"Doctor / MBBS",l:"Outcome"},{i:"&#127757;",v:"Intl Curriculum",l:"Medium"}],ab:{d:"Study MBBS in top NMC & WHO recognised medical universities in Russia, Uzbekistan, Kazakhstan, Georgia, and Philippines. Enjoy low tuition fees, no donation, 100% English medium instruction, and full EduVision visa & admission guidance.",pts:[{i:"&#127973;",t:"NMC & WHO Approved",d:"Valid for NEXT exam and medical license in India & globally"},{i:"&#128178;",t:"Low Cost & No Donation",d:"Affordable tuition fee structures with 0% donation required"},{i:"&#9992;&#65039;",t:"100% Visa & Flight Support",d:"End-to-end assistance from application to university hostel arrival"},{i:"&#128218;",t:"NEXT & USMLE Prep",d:"Dedicated coaching guidance for Indian licensing & USMLE exams"}],img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",bi:"&#127973;",bt:"Intl Medical Degree",bs:"NMC / WHO Approved · Free Visa & Counselling Help"},el:[{i:"&#128218;",t:"NEET Qualification",d:"Qualified NEET score (Current or Previous Year)"},{i:"&#128221;",t:"12th Marks",d:"Minimum 50% aggregate in Physics, Chemistry & Biology (PCB)"},{i:"&#128197;",t:"Age Limit",d:"Minimum 17 years completed as of 31st December"}],tl:{d:"5 to 6-year clinical medical curriculum covering pre-clinical, para-clinical, and hospital rotations.",y:[{y:"Year 1-2",p:"Pre-Clinical",t:"Basic Medical Sciences",s:["Human Anatomy","Human Physiology","Biochemistry","Medical Terminology","Histology"]},{y:"Year 3-4",p:"Para-Clinical",t:"Pathology & Pharmacology",s:["General Pathology","Microbiology","Pharmacology","Forensic Medicine","Clinical Diagnostics"]},{y:"Year 5-6",p:"Clinical & Internship",t:"Hospital Clinical Rotations",s:["General Medicine","General Surgery","Obstetrics & Gynaecology","Pediatrics","NEXT / USMLE Prep"]}]},un:[{n:"Samarkand State Medical University",l:"Samarkand, Uzbekistan",na:"WHO / NMC",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SSMU&background=1e293b&color=d4af37&bold=true",f:"2.5L-3.5L/yr",p:"15-35 LPA",a:"NMC & WHO Approved"},{n:"Tashkent Medical Academy",l:"Tashkent, Uzbekistan",na:"A+",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600&q=80",lo:"https://ui-avatars.com/api/?name=TMA&background=1e293b&color=d4af37&bold=true",f:"3L-4L/yr",p:"18-40 LPA",a:"NMC Recognised"},{n:"Kazakh National Medical University",l:"Almaty, Kazakhstan",na:"Top Ranked",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=KNMU&background=1e293b&color=d4af37&bold=true",f:"3.2L-4.5L/yr",p:"20-45 LPA",a:"WHO / ECFMG"}],sal:{h:"50+ LPA",hs:"Consultant doctors, surgeons & medical specialists in India & abroad",bars:[{r:"Junior Resident / Doctor",v:"8-14 LPA",p:70},{r:"Senior Medical Officer",v:"14-25 LPA",p:85},{r:"Specialist / Consultant Surgeon",v:"25-50+ LPA",p:98}],cars:[{i:"&#129658;",t:"Registered Medical Doctor",d:"Practice in top hospitals across India after qualifying NEXT exam",tag:"Doctor (MBBS)"},{i:"&#127757;",t:"Global Medical Practice",d:"Appear for USMLE (USA) or PLAB (UK) for global residency",tag:"International"},{i:"&#127973;",t:"Private Hospital / Clinic",d:"Work in Apollo, Max, Fortis or set up private clinical practice",tag:"Private Practice"}]},syl:[{t:"Pre-Clinical",s:["Human Anatomy","Physiology","Biochemistry","Histology","Embryology"]},{t:"Para-Clinical",s:["Microbiology","Pathology","Pharmacology","Community Medicine","Forensic Medicine"]},{t:"Clinical Phase",s:["General Medicine","General Surgery","Pediatrics","Orthopaedics","ENT & Ophthalmology","Obstetrics & Gynaecology"]}],rec:["AIIMS","Apollo Hospitals","Fortis Healthcare","Max Healthcare","Medanta","NHS UK","WHO"],faq:[{q:"Is MBBS Abroad valid in India?",a:"Yes! Universities recommended by EduVision are 100% recognised by NMC (National Medical Commission) and WHO. Graduates are eligible to appear for the NEXT exam in India."},{q:"Is NEET mandatory for MBBS Abroad?",a:"Yes, qualifying NEET is compulsory as per NMC guidelines to practice in India after graduation."},{q:"What is the average cost of MBBS Abroad?",a:"Tuition fees start from ₹2.5 Lakhs to ₹4.5 Lakhs per year depending on the university and country."}]},
+
+"MBBS":{fn:"MBBS Abroad (Medical Degree)",hs:[{v:"5-6 Years",l:"Duration"},{v:"NMC & WHO",l:"Recognised"},{v:"100%",l:"English Medium"},{v:"1000+",l:"Students Placed"}],ss:[{i:"&#127891;",v:"5-6 Years",l:"Duration"},{i:"&#127973;",v:"Medical",l:"Level"},{i:"&#128302;",v:"Doctor / MBBS",l:"Outcome"},{i:"&#127757;",v:"Intl Curriculum",l:"Medium"}],ab:{d:"Study MBBS in top NMC & WHO recognised medical universities in Russia, Uzbekistan, Kazakhstan, Georgia, and Philippines. Enjoy low tuition fees, no donation, 100% English medium instruction, and full EduVision visa & admission guidance.",pts:[{i:"&#127973;",t:"NMC & WHO Approved",d:"Valid for NEXT exam and medical license in India & globally"},{i:"&#128178;",t:"Low Cost & No Donation",d:"Affordable tuition fee structures with 0% donation required"},{i:"&#9992;&#65039;",t:"100% Visa & Flight Support",d:"End-to-end assistance from application to university hostel arrival"},{i:"&#128218;",t:"NEXT & USMLE Prep",d:"Dedicated coaching guidance for Indian licensing & USMLE exams"}],img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",bi:"&#127973;",bt:"Intl Medical Degree",bs:"NMC / WHO Approved · Free Visa & Counselling Help"},el:[{i:"&#128218;",t:"NEET Qualification",d:"Qualified NEET score (Current or Previous Year)"},{i:"&#128221;",t:"12th Marks",d:"Minimum 50% aggregate in Physics, Chemistry & Biology (PCB)"},{i:"&#128197;",t:"Age Limit",d:"Minimum 17 years completed as of 31st December"}],tl:{d:"5 to 6-year clinical medical curriculum covering pre-clinical, para-clinical, and hospital rotations.",y:[{y:"Year 1-2",p:"Pre-Clinical",t:"Basic Medical Sciences",s:["Human Anatomy","Human Physiology","Biochemistry","Medical Terminology","Histology"]},{y:"Year 3-4",p:"Para-Clinical",t:"Pathology & Pharmacology",s:["General Pathology","Microbiology","Pharmacology","Forensic Medicine","Clinical Diagnostics"]},{y:"Year 5-6",p:"Clinical & Internship",t:"Hospital Clinical Rotations",s:["General Medicine","General Surgery","Obstetrics & Gynaecology","Pediatrics","NEXT / USMLE Prep"]}]},un:[{n:"Samarkand State Medical University",l:"Samarkand, Uzbekistan",na:"WHO / NMC",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SSMU&background=1e293b&color=d4af37&bold=true",f:"2.5L-3.5L/yr",p:"15-35 LPA",a:"NMC & WHO Approved"},{n:"Tashkent Medical Academy",l:"Tashkent, Uzbekistan",na:"A+",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600&q=80",lo:"https://ui-avatars.com/api/?name=TMA&background=1e293b&color=d4af37&bold=true",f:"3L-4L/yr",p:"18-40 LPA",a:"NMC Recognised"},{n:"Kazakh National Medical University",l:"Almaty, Kazakhstan",na:"Top Ranked",m:"Regular / Campus",img:"https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=KNMU&background=1e293b&color=d4af37&bold=true",f:"3.2L-4.5L/yr",p:"20-45 LPA",a:"WHO / ECFMG"}],sal:{h:"50+ LPA",hs:"Consultant doctors, surgeons & medical specialists in India & abroad",bars:[{r:"Junior Resident / Doctor",v:"8-14 LPA",p:70},{r:"Senior Medical Officer",v:"14-25 LPA",p:85},{r:"Specialist / Consultant Surgeon",v:"25-50+ LPA",p:98}],cars:[{i:"&#129658;",t:"Registered Medical Doctor",d:"Practice in top hospitals across India after qualifying NEXT exam",tag:"Doctor (MBBS)"},{i:"&#127757;",t:"Global Medical Practice",d:"Appear for USMLE (USA) or PLAB (UK) for global residency",tag:"International"},{i:"&#127973;",t:"Private Hospital / Clinic",d:"Work in Apollo, Max, Fortis or set up private clinical practice",tag:"Private Practice"}]},syl:[{t:"Pre-Clinical",s:["Human Anatomy","Physiology","Biochemistry","Histology","Embryology"]},{t:"Para-Clinical",s:["Microbiology","Pathology","Pharmacology","Community Medicine","Forensic Medicine"]},{t:"Clinical Phase",s:["General Medicine","General Surgery","Pediatrics","Orthopaedics","ENT & Ophthalmology","Obstetrics & Gynaecology"]}],rec:["AIIMS","Apollo Hospitals","Fortis Healthcare","Max Healthcare","Medanta","NHS UK","WHO"],faq:[{q:"Is MBBS Abroad valid in India?",a:"Yes! Universities recommended by EduVision are 100% recognised by NMC (National Medical Commission) and WHO. Graduates are eligible to appear for the NEXT exam in India."},{q:"Is NEET mandatory for MBBS Abroad?",a:"Yes, qualifying NEET is compulsory as per NMC guidelines to practice in India after graduation."},{q:"What is the average cost of MBBS Abroad?",a:"Tuition fees start from ₹2.5 Lakhs to ₹4.5 Lakhs per year depending on the university and country."}]},
+
+"10TH ADMISSION":{fn:"10th Admission (Matriculation)",hs:[{v:"1 Year",l:"Duration"},{v:"Board Approved",l:"Recognition"},{v:"100%",l:"Free Guidance"},{v:"500+",l:"Top Schools"}],ss:[{i:"&#9201;",v:"1 Year",l:"Duration"},{i:"&#127891;",v:"10th Board",l:"Level"},{i:"&#128640;",v:"12th & Diploma",l:"Outcome"},{i:"&#128221;",v:"All Subjects",l:"Curriculum"}],ab:{d:"Complete your 10th Board / Secondary Education through CBSE, ICSE, NIOS, or State Recognized Boards. Enables eligibility for 12th admission, Polytechnic Diplomas, ITI, and Govt jobs.",pts:[{i:"&#128218;",t:"Flexible Education",d:"Regular and open schooling options for all students"},{i:"&#127757;",t:"Fully Recognised",d:"Valid for all govt jobs, higher secondary admission & competitive exams"},{i:"&#9201;",t:"On-Demand Exams",d:"Flexible exam dates and personalized study material"},{i:"&#128187;",t:"Career Guidance",d:"Free counselling to pick your stream in 11th standard"}],img:"https://images.unsplash.com/photo-1427504494785-319ce1473799?w=800&q=80",bi:"&#127891;",bt:"Secondary Schooling",bs:"Govt / Board Recognised Â· Free Admission Help"},el:[{i:"&#128218;",t:"Qualification",d:"Minimum 14 years age â€” no prior formal schooling barrier for open board"},{i:"&#128202;",t:"Passing Criteria",d:"Pass marks in 5 main subjects including Mathematics & Science"},{i:"&#128221;",t:"Documents Needed",d:"Birth Certificate / School Leaving Cert, Aadhaar Card, Passport Photos"}],tl:{d:"10th Secondary curriculum covering core subjects with complete sample papers and exam preparation.",y:[{y:"Term 1",p:"Semester I",t:"Core Subject Foundations",s:["Mathematics","Science","Social Science","English","Hindi / Regional Language"]},{y:"Term 2",p:"Semester II",t:"Board Exam Preparation",s:["Sample Paper Revision","Practical Assignments","Internal Assessment","Board Exams","Career Guidance"]}]},un:[{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"10K-15K",p:"Board Pass",a:"DEB Approved"},{n:"Swami Vivekanand Open Board",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SVU&background=1e293b&color=d4af37&bold=true",f:"8K-12K",p:"Board Pass",a:"Recognised Board"}],sal:{h:"Higher Eligibility",hs:"Qualifies for 12th Admission, Polytechnic Diploma, ITI & Govt Jobs",bars:[{r:"12th Admission Eligibility",v:"100% Eligible",p:100},{r:"Polytechnic Diploma Eligibility",v:"100% Eligible",p:95},{r:"Govt Job Exam (SSC MTS / Railway)",v:"100% Eligible",p:90}],cars:[{i:"&#127891;",t:"12th Senior Secondary",d:"Choose Science, Commerce or Arts stream for Class 11th & 12th",tag:"Schooling"},{i:"&#9881;&#65039;",t:"Polytechnic Diploma",d:"Join 3-year Engineering Diploma in CS, Civil, Mechanical or Electrical",tag:"Diploma"}]},syl:[{t:"Core Subjects",s:["Mathematics","Science (Physics, Chem, Bio)","Social Science (History, Civics, Geo)","English Language","Hindi / Elective"]}],rec:["CBSE","NIOS","State Boards","EduVision Partners"],faq:[{q:"Is 10th Admission valid for Govt Jobs?",a:"Yes! 10th pass certificates from recognized boards are 100% valid for SSC MTS, Railway, Army & State Govt Jobs."}]},
+
+"12TH ADMISSION":{fn:"12th Admission (Senior Secondary)",hs:[{v:"1-2 Years",l:"Duration"},{v:"Board Approved",l:"Recognition"},{v:"100%",l:"Free Guidance"},{v:"500+",l:"Top Colleges"}],ss:[{i:"&#9201;",v:"1-2 Years",l:"Duration"},{i:"&#127891;",v:"12th Board",l:"Level"},{i:"&#128640;",v:"Degree Eligible",l:"Scope"},{i:"&#128221;",v:"Science/Comm/Arts",l:"Streams"}],ab:{d:"Complete your 12th Admission / Senior Secondary Education through UGC & Board recognized universities and open boards (NIOS / State Open Boards). Enables direct eligibility for higher degree programs including B.Tech, MBBS, BCA, BBA, Nursing, Law, and Govt Competitive Exams.",pts:[{i:"&#128218;",t:"All Streams Available",d:"Science (PCM/PCB), Commerce, and Arts/Humanities streams"},{i:"&#127757;",t:"Fully Recognised",d:"Valid for all Central & State Govt jobs, Degree admissions & Abroad study"},{i:"&#9201;",t:"Flexible Examination",d:"On-demand examination options and distance learning support"},{i:"&#128187;",t:"Career Counselling",d:"Free guidance for choosing the right stream and future degree path"}],img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",bi:"&#127891;",bt:"Senior Secondary Schooling",bs:"Govt / Board Recognised Â· Open Learning Supported"},el:[{i:"&#128218;",t:"Qualification",d:"10th Pass from any recognized board (CBSE / ICSE / State Board / Open Board)"},{i:"&#128202;",t:"Age Limit",d:"Minimum 15 years â€” no upper age limit for open schooling"},{i:"&#128221;",t:"Documents Needed",d:"10th Marksheet, Aadhaar Card, Passport Size Photos, Address Proof"}],tl:{d:"12th Senior Secondary curriculum structured across key subjects based on your chosen stream.",y:[{y:"Class 11",p:"Year 1",t:"Stream Fundamentals",s:["Language (English/Hindi)","Core Subject 1","Core Subject 2","Core Subject 3","Elective Subject"]},{y:"Class 12",p:"Year 2",t:"Board Curriculum",s:["Advanced Stream Modules","Board Exam Prep","Practical Labs","Internal Assessment","Career Guidance"]}]},un:[{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"12K-18K",p:"Board Pass",a:"UGC / DEB Approved"},{n:"Swami Vivekanand Open Board",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SVU&background=1e293b&color=d4af37&bold=true",f:"10K-15K",p:"Board Pass",a:"Recognised Open Board"},{n:"Mangalayatan University",l:"Aligarh, UP",na:"B+",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/mangalayatan-in-logo.jpg",f:"15K-20K",p:"Board Pass",a:"UGC / DEB Approved"}],sal:{h:"Degree Eligible",hs:"Qualifies for B.Tech, MBBS, BCA, BBA, Nursing, Banking & Govt Competitive Exams",bars:[{r:"B.Tech / Engineering Eligibility",v:"100% Eligible",p:95},{r:"Medical / Nursing Eligibility",v:"100% Eligible",p:90},{r:"BCA / IT Degree Eligibility",v:"100% Eligible",p:100},{r:"Govt Job Exam Eligibility (SSC / Railway)",v:"100% Eligible",p:100}],cars:[{i:"&#127891;",t:"Higher Degree Education",d:"Enroll in B.Tech, BCA, BBA, B.Sc, BA, Nursing or Law",tag:"UG Degree"},{i:"&#127963;",t:"Govt Competitive Exams",d:"Apply for SSC CHSL, Railway, Defence & State Govt Exams",tag:"Govt Jobs"},{i:"&#128187;",t:"IT & Skill Diploma",d:"Join Digital Marketing, Web Development or Animation courses",tag:"Skill Cert"},{i:"&#127757;",t:"Study Abroad",d:"Eligible for international diploma and foundation degree programs",tag:"Global Scope"}]},syl:[{t:"Science Stream",s:["Physics","Chemistry","Mathematics / Biology","English Core","Computer Science / Physical Education"]},{t:"Commerce Stream",s:["Accountancy","Business Studies","Economics","English Core","Mathematics / Informatics Practices"]},{t:"Arts / Humanities",s:["History","Political Science","Geography / Sociology","English Core","Economics / Psychology"]}],rec:["CBSE","NIOS","State Open Boards","EduVision Partner Universities"],faq:[{q:"Is 12th Admission valid for Govt Jobs?",a:"Yes! 12th certificates from UGC and Board recognized boards/universities are 100% valid for all Govt job exams (SSC, Railway, Police, Army, etc.)."}]},
+
+"NIOS":{fn:"National Institute of Open Schooling (NIOS)",hs:[{v:"6-12 Months",l:"Duration"},{v:"Govt of India Board",l:"Recognition"},{v:"100%",l:"Flexible Exams"},{v:"Global",l:"Validity"}],ss:[{i:"&#9201;",v:"Flexible",l:"Duration"},{i:"&#127891;",v:"10th & 12th",l:"Level"},{i:"&#128640;",v:"Direct Degree",l:"Outcome"},{i:"&#128221;",v:"On-Demand",l:"Exams"}],ab:{d:"NIOS is an autonomous institution under the Ministry of Education, Govt of India. Provides flexible secondary (10th) & senior secondary (12th) education with on-demand examination options.",pts:[{i:"&#127970;",t:"Govt of India Board",d:"100% valid for NEET, JEE, UPSC, SSC, Defense & Foreign Universities"},{i:"&#9201;",t:"On-Demand Examination",d:"Appear for exams when you are ready â€” no rigid exam timeline"},{i:"&#128218;",t:"Subject Choice Freedom",d:"Mix Science, Commerce, Arts and Vocational subjects freely"}],img:"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&q=80",bi:"&#127891;",bt:"Open Schooling",bs:"Ministry of Education Â· Govt of India"},el:[{i:"&#128218;",t:"10th Eligibility",d:"Minimum 14 years of age"},{i:"&#128202;",t:"12th Eligibility",d:"10th Pass from any recognized board"}],tl:{d:"Flexible learning timeline allowing students to pass subjects at their own pace.",y:[{y:"Module 1",p:"Self-Paced",t:"Tutor Marked Assignments (TMA)",s:["Subject Selection","Assignment Submission","Practical Preparation"]},{y:"Module 2",p:"Exam Phase",t:"Public / On-Demand Exams",s:["Practical Examinations","Theory Board Exams","Result Verification"]}]},un:[{n:"NIOS Regional Centres",l:"Pan India",na:"Govt Board",m:"Distance / Open",img:"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80",lo:"https://ui-avatars.com/api/?name=NIOS&background=1e293b&color=d4af37&bold=true",f:"5K-10K",p:"Valid Everywhere",a:"Ministry of Education Govt of India"}],sal:{h:"Degree & NEET/JEE Eligible",hs:"100% recognized for NEET, JEE, Nursing, B.Tech, Defence & UPSC",bars:[{r:"NEET / JEE Eligibility",v:"100% Valid",p:100},{r:"Govt Jobs (UPSC / SSC / Railway)",v:"100% Valid",p:100}],cars:[{i:"&#127891;",t:"Higher Education",d:"Direct admission to B.Tech, MBBS, BCA, BBA & Law",tag:"UG Degree"}]},syl:[{t:"Secondary / Sr Secondary",s:["Physics","Chemistry","Maths","Biology","Accountancy","Business Studies","English","Psychology"]}],rec:["Govt of India","AIU","UGC","All Universities"],faq:[{q:"Is NIOS valid for NEET & JEE?",a:"Yes! Supreme Court & Govt of India have affirmed NIOS validity for NEET, JEE and all competitive exams."}]},
+
+"BA":{fn:"Bachelor of Arts (B.A.)",hs:[{v:"3 Years",l:"Duration"},{v:"3-8 LPA",l:"Avg Salary"},{v:"92%",l:"Placement"},{v:"400+",l:"Companies"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#128176;",v:"3-8 LPA",l:"Avg Package"},{i:"&#128640;",v:"20 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"6 Sem",l:"Structure"}],ab:{d:"Bachelor of Arts is a versatile 3-year undergraduate degree program offering deep knowledge in humanities, social sciences, languages, and liberal arts. Ideal for Civil Services, Teaching, Content, HR, and Media careers.",pts:[{i:"&#127970;",t:"Civil Services Base",d:"Best foundation degree for UPSC, State PSC & Govt Competitive Exams"},{i:"&#128218;",t:"Diverse Subjects",d:"Political Science, History, Economics, English, Psychology, Sociology"},{i:"&#127757;",t:"Flexible Learning",d:"Available in Regular Campus and Distance / Online learning modes"}],img:"https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&q=80",bi:"&#127891;",bt:"Humanities & Arts Degree",bs:"UGC Recognised Â· Distance & Regular"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass from any recognized board (Science, Commerce, or Arts)"},{i:"&#128202;",t:"Percentage",d:"Minimum 40-45% aggregate marks"}],tl:{d:"6 semesters covering core subjects, electives, and skill enhancement papers.",y:[{y:"Year 1",p:"Sem 1-2",t:"Core Humanities",s:["Political Theory","Indian History","English Literature","Sociology Fundamentals","Environmental Studies"]},{y:"Year 2",p:"Sem 3-4",t:"Advanced Studies",s:["Indian Administration","World History","Economics Principles","Public Administration","Skill Enhancement"]},{y:"Year 3",p:"Sem 5-6",t:"Specialization & Project",s:["International Relations","Contemporary History","Applied Psychology","Dissertation","Placement Prep"]}]},un:[{n:"Amity University Online",l:"Noida, UP",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Amity_University_logo.svg/200px-Amity_University_logo.svg.png",f:"30K-60K/yr",p:"6 LPA",a:"UGC-DEB"},{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"12K-18K/yr",p:"4 LPA",a:"DEB Approved"}],sal:{h:"20 LPA",hs:"Civil services officers, media heads & HR directors",bars:[{r:"Content Strategist / Journalist",v:"4-9 LPA",p:65},{r:"HR Executive",v:"4-8 LPA",p:60},{r:"Civil Services / Govt Officer",v:"7-15 LPA",p:80}],cars:[{i:"&#127963;",t:"Civil Services (UPSC/PSC)",d:"Prepare for IAS, IPS, PCS & administrative services",tag:"Govt Job"},{i:"&#128221;",t:"Content & Journalism",d:"Career in media houses, digital publishing, and PR agencies",tag:"Media"}]},syl:[{t:"Sem 1-6",s:["Political Science","History","Economics","Sociology","English Literature","Psychology","Public Admin"]}],rec:["Times Group","NDTV","TCS","Genpact","Govt Departments","NGOs"],faq:[{q:"Is BA good for UPSC preparation?",a:"Yes! BA in Political Science, History or Economics is considered the single best degree for UPSC civil services examination."}]},
+
+"BCOM":{fn:"Bachelor of Commerce (B.Com)",hs:[{v:"3 Years",l:"Duration"},{v:"3-10 LPA",l:"Avg Salary"},{v:"94%",l:"Placement"},{v:"500+",l:"Companies"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#128176;",v:"3-10 LPA",l:"Avg Package"},{i:"&#128640;",v:"25 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"6 Sem",l:"Structure"}],ab:{d:"Bachelor of Commerce is a premier 3-year undergraduate program focusing on financial accounting, corporate law, taxation, auditing, and banking. Gateway to Chartered Accountancy (CA), CS, CMA, and MBA Finance.",pts:[{i:"&#128202;",t:"Finance & Tax Expertise",d:"Master Financial Accounting, Income Tax Law, GST, and Auditing"},{i:"&#128188;",t:"CA / CS Preparation",d:"Parallel path for CA Foundation/Inter and CS Executive exams"},{i:"&#127974;",t:"Banking Sector Jobs",d:"Direct eligibility for IBPS, SBI PO, and corporate banking roles"}],img:"https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",bi:"&#128202;",bt:"Commerce & Finance Degree",bs:"UGC Recognised Â· High Hiring Demand"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass (Commerce preferred, Science/Arts eligible)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"Comprehensive accounting, financial management, and corporate law curriculum.",y:[{y:"Year 1",p:"Sem 1-2",t:"Accounting Foundations",s:["Financial Accounting","Business Law","Business Statistics","Micro Economics","Corporate Communication"]},{y:"Year 2",p:"Sem 3-4",t:"Corporate & Taxation",s:["Corporate Accounting","Income Tax Law & Practice","Cost Accounting","Macro Economics","Company Law"]},{y:"Year 3",p:"Sem 5-6",t:"Advanced Finance & Audit",s:["Management Accounting","Auditing & Governance","GST & Indirect Tax","Financial Management","Project Work"]}]},un:[{n:"Chandigarh University Online",l:"Mohali, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80",lo:"https://ui-avatars.com/api/?name=CU&background=1e293b&color=d4af37&bold=true",f:"40K-70K/yr",p:"8 LPA",a:"UGC-DEB"},{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"15K-25K/yr",p:"5 LPA",a:"DEB Approved"}],sal:{h:"25 LPA",hs:"Big 4 accounting firms & investment banks",bars:[{r:"Accountant / Auditor",v:"4-9 LPA",p:70},{r:"Financial Analyst",v:"5-12 LPA",p:80},{r:"Tax Consultant",v:"4-10 LPA",p:65}],cars:[{i:"&#128178;",t:"Financial Analyst",d:"Analyze corporate financial statements and guide investments",tag:"5-12 LPA"},{i:"&#127974;",t:"Bank PO / Manager",d:"Join public and private sector banks",tag:"Govt / Private Banking"}]},syl:[{t:"Sem 1-6",s:["Financial Accounting","Corporate Law","Cost Accounting","Income Tax","GST","Auditing","Financial Management"]}],rec:["Deloitte","PwC","EY","KPMG","HDFC Bank","ICICI Bank","TCS","Genpact"],faq:[{q:"Can I pursue CA along with B.Com?",a:"Yes! B.Com + CA is the most popular combination for commerce students."}]},
+
+"BSC":{fn:"Bachelor of Science (B.Sc)",hs:[{v:"3 Years",l:"Duration"},{v:"3-12 LPA",l:"Avg Salary"},{v:"93%",l:"Placement"},{v:"450+",l:"Companies"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#128176;",v:"3-12 LPA",l:"Avg Package"},{i:"&#128640;",v:"30 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"6 Sem",l:"Structure"}],ab:{d:"Bachelor of Science is a 3-year undergraduate degree program providing rigorous scientific training across PCM (Physics, Chemistry, Maths), ZBC (Zoology, Botany, Chemistry), Computer Science, or Biotechnology.",pts:[{i:"&#128300;",t:"Research & Lab Practical",d:"Hands-on practical training in modern laboratory techniques"},{i:"&#128187;",t:"IT & Analytics Pathway",d:"B.Sc CS / IT opens direct tech industry careers"},{i:"&#127891;",t:"M.Sc & PhD Foundation",d:"Prerequisite degree for master's programs and scientific research"}],img:"https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80",bi:"&#9883;",bt:"Pure & Applied Science",bs:"UGC Approved Â· Research Ready"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Science (PCM / PCB)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"Core scientific theory combined with practical lab experiments across 6 semesters.",y:[{y:"Year 1",p:"Sem 1-2",t:"Scientific Foundations",s:["Physics I","Chemistry I","Mathematics I / Biology I","Lab Practicals","Scientific Computing"]},{y:"Year 2",p:"Sem 3-4",t:"Advanced Concepts",s:["Quantum Physics / Organic Chem","Linear Algebra / Genetics","Lab Practicals II","Research Methodology"]},{y:"Year 3",p:"Sem 5-6",t:"Specialization & Project",s:["Specialized Theory","Advanced Lab Project","Dissertation","Placement Prep"]}]},un:[{n:"LPU Online",l:"Phagwara, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Lovely_Professional_University_logo.svg/200px-Lovely_Professional_University_logo.svg.png",f:"40K-80K/yr",p:"8 LPA",a:"UGC-DEB"}],sal:{h:"30 LPA",hs:"Research labs, IT firms & pharma companies",bars:[{r:"Research Associate",v:"4-10 LPA",p:65},{r:"Data Analyst / IT Specialist",v:"5-14 LPA",p:80}],cars:[{i:"&#128300;",t:"Scientific Researcher",d:"Work in R&D labs, pharma, and research institutes",tag:"R&D Scope"}]},syl:[{t:"Sem 1-6",s:["Physics","Chemistry","Mathematics","Botany","Zoology","Computer Science","Biotechnology"]}],rec:["DRDO","ISRO Labs","Cipla","Sun Pharma","TCS","Infosys"],faq:[{q:"Is B.Sc valid for IT jobs?",a:"Yes! B.Sc Computer Science or Maths graduates get easily recruited by IT MNCs like TCS, Wipro, and Infosys."}]},
+
+"BBA":{fn:"Bachelor of Business Administration",hs:[{v:"3 Years",l:"Duration"},{v:"3-12 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"500+",l:"Companies"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#128176;",v:"3-12 LPA",l:"Avg Package"},{i:"&#128640;",v:"30 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"6 Sem",l:"Structure"}],ab:{d:"BBA is a prestigious 3-year undergraduate degree for building future business leaders. Covers management, finance, marketing and entrepreneurship â€” your gateway to top corporate careers and MBA.",pts:[{i:"&#127970;",t:"Corporate Ready",d:"Designed for MNC placements and entrepreneurial ventures"},{i:"&#128188;",t:"Management Foundation",d:"Strong base in HR, Finance, Marketing and Operations"},{i:"&#127757;",t:"Global Exposure",d:"International case studies, simulations and industry visits"},{i:"&#127919;",t:"MBA Gateway",d:"Best foundation degree before pursuing an MBA"}],img:"https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80",bi:"&#128202;",bt:"Management Degree",bs:"UGC Recognised Â· Industry Preferred"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass from any recognized board (Science / Commerce / Arts)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"BBA spans 3 years with 6 semesters covering management fundamentals, specializations, and live projects.",y:[{y:"Year 1",p:"Sem 1-2",t:"Business Fundamentals",s:["Principles of Management","Business Mathematics","Business English","Microeconomics","Accounting Basics","IT for Business"]},{y:"Year 2",p:"Sem 3-4",t:"Core Specialization",s:["Financial Management","Human Resource Management","Marketing Management","Business Law","Organizational Behaviour","Research Methodology"]},{y:"Year 3",p:"Sem 5-6",t:"Specialization & Project",s:["Strategic Management","Entrepreneurship","International Business","Summer Internship Project","Digital Marketing","Business Analytics"]}]},un:[{n:"Amity University Online",l:"Noida, UP",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Amity_University_logo.svg/200px-Amity_University_logo.svg.png",f:"1.4L/yr",p:"8 LPA",a:"UGC-DEB"},{n:"Chandigarh University Online",l:"Mohali, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80",lo:"https://ui-avatars.com/api/?name=CU&background=1e293b&color=d4af37&bold=true",f:"1.2L/yr",p:"10 LPA",a:"UGC-DEB"}],sal:{h:"30 LPA",hs:"Top placements from Amity, LPU & CU Online",bars:[{r:"Business Dev Manager",v:"8-15 LPA",p:60},{r:"Marketing Manager",v:"6-12 LPA",p:50}],cars:[{i:"&#128200;",t:"Marketing Manager",d:"Plan and execute brand strategies for top companies",tag:"6-12 LPA"}]},syl:[{t:"Sem 1-6",s:["Management Principles","Marketing","HR","Finance","Business Law","Entrepreneurship"]}],rec:["TCS","Infosys","Amazon","Wipro","Deloitte"],faq:[{q:"Does EduVision charge fees?",a:"No! EduVision provides 100% free admission guidance and university selection support."}]},
+
+"BCA":{fn:"Bachelor of Computer Applications",hs:[{v:"3 Years",l:"Duration"},{v:"3-14 LPA",l:"Avg Salary"},{v:"98%",l:"Placement"},{v:"600+",l:"Tech Cos"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#128176;",v:"3-14 LPA",l:"Avg Package"},{i:"&#128640;",v:"45 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"6 Sem",l:"Structure"}],ab:{d:"BCA is a 3-year premier IT degree preparing students for the booming tech sector. Covers programming, web development, databases, networking â€” your gateway to top IT careers at MNCs and startups.",pts:[{i:"&#128187;",t:"Programming Expert",d:"Master Python, Java, C++ and modern web technologies"},{i:"&#127758;",t:"Full-Stack Dev",d:"Build complete web and mobile applications"}],img:"https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",bi:"&#128187;",bt:"IT Professional Degree",bs:"UGC Recognised Â· High Demand Skills"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Mathematics (PCM) or Computer Science preferred"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"BCA covers programming fundamentals to advanced software engineering across 6 semesters.",y:[{y:"Year 1",p:"Sem 1-2",t:"Programming Foundations",s:["C Programming","Mathematics","Web Technology","Computer Organization"]},{y:"Year 2",p:"Sem 3-4",t:"Core IT",s:["Data Structures","DBMS","Java","Operating Systems"]},{y:"Year 3",p:"Sem 5-6",t:"Advanced & Project",s:["Software Engineering","Cloud Computing","Python","Major Project"]}]},un:[{n:"LPU Online",l:"Phagwara, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Lovely_Professional_University_logo.svg/200px-Lovely_Professional_University_logo.svg.png",f:"1.1L/yr",p:"14 LPA",a:"UGC-DEB"}],sal:{h:"45 LPA",hs:"Top tech placements at Google, Amazon & Microsoft",bars:[{r:"Software Developer",v:"5-15 LPA",p:65}],cars:[{i:"&#128187;",t:"Software Developer",d:"Build scalable apps for top tech companies",tag:"5-15 LPA"}]},syl:[{t:"Sem 1-6",s:["C / C++","Java","Python","Data Structures","DBMS","Web Dev","AI Basics"]}],rec:["Google","Microsoft","Amazon","TCS","Infosys"],faq:[{q:"Can I pursue MCA after BCA?",a:"Yes! BCA + MCA is the most popular combination for top IT careers."}]},
+
+"MBA":{fn:"Master of Business Administration (MBA)",hs:[{v:"2 Years",l:"Duration"},{v:"8-25 LPA",l:"Avg Salary"},{v:"96%",l:"Placement"},{v:"1000+",l:"Companies"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#128176;",v:"8-25 LPA",l:"Avg Package"},{i:"&#128640;",v:"60 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"4 Sem",l:"Structure"}],ab:{d:"MBA is the world's most sought-after postgraduate management degree. Opens doors to C-suite positions, strategic leadership roles, and entrepreneurial ventures across all industries globally.",pts:[{i:"&#127757;",t:"Global Recognition",d:"Recognized and valued by top employers globally"},{i:"&#128188;",t:"Leadership & Strategy",d:"Develop executive decision-making and business models"},{i:"&#128202;",t:"Specializations",d:"Finance, Marketing, HR, Operations, Business Analytics, IT"},{i:"&#128187;",t:"Flexible Learning",d:"Online, Distance, and Regular campus options available"}],img:"https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80",bi:"&#127942;",bt:"Postgraduate Management Degree",bs:"AICTE & UGC Approved · Gold Standard"},el:[{i:"&#127891;",t:"Qualification",d:"Bachelor's degree in any discipline from a UGC-recognized university"},{i:"&#128202;",t:"Percentage",d:"Minimum 50% in graduation (45% for reserved)"},{i:"&#128221;",t:"Work Experience",d:"Freshers & working professionals both eligible"}],tl:{d:"2-year program covering core management, specialization electives, and capstone project.",y:[{y:"Year 1",p:"Sem 1-2",t:"Core Management",s:["Financial Accounting","Marketing Management","Human Resource Mgmt","Managerial Economics","Business Analytics","Operations Mgmt"]},{y:"Year 2",p:"Sem 3-4",t:"Specialization & Leadership",s:["Strategic Management","Specialization Electives (Finance/Marketing/HR/Analytics)","Summer Internship","Master Dissertation","Placement Drives"]}]},un:[{n:"JAIN Online",l:"Bengaluru, Karnataka",na:"A++",m:"Online",img:"https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80",lo:"https://ui-avatars.com/api/?name=JAIN&background=1e293b&color=d4af37&bold=true",f:"1.8L-2.4L Total",p:"22 LPA",a:"UGC-DEB Approved"},{n:"Amity University Online",l:"Noida, UP",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Amity_University_logo.svg/200px-Amity_University_logo.svg.png",f:"1.9L-2.6L Total",p:"18 LPA",a:"UGC-DEB"},{n:"Chandigarh University Online",l:"Mohali, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80",lo:"https://ui-avatars.com/api/?name=CU&background=1e293b&color=d4af37&bold=true",f:"1.6L-2.2L Total",p:"20 LPA",a:"UGC-DEB"},{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"40K-70K/yr",p:"10 LPA",a:"DEB Approved"}],sal:{h:"60 LPA",hs:"Top placements at consulting giants & Fortune 500 MNCs",bars:[{r:"Management Consultant",v:"15-35 LPA",p:88},{r:"Marketing Director",v:"12-28 LPA",p:78},{r:"Financial Controller / Analyst",v:"14-30 LPA",p:82},{r:"Operations & Strategy Head",v:"10-24 LPA",p:72}],cars:[{i:"&#127919;",t:"Management Consultant",d:"Advise top executives on strategy, growth and operations",tag:"Consulting"},{i:"&#128188;",t:"Product & Brand Manager",d:"Lead products from concept to multi-million dollar revenue",tag:"Product Mgmt"},{i:"&#128178;",t:"Investment Banker / VC",d:"Guide corporate mergers, acquisitions, and startup funding",tag:"Finance"}]},syl:[{t:"Core Sem 1-2",s:["Finance","Marketing","HR","Operations","Business Law","Economics"]},{t:"Specialization Sem 3-4",s:["Corporate Strategy","Analytics Electives","International Business","Internship Project","Leadership"]}],rec:["McKinsey","BCG","Bain","Deloitte","PwC","Amazon","Google","Microsoft"],faq:[{q:"Is Online / Distance MBA valid for corporate jobs?",a:"Yes! MBA degrees from UGC-DEB approved universities are 100% equivalent to on-campus degrees and recognized globally."},{q:"Can I pursue MBA while working full-time?",a:"Yes! Online & Distance MBA provides 100% flexible schedules with recorded lectures and weekend live sessions."}]},
+
+"MCA":{fn:"Master of Computer Applications",hs:[{v:"2 Years",l:"Duration"},{v:"5-20 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"500+",l:"Tech Cos"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#128176;",v:"5-20 LPA",l:"Avg Package"},{i:"&#128640;",v:"50 LPA",l:"Highest Pkg"},{i:"&#127891;",v:"4 Sem",l:"Structure"}],ab:{d:"MCA is a prestigious 2-year postgraduate IT degree creating highly skilled software professionals.",pts:[{i:"&#128187;",t:"Advanced Programming",d:"Master Java, Python, and cloud technologies"}],img:"https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80",bi:"&#128187;",bt:"Postgraduate IT Degree",bs:"AICTE Approved Â· Top Tech Placements"},el:[{i:"&#127891;",t:"Qualification",d:"BCA / B.Sc CS / B.Tech or any graduation with Math"},{i:"&#128202;",t:"Percentage",d:"Minimum 50% in graduation"}],tl:{d:"2-year intensive program with hands-on labs and live projects.",y:[{y:"Year 1",p:"Sem 1-2",t:"Advanced IT Core",s:["Advanced Java","Data Structures","DBMS","Operating Systems"]},{y:"Year 2",p:"Sem 3-4",t:"Specialization & Project",s:["AI & ML","Cloud Computing","Cyber Security","Major Project"]}]},un:[{n:"LPU Online",l:"Phagwara, Punjab",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Lovely_Professional_University_logo.svg/200px-Lovely_Professional_University_logo.svg.png",f:"1.1L/yr",p:"18 LPA",a:"UGC-DEB"}],sal:{h:"50 LPA",hs:"Senior developer roles at top tech firms",bars:[{r:"Senior Software Engineer",v:"10-22 LPA",p:75}],cars:[{i:"&#128187;",t:"Software Engineer",d:"Lead technical teams building software",tag:"10-22 LPA"}]},syl:[{t:"Sem 1-4",s:["Advanced Data Structures","Algorithms","AI/ML","Cloud Computing","DevOps"]}],rec:["Google","Microsoft","Amazon","TCS","Infosys"],faq:[{q:"Is Online MCA valid for GATE?",a:"Yes, Online MCA from a UGC-approved university makes you eligible for GATE and competitive exams."}]},
+
+"B.ED":{fn:"Bachelor of Education (B.Ed)",hs:[{v:"2 Years",l:"Duration"},{v:"3-8 LPA",l:"Avg Salary"},{v:"96%",l:"Placement"},{v:"400+",l:"Schools"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#127891;",v:"NCTE Approved",l:"Recognition"},{i:"&#128640;",v:"Govt Teacher",l:"Outcome"},{i:"&#128221;",v:"4 Sem",l:"Structure"}],ab:{d:"Bachelor of Education (B.Ed) is an NCTE-approved professional degree program mandatory for teaching secondary and senior secondary classes in private and government schools across India.",pts:[{i:"&#127891;",t:"NCTE Approved Degree",d:"Mandatory qualification for CTET, STET, TGT, and PGT teacher recruitment"},{i:"&#127970;",t:"Government School Hiring",d:"Direct eligibility for Kendriya Vidyalaya (KVS), NVS, and State Govt Teacher exams"},{i:"&#128218;",t:"School Internship",d:"Real classroom teaching practice in top partner schools"}],img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80",bi:"&#127891;",bt:"Teaching Professional Degree",bs:"NCTE Approved Â· Govt Job Gateway"},el:[{i:"&#127891;",t:"Qualification",d:"Graduation or Post Graduation in any stream (BA, B.Sc, B.Com, MA, M.Sc, etc.)"},{i:"&#128202;",t:"Percentage",d:"Minimum 50% in graduation (45% for reserved categories)"}],tl:{d:"4 semesters covering pedagogy, child psychology, school administration, and internship.",y:[{y:"Year 1",p:"Sem 1-2",t:"Educational Foundations",s:["Childhood & Growing Up","Contemporary India & Education","Learning & Teaching","Pedogy Subject I","ICT in Education"]},{y:"Year 2",p:"Sem 3-4",t:"Internship & Practice",s:["School Internship (16 Weeks)","Assessment for Learning","Creating an Inclusive School","Gender, School & Society","CTET Prep"]}]},un:[{n:"Subharti University",l:"Meerut, UP",na:"A",m:"Regular / Distance",img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"40K-60K/yr",p:"6 LPA",a:"NCTE & UGC Approved"},{n:"Mangalayatan University",l:"Aligarh, UP",na:"B+",m:"Regular",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/mangalayatan-in-logo.jpg",f:"45K-65K/yr",p:"5 LPA",a:"NCTE Approved"}],sal:{h:"12 LPA",hs:"Govt school PGT teachers & international school educators",bars:[{r:"Government School Teacher (TGT/PGT)",v:"5-10 LPA",p:85},{r:"Private International School Educator",v:"4-8 LPA",p:75}],cars:[{i:"&#127963;",t:"Government School Teacher",d:"Qualify CTET / KVS / NVS / STET exams for permanent teaching roles",tag:"Govt Job"}]},syl:[{t:"Sem 1-4",s:["Child Psychology","Educational Sociology","Pedagogy","School Admin","Educational Tech","16-Week Internship"]}],rec:["Kendriya Vidyalaya (KVS)","Navodaya Vidyalaya (NVS)","Delhi Public School (DPS)","GD Goenka"],faq:[{q:"Is B.Ed mandatory for Govt School Teacher jobs?",a:"Yes! NCTE guidelines mandate B.Ed for TGT (Classes 6-10) and PGT (Classes 11-12) teaching posts."}]},
+
+"D.EL.ED":{fn:"Diploma in Elementary Education (D.El.Ed)",hs:[{v:"2 Years",l:"Duration"},{v:"2.5-6 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"350+",l:"Schools"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#127891;",v:"NCTE Approved",l:"Recognition"},{i:"&#128640;",v:"Primary Teacher",l:"Outcome"},{i:"&#128221;",v:"4 Sem",l:"Structure"}],ab:{d:"D.El.Ed (formerly BTC) is a 2-year NCTE-approved diploma program certifying candidates to teach primary school students (Classes 1 to 8). Highest demand qualification for primary teacher recruitment.",pts:[{i:"&#127891;",t:"Primary Teacher Qualification",d:"Essential eligibility for Primary CTET Paper-1 and State TET exams"},{i:"&#127970;",t:"Govt Primary School Jobs",d:"Direct path for PRT teacher recruitment in govt schools"}],img:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80",bi:"&#127891;",bt:"Elementary Teaching Diploma",bs:"NCTE Approved Â· High Govt Scope"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass from any recognized board"},{i:"&#128202;",t:"Percentage",d:"Minimum 50% aggregate marks in 12th"}],tl:{d:"4 semesters covering child development, elementary pedagogy, and school internship.",y:[{y:"Year 1",p:"Sem 1-2",t:"Child Pedagogy",s:["Child Development","Cognition & Learning","Elementary Maths Teaching","Language Teaching (Hindi/English)"]},{y:"Year 2",p:"Sem 3-4",t:"Practice & Internship",s:["Environmental Studies Teaching","Social Science Pedagogy","School Experience Program (Internship)","CTET Paper 1 Prep"]}]},un:[{n:"Diet / Partner NCTE Colleges",l:"Pan India",na:"NCTE Approved",m:"Regular / Open",img:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=80",lo:"https://ui-avatars.com/api/?name=DELED&background=1e293b&color=d4af37&bold=true",f:"20K-40K/yr",p:"5 LPA",a:"NCTE Approved"}],sal:{h:"8 LPA",hs:"Govt Primary School PRT Teachers",bars:[{r:"Govt Primary Teacher (PRT)",v:"4-7 LPA",p:90}],cars:[{i:"&#127963;",t:"Primary School Teacher (PRT)",d:"Teach Classes 1-5 in government and reputed private schools",tag:"Primary Teacher"}]},syl:[{t:"Sem 1-4",s:["Child Development","Elementary Teaching","Mathematics Pedagogy","Language Methods","School Internship"]}],rec:["State Govt Schools","Private Academies","EduVision Network"],faq:[{q:"What is the difference between B.Ed and D.El.Ed?",a:"D.El.Ed is specifically for Primary School Teachers (Classes 1-5), whereas B.Ed covers Secondary & Sr Secondary (Classes 6-12)."}]},
+
+"NURSING":{fn:"General Nursing & Midwifery (GNM / Nursing)",hs:[{v:"3 Years",l:"Duration"},{v:"3-10 LPA",l:"Avg Salary"},{v:"98%",l:"Placement"},{v:"500+",l:"Hospitals"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#127891;",v:"INC Approved",l:"Recognition"},{i:"&#128640;",v:"Global Scope",l:"Outcome"},{i:"&#128221;",v:"Clinical Practice",l:"Training"}],ab:{d:"GNM is an INC-approved 3-year diploma in nursing and healthcare. Trains nurses for emergency care, clinical operations, ICU management, and hospital administration with high global job demand.",pts:[{i:"&#127973;",t:"Hospital Clinical Postings",d:"Mandatory clinical practice in super-specialty hospitals"},{i:"&#127757;",t:"High Global Demand",d:"Direct opportunities for NHS UK, USA NCLEX, and Gulf healthcare jobs"}],img:"https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80",bi:"&#128138;",bt:"Healthcare Professional Diploma",bs:"INC & State Nursing Council Approved"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass in Science (PCB preferred) or Arts/Commerce with English"},{i:"&#128202;",t:"Percentage",d:"Minimum 40-45% aggregate marks"}],tl:{d:"3 years including hands-on hospital postings and practical clinical rotations.",y:[{y:"Year 1",p:"Basic Nursing",t:"Anatomy & Physiology",s:["Anatomy & Physiology","Microbiology","Fundamentals of Nursing","First Aid","Community Health Nursing"]},{y:"Year 2",p:"Clinical Specialization",t:"Medical Surgical Nursing",s:["Medical Surgical Nursing I & II","Pharmacology","Mental Health Nursing","Psychiatry"]},{y:"Year 3",p:"Midwifery & Internship",t:"Midwifery & Gynaecology",s:["Midwifery & Gynaecology Nursing","Pediatric Nursing","Hospital Internship (6 Months)"]}]},un:[{n:"Subharti Nursing College",l:"Meerut, UP",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"60K-90K/yr",p:"6 LPA",a:"INC & State Council Approved"}],sal:{h:"20+ LPA",hs:"International nursing roles in UK, USA, Canada & Gulf",bars:[{r:"Staff Nurse (Hospital)",v:"3.5-8 LPA",p:90},{r:"Overseas Healthcare Nurse (UK/Gulf)",v:"15-28 LPA",p:75}],cars:[{i:"&#127973;",t:"Staff Nurse / ICU Specialist",d:"Work in top hospital chains like Apollo, Fortis, Max",tag:"Hospital Jobs"}]},syl:[{t:"Year 1-3",s:["Anatomy","Physiology","Fundamentals of Nursing","Medical Surgical","Midwifery","Pediatrics","Hospital Postings"]}],rec:["Apollo Hospitals","Fortis Healthcare","Max Healthcare","Medanta","NHS UK"],faq:[{q:"Is GNM Nursing valid for Govt Hospital jobs?",a:"Yes! GNM registered nurses with State Nursing Council registration are 100% eligible for AIIMS NORCET, RRB Nurse, and State Govt Hospital jobs."}]},
+
+"B.SC NURSING":{fn:"Bachelor of Science in Nursing (B.Sc Nursing)",hs:[{v:"4 Years",l:"Duration"},{v:"4-12 LPA",l:"Avg Salary"},{v:"99%",l:"Placement"},{v:"600+",l:"Hospitals"}],ss:[{i:"&#9201;",v:"4 Years",l:"Duration"},{i:"&#127891;",v:"INC Approved",l:"Recognition"},{i:"&#128640;",v:"AIIMS / NHS Scope",l:"Outcome"},{i:"&#128221;",v:"8 Sem",l:"Structure"}],ab:{d:"B.Sc Nursing is a 4-year premier undergraduate degree program recognized by Indian Nursing Council (INC). Qualifies graduates for senior nursing roles, clinical research, hospital management, and international healthcare.",pts:[{i:"&#127973;",t:"Degree Level Nursing",d:"Senior clinical status in hospitals and healthcare organizations"},{i:"&#128640;",t:"AIIMS NORCET Eligible",d:"Direct eligibility for AIIMS Nursing Officer competitive exam"}],img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",bi:"&#129658;",bt:"Professional Nursing Degree",bs:"INC Approved Â· Highest Demand"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Physics, Chemistry, Biology & English (PCB)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks in PCB"}],tl:{d:"4 years including 8 semesters of advanced theory and clinical internship.",y:[{y:"Year 1",p:"Sem 1-2",t:"Basic Medical Sciences",s:["Anatomy & Physiology","Biochemistry","Nursing Foundations","Psychology","Nutrition"]},{y:"Year 2",p:"Sem 3-4",t:"Clinical Nursing",s:["Pharmacology","Pathology","Medical Surgical Nursing I","Community Health"]},{y:"Year 3",p:"Sem 5-6",t:"Specialized Care",s:["Child Health Nursing","Mental Health Nursing","Obstetrics & Gynaecology Nursing"]},{y:"Year 4",p:"Sem 7-8",t:"Internship & Management",s:["Nursing Research","Nursing Leadership & Management","6-Month Clinical Internship"]}]},un:[{n:"Sharda University Nursing College",l:"Greater Noida, UP",na:"A+",m:"Regular Campus",img:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SU&background=1e293b&color=d4af37&bold=true",f:"1.2L-1.6L/yr",p:"8 LPA",a:"INC Approved"}],sal:{h:"25+ LPA",hs:"AIIMS Nursing Officers & Overseas Registered Nurses",bars:[{r:"AIIMS / Govt Nursing Officer",v:"8-14 LPA",p:85},{r:"Private Hospital Senior Nurse",v:"4-9 LPA",p:90}],cars:[{i:"&#129658;",t:"Nursing Officer / Educator",d:"Work in AIIMS, Railway Hospitals, or become Nursing Lecturer",tag:"Govt & Academic"}]},syl:[{t:"Sem 1-8",s:["Anatomy","Physiology","Biochemistry","Pharmacology","Medical Surgical Nursing","Child Health","Research","Internship"]}],rec:["AIIMS","Apollo","Max","Fortis","Medanta","NHS UK","Saudi German Hospitals"],faq:[{q:"What is the difference between GNM and B.Sc Nursing?",a:"GNM is a 3-year diploma, whereas B.Sc Nursing is a 4-year degree providing faster promotion to Nursing Superintendent & Lecturer roles."}]},
+
+"PHARMACY":{fn:"Diploma in Pharmacy (D.Pharm)",hs:[{v:"2 Years",l:"Duration"},{v:"3-9 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"400+",l:"Pharma Cos"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#127891;",v:"PCI Approved",l:"Recognition"},{i:"&#128640;",v:"Chemist License",l:"Outcome"},{i:"&#128221;",v:"Annual Exam",l:"Structure"}],ab:{d:"D.Pharm is a 2-year PCI-approved diploma program. Qualifies candidates to obtain a Drug / Medical Store License and work in pharmaceutical companies, hospitals, and drug retail.",pts:[{i:"&#128856;",t:"Drug Store License",d:"Get official Drug License to start your own retail/wholesale pharmacy"},{i:"&#127973;",t:"Hospital Pharmacist",d:"Eligible for Govt Hospital Pharmacist recruitment exams"}],img:"https://images.unsplash.com/photo-1584308666744-24d5e4a8b79d?w=800&q=80",bi:"&#129514;",bt:"Pharmacy Diploma",bs:"PCI Approved Â· Drug License Eligible"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Physics, Chemistry & Biology/Maths (PCM/PCB)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"2 years of pharmaceutical theory, practical labs, and 500 hours hospital training.",y:[{y:"Year 1",p:"Basic Science",t:"Pharmaceutics & Chemistry",s:["Pharmaceutics I","Pharmaceutical Chemistry I","Pharmacognosy","Human Anatomy & Physiology","Social Pharmacy"]},{y:"Year 2",p:"Advanced & Practice",t:"Pharmacology & Law",s:["Pharmaceutics II","Pharmaceutical Chemistry II","Pharmacology & Toxicology","Pharmacy Law & Ethics","500 Hours Hospital Training"]}]},un:[{n:"IIMT University Pharmacy",l:"Meerut, UP",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1584308666744-24d5e4a8b79d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=IIMT&background=1e293b&color=d4af37&bold=true",f:"50K-80K/yr",p:"6 LPA",a:"PCI Approved"}],sal:{h:"15 LPA",hs:"Retail pharmacy chain owners & medical reps",bars:[{r:"Govt / Private Pharmacist",v:"3.5-7 LPA",p:80},{r:"Pharma Sales / MR",v:"4-9 LPA",p:85}],cars:[{i:"&#129514;",t:"Own Pharmacy Store",d:"Open your independent retail or wholesale medical shop",tag:"Business"}]},syl:[{t:"Year 1-2",s:["Pharmaceutics","Pharmaceutical Chemistry","Pharmacognosy","Pharmacology","Drug Store Mgmt","500h Training"]}],rec:["Cipla","Sun Pharma","Mankind","Apollo Pharmacy","Netmeds"],faq:[{q:"Can I open a medical store after D.Pharm?",a:"Yes! D.Pharm graduates register with State Pharmacy Council and receive official Drug License to run medical stores."}]},
+
+"B.PHARMA":{fn:"Bachelor of Pharmacy (B.Pharm)",hs:[{v:"4 Years",l:"Duration"},{v:"4-10 LPA",l:"Avg Salary"},{v:"96%",l:"Placement"},{v:"500+",l:"Pharma MNCs"}],ss:[{i:"&#9201;",v:"4 Years",l:"Duration"},{i:"&#127891;",v:"PCI Approved",l:"Recognition"},{i:"&#128640;",v:"Drug R&D / Business",l:"Outcome"},{i:"&#128221;",v:"8 Sem",l:"Structure"}],ab:{d:"B.Pharm is a 4-year PCI-approved professional degree program preparing graduates for drug manufacturing, clinical research, quality control, drug inspection, and pharmaceutical business.",pts:[{i:"&#128856;",t:"Drug Inspector Eligible",d:"Qualify for Drug Inspector and Govt Pharmacist examinations"},{i:"&#128300;",t:"Pharma R&D & QC",d:"Work in formulation labs, quality control, and clinical trials"}],img:"https://images.unsplash.com/photo-1584308666744-24d5e4a8b79d?w=800&q=80",bi:"&#129514;",bt:"Professional Pharmacy Degree",bs:"PCI Approved Â· Industrial & Research Scope"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Physics, Chemistry & Biology/Maths (PCM/PCB)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"8 semesters covering drug synthesis, pharmacology, formulation, and industrial training.",y:[{y:"Year 1",p:"Sem 1-2",t:"Pharma Sciences",s:["Human Anatomy","Pharma Analysis","Pharmaceutics I","Pharmaceutical Inorganic Chemistry"]},{y:"Year 2",p:"Sem 3-4",t:"Core Synthesis",s:["Organic Chemistry","Physical Pharmaceutics","Microbiology","Pharmaceutical Engineering"]},{y:"Year 3",p:"Sem 5-6",t:"Drug Action",s:["Medicinal Chemistry","Pharmacology I & II","Pharmacognosy","Pharma Jurisprudence"]},{y:"Year 4",p:"Sem 7-8",t:"Industrial & QC",s:["Industrial Pharmacy","Novel Drug Delivery","Quality Assurance","Industrial Training & Project"]}]},un:[{n:"UPES Pharmacy",l:"Dehradun, UK",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1584308666744-24d5e4a8b79d?w=600&q=80",lo:"https://ui-avatars.com/api/?name=UPES&background=1e293b&color=d4af37&bold=true",f:"1.2L-1.8L/yr",p:"8 LPA",a:"PCI Approved"}],sal:{h:"20 LPA",hs:"Formulation scientists & pharma R&D leaders",bars:[{r:"Quality Control / R&D Specialist",v:"4-9 LPA",p:80},{r:"Drug Inspector / Govt Officer",v:"7-14 LPA",p:75}],cars:[{i:"&#129514;",t:"Drug Inspector / R&D Scientist",d:"Inspect pharmaceutical plants or design new drug formulations",tag:"Govt / R&D"}]},syl:[{t:"Sem 1-8",s:["Pharmaceutics","Medicinal Chemistry","Pharmacology","Pharma Analysis","Biopharmaceutics","Industrial Training"]}],rec:["Cipla","Sun Pharma","Dr Reddy's","Lupin","Abbott","Pfizer"],faq:[{q:"What is the career scope after B.Pharm?",a:"B.Pharm opens careers in Drug R&D, Quality Control, Drug Inspector exams, Pharma Exports, and M.Pharm/MBA higher studies."}]},
+
+"AGRICULTURE":{fn:"B.Sc in Agriculture (B.Sc Ag)",hs:[{v:"4 Years",l:"Duration"},{v:"4-10 LPA",l:"Avg Salary"},{v:"94%",l:"Placement"},{v:"350+",l:"Agri Cos"}],ss:[{i:"&#9201;",v:"4 Years",l:"Duration"},{i:"&#127891;",v:"ICAR Aligned",l:"Recognition"},{i:"&#128640;",v:"Agri Officer / NABARD",l:"Outcome"},{i:"&#128221;",v:"8 Sem",l:"Structure"}],ab:{d:"B.Sc Agriculture is a 4-year professional science degree focusing on agronomy, soil science, plant breeding, horticulture, agricultural economics, and modern agritech.",pts:[{i:"&#127806;",t:"Govt Agriculture Officer Jobs",d:"Direct eligibility for State Agriculture Officer, Krishi Vigyan Kendra (KVK) & NABARD exams"},{i:"&#128640;",t:"Agritech & Agribusiness",d:"Work with pesticide, seed, fertilizer, and agricultural drone technology MNCs"}],img:"https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=800&q=80",bi:"&#127806;",bt:"Agricultural Science Degree",bs:"ICAR Aligned Â· High Govt & Private Scope"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with PCB / PCM / Agriculture stream"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"8 semesters including RAWE (Rural Agricultural Work Experience) field training.",y:[{y:"Year 1",p:"Sem 1-2",t:"Agri Fundamentals",s:["Agronomy Principles","Soil Science","Plant Biochemistry","Horticulture Basics","Agricultural Economics"]},{y:"Year 2",p:"Sem 3-4",t:"Crops & Protection",s:["Field Crops","Entomology (Pest Mgmt)","Plant Pathology","Genetics & Plant Breeding"]},{y:"Year 3",p:"Sem 5-6",t:"Modern Agritech",s:["Farm Machinery","Seed Technology","Irrigation Engineering","Post-Harvest Technology"]},{y:"Year 4",p:"Sem 7-8",t:"RAWE Field Training",s:["Rural Agricultural Work Experience","Agro-Industrial Attachment","Plant Clinic Project"]}]},un:[{n:"SAGE University Agriculture",l:"Bhopal, MP",na:"A+",m:"Regular Campus",img:"https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&q=80",lo:"https://ui-avatars.com/api/?name=SAGE&background=1e293b&color=d4af37&bold=true",f:"60K-90K/yr",p:"7 LPA",a:"UGC & ICAR Aligned"}],sal:{h:"18 LPA",hs:"NABARD Officers, Bank Agri Officers & Agritech MNC Heads",bars:[{r:"Agriculture Field Officer (AFO)",v:"6-12 LPA",p:85},{r:"Agronomist / Seed Specialist",v:"4-9 LPA",p:80}],cars:[{i:"&#127806;",t:"Bank Agri Officer (IBPS AFO)",d:"Manage agricultural loans and rural banking networks",tag:"Banking"}]},syl:[{t:"Sem 1-8",s:["Agronomy","Soil Science","Genetics","Entomology","Horticulture","Agri Engineering","RAWE Internship"]}],rec:["NABARD","IFFCO","Syngenta","UPL","Mahindra Agri","Niti Aayog Projects"],faq:[{q:"Is B.Sc Agriculture valid for IBPS AFO Bank Officer exam?",a:"Yes! B.Sc Agriculture is the mandatory degree required for IBPS Agriculture Field Officer (AFO) Bank PO positions."}]},
+
+"POLYTECHNIC":{fn:"Polytechnic Diploma in Engineering",hs:[{v:"3 Years",l:"Duration"},{v:"2.5-7 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"500+",l:"Industries"}],ss:[{i:"&#9201;",v:"3 Years",l:"Duration"},{i:"&#127891;",v:"AICTE Approved",l:"Recognition"},{i:"&#128640;",v:"Junior Engineer (JE)",l:"Outcome"},{i:"&#128221;",v:"Multiple Branches",l:"Branches"}],ab:{d:"Polytechnic is a 3-year AICTE-approved technical engineering diploma. Branches include Computer Science, Mechanical, Civil, Electrical, and Electronics. Direct eligibility for B.Tech 2nd Year (Lateral Entry).",pts:[{i:"&#9881;&#65039;",t:"Junior Engineer (JE) Jobs",d:"Eligible for SSC JE, Railway RRB JE, State PWD & Electricity Board exams"},{i:"&#128640;",t:"B.Tech Lateral Entry",d:"Get direct admission into 2nd year (3rd semester) of B.Tech degree"}],img:"https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=800&q=80",bi:"&#9881;&#65039;",bt:"Technical Engineering Diploma",bs:"AICTE Approved Â· Industry Ready"},el:[{i:"&#128218;",t:"Qualification",d:"10th Pass (or 12th / ITI for Lateral Entry)"},{i:"&#128202;",t:"Percentage",d:"Minimum 35-45% aggregate marks"}],tl:{d:"6 semesters of technical theory, engineering workshops, and industrial labs.",y:[{y:"Year 1",p:"Sem 1-2",t:"Engineering Science",s:["Applied Mathematics","Applied Physics","Applied Chemistry","Engineering Drawing","Workshop Practice"]},{y:"Year 2",p:"Sem 3-4",t:"Branch Core",s:["Branch Paper I","Branch Paper II","Circuit / Machine Lab","CAD Drafting"]},{y:"Year 3",p:"Sem 5-6",t:"Advanced & Project",s:["Industrial Engineering","Branch Paper III","Industrial Internship","Major Diploma Project"]}]},un:[{n:"GNIOT Polytechnic",l:"Greater Noida, UP",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=600&q=80",lo:"https://ui-avatars.com/api/?name=GNIOT&background=1e293b&color=d4af37&bold=true",f:"35K-55K/yr",p:"6 LPA",a:"AICTE Approved"}],sal:{h:"12 LPA",hs:"Junior Engineers in Tata Motors, L&T, Railways & PWD",bars:[{r:"Junior Engineer (JE)",v:"3.5-7 LPA",p:85},{r:"Technical Supervisor",v:"3-6 LPA",p:80}],cars:[{i:"&#9881;&#65039;",t:"Junior Engineer (JE)",d:"Work in Railway RRB JE, PWD, Electricity Board, or L&T",tag:"JE Jobs"}]},syl:[{t:"Sem 1-6",s:["Maths","Physics","Engineering Drawing","CS / Civil / Mech / Electrical Core","Workshop","Project"]}],rec:["Tata Motors","L&T","Maruti Suzuki","Bajaj Auto","Railways","BHEL"],faq:[{q:"Can I pursue B.Tech after Polytechnic?",a:"Yes! You can take admission directly in 2nd year of B.Tech through Lateral Entry (LEET) entrance exams."}]},
+
+"B.TECH":{fn:"Bachelor of Technology (B.Tech)",hs:[{v:"4 Years",l:"Duration"},{v:"5-25 LPA",l:"Avg Salary"},{v:"98%",l:"Placement"},{v:"800+",l:"Tech MNCs"}],ss:[{i:"&#9201;",v:"4 Years",l:"Duration"},{i:"&#127891;",v:"AICTE Approved",l:"Recognition"},{i:"&#128640;",v:"Software / Core Engineer",l:"Outcome"},{i:"&#128221;",v:"8 Sem",l:"Structure"}],ab:{d:"B.Tech is India's flagship 4-year engineering degree program accredited by AICTE. Specializations include Computer Science & AI, Data Science, Cyber Security, Mechanical, Civil, ECE, and Electrical.",pts:[{i:"&#128187;",t:"High Salary Tech Careers",d:"Highest placement records in IT, Cloud, AI, and Product Engineering"},{i:"&#127757;",t:"Global Degree Recognition",d:"Recognized globally for GATE, GRE, US Masters, and MNC hiring"}],img:"https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=800&q=80",bi:"&#9881;&#65039;",bt:"Engineering Degree",bs:"AICTE & NBA Accredited Aligned"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Physics, Chemistry & Mathematics (PCM)"},{i:"&#128202;",t:"Percentage",d:"Minimum 50-60% aggregate marks (JEE / State Entrance valid)"}],tl:{d:"8 semesters of intensive engineering theory, coding labs, and industrial internship.",y:[{y:"Year 1",p:"Sem 1-2",t:"Engineering Foundations",s:["Engineering Mathematics I & II","Engineering Physics","Basic Electrical & Electronics","Programming in C / Python","Engineering Graphics"]},{y:"Year 2",p:"Sem 3-4",t:"Branch Core",s:["Data Structures","Object Oriented Programming","DBMS","Computer Architecture","Discrete Maths"]},{y:"Year 3",p:"Sem 5-6",t:"Advanced Branch Specialization",s:["Operating Systems","Computer Networks","Software Engineering","AI & Cloud Elective","Mini Project"]},{y:"Year 4",p:"Sem 7-8",t:"Industry Internship & Capstone",s:["Deep Learning / Cyber Security","Industrial Internship","Major Capstone Project","Placement Drive"]}]},un:[{n:"Galgotias University B.Tech",l:"Greater Noida, UP",na:"A+",m:"Regular Campus",img:"https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=600&q=80",lo:"https://ui-avatars.com/api/?name=GU&background=1e293b&color=d4af37&bold=true",f:"1.5L-2.2L/yr",p:"12 LPA",a:"UGC & AICTE Approved"},{n:"Parul University B.Tech",l:"Vadodara, Gujarat",na:"A++",m:"Regular Campus",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80",lo:"https://ui-avatars.com/api/?name=PU&background=1e293b&color=d4af37&bold=true",f:"1.2L-1.8L/yr",p:"10 LPA",a:"AICTE Approved"}],sal:{h:"50+ LPA",hs:"Top placements at Google, Amazon, Microsoft & Adobe",bars:[{r:"Software Development Engineer (SDE)",v:"8-22 LPA",p:90},{r:"Cloud & DevOps Engineer",v:"7-18 LPA",p:85}],cars:[{i:"&#128187;",t:"Software Engineer (SDE)",d:"Build enterprise applications at top global product tech companies",tag:"High Salary"}]},syl:[{t:"Sem 1-8",s:["Maths","Physics","Programming","Data Structures","DBMS","OS","Networks","AI/ML","Project"]}],rec:["Google","Microsoft","Amazon","TCS","Infosys","Wipro","Cognizant","Adobe","Salesforce"],faq:[{q:"Which branch has highest placements in B.Tech?",a:"Computer Science Engineering (CSE) and AI / Data Science specializations currently offer highest packages."}]},
+
+"ARTIFICIAL INTELLIGENCE":{fn:"Professional AI & Machine Learning",hs:[{v:"6-12 Months",l:"Duration"},{v:"6-18 LPA",l:"Avg Salary"},{v:"98%",l:"Placement"},{v:"500+",l:"Tech Cos"}],ss:[{i:"&#9201;",v:"6-12 Mos",l:"Duration"},{i:"&#129302;",v:"Python & ML",l:"Skills"},{i:"&#128640;",v:"AI Engineer",l:"Outcome"},{i:"&#128221;",v:"Real Projects",l:"Portfolio"}],ab:{d:"Professional AI & Machine Learning program covering Python, Data Science, Deep Learning, Neural Networks, Natural Language Processing (NLP), Computer Vision, and Generative AI (LLMs).",pts:[{i:"&#129302;",t:"Cutting-Edge AI Tech",d:"Master ChatGPT APIs, LLMs, PyTorch, TensorFlow, and Scikit-learn"},{i:"&#128187;",t:"Live Industry Projects",d:"Build a portfolio of real-world AI applications for MNC hiring"}],img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",bi:"&#129302;",bt:"Professional Skill Certification",bs:"Highest Industry Demand Â· High Salary"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass / Graduation / Engineering students from any background"},{i:"&#128202;",t:"Prerequisites",d:"Basic computer knowledge â€” coding taught from scratch"}],tl:{d:"Hands-on practical modules with real-world AI model building.",y:[{y:"Phase 1",p:"Months 1-3",t:"Python & Data Analysis",s:["Python Programming","NumPy & Pandas","Data Visualization","SQL Databases"]},{y:"Phase 2",p:"Months 4-6",t:"Machine & Deep Learning",s:["Scikit-Learn Algorithms","Neural Networks","PyTorch / TensorFlow","Computer Vision"]},{y:"Phase 3",p:"Months 7-12",t:"Gen AI & Deployment",s:["NLP & LLMs","ChatGPT API Integration","Model Deployment (AWS/GCP)","Capstone AI Project"]}]},un:[{n:"EduVision AI Academy",l:"Online & Offline",na:"Certified",m:"Hybrid",img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80",lo:"https://ui-avatars.com/api/?name=AI&background=1e293b&color=d4af37&bold=true",f:"25K-60K",p:"12 LPA",a:"Industry Certified"}],sal:{h:"35 LPA",hs:"AI Engineers, Data Scientists & ML Specialists",bars:[{r:"AI / ML Engineer",v:"8-20 LPA",p:90},{r:"Data Scientist",v:"7-16 LPA",p:85}],cars:[{i:"&#129302;",t:"AI Engineer",d:"Develop intelligent models and Generative AI applications",tag:"High Demand"}]},syl:[{t:"Modules",s:["Python","Data Analysis","Machine Learning","Deep Learning","NLP","Computer Vision","Gen AI"]}],rec:["Google","Microsoft","Amazon","Accenture","TCS","Startups"],faq:[{q:"Do I need prior coding experience for AI course?",a:"No! Our AI program starts with Python basics and builds up to advanced Neural Networks."}]},
+
+"DIGITAL MARKETING":{fn:"Professional Digital Marketing",hs:[{v:"3-6 Months",l:"Duration"},{v:"3-10 LPA",l:"Avg Salary"},{v:"96%",l:"Placement"},{v:"600+",l:"Agencies"}],ss:[{i:"&#9201;",v:"3-6 Mos",l:"Duration"},{i:"&#128200;",v:"Google & Meta",l:"Certs"},{i:"&#128640;",v:"Freelance & Agency",l:"Outcome"},{i:"&#128221;",v:"Live Ads",l:"Training"}],ab:{d:"Complete Digital Marketing certification covering SEO, Social Media Marketing (SMM), Google Search Ads, Meta Ads (Facebook/Instagram), Content Strategy, Email Marketing, and Web Analytics.",pts:[{i:"&#128200;",t:"Google & Meta Certified",d:"Prepare for official Google Ads, Meta Blueprint, and HubSpot certifications"},{i:"&#128187;",t:"Live Ad Budget Practice",d:"Run real ad campaigns and manage actual client budgets"}],img:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",bi:"&#128200;",bt:"Marketing Certification",bs:"High Earning Â· Freelance & Job Ready"},el:[{i:"&#128218;",t:"Qualification",d:"10th / 12th Pass or Graduates from any stream"},{i:"&#128202;",t:"Prerequisites",d:"Basic internet and smartphone/laptop familiarity"}],tl:{d:"3-6 months practical training covering organic and paid marketing channels.",y:[{y:"Module 1",p:"Month 1",t:"Website & SEO",s:["WordPress Site Setup","On-Page SEO","Off-Page Link Building","Keyword Research"]},{y:"Module 2",p:"Month 2",t:"Paid Ads & Social Media",s:["Google Search & Display Ads","Meta Facebook & Insta Ads","Copywriting","Social Media Strategy"]},{y:"Module 3",p:"Month 3-6",t:"Analytics & Freelancing",s:["Google Analytics 4 (GA4)","Email Marketing","Freelance Client Acquisition","Agency Internship"]}]},un:[{n:"EduVision Digital Institute",l:"Gurgaon & Online",na:"Google Partner",m:"Hybrid",img:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",lo:"https://ui-avatars.com/api/?name=DM&background=1e293b&color=d4af37&bold=true",f:"15K-35K",p:"6 LPA",a:"Google & Meta Aligned"}],sal:{h:"18 LPA",hs:"Digital Marketing Directors & Agency Founders",bars:[{r:"Digital Marketing Specialist",v:"4-9 LPA",p:85},{r:"SEO & Meta Ads Expert",v:"5-11 LPA",p:80}],cars:[{i:"&#128200;",t:"Digital Marketing Manager",d:"Manage brand marketing budgets and ad performance",tag:"Agency / Brand"}]},syl:[{t:"Modules",s:["SEO","Google Ads","Meta Ads","Social Media","Content Marketing","Analytics","WordPress"]}],rec:["Google Partners","Ogilvy","GroupM","Dentsu","Ad Agencies","Flipkart"],faq:[{q:"Can I earn as a freelancer after Digital Marketing course?",a:"Yes! Digital marketing offers immediate freelancing, remote work, and agency creation scope."}]},
+
+"JAPANESE LANGUAGE":{fn:"Japanese Language Program (JLPT N5-N2)",hs:[{v:"6-12 Months",l:"Duration"},{v:"4-12 LPA",l:"Avg Salary"},{v:"98%",l:"Placement"},{v:"300+",l:"Japan MNCs"}],ss:[{i:"&#9201;",v:"6-12 Mos",l:"Duration"},{i:"&#127758;",v:"JLPT N5-N2",l:"Certification"},{i:"&#128640;",v:"Japan Job Market",l:"Outcome"},{i:"&#128221;",v:"Native Trainer",l:"Faculty"}],ab:{d:"Japanese Language training from JLPT N5 (Basic) to N2 (Advanced Business). Opens doors to lucrative careers in Japan, Japanese MNCs in India (Maruti, Sony, Honda, Panasonic), translation, and IT bilingual engineering.",pts:[{i:"&#127758;",t:"Japan Work Visa Support",d:"Direct placement assistance for jobs in Tokyo, Osaka, and Japan IT hubs"},{i:"&#128187;",t:"Bilingual IT Engineer Scope",d:"High salary demand for Japanese speaking software developers"}],img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80",bi:"&#127758;",bt:"International Language Certification",bs:"High Overseas Salary Scope"},el:[{i:"&#128218;",t:"Qualification",d:"10th / 12th Pass or Graduates (No prior language knowledge needed)"}],tl:{d:"JLPT Level-wise systematic training in Kanji, Grammar, Vocabulary, and Conversation.",y:[{y:"Level N5-N4",p:"Months 1-6",t:"Foundational Japanese",s:["Hiragana & Katakana","Basic Kanji (200+)","Daily Conversation","JLPT N5 & N4 Exam Prep"]},{y:"Level N3-N2",p:"Months 7-12",t:"Business Japanese",s:["Advanced Kanji (1000+)","Business Email & Etiquette","JLPT N3 & N2 Exam Prep","Japan Interview Training"]}]},un:[{n:"EduVision Foreign Language Wing",l:"Delhi NCR & Online",na:"JLPT Aligned",m:"Hybrid",img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80",lo:"https://ui-avatars.com/api/?name=JL&background=1e293b&color=d4af37&bold=true",f:"20K-45K",p:"10 LPA",a:"JLPT Certification"}],sal:{h:"25 LPA",hs:"Bilingual IT Engineers & Translators in Japan",bars:[{r:"Japanese Bilingual Engineer",v:"8-18 LPA",p:90},{r:"Translator / Interpreter",v:"6-14 LPA",p:85}],cars:[{i:"&#127758;",t:"Japan IT & Corporate Jobs",d:"Work in Japan or Japanese MNCs in India",tag:"Overseas Scope"}]},syl:[{t:"Levels",s:["Hiragana/Katakana","Kanji","JLPT N5","JLPT N4","JLPT N3","JLPT N2","Conversation"]}],rec:["Sony","Honda","Maruti Suzuki","Canon","Panasonic","Japan Tech Firms"],faq:[{q:"Is Japanese language difficult to learn?",a:"With our native trainer guidance and systematic Kanji mnemonics, students master N5 in 3 months!"}]},
+
+"CHINESE LANGUAGE":{fn:"Mandarin Chinese Language (HSK 1-4)",hs:[{v:"6-12 Months",l:"Duration"},{v:"4-12 LPA",l:"Avg Salary"},{v:"95%",l:"Placement"},{v:"250+",l:"Trade Cos"}],ss:[{i:"&#9201;",v:"6-12 Mos",l:"Duration"},{i:"&#127464;&#127475;",v:"HSK 1-4",l:"Certification"},{i:"&#128640;",v:"Trade & Translate",l:"Outcome"},{i:"&#128221;",v:"Pinyin & Hanzi",l:"Training"}],ab:{d:"Mandarin Chinese language certification covering HSK 1 to HSK 4. Highly valuable skill for international trade, electronics import/export, translation, intelligence, and multinational corporate roles.",pts:[{i:"&#127464;&#127475;",t:"HSK Official Certification",d:"Prepares for global HSK exam recognized by Chinese universities and MNCs"},{i:"&#128188;",t:"Import / Export Business Scope",d:"Essential for electronics, manufacturing, and global trade managers"}],img:"https://images.unsplash.com/photo-1508804185872-d7bad800d9e1?w=800&q=80",bi:"&#127464;&#127475;",bt:"Global Language Certification",bs:"High Trade & Corporate Value"},el:[{i:"&#128218;",t:"Qualification",d:"10th / 12th Pass or Graduates"}],tl:{d:"HSK Level-wise training in Pinyin phonetics, Hanzi characters, and business dialogue.",y:[{y:"HSK 1-2",p:"Months 1-6",t:"Pinyin & Basic Hanzi",s:["Pinyin Tones","Basic Characters (300+)","Greeting & Trade Vocab"]},{y:"HSK 3-4",p:"Months 7-12",t:"Business Mandarin",s:["Advanced Characters (1200+)","Commercial Translation","Interview Preparation"]}]},un:[{n:"EduVision Chinese Language Wing",l:"Delhi NCR & Online",na:"HSK Aligned",m:"Hybrid",img:"https://images.unsplash.com/photo-1508804185872-d7bad800d9e1?w=600&q=80",lo:"https://ui-avatars.com/api/?name=CN&background=1e293b&color=d4af37&bold=true",f:"20K-45K",p:"9 LPA",a:"HSK Certification Aligned"}],sal:{h:"22 LPA",hs:"Chinese translators & trade managers",bars:[{r:"Mandarin Translator / Specialist",v:"6-15 LPA",p:85}],cars:[{i:"&#127464;&#127475;",t:"Trade Manager / Translator",d:"Work with international trading houses and MNCs",tag:"Trade & Translation"}]},syl:[{t:"Levels",s:["Pinyin","Hanzi","HSK 1","HSK 2","HSK 3","HSK 4","Business Mandarin"]}],rec:["Trade Houses","MNCs","Electronics Giants","Translation Agencies"],faq:[{q:"What is HSK?",a:"HSK (Hanyu Shuiping Kaoshi) is the standardized Chinese proficiency test used globally for jobs and scholarships."}]},
+
+"B.LIB":{fn:"Bachelor of Library Science (B.Lib.I.Sc)",hs:[{v:"1 Year",l:"Duration"},{v:"3-7 LPA",l:"Avg Salary"},{v:"94%",l:"Placement"},{v:"300+",l:"Institutions"}],ss:[{i:"&#9201;",v:"1 Year",l:"Duration"},{i:"&#128218;",v:"UGC Approved",l:"Recognition"},{i:"&#128640;",v:"Librarian Jobs",l:"Outcome"},{i:"&#128221;",v:"2 Sem",l:"Structure"}],ab:{d:"Bachelor of Library and Information Science is a 1-year UGC-approved degree. Trains students in digital archiving, library automation, database management, and information classification for schools, universities, and research institutes.",pts:[{i:"&#128218;",t:"Govt Librarian Eligibility",d:"Mandatory qualification for Govt School, College, and Public Library posts"},{i:"&#128187;",t:"Digital Library Automation",d:"Master KOHA software, MARC21, and digital database indexing"}],img:"https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80",bi:"&#128218;",bt:"Information Science Degree",bs:"UGC Approved Â· Quick 1-Year Degree"},el:[{i:"&#127891;",t:"Qualification",d:"Graduation in any discipline (BA, B.Sc, B.Com, BBA, etc.)"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"2 semesters covering classification, cataloguing, and digital library software.",y:[{y:"Year 1",p:"Sem 1-2",t:"Library Science Core",s:["Library & Society","Library Classification Theory","Cataloguing Practical","Digital Libraries & KOHA","Information Sources"]}]},un:[{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance / Regular",img:"https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"15K-25K/yr",p:"5 LPA",a:"UGC & DEB Approved"}],sal:{h:"10 LPA",hs:"University librarians & Govt archive heads",bars:[{r:"University / Govt Librarian",v:"4-8 LPA",p:85}],cars:[{i:"&#128218;",t:"College / Govt Librarian",d:"Manage digital and physical library networks",tag:"Librarian"}]},syl:[{t:"Sem 1-2",s:["Library Classification","Dewey Decimal System","KOHA Software","Digital Archiving"]}],rec:["Central Universities","KVS Schools","Govt Libraries","Research Labs"],faq:[{q:"Can I complete B.Lib in distance mode?",a:"Yes! B.Lib from UGC-DEB approved universities is available in distance mode and fully valid for govt jobs."}]},
+
+"BPT":{fn:"Bachelor of Physiotherapy (BPT)",hs:[{v:"4.5 Years",l:"Duration"},{v:"4-12 LPA",l:"Avg Salary"},{v:"97%",l:"Placement"},{v:"400+",l:"Hospitals"}],ss:[{i:"&#9201;",v:"4.5 Years",l:"Duration"},{i:"&#127891;",v:"Health Council",l:"Recognition"},{i:"&#128640;",v:"Dr. Title & Clinic",l:"Outcome"},{i:"&#128221;",v:"6-Mo Internship",l:"Training"}],ab:{d:"Bachelor of Physiotherapy is a 4.5-year clinical healthcare degree (including 6-month mandatory internship). Enables graduates to use the 'Dr.' prefix, open private physiotherapy clinics, and treat sports/ortho patients.",pts:[{i:"&#9877;&#65039;",t:"Dr. Prefix & Private Clinic License",d:"Eligible to practice independently and open licensed physiotherapy clinics"},{i:"&#9917;",t:"Sports Medicine & Rehab",d:"High demand in sports academies, orthopaedic hospitals, and neuro rehab"}],img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",bi:"&#9877;&#65039;",bt:"Clinical Healthcare Degree",bs:"State Health Council Approved"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass with Physics, Chemistry & Biology (PCB)"},{i:"&#128202;",t:"Percentage",d:"Minimum 50% aggregate marks in PCB"}],tl:{d:"4 years academic study + 6 months compulsory clinical internship.",y:[{y:"Year 1-2",p:"Basic Medical",t:"Anatomy & Physiology",s:["Anatomy","Physiology","Biochemistry","Biomechanics","Pathology"]},{y:"Year 3-4",p:"Clinical Rehab",t:"Ortho & Neuro Rehab",s:["Orthopaedics","Neurology","Cardiothoracic Rehab","Sports Physiotherapy"]},{y:"Internship",p:"6 Months",t:"Clinical Rotation",s:["Hospital Ortho Ward","ICU & Neuro Rehab","Sports Injury Clinic"]}]},un:[{n:"SMRU / Subharti Physiotherapy",l:"Meerut, UP",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80",lo:"https://ui-avatars.com/api/?name=BPT&background=1e293b&color=d4af37&bold=true",f:"80K-1.3L/yr",p:"8 LPA",a:"UGC & Council Approved"}],sal:{h:"20 LPA",hs:"Sports physiotherapists & private clinic owners",bars:[{r:"Consultant Physiotherapist",v:"5-12 LPA",p:85}],cars:[{i:"&#9877;&#65039;",t:"Private Clinic & Sports Rehab",d:"Treat patients independently or join sports teams",tag:"Dr. Practice"}]},syl:[{t:"Years 1-4",s:["Anatomy","Physiology","Electrotherapy","Exercise Therapy","Orthopaedics","Neurology","Internship"]}],rec:["Max Healthcare","Fortis","Apollo","Sports Academies","Private Clinics"],faq:[{q:"Can BPT graduates use Dr. prefix?",a:"Yes! Qualified BPT registered physiotherapists use Dr. prefix as recognized clinical practitioners."}]},
+
+"BHM / BHMCT":{fn:"Bachelor of Hotel Management (BHM)",hs:[{v:"4 Years",l:"Duration"},{v:"3-12 LPA",l:"Avg Salary"},{v:"96%",l:"Placement"},{v:"500+",l:"5-Star Hotels"}],ss:[{i:"&#9201;",v:"4 Years",l:"Duration"},{i:"&#127891;",v:"UGC & AICTE",l:"Recognition"},{i:"&#128640;",v:"5-Star & Cruise",l:"Outcome"},{i:"&#128221;",v:"8 Sem",l:"Structure"}],ab:{d:"Bachelor of Hotel Management & Catering Technology is a 4-year professional degree preparing students for executive roles in 5-star hotel chains, luxury cruises, airlines, food production, and resort management.",pts:[{i:"&#127960;",t:"5-Star Hotel Internships",d:"Paid industrial training in Marriott, Taj, Oberoi, Hyatt, and Radisson"},{i:"&#128745;",t:"Airlines & Cruise Careers",d:"Direct recruitment for cabin crew, flight catering, and luxury cruise lines"}],img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",bi:"&#127960;",bt:"Hospitality Professional Degree",bs:"UGC & AICTE Approved Â· Global Scope"},el:[{i:"&#128218;",t:"Qualification",d:"12th Pass from any recognized board"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"8 semesters covering culinary arts, front office, housekeeping, and paid industrial exposure.",y:[{y:"Year 1",p:"Sem 1-2",t:"Hospitality Core",s:["Food Production I","Food & Beverage Service I","Front Office Ops","Housekeeping Ops"]},{y:"Year 2",p:"Sem 3-4",t:"Industrial Training",s:["6-Month Paid 5-Star Hotel Internship","Hotel Accountancy","Hospitality Law"]},{y:"Year 3-4",p:"Sem 5-8",t:"Advanced Mgmt",s:["Executive Culinary Arts","Event Management","Hotel Facility Planning","Placement Drives"]}]},un:[{n:"Subharti Hotel Management",l:"Meerut, UP",na:"A",m:"Regular Campus",img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"60K-1L/yr",p:"8 LPA",a:"UGC Approved"}],sal:{h:"22 LPA",hs:"General Managers in Taj, Marriott & International Cruise Lines",bars:[{r:"Hotel Executive / Manager",v:"4-10 LPA",p:85}],cars:[{i:"&#127960;",t:"5-Star Hotel / Cruise Manager",d:"Manage luxury hotel operations and culinary departments",tag:"Hospitality"}]},syl:[{t:"Sem 1-8",s:["Food Production","F&B Service","Front Office","Housekeeping","Hotel Accounts","Industrial Training"]}],rec:["Taj Hotels","Oberoi Group","Marriott","Hyatt","Indigo Airlines","Royal Caribbean"],faq:[{q:"Does BHM include hotel internships?",a:"Yes! BHM includes 6 months of mandatory paid industrial exposure in leading 5-star hotels."}]},
+
+"MA":{fn:"Master of Arts (M.A.)",hs:[{v:"2 Years",l:"Duration"},{v:"4-10 LPA",l:"Avg Salary"},{v:"94%",l:"Placement"},{v:"350+",l:"Universities"}],ss:[{i:"&#9201;",v:"2 Years",l:"Duration"},{i:"&#127891;",v:"UGC Approved",l:"Recognition"},{i:"&#128640;",v:"UGC NET & PhD",l:"Outcome"},{i:"&#128221;",v:"4 Sem",l:"Structure"}],ab:{d:"Master of Arts is a 2-year postgraduate degree program offering specialization in English, History, Political Science, Economics, Psychology, or Sociology. Key qualification for Assistant Professor (UGC NET) and PhD.",pts:[{i:"&#127891;",t:"UGC NET & Assistant Professor",d:"Prerequisite degree to appear for UGC NET / JRF exam for college lectureships"},{i:"&#128218;",t:"Distance & Regular Options",d:"Flexible distance learning available for working professionals"}],img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",bi:"&#127891;",bt:"Postgraduate Humanities Degree",bs:"UGC Approved Â· Academic Gold Standard"},el:[{i:"&#127891;",t:"Qualification",d:"Bachelor's degree (BA / B.Sc / B.Com / BBA) from a UGC recognized university"},{i:"&#128202;",t:"Percentage",d:"Minimum 45-50% aggregate marks"}],tl:{d:"4 semesters of specialized research and advanced theoretical studies.",y:[{y:"Year 1",p:"Sem 1-2",t:"Specialization Foundations",s:["Specialized Paper I","Specialized Paper II","Research Methods","Historiography / Theory"]},{y:"Year 2",p:"Sem 3-4",t:"Advanced & Dissertation",s:["Advanced Elective I","Advanced Elective II","Master Dissertation","NET Exam Prep"]}]},un:[{n:"Amity University Online",l:"Noida, UP",na:"A+",m:"Online",img:"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",lo:"https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Amity_University_logo.svg/200px-Amity_University_logo.svg.png",f:"30K-60K/yr",p:"6 LPA",a:"UGC-DEB"},{n:"Subharti University (Distance)",l:"Meerut, UP",na:"A",m:"Distance",img:"https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80",lo:"logos/subharti-org-logo.png",f:"15K-25K/yr",p:"5 LPA",a:"DEB Approved"}],sal:{h:"15 LPA",hs:"Assistant Professors, Research Scholars & Content Directors",bars:[{r:"College Lecturer / Assistant Professor",v:"6-12 LPA",p:85}],cars:[{i:"&#127891;",t:"Assistant Professor / PhD",d:"Qualify UGC NET and teach in universities or pursue PhD",tag:"Academia"}]},syl:[{t:"Sem 1-4",s:["English","History","Political Science","Economics","Psychology","Sociology","Dissertation"]}],rec:["Universities","Colleges","Research Institutes","Publishing Houses"],faq:[{q:"Can I pursue MA in distance mode?",a:"Yes! MA from UGC-DEB approved universities is fully valid for UGC NET and Govt College Professor posts."}]}
+};
+
+function gD(n){
+  const u = n.toUpperCase();
+  const isPostgrad = ["MBA","MCA","M.TECH","M.SC","MA","M.COM","POSTGRADUATE","MASTER"].some(k=>u.includes(k));
+  const isSchool = ["10TH","12TH","SCHOOL","ADMISSION","INTERMEDIATE","MATRIC","SECONDARY","OPEN SCHOOL","NIOS"].some(k=>u.includes(k));
+  const isShortCert = ["LANG","CERTIFICATE","SKILL","MARKETING","JAPANESE","CHINESE","PYTHON","AI"].some(k=>u.includes(k)) && !u.includes("DEGREE");
+  const isDip = ["DIPLOMA","POLYTECHNIC","D.PHARM","D.EL.ED"].some(k=>u.includes(k));
+  
+  let duration = "3 Years";
+  let avgSal = "3-10 LPA";
+  let placement = "90%+";
+  let companies = "400+";
+  let level = "Undergraduate Degree";
+  
+  if (isSchool) {
+    duration = "1-2 Years";
+    avgSal = "Board Pass";
+    placement = "100% Guidance";
+    companies = "Top Colleges";
+    level = "Schooling Program";
+  } else if (isShortCert) {
+    duration = "6-12 Months";
+    avgSal = "High Demand";
+    placement = "Job Ready";
+    companies = "Global Scope";
+    level = "Professional Skill Cert";
+  } else if (isDip) {
+    duration = "2-3 Years";
+    avgSal = "2.5-6 LPA";
+    placement = "88%+";
+    companies = "300+";
+    level = "Professional Diploma";
+  } else if (isPostgrad) {
+    duration = "2 Years";
+    avgSal = "5-20 LPA";
+    placement = "95%+";
+    companies = "500+";
+    level = "Postgraduate Degree";
+  }
+
+  return {
+    fn: n,
+    hs: [
+      {v: duration, l: "Duration"},
+      {v: avgSal, l: isSchool ? "Recognition" : "Avg Salary"},
+      {v: placement, l: isSchool ? "Counselling" : "Placement Rate"},
+      {v: companies, l: isSchool ? "Tie-ups" : "Recruiters"}
+    ],
+    ss: [
+      {i: "&#9201;", v: duration, l: "Duration"},
+      {i: "&#128176;", v: avgSal, l: isSchool ? "Recognition" : "Avg Package"},
+      {i: "&#128640;", v: isSchool ? "Direct Eligible" : "Career Growth", l: isSchool ? "Outcome" : "Scope"},
+      {i: "&#127891;", v: level, l: "Program Type"}
+    ],
+    ab: {
+      d: n + " is a highly recognized educational program designed for career advancement, skill building, and academic excellence.",
+      pts: [
+        {i: "&#127970;", t: "Industry Aligned", d: "Updated curriculum adhering to official academic and industry standards"},
+        {i: "&#127757;", t: "Career Opportunities", d: "Opens doors to leading corporate roles, government jobs, and higher studies"},
+        {i: "&#128161;", t: "Comprehensive Learning", d: "Hands-on projects, study resources, and expert mentor support"},
+        {i: "&#127891;", t: "Free Counselling", d: "EduVision provides 100% free admission guidance and university selection"}
+      ],
+      img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
+      bi: "&#127891;",
+      bt: level,
+      bs: "UGC / Board Approved Â· Free Guidance Supported"
+    },
+    el: [
+      {i: "&#128218;", t: "Qualification", d: isSchool ? "10th / 12th appeared or pass from any recognized board" : (isPostgrad ? "Graduation degree in any discipline from a UGC-recognized university" : "12th Pass (or equivalent) from any recognized board")},
+      {i: "&#128202;", t: "Aggregate Marks", d: "Minimum 45-50% aggregate marks required"},
+      {i: "&#128221;", t: "Admission Process", d: "Direct merit-based admission & free counselling support"}
+    ],
+    tl: {
+      d: "Comprehensive timeline structured for systematic learning and exam preparation.",
+      y: isSchool ? [
+        {y: "Stage 1", p: "Year 1", t: "Core Stream Curriculum", s: ["Subject 1", "Subject 2", "Subject 3", "Language Paper", "Elective Module"]},
+        {y: "Stage 2", p: "Year 2", t: "Board Exam & Career Guidance", s: ["Advanced Modules", "Sample Papers", "Practical Exams", "Career Guidance", "Admission Prep"]}
+      ] : (isPostgrad ? [
+        {y: "Year 1", p: "Sem 1-2", t: "Advanced Core Foundations", s: ["Core Module I", "Core Module II", "Research Methods", "Practical Workshop", "Seminars"]},
+        {y: "Year 2", p: "Sem 3-4", t: "Specialization & Dissertation", s: ["Specialization Elective", "Industry Internship", "Major Project", "Placement Prep"]}
+      ] : [
+        {y: "Year 1", p: "Sem 1-2", t: "Fundamental Learning", s: ["Core Paper I", "Core Paper II", "Practical Lab", "Communication", "Elective"]},
+        {y: "Year 2", p: "Sem 3-4", t: "Intermediate Modules", s: ["Advanced Paper I", "Advanced Paper II", "Industry Project", "Lab II"]},
+        {y: "Year 3", p: "Sem 5-6", t: "Specialization & Internship", s: ["Specialization", "Major Project", "Internship", "Placement Training"]}
+      ])
+    },
+    un: [
+      {n: "Amity University Online", l: "Noida, UP", na: "A+", m: "Online", img: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80", lo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Amity_University_logo.svg/200px-Amity_University_logo.svg.png", f: "1.2-1.8L/yr", p: "8 LPA", a: "UGC-DEB"},
+      {n: "Chandigarh University Online", l: "Mohali, Punjab", na: "A+", m: "Online", img: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80", lo: "https://ui-avatars.com/api/?name=CU&background=1e293b&color=d4af37&bold=true", f: "1-1.5L/yr", p: "10 LPA", a: "UGC-DEB"},
+      {n: "LPU Online", l: "Phagwara, Punjab", na: "A+", m: "Online", img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80", lo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Lovely_Professional_University_logo.svg/200px-Lovely_Professional_University_logo.svg.png", f: "1.1-1.5L/yr", p: "12 LPA", a: "UGC-DEB"},
+      {n: "Mangalayatan University", l: "Aligarh, UP", na: "B+", m: "Distance", img: "https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80", lo: "logos/mangalayatan-in-logo.jpg", f: "25-45K/yr", p: "5 LPA", a: "DEB Approved"}
+    ],
+    sal: {
+      h: isSchool ? "Direct Degree Eligible" : "25+ LPA",
+      hs: isSchool ? "Qualifies for Degree admissions and Government Job Competitive Exams" : "Top recruiters across corporate and technology sectors",
+      bars: isSchool ? [
+        {r: "Higher Degree Eligibility", v: "100% Eligible", p: 95},
+        {r: "Govt Job Exam Eligibility", v: "100% Eligible", p: 90},
+        {r: "Skill Certification Access", v: "100% Eligible", p: 85}
+      ] : [
+        {r: "Entry Level Professional", v: "3-6 LPA", p: 50},
+        {r: "Mid-Level Executive", v: "6-12 LPA", p: 70},
+        {r: "Senior Manager / Architect", v: "12-25 LPA", p: 90}
+      ],
+      cars: isSchool ? [
+        {i: "&#127891;", t: "Undergraduate Degree Admission", d: "Enroll in B.Tech, BCA, BBA, B.Sc, BA, Nursing or Law", tag: "UG Degree"},
+        {i: "&#127963;", t: "Government Competitive Exams", d: "Eligible for SSC, Railway, Defence and Police recruitment", tag: "Govt Jobs"}
+      ] : [
+        {i: "&#127970;", t: "Corporate Professional", d: "Build a high-growth career in top companies and MNCs", tag: "4-15 LPA"},
+        {i: "&#128640;", t: "Entrepreneurship", d: "Start and grow your own business with domain expertise", tag: "High Scope"}
+      ]
+    },
+    syl: [
+      {t: "Module 1: Foundations", s: ["Core Principles", "Applied Theory", "Practical Lab", "Communication Skills"]},
+      {t: "Module 2: Advanced Learning", s: ["Advanced Elective I", "Advanced Elective II", "Project Work", "Industry Certification"]}
+    ],
+    rec: ["TCS", "Infosys", "Wipro", "Amazon", "Deloitte", "EduVision Partner Universities"],
+    faq: [
+      {q: "Is " + n + " recognized for jobs?", a: "Yes! Degrees and certifications from UGC / Board approved institutions are 100% valid for corporate and government jobs."},
+      {q: "How does EduVision assist in admission?", a: "EduVision provides 100% free guidance, university comparison, document verification, and admission support."}
+    ]
+  };
+}
+
+function getMasterCoursesFromStorage() {
+  try {
+    const raw = localStorage.getItem('eduvision_master_courses');
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function renderCoursePage() {
+  const params = new URLSearchParams(window.location.search);
+  let rawCk = (params.get("course") || "BBA").trim();
+  let ck = rawCk.toUpperCase();
+
+  // Advanced Alias Resolution Mapping
+  if (ck.includes("12TH") || ck.includes("INTERMEDIATE")) ck = "12TH ADMISSION";
+  else if (ck.includes("10TH") || ck.includes("MATRIC")) ck = "10TH ADMISSION";
+  else if (ck.includes("NIOS")) ck = "NIOS";
+  else if (ck.includes("B.SC NURSING") || ck.includes("BSC NURSING")) ck = "B.SC NURSING";
+  else if (ck.includes("NURSING") || ck.includes("GNM")) ck = "NURSING";
+  else if (ck.includes("B.PHARMA") || ck.includes("B.PHARM") || ck.includes("BPHARM")) ck = "B.PHARMA";
+  else if (ck.includes("PHARMACY") || ck.includes("D.PHARM")) ck = "PHARMACY";
+  else if (ck.includes("AGRICULTURE") || ck.includes("AGRI")) ck = "AGRICULTURE";
+  else if (ck.includes("POLYTECHNIC")) ck = "POLYTECHNIC";
+  else if (ck.includes("B.TECH") || ck.includes("BTECH")) ck = "B.TECH";
+  else if (ck.includes("INTELLIGENCE") || ck === "AI") ck = "ARTIFICIAL INTELLIGENCE";
+  else if (ck.includes("DIGITAL MARKETING")) ck = "DIGITAL MARKETING";
+  else if (ck.includes("JAPANESE")) ck = "JAPANESE LANGUAGE";
+  else if (ck.includes("CHINESE") || ck.includes("MANDARIN")) ck = "CHINESE LANGUAGE";
+  else if (ck.includes("B.LIB") || ck.includes("BLIB")) ck = "B.LIB";
+  else if (ck === "BPT" || ck.includes("PHYSIOTHERAPY")) ck = "BPT";
+  else if (ck.includes("HOTEL") || ck.includes("BHM")) ck = "BHM / BHMCT";
+  else if (ck.includes("D.EL.ED") || ck.includes("DELED") || ck.includes("BTC")) ck = "D.EL.ED";
+  else if (ck.includes("B.ED") || ck.includes("BED")) ck = "B.ED";
+  else if (ck === "BA" || ck.includes("BACHELOR OF ARTS")) ck = "BA";
+  else if (ck === "BCOM" || ck.includes("COMMERCE")) ck = "BCOM";
+  else if (ck === "BSC" || ck.includes("BACHELOR OF SCIENCE")) ck = "BSC";
+  else if (ck === "MA" || ck.includes("MASTER OF ARTS")) ck = "MA";
+
+  // Check custom master courses created/edited by Admin or Team Leader
+  const customCourses = getMasterCoursesFromStorage();
+  let customCourseData = null;
+  for (const k in customCourses) {
+    if (k.toLowerCase() === rawCk.toLowerCase() || k.toLowerCase() === ck.toLowerCase()) {
+      customCourseData = customCourses[k];
+      break;
+    }
+  }
+
+  const d = customCourseData || C[ck] || (() => {
+    const f = Object.keys(C).find(k => k.toLowerCase() === rawCk.toLowerCase() || k.toLowerCase() === ck.toLowerCase());
+    return f ? C[f] : gD(rawCk);
+  })();
+
+  const rs = s => (s || '').replace(/Rs\./g, "₹");
+  const displayName = d.fn || d.name || ck;
+  document.title = displayName + " | EduVision";
+  
+  const hName = document.getElementById("heroCourseName");
+  if (hName) hName.textContent = displayName;
+  const hSub = document.getElementById("heroSubtitle");
+  if (hSub) hSub.textContent = d.ab?.d ? (d.ab.d.slice(0, 140) + "...") : ("Complete guide to " + displayName + " — eligibility, syllabus, universities, fees & career opportunities.");
+  const fName = document.getElementById("formCourseName");
+  if (fName) fName.value = displayName;
+  const aTitle = document.getElementById("aboutCourseTitle");
+  if (aTitle) aTitle.textContent = displayName;
+  const aDesc = document.getElementById("aboutDesc");
+  if (aDesc) aDesc.textContent = d.ab?.d || (displayName + " is a premier career-focused program supported with 100% free guidance by EduVision.");
+  const aImg = document.getElementById("aboutImg");
+  if (aImg) aImg.src = d.ab?.img || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80";
+  const aBIcon = document.getElementById("aboutBadgeIcon");
+  if (aBIcon) aBIcon.innerHTML = d.ab?.bi || "🎓";
+  const aBTitle = document.getElementById("aboutBadgeTitle");
+  if (aBTitle) aBTitle.textContent = d.ab?.bt || "Certified Degree";
+  const aBSub = document.getElementById("aboutBadgeSub");
+  if (aBSub) aBSub.textContent = d.ab?.bs || "UGC / AICTE Recognised";
+
+  const heroStatsEl = document.getElementById("heroStats");
+  if (heroStatsEl && d.hs) {
+    heroStatsEl.innerHTML = d.hs.map(s => `<div class="hero-stat"><span class="hero-stat-val">${s.v}</span><span class="hero-stat-lbl">${s.l}</span></div>`).join("");
+  }
+  const statsStripEl = document.getElementById("statsStrip");
+  if (statsStripEl && d.ss) {
+    statsStripEl.innerHTML = d.ss.map(s => `<div class="stat-card"><span class="stat-card-icon">${s.i}</span><span class="stat-card-val">${s.v}</span><div class="stat-card-lbl">${s.l}</div></div>`).join("");
+  }
+  const aboutListEl = document.getElementById("aboutList");
+  if (aboutListEl && d.ab?.pts) {
+    aboutListEl.innerHTML = d.ab.pts.map(p => `<div class="about-item"><div class="about-item-icon">${p.i}</div><div class="about-item-text"><strong>${p.t}</strong><p>${p.d}</p></div></div>`).join("");
+  }
+  const eligGridEl = document.getElementById("eligGrid");
+  if (eligGridEl && d.el) {
+    eligGridEl.innerHTML = d.el.map(e => `<div class="elig-card reveal"><div class="elig-icon">${e.i}</div><div class="elig-title">${e.t}</div><div class="elig-desc">${e.d}</div></div>`).join("");
+  }
+  const timelineDescEl = document.getElementById("timelineDesc");
+  if (timelineDescEl) timelineDescEl.textContent = d.tl?.d || "Curriculum and semester progression structure.";
+  const timelineEl = document.getElementById("timeline");
+  if (timelineEl && d.tl?.y) {
+    timelineEl.innerHTML = d.tl.y.map((y, i) => `<div class="timeline-item reveal"><div class="timeline-dot"><div class="timeline-circle">${i+1}</div><div class="timeline-period">${y.p}</div></div><div class="timeline-content"><div class="timeline-title">${y.y}: ${y.t}</div><div class="timeline-subjects">${y.s.map(x => `<span class="timeline-subject">${x}</span>`).join("")}</div></div></div>`).join("");
+  }
+
+  // Render Partner Universities Offering this Course
+  const uniGridEl = document.getElementById("uniGrid");
+  if (uniGridEl) {
+    let universitiesList = d.un || [];
+    try {
+      const rawUnis = localStorage.getItem('eduvision_universities_master') || localStorage.getItem('eduvision_master_universities');
+      if (rawUnis) {
+        const parsedUnis = JSON.parse(rawUnis);
+        if (Array.isArray(parsedUnis) && parsedUnis.length > 0) {
+          const matching = parsedUnis.filter(u => {
+            const prog = (u.programs || u.programs_summary || '').toLowerCase();
+            return prog.includes(rawCk.toLowerCase()) || prog.includes(ck.toLowerCase());
+          });
+          if (matching.length > 0) {
+            universitiesList = matching.map(u => ({
+              n: u.name,
+              l: u.location,
+              na: u.naac || 'A+',
+              m: u.category || 'Online',
+              img: u.hero_img || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80',
+              lo: u.logoImg || u.logo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name.slice(0, 2)) + '&background=ffffff&color=000&bold=true',
+              f: u.fees || u.master_fees || '₹1.5L Total',
+              p: u.highest_package || u.emi || '₹8 LPA',
+              a: u.naac || 'UGC-DEB',
+              code: u.code || u.univ_code
+            }));
+          }
+        }
+      }
+    } catch(e) {}
+
+    uniGridEl.innerHTML = universitiesList.map(u => {
+      const uniLink = u.code ? `universities/university-details.html?uni=${encodeURIComponent(u.code)}` : '#apply';
+      return `<div class="uni-card reveal" data-mode="${u.m}">
+        <div class="uni-card-img-wrap">
+          <img src="${u.img}" alt="${u.n}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80'">
+          <div class="uni-card-img-overlay"></div>
+          <span class="uni-card-naac">${u.na}</span>
+          <span class="uni-card-mode">${u.m}</span>
+        </div>
+        <div class="uni-card-body">
+          <div class="uni-card-logo-wrap">
+            <div class="uni-logo-circle">
+              <img src="${u.lo}" alt="${u.n}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(u.n.slice(0,2))}&background=ffffff&color=000&bold=true'">
+            </div>
+            <div>
+              <div class="uni-name">${u.n}</div>
+              <div class="uni-location">&#128205; ${u.l}</div>
+            </div>
+          </div>
+          <div class="uni-stats">
+            <div class="uni-stat">
+              <span class="uni-stat-val">${u.f.startsWith('₹') ? u.f : '₹' + u.f}</span>
+              <div class="uni-stat-lbl">Tuition Fee</div>
+            </div>
+            <div class="uni-stat">
+              <span class="uni-stat-val">${u.p.startsWith('₹') ? u.p : '₹' + u.p}</span>
+              <div class="uni-stat-lbl">Package / EMI</div>
+            </div>
+          </div>
+        </div>
+        <div class="uni-card-footer" style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="uni-tag">${u.a}</span>
+          <a href="${uniLink}" style="padding:6px 14px; font-size:0.75rem; font-weight:700; border-radius:50px; background:linear-gradient(135deg,var(--gold),#b8941f); color:#000; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">View University &rarr;</a>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  const hPkg = document.getElementById("highestPackage");
+  if (hPkg) hPkg.innerHTML = d.sal?.h ? (d.sal.h.startsWith("₹") ? d.sal.h : "&#8377;" + d.sal.h) : "&#8377;35 LPA";
+  const hPkgSub = document.getElementById("highestPackageSub");
+  if (hPkgSub) hPkgSub.textContent = d.sal?.hs || "Top campus placements recorded";
+  const salaryBarsEl = document.getElementById("salaryBars");
+  if (salaryBarsEl && d.sal?.bars) {
+    salaryBarsEl.innerHTML = d.sal.bars.map(b => `<div><div class="salary-bar-header"><span class="salary-bar-role">${b.r}</span><span class="salary-bar-val">&#8377;${b.v}</span></div><div class="salary-bar-track"><div class="salary-bar-fill" data-pct="${b.p}"></div></div></div>`).join("");
+  }
+  const careersListEl = document.getElementById("careersList");
+  if (careersListEl && d.sal?.cars) {
+    careersListEl.innerHTML = d.sal.cars.map(c => `<div class="career-card reveal"><div class="career-icon">${c.i}</div><div><div class="career-title">${c.t}</div><div class="career-desc">${c.d}</div><span class="career-tag">${c.tag}</span></div></div>`).join("");
+  }
+
+  const sT = document.getElementById("sylTabs"), sP = document.getElementById("sylPanels");
+  const syllabusData = d.syl || [
+    {t: "Semester / Year I", s: ["Core Theoretical Principles", "Applied Methodologies", "Practical Lab Workshop", "Professional Communications"]},
+    {t: "Semester / Year II", s: ["Advanced Electives", "Industry Case Studies", "Capstones & Major Project", "Placement & Certification"]}
+  ];
+  if (sT && sP) {
+    sT.innerHTML = "";
+    sP.innerHTML = "";
+    syllabusData.forEach((sem, i) => {
+      sT.innerHTML += `<button class="syl-tab${i === 0 ? " active" : ""}" onclick="swT(${i})">${sem.t}</button>`;
+      sP.innerHTML += `<div class="syl-panel${i === 0 ? " active" : ""}" id="sp${i}"><div class="subject-grid">${sem.s.map(x => `<div class="subject-chip"><div class="subject-chip-dot"></div>${x}</div>`).join("")}</div></div>`;
+    });
+  }
+
+  const CLOGOS = {"TCS":"https://www.google.com/s2/favicons?domain=tcs.com&sz=32","Infosys":"https://www.google.com/s2/favicons?domain=infosys.com&sz=32","Wipro":"https://www.google.com/s2/favicons?domain=wipro.com&sz=32","HCL":"https://www.google.com/s2/favicons?domain=hcltech.com&sz=32","Accenture":"https://www.google.com/s2/favicons?domain=accenture.com&sz=32","Amazon":"https://www.google.com/s2/favicons?domain=amazon.com&sz=32","Google":"https://www.google.com/s2/favicons?domain=google.com&sz=32","Microsoft":"https://www.google.com/s2/favicons?domain=microsoft.com&sz=32","IBM":"https://www.google.com/s2/favicons?domain=ibm.com&sz=32","Deloitte":"https://www.google.com/s2/favicons?domain=deloitte.com&sz=32","Cognizant":"https://www.google.com/s2/favicons?domain=cognizant.com&sz=32","Capgemini":"https://www.google.com/s2/favicons?domain=capgemini.com&sz=32","Tech Mahindra":"https://www.google.com/s2/favicons?domain=techmahindra.com&sz=32","Reliance":"https://www.google.com/s2/favicons?domain=ril.com&sz=32","HDFC Bank":"https://www.google.com/s2/favicons?domain=hdfcbank.com&sz=32","ICICI Bank":"https://www.google.com/s2/favicons?domain=icicibank.com&sz=32","Axis Bank":"https://www.google.com/s2/favicons?domain=axisbank.com&sz=32","Paytm":"https://www.google.com/s2/favicons?domain=paytm.com&sz=32","Jio":"https://www.google.com/s2/favicons?domain=jio.com&sz=32","Genpact":"https://www.google.com/s2/favicons?domain=genpact.com&sz=32","Concentrix":"https://www.google.com/s2/favicons?domain=concentrix.com&sz=32","WNS":"https://www.google.com/s2/favicons?domain=wns.com&sz=32","KPMG":"https://www.google.com/s2/favicons?domain=kpmg.com&sz=32","PwC":"https://www.google.com/s2/favicons?domain=pwc.com&sz=32","EY":"https://www.google.com/s2/favicons?domain=ey.com&sz=32","Goldman Sachs":"https://www.google.com/s2/favicons?domain=goldmansachs.com&sz=32","JP Morgan":"https://www.google.com/s2/favicons?domain=jpmorgan.com&sz=32","Cisco":"https://www.google.com/s2/favicons?domain=cisco.com&sz=32","Intel":"https://www.google.com/s2/favicons?domain=intel.com&sz=32","Apple":"https://www.google.com/s2/favicons?domain=apple.com&sz=32","PayPal":"https://www.google.com/s2/favicons?domain=paypal.com&sz=32","Shell":"https://www.google.com/s2/favicons?domain=shell.com&sz=32","Siemens":"https://www.google.com/s2/favicons?domain=siemens.com&sz=32","Philips":"https://www.google.com/s2/favicons?domain=philips.com&sz=32","Bosch":"https://www.google.com/s2/favicons?domain=bosch.com&sz=32","Adani":"https://www.google.com/s2/favicons?domain=adani.com&sz=32","Apollo Hospitals":"https://www.google.com/s2/favicons?domain=apollohospitals.com&sz=32","Fortis":"https://www.google.com/s2/favicons?domain=fortishealthcare.com&sz=32","Max Healthcare":"https://www.google.com/s2/favicons?domain=maxhealthcare.in&sz=32","Cipla":"https://www.google.com/s2/favicons?domain=cipla.com&sz=32","Sun Pharma":"https://www.google.com/s2/favicons?domain=sunpharma.com&sz=32","Tata Motors":"https://www.google.com/s2/favicons?domain=tatamotors.com&sz=32","Mahindra":"https://www.google.com/s2/favicons?domain=mahindra.com&sz=32","Airtel":"https://www.google.com/s2/favicons?domain=airtel.in&sz=32","PolicyBazaar":"https://www.google.com/s2/favicons?domain=policybazaar.com&sz=32","Decathlon":"https://www.google.com/s2/favicons?domain=decathlon.com&sz=32","Honda":"https://www.google.com/s2/favicons?domain=honda.com&sz=32","Sony":"https://www.google.com/s2/favicons?domain=sony.com&sz=32","Maruti Suzuki":"https://www.google.com/s2/favicons?domain=marutisuzuki.com&sz=32","Canon":"https://www.google.com/s2/favicons?domain=canon.com&sz=32","Panasonic":"https://www.google.com/s2/favicons?domain=panasonic.com&sz=32","L&T":"https://www.google.com/s2/favicons?domain=lntecc.com&sz=32","Deutsche Bank":"https://www.google.com/s2/favicons?domain=db.com&sz=32","Bajaj Finance":"https://www.google.com/s2/favicons?domain=bajajfinserv.in&sz=32","S&P Global":"https://www.google.com/s2/favicons?domain=spglobal.com&sz=32","Adobe":"https://www.google.com/s2/favicons?domain=adobe.com&sz=32","Salesforce":"https://www.google.com/s2/favicons?domain=salesforce.com&sz=32","Oracle":"https://www.google.com/s2/favicons?domain=oracle.com&sz=32","SAP":"https://www.google.com/s2/favicons?domain=sap.com&sz=32","Flipkart":"https://www.google.com/s2/favicons?domain=flipkart.com&sz=32","Zomato":"https://www.google.com/s2/favicons?domain=zomato.com&sz=32","Swiggy":"https://www.google.com/s2/favicons?domain=swiggy.com&sz=32","Ola":"https://www.google.com/s2/favicons?domain=olacabs.com&sz=32","Uber":"https://www.google.com/s2/favicons?domain=uber.com&sz=32","Netflix":"https://www.google.com/s2/favicons?domain=netflix.com&sz=32","Meta":"https://www.google.com/s2/favicons?domain=meta.com&sz=32","Twitter":"https://www.google.com/s2/favicons?domain=x.com&sz=32","LinkedIn":"https://www.google.com/s2/favicons?domain=linkedin.com&sz=32","Tata Group":"https://www.google.com/s2/favicons?domain=tata.com&sz=32","BYJU's":"https://www.google.com/s2/favicons?domain=byjus.com&sz=32","Indigo":"https://www.google.com/s2/favicons?domain=goindigo.in&sz=32","IndiGo":"https://www.google.com/s2/favicons?domain=goindigo.in&sz=32","Air India":"https://www.google.com/s2/favicons?domain=airindia.com&sz=32","NTPC":"https://www.google.com/s2/favicons?domain=ntpc.co.in&sz=32","BHEL":"https://www.google.com/s2/favicons?domain=bhel.com&sz=32","SAIL":"https://www.google.com/s2/favicons?domain=sail.co.in&sz=32"};
+  const recruitersList = d.rec || ["Google","Microsoft","Amazon","TCS","Infosys","Wipro","Deloitte","Accenture"];
+  const recTrackEl = document.getElementById("recruiterTrack");
+  if (recTrackEl) {
+    recTrackEl.innerHTML = [...recruitersList, ...recruitersList].map(r => {
+      const lg = CLOGOS[r] || ("https://ui-avatars.com/api/?name=" + encodeURIComponent(r.slice(0, 2)) + "&background=1e293b&color=d4af37&bold=true&size=32");
+      const el = document.createElement("div");
+      el.className = "recruiter-chip";
+      el.innerHTML = `<img src="${lg}" alt="${r}" width="24" height="24" style="border-radius:5px;object-fit:contain;background:#fff;padding:2px;flex-shrink:0;"> ${r}`;
+      return el.outerHTML;
+    }).join("");
+  }
+
+  const faqListEl = document.getElementById("faqList");
+  const faqData = d.faq || [
+    {q: "Is " + displayName + " valid for Govt and Private jobs?", a: "Yes! All courses & partner universities listed by EduVision are 100% UGC, DEB, AICTE or Board approved, making your qualification valid across private MNCs and Govt recruitments."},
+    {q: "How does EduVision provide Free Counselling?", a: "EduVision provides 100% free guidance, admission processing, university comparison, and telephonic counselling assistance with zero consultation charges."}
+  ];
+  if (faqListEl) {
+    faqListEl.innerHTML = faqData.map((f, i) => `<div class="faq-item reveal"><button class="faq-q" onclick="tF(${i})">${f.q}<span class="faq-icon" id="fi${i}">+</span></button><div class="faq-a" id="fa${i}">${f.a}</div></div>`).join("");
+  }
+
+  // Trigger animations & guarantee visibility
+  function initRevealObserver() {
+    const revealElements = document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-up");
+    if ('IntersectionObserver' in window) {
+      const ro = new IntersectionObserver((entries, observer) => {
+        entries.forEach(x => {
+          if (x.isIntersecting) {
+            x.target.classList.add("visible", "active", "in-view");
+            observer.unobserve(x.target);
+          }
+        });
+      }, { rootMargin: "250px 0px 250px 0px", threshold: 0.01 });
+      revealElements.forEach(el => ro.observe(el));
+    } else {
+      revealElements.forEach(el => el.classList.add("visible", "active", "in-view"));
+    }
+
+    // Immediate viewport fallback: ensure visible elements are never blank
+    revealElements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 250) {
+        el.classList.add("visible", "active", "in-view");
+      }
+    });
+  }
+  initRevealObserver();
+  setTimeout(initRevealObserver, 150);
+
+  const salSec = document.querySelector(".salary-section");
+  if (salSec) {
+    new IntersectionObserver(e => {
+      if (e[0].isIntersecting) {
+        document.querySelectorAll(".salary-bar-fill").forEach(b => {
+          setTimeout(() => b.style.width = (b.dataset.pct || "75") + "%", 200);
+        });
+      }
+    }, { threshold: 0.1 }).observe(salSec);
+  }
+}
+
+window.swT = i => {
+  document.querySelectorAll(".syl-tab").forEach((t, j) => t.classList.toggle("active", j === i));
+  document.querySelectorAll(".syl-panel").forEach((p, j) => p.classList.toggle("active", j === i));
+};
+
+window.tF = i => {
+  const qBtn = document.querySelectorAll(".faq-q")[i];
+  const aDiv = document.getElementById("fa" + i);
+  if (qBtn) qBtn.classList.toggle("open");
+  if (aDiv) aDiv.classList.toggle("open");
+};
+
+window.filterUni = (m, btn) => {
+  document.querySelectorAll(".uni-tab").forEach(t => t.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  document.querySelectorAll("#uniGrid .uni-card").forEach(c => {
+    const cm = (c.dataset.mode || "").toLowerCase();
+    if (m === "all" || cm.includes(m.toLowerCase())) {
+      c.style.display = "block";
+      setTimeout(() => { c.style.opacity = "1"; c.style.transform = "translate3d(0,0,0)"; }, 10);
+    } else {
+      c.style.opacity = "0";
+      c.style.transform = "translate3d(0,20px,0)";
+      setTimeout(() => { c.style.display = "none"; }, 250);
+    }
+  });
+};
+
+document.addEventListener("DOMContentLoaded", renderCoursePage);
+renderCoursePage();
+
+window.addEventListener("storage", e => {
+  if (e.key === "eduvision_master_courses" || e.key === "eduvision_universities_master" || e.key === "eduvision_master_universities") {
+    renderCoursePage();
+  }
+});
+
+document.getElementById("applyForm")?.addEventListener("submit", async e => {
+  e.preventDefault();
+  const b = document.getElementById("submitBtn");
+  const originalText = b ? b.textContent : "Submit – Get Free Counselling";
+  if (b) { b.textContent = "⏳ Submitting..."; b.disabled = true; }
+
+  const form = e.target;
+  const nameVal = (form.querySelector('[name="full_name"], [name="name"]')?.value || '').trim();
+  const phoneVal = (form.querySelector('[name="mobile"], [name="phone"]')?.value || '').trim();
+  const cityVal = (form.querySelector('[name="city"]')?.value || '').trim();
+  const courseVal = (form.querySelector('[name="course"]')?.value || document.getElementById('formCourseName')?.value || '').trim();
+  const modeVal = (form.querySelector('[name="mode"]')?.value || '').trim();
+  const eduVal = (form.querySelector('[name="education"]')?.value || '').trim();
+
+  try {
+    if (window.EduVisionWebForm && typeof window.EduVisionWebForm.submit === 'function') {
+      const res = await window.EduVisionWebForm.submit({
+        full_name: nameVal,
+        phone: phoneVal,
+        city: cityVal,
+        course_name: courseVal,
+        message: `Preferred Mode: ${modeVal || 'Not specified'} | Current Education: ${eduVal || 'Not specified'}`,
+        form_type: 'course_details_apply'
+      });
+      form.style.display = "none";
+      const s = document.getElementById("formSuccess");
+      if (s) s.style.display = "block";
+    } else {
+      throw new Error('Form engine unavailable');
+    }
+  } catch (err) {
+    if (b) { b.textContent = originalText; b.disabled = false; }
+    alert('❌ ' + (err.message || 'Something went wrong. Please try again or contact us on WhatsApp.'));
+  }
+});
+
+let scrolled = false;
+window.addEventListener("scroll", () => {
+  if (!scrolled) {
+    requestAnimationFrame(() => {
+      const nav = document.querySelector("nav");
+      if (nav) nav.style.borderBottomColor = window.scrollY > 50 ? "rgba(212,175,55,0.3)" : "rgba(212,175,55,0.18)";
+      scrolled = false;
+    });
+    scrolled = true;
+  }
+}, { passive: true });
+</script>
+<script src="assets/js/web_form_client.js"></script>
+<script src="animations/reveal.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- EDUVISION BULLETPROOF UNIVERSAL LIVE SYNC ENGINE -->
+
+<script>
+(function() {
+  function applyLiveFeeSync() {
+    try {
+      const rawCustomTables = localStorage.getItem('eduvision_custom_tables');
+      if (!rawCustomTables) return;
+      const customTables = JSON.parse(rawCustomTables);
+
+      const currentUrl = (window.location.href || '').toLowerCase();
+      const currentPath = (window.location.pathname || '').toLowerCase();
+
+      // Find the exact table key for this university file
+      let activeRows = null;
+      for (const key in customTables) {
+        const kLower = key.toLowerCase();
+        if (currentUrl.includes(kLower) || currentPath.includes(kLower)) {
+          activeRows = customTables[key];
+          break;
+        }
+      }
+
+      if (!activeRows || !Array.isArray(activeRows)) return;
+
+      // Find the main fee matrix table
+      const allTables = document.querySelectorAll('table');
+      let mainTable = null;
+      for (const t of allTables) {
+        if (!t.innerText.includes('Other Charges') && t.querySelectorAll('tr').length > 1) {
+          mainTable = t;
+          break;
+        }
+      }
+      if (!mainTable) return;
+
+      const tbody = mainTable.querySelector('tbody') || mainTable;
+      const existingDataRows = [];
+      
+      tbody.querySelectorAll('tr').forEach(tr => {
+        if (!tr.querySelector('th') && !tr.classList.contains('fee-dept-row') && !tr.closest('table').innerText.includes('Other Charges')) {
+          existingDataRows.push(tr);
+        }
+      });
+
+      // 1. Update existing rows with 100% exact index isolation
+      activeRows.forEach((rowData, idx) => {
+        if (!rowData || !rowData.cells) return;
+
+        if (idx < existingDataRows.length) {
+          const tr = existingDataRows[idx];
+          const cells = tr.querySelectorAll('td');
+          rowData.cells.forEach((val, cIdx) => {
+            if (cIdx < cells.length) {
+              const currentVal = cells[cIdx].textContent.trim();
+              if (currentVal !== val && val !== '') {
+                // If cell contains inner tags like strong or span, preserve structure
+                if (cells[cIdx].querySelector('strong')) {
+                  cells[cIdx].querySelector('strong').textContent = val;
+                } else if (cells[cIdx].querySelector('span')) {
+                  cells[cIdx].querySelector('span').textContent = val;
+                } else {
+                  cells[cIdx].textContent = val;
+                }
+              }
+            }
+          });
+        } else {
+          // 2. Dynamically append NEW course rows added from Admin Dashboard!
+          const tr = document.createElement('tr');
+          tr.className = 'eduvision-dynamic-added-row';
+          tr.style.animation = 'fadeIn 0.3s ease';
+
+          rowData.cells.forEach((val, cIdx) => {
+            const td = document.createElement('td');
+            td.textContent = val;
+            td.style.padding = '10px 14px';
+            if (cIdx === 0) {
+              td.style.fontWeight = 'bold';
+              td.style.color = '#38bdf8';
+            }
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        }
+      });
+
+      // 3. Remove rows if admin deleted them
+      if (existingDataRows.length > activeRows.length) {
+        for (let i = activeRows.length; i < existingDataRows.length; i++) {
+          if (existingDataRows[i] && existingDataRows[i].classList.contains('eduvision-dynamic-added-row')) {
+            existingDataRows[i].remove();
+          }
+        }
+      }
+
+    } catch (e) {
+      console.warn("Live Fee Sync notice:", e);
+    }
+  }
+
+  // Run on load and listen for real-time changes
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyLiveFeeSync);
+  } else {
+    applyLiveFeeSync();
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'eduvision_custom_tables' || e.key === 'eduvision_custom_other_charges') {
+      applyLiveFeeSync();
+    }
+  });
+})();
+</script>
+
+
+</body>
+</html>

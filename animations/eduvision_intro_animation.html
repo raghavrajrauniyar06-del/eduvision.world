@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Official Apple "Eduvision" — 1:1 Match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #000000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ═══ MASTER STAGE ═══ */
+  #macStage {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1), filter 1.3s ease;
+  }
+
+  #macStage.dissolve {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(14px);
+    pointer-events: none;
+  }
+
+  /* Exact Apple Sonoma Blurred Landscape Wallpaper (1:1 Match) */
+  .wallpaper-bg {
+    position: absolute;
+    inset: -40px;
+    background: 
+      radial-gradient(ellipse 70% 55% at 50% 28%, #3e526a 0%, #1e2938 42%, #0e141c 78%),
+      radial-gradient(circle at 22% 42%, rgba(217, 145, 20, 0.42) 0%, transparent 52%),
+      radial-gradient(circle at 78% 44%, rgba(180, 83, 9, 0.38) 0%, transparent 54%),
+      radial-gradient(ellipse 90% 45% at 50% 88%, #05080c 0%, #000000 100%);
+    filter: blur(36px);
+    transform: scale(1.05);
+  }
+
+  /* ═══ SVG VECTOR STAGE ═══ */
+  .vector-stage {
+    position: relative;
+    z-index: 5;
+    width: 90vw;
+    max-width: 1160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vector-stage svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 4px 28px rgba(0, 0, 0, 0.55));
+  }
+
+  /* ═══ PURE GPU FLUID LETTER-WRITING MOTION ═══ */
+
+  #p0 {
+    stroke-dasharray: 1770;
+    stroke-dashoffset: 1770;
+    animation: drawPath_0 0.48s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.45s;
+  }
+  @keyframes drawPath_0 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p1 {
+    stroke-dasharray: 1540;
+    stroke-dashoffset: 1540;
+    animation: drawPath_1 0.38s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.87s;
+  }
+  @keyframes drawPath_1 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p2 {
+    stroke-dasharray: 1300;
+    stroke-dashoffset: 1300;
+    animation: drawPath_2 0.32s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 1.21s;
+  }
+  @keyframes drawPath_2 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p3 {
+    stroke-dasharray: 940;
+    stroke-dashoffset: 940;
+    animation: drawPath_3 0.24s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 1.49s;
+  }
+  @keyframes drawPath_3 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p4 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawPath_4 0.24s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 1.70s;
+  }
+  @keyframes drawPath_4 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p5 {
+    stroke-dasharray: 1135;
+    stroke-dashoffset: 1135;
+    animation: drawPath_5 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 1.91s;
+  }
+  @keyframes drawPath_5 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p6 {
+    stroke-dasharray: 790;
+    stroke-dashoffset: 790;
+    animation: drawPath_6 0.20s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.16s;
+  }
+  @keyframes drawPath_6 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p7 {
+    opacity: 0;
+    transform-origin: center;
+    animation: popDot 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 2.33s;
+  }
+
+  #p8 {
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    animation: drawPath_8 0.08s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.33s;
+  }
+  @keyframes drawPath_8 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p9 {
+    stroke-dasharray: 735;
+    stroke-dashoffset: 735;
+    animation: drawPath_9 0.20s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.40s;
+  }
+  @keyframes drawPath_9 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p10 {
+    stroke-dasharray: 725;
+    stroke-dashoffset: 725;
+    animation: drawPath_10 0.18s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.58s;
+  }
+  @keyframes drawPath_10 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p11 {
+    stroke-dasharray: 790;
+    stroke-dashoffset: 790;
+    animation: drawPath_11 0.20s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.74s;
+  }
+  @keyframes drawPath_11 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p12 {
+    opacity: 0;
+    transform-origin: center;
+    animation: popDot 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 2.91s;
+  }
+
+  #p13 {
+    stroke-dasharray: 1825;
+    stroke-dashoffset: 1825;
+    animation: drawPath_13 0.38s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 2.91s;
+  }
+  @keyframes drawPath_13 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p14 {
+    stroke-dasharray: 390;
+    stroke-dashoffset: 390;
+    animation: drawPath_14 0.12s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 3.25s;
+  }
+  @keyframes drawPath_14 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  #p15 {
+    stroke-dasharray: 1115;
+    stroke-dashoffset: 1115;
+    animation: drawPath_15 0.32s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 3.35s;
+  }
+  @keyframes drawPath_15 {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes popDot {
+    0% { opacity: 0; transform: scale(0.3); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ═══ APPLE ARROW BUTTON ("Get Started") ═══ */
+  .apple-arrow-btn {
+    position: absolute;
+    bottom: 58px;
+    z-index: 20;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: btnFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 3.4s;
+  }
+
+  .apple-arrow-btn:hover {
+    background: rgba(0, 113, 227, 0.85);
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: scale(1.08) translateY(0);
+    box-shadow: 0 12px 36px rgba(0, 113, 227, 0.45);
+  }
+
+  .apple-arrow-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #ffffff;
+    stroke-width: 2.4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @keyframes btnFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Floating Apple Control Bar */
+  .control-bar {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100001;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: rgba(20, 20, 25, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .ctrl-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .ctrl-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .loop-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #ddd;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .loop-toggle input {
+    cursor: pointer;
+    accent-color: #0071e3;
+    width: 16px;
+    height: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="control-bar">
+  <button class="ctrl-btn" onclick="replayAnimation()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Replay
+  </button>
+  <label class="loop-toggle">
+    <input type="checkbox" id="autoLoopCheck" onchange="toggleLoop(this)">
+    Auto-Loop
+  </label>
+  <button class="ctrl-btn" onclick="triggerDissolve()" style="background: rgba(0, 113, 227, 0.3); border-color: rgba(0, 113, 227, 0.5);">
+    Trigger Exit Dissolve
+  </button>
+</div>
+
+<!-- Master Mac Sonoma Stage -->
+<div id="macStage">
+  <div class="wallpaper-bg"></div>
+
+  <div class="vector-stage">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="50 -100 4750 850">
+      <g transform="scale(1, -1) translate(0, -680)">
+    <path id="p0" d="M 420,680 C 350,705 280,705 210,660 C 140,610 130,520 180,450 C 220,395 280,390 340,410 C 370,420 375,395 340,385 C 260,360 170,330 130,220 C 90,110 130,15 220,-8 C 300,-8 380,10 460,50 C 530,90 600,160 660,223" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p1" d="M 980.63,307.00 C 961.09,353.00 920.69,388.00 851.69,388.00 C 741.69,388.00 660.97,278.00 653.34,160.00 C 646.60,52.00 695.31,-9.00 766.30,-8.00 C 866.28,-7.00 938.92,91.85 978.75,297.00 C 1004.45,429.43 1030.29,562.57 1056.00,695.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p2" d="M 1056.00,695.00 C 1035.59,589.67 1015.19,484.33 994.79,379.00 C 968.30,242.21 950.36,158.00 950.90,112.00 C 951.70,43.00 977.00,-4.00 1043.37,-4.00 C 1136.77,-4.00 1231.03,93.68 1259.02,211.85 C 1283.00,290.00 1323.00,379.28 1363.00,379.28" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p3" d="M 1363.00,379.28 C 1345.72,306.22 1334.14,247.00 1327.98,203.00 C 1322.87,171.00 1319.67,149.00 1318.42,122.00 C 1316.77,51.00 1356.60,0.00 1433.60,0.00 C 1545.60,0.00 1601.25,99.65 1635.00,263.09 C 1643.07,302.18 1651.86,339.48 1658.97,378.76" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p4" d="M 1658.97,378.76 C 1633.97,240.76 1613.60,158.00 1613.60,112.00 C 1613.60,43.00 1640.60,-4.00 1710.91,-4.00 C 1818.12,-4.00 1944.05,106.48 1975.90,279.73 C 1990.60,340.00 2017.60,379.28 2052.60,379.28" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p5" d="M 2052.60,379.28 C 2035.32,306.22 2023.74,247.00 2017.59,203.00 C 2012.48,171.00 2009.27,149.00 2008.03,122.00 C 2006.37,51.00 2046.20,0.00 2123.21,0.00 C 2235.21,0.00 2290.86,99.65 2324.60,263.09 C 2332.67,302.18 2341.46,339.48 2348.58,378.76 C 2362.21,385.00 2397.21,342.00 2437.21,342.00 C 2467.21,342.00 2492.21,368.00 2527.21,380.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p6" d="M 2527.21,380.00 C 2515.71,312.00 2505.13,256.00 2498.50,206.00 C 2494.75,178.00 2492.52,149.00 2492.52,112.00 C 2492.52,43.00 2521.21,-4.00 2592.34,-4.00 C 2691.06,-4.00 2789.27,103.97 2817.27,222.96" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p7" d="M 2566.05,589.00 C 2566.05,589.00 2566.05,589.00 2566.05,589.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p8" d="M 2817.27,222.96 C 2841.25,295.00 2866.25,365.00 2950.27,409.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p9" d="M 2940.66,376.65 C 3059.66,307.65 3118.27,232.00 3118.27,139.00 C 3118.27,62.00 3055.27,-2.00 2959.27,-2.00 C 2885.27,-2.00 2832.27,43.00 2811.27,84.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p10" d="M 2924.07,1.52 C 3134.04,-41.42 3317.27,67.91 3361.49,222.96 C 3377.27,280.00 3407.27,380.00 3437.27,380.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p11" d="M 3437.27,380.00 C 3425.78,312.00 3415.19,256.00 3408.57,206.00 C 3404.81,178.00 3402.58,149.00 3402.58,112.00 C 3402.58,43.00 3431.27,-4.00 3502.40,-4.00 C 3601.13,-4.00 3699.34,103.97 3727.34,222.96" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p12" d="M 3476.12,589.00 C 3476.12,589.00 3476.12,589.00 3476.12,589.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p13" d="M 3727.34,210.49 C 3765.16,318.00 3812.16,385.00 3910.16,385.00 C 3991.16,385.00 4055.16,325.00 4055.16,212.00 C 4055.16,87.00 3974.06,-7.00 3871.58,-8.00 C 3781.40,-9.00 3722.16,64.00 3728.16,174.00 C 3735.16,296.00 3809.16,385.00 3906.16,385.00 C 3962.16,385.00 4009.20,360.11 4046.16,333.00 C 4146.38,259.89 4223.59,305.07 4253.16,377.36" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p14" d="M 4253.16,380.00 C 4234.16,253.00 4218.16,128.00 4198.16,1.00" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="p15" d="M 4211.79,90.95 C 4239.32,278.88 4323.16,388.00 4423.16,388.00 C 4493.16,388.00 4529.16,344.00 4529.16,277.00 C 4529.16,192.00 4470.16,91.00 4491.16,-4.00 C 4512.00,-4.00 4556.91,41.98 4720.66,98.96" fill="none" stroke="white" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+
+      </g>
+    </svg>
+  </div>
+
+  <!-- Apple "Get Started" Arrow Button -->
+  <button class="apple-arrow-btn" id="appleArrowBtn" onclick="triggerDissolve()" title="Continue to Website">
+    <svg viewBox="0 0 24 24">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>
+
+<script>
+  let loopInterval = null;
+
+  function replayAnimation() {
+    const stage = document.getElementById('macStage');
+    stage.classList.remove('dissolve');
+    
+    // Trigger DOM reflow to re-fire CSS @keyframes
+    const svg = stage.querySelector('svg');
+    const newSvg = svg.cloneNode(true);
+    svg.parentNode.replaceChild(newSvg, svg);
+
+    // Reset button animation
+    const btn = document.getElementById('appleArrowBtn');
+    btn.style.animation = 'none';
+    btn.offsetHeight; /* trigger reflow */
+    btn.style.animation = null;
+  }
+
+  function toggleLoop(cb) {
+    if (cb.checked) {
+      loopInterval = setInterval(() => {
+        replayAnimation();
+      }, 5500);
+    } else {
+      clearInterval(loopInterval);
+    }
+  }
+
+  function triggerDissolve() {
+    const stage = document.getElementById('macStage');
+    stage.classList.add('dissolve');
+    setTimeout(() => {
+      alert('Dissolve completed! Website content revealed gracefully.');
+    }, 1300);
+  }
+</script>
+
+</body>
+</html>

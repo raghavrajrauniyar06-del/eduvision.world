@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVision — Option 1: Liquid Glass Prism Reveal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  :root { --ease-apple: cubic-bezier(0.16, 1, 0.3, 1); }
+  body { background: #000000; color: #f5f5f7; font-family: 'DM Sans', sans-serif; overflow-x: hidden; min-height: 100vh; }
+
+  /* FLOATING CONTROLS */
+  .apple-controls {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 99999999;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(14, 14, 18, 0.92); backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(232, 180, 42, 0.2);
+    padding: 8px 18px; border-radius: 999px; font-size: 13px;
+  }
+  .active-badge {
+    background: linear-gradient(135deg, #f7d268, #c9932a);
+    color: #000; font-weight: 800; font-size: 12px;
+    padding: 6px 14px; border-radius: 999px; display: flex; align-items: center; gap: 6px;
+  }
+  .ctrl-btn {
+    background: rgba(255, 255, 255, 0.08); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15); padding: 6px 14px;
+    border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { background: rgba(255, 255, 255, 0.18); transform: translateY(-1px); }
+  .ctrl-sep { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.15); }
+
+  /* WEBSITE STYLES */
+  .site-canvas {
+    min-height: 100vh; display: flex; flex-direction: column; background: #000000; position: relative;
+    opacity: 0; filter: blur(10px); transform: scale(0.985);
+    transition: opacity 1.3s var(--ease-apple), filter 1.3s var(--ease-apple), transform 1.3s var(--ease-apple);
+  }
+  .site-canvas.revealed { opacity: 1; filter: blur(0); transform: scale(1); }
+
+  .navbar {
+    height: 86px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6vw; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(28px);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { height: 52px; width: auto; filter: drop-shadow(0 2px 14px rgba(232, 180, 42, 0.35)); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: #86868b; text-decoration: none; font-size: 14.5px; font-weight: 500; }
+  .nav-cta {
+    background: linear-gradient(135deg, #f7d268, #c9932a); color: #000;
+    font-weight: 700; font-size: 13.5px; padding: 11px 26px; border-radius: 999px; border: none; cursor: pointer;
+  }
+
+  .hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 110px 24px; position: relative; overflow: hidden;
+  }
+  .ambient-glow {
+    position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%);
+    width: 850px; height: 500px; background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.2) 0%, transparent 70%); filter: blur(80px);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; background: rgba(232, 180, 42, 0.08);
+    border: 1px solid rgba(232, 180, 42, 0.28); color: #f7d268; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.14em; padding: 7px 22px; border-radius: 999px; margin-bottom: 28px; text-transform: uppercase;
+  }
+  .h1 {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 7vw, 92px); font-weight: 700;
+    line-height: 1.05; max-width: 1020px; margin-bottom: 24px; color: #f5f5f7;
+  }
+  .h1 em {
+    font-style: italic; background: linear-gradient(135deg, #ffffff 0%, #fff1cc 35%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .desc { font-size: clamp(17px, 1.9vw, 21px); color: #86868b; max-width: 680px; line-height: 1.6; margin-bottom: 42px; }
+  .hero-cta {
+    background: linear-gradient(135deg, #f7d268, #c9932a); color: #000; font-weight: 700;
+    font-size: 15.5px; padding: 17px 38px; border-radius: 999px; border: none; cursor: pointer;
+  }
+
+  /* QUOTE CAPSULE */
+  .quote-capsule {
+    margin-top: 36px; max-width: 680px; padding: 16px 38px; text-align: center;
+    background: rgba(18, 18, 24, 0.6); backdrop-filter: blur(36px) saturate(180%);
+    -webkit-backdrop-filter: blur(36px) saturate(180%);
+    border: 1px solid rgba(232, 180, 42, 0.28); border-radius: 999px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(232, 180, 42, 0.15);
+    opacity: 0; transform: translateY(22px); filter: blur(10px);
+    transition: opacity 0.9s var(--ease-apple), transform 0.9s var(--ease-apple), filter 0.9s var(--ease-apple);
+  }
+  .quote-capsule.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+  .q-eye { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; color: #f7d268; text-transform: uppercase; margin-bottom: 5px; }
+  .q-sentence { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.3vw, 24px); font-style: italic; font-weight: 600; color: #ffffff; line-height: 1.35; }
+  .q-author { font-size: 12.5px; font-weight: 600; color: #c9932a; letter-spacing: 0.08em; margin-top: 6px; }
+
+
+  #intro-stage {
+    position: fixed; inset: 0; z-index: 1000000; background: #000000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: none; transition: opacity 1.3s var(--ease-apple);
+  }
+  .stage-aura {
+    position: absolute; width: 850px; height: 520px;
+    background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.35) 0%, rgba(201, 147, 42, 0.08) 45%, transparent 72%);
+    filter: blur(65px);
+  }
+  .glass-veil {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(20, 20, 26, 0.7) 0%, rgba(0, 0, 0, 0.95) 100%);
+    backdrop-filter: blur(40px); transition: opacity 1.2s var(--ease-apple);
+  }
+
+  .center-glider {
+    position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;
+    transform: translateY(0); transition: transform 1.15s var(--ease-apple);
+  }
+  .center-glider.glided-up { transform: translateY(-48px); }
+
+  .type-box {
+    display: flex; align-items: center; justify-content: center; height: 76px; min-width: 20px;
+  }
+  .txt-typed {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(48px, 6.5vw, 76px); font-weight: 800; letter-spacing: 0.16em;
+    padding-left: 0.16em;
+    background: linear-gradient(135deg, #ffffff 0%, #fff2cc 30%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(232, 180, 42, 0.5));
+  }
+  .laser-beam {
+    width: 3.5px; height: 58px; background: #ffffff;
+    box-shadow: 0 0 18px #ffffff, 0 0 35px #f7d268, 0 0 50px #e8b42a;
+    border-radius: 2px; margin-left: 6px;
+    animation: blinkGlint 0.9s infinite;
+  }
+  @keyframes blinkGlint { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  .tagline-fade {
+    font-size: 14px; font-weight: 700; letter-spacing: 0.38em; color: #a8a49c;
+    text-transform: uppercase; margin-top: 10px; opacity: 0; transform: translateY(8px);
+    transition: opacity 0.8s var(--ease-apple), transform 0.8s var(--ease-apple);
+  }
+  .tagline-fade.visible { opacity: 1; transform: translateY(0); }
+
+  #intro-stage.fade-out { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="apple-controls">
+  <div class="active-badge">✦ Option 1: Liquid Glass Prism</div>
+  <button class="ctrl-btn" onclick="startOption1()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Replay
+  </button>
+  <button class="ctrl-btn" id="loopBtn" onclick="toggleLoop()">Loop: ON</button>
+  <div class="ctrl-sep"></div>
+  <a href="option2_keynote_split.html" class="ctrl-btn">Next: Option 2 ➔</a>
+</div>
+
+
+<div class="site-canvas" id="mainWebsite">
+  <header class="navbar">
+    <a href="#" class="brand">
+      <img src="eduvision_correct_logo.png" alt="EduVision" class="nav-logo">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Universities</a></li>
+      <li><a href="#">Mentorship</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <button class="nav-cta">Book Free Session 🔑</button>
+  </header>
+
+  <main class="hero">
+    <div class="ambient-glow"></div>
+    <div class="eyebrow">✦ India's Premier Education Partner</div>
+    <h1 class="h1">Shape Your Tomorrow With<br><em>Unrivalled Career Clarity</em></h1>
+    <p class="desc">1,500+ verified undergraduate & postgraduate degrees. Executive mentorship by CEO Miss Ishika Sharma.</p>
+    <div><button class="hero-cta">Explore 1500+ Courses ✦</button></div>
+  </main>
+</div>
+
+
+<div id="intro-stage">
+  <div class="stage-aura"></div>
+  <div class="glass-veil"></div>
+
+  <div class="center-glider" id="glider">
+    <div class="type-box">
+      <span class="txt-typed" id="typedOutput"></span>
+      <span class="laser-beam" id="laserBeam"></span>
+    </div>
+    <div class="tagline-fade" id="tagline">YOUR FUTURE STARTS HERE</div>
+
+    <div class="quote-capsule" id="quote">
+      <div class="q-eye">✦ Daily Inspiration ✦</div>
+      <div class="q-sentence">"Your education is an investment that pays the best dividends. Start today!"</div>
+      <div class="q-author">— Miss Ishika Sharma, Founder & CEO</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isLoop = true;
+  let loopTimer = null;
+  let animTimer = null;
+
+  const FULL_WORD = "EDUVISION";
+
+  function toggleLoop() {
+    isLoop = !isLoop;
+    document.getElementById('loopBtn').innerText = 'Loop: ' + (isLoop ? 'ON' : 'OFF');
+    if (isLoop) startOption1();
+    else clearTimeout(loopTimer);
+  }
+
+  function startOption1() {
+    clearTimeout(animTimer);
+    clearTimeout(loopTimer);
+
+    const stage = document.getElementById('intro-stage');
+    const glider = document.getElementById('glider');
+    const typed = document.getElementById('typedOutput');
+    const laser = document.getElementById('laserBeam');
+    const tag = document.getElementById('tagline');
+    const q = document.getElementById('quote');
+    const site = document.getElementById('mainWebsite');
+
+    // Reset
+    stage.style.display = 'flex';
+    stage.classList.remove('fade-out');
+    site.classList.remove('revealed');
+    glider.classList.remove('glided-up');
+    tag.classList.remove('visible');
+    q.classList.remove('visible');
+    laser.style.display = 'inline-block';
+    typed.innerText = '';
+
+    // Step 1: Types 'E' -> 'ED' -> 'EDU' -> ... in center
+    let charIndex = 0;
+    function typeStep() {
+      if (charIndex <= FULL_WORD.length) {
+        typed.innerText = FULL_WORD.substring(0, charIndex);
+        charIndex++;
+        setTimeout(typeStep, 95);
+      } else {
+        // Typing complete!
+        laser.style.display = 'none';
+        tag.classList.add('visible');
+
+        // Step 2: Glides UP
+        setTimeout(() => {
+          glider.classList.add('glided-up');
+
+          // Quote appears
+          setTimeout(() => {
+            q.classList.add('visible');
+
+            // Step 3: Hold 2.8s to read, then liquid glass dissolves to website
+            animTimer = setTimeout(() => {
+              stage.classList.add('fade-out');
+              site.classList.add('revealed');
+
+              setTimeout(() => {
+                stage.style.display = 'none';
+
+                // Auto-loop after 4s on website
+                if (isLoop) {
+                  loopTimer = setTimeout(startOption1, 4000);
+                }
+              }, 1300);
+
+            }, 2800);
+
+          }, 400);
+
+        }, 350);
+      }
+    }
+
+    setTimeout(typeStep, 300);
+  }
+
+  window.onload = startOption1;
+</script>
+</body>
+</html>

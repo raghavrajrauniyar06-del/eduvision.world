@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <title>EduVision Associate Partner Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../animations/animations.css">
+  
+  <!-- Supabase & Central Permission Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --bg-card: rgba(12, 18, 32, 0.85);
+      --bg-card-hover: rgba(20, 28, 48, 0.95);
+      --sidebar-bg: #04070d;
+      --gold: #c9932a;
+      --gold-light: #f7d377;
+      --gold-bright: #fef08a;
+      --gold-gradient: linear-gradient(135deg, #fff0c4 0%, #f7d377 40%, #c9932a 80%, #8a6015 100%);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border-gold: rgba(247, 211, 119, 0.2);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      --accent-purple: #a855f7;
+      --accent-purple-glow: rgba(168, 85, 247, 0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+    
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(201, 147, 42, 0.06) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(247, 211, 119, 0.15); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(247, 211, 119, 0.3); }
+
+    /* Global Full-Width Layout */
+    .app-container {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    /* SECURITY GUARD OVERLAY */
+    #securityGuardOverlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #070b12; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+
+    /* SIDEBAR (Dark Obsidian 280px) */
+    aside.sidebar {
+      width: 280px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-shrink: 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    /* Profile Header Box */
+    .sidebar-user-box {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(12, 18, 32, 0.6);
+    }
+
+    .user-avatar-sq {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--gold-gradient);
+      color: #070b12;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(201, 147, 42, 0.25);
+    }
+
+    .user-meta-info h4 {
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .user-meta-info p {
+      color: var(--gold-light);
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Sidebar Navigation Menu */
+    .sidebar-menu {
+      list-style: none;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .sidebar-menu li a:hover, .sidebar-menu li.active a {
+      background: rgba(201, 147, 42, 0.08);
+      color: #ffffff;
+      border-color: rgba(247, 211, 119, 0.15);
+      transform: translateX(4px);
+    }
+
+    .sidebar-menu li.active a {
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.15), rgba(138, 96, 21, 0.08));
+      border-color: rgba(247, 211, 119, 0.25);
+      color: var(--gold-light);
+    }
+
+    .menu-link-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-link-inner i {
+      font-size: 0.95rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .arrow-icon {
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      opacity: 0.7;
+    }
+
+    /* Bottom Actions */
+    .sidebar-bottom {
+      padding: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-side-action {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.02);
+      color: #f1f5f9;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-side-action.signout {
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.15);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .btn-side-action.signout:hover {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    .btn-side-action.website:hover {
+      background: rgba(201, 147, 42, 0.1);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+    }
+
+    /* MAIN CONTENT WORKSPACE AREA */
+    main.workspace {
+      flex: 1;
+      padding: 28px 36px;
+      overflow-y: auto;
+      width: calc(100vw - 280px);
+    }
+
+    /* Modules Display Control */
+    .module-view {
+      display: none;
+    }
+    .module-view.active {
+      display: block;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Welcome Header Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, #f7d377 0%, #c9932a 50%, #8a6015 100%);
+      border-radius: 18px;
+      padding: 24px 32px;
+      color: #070b12;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(201, 147, 42, 0.2);
+    }
+
+    .welcome-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .welcome-text p {
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #d97706);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-add-lead {
+      padding: 11px 22px;
+      border-radius: 30px;
+      background: #070b12;
+      color: #f7d377;
+      border: 1.5px solid var(--gold-light);
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-add-lead:hover {
+      transform: translateY(-1px);
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    /* KPI METRICS GRID (8 Cards) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.15);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-gold);
+      box-shadow: 0 14px 32px -4px rgba(0, 0, 0, 0.55), 0 0 20px rgba(247, 211, 119, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    }
+
+    .kpi-icon-box {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon-1 { background: rgba(148, 163, 184, 0.12); border: 1px solid rgba(148, 163, 184, 0.3); color: #cbd5e1; }
+    .kpi-icon-2 { background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+    .kpi-icon-3 { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; }
+    .kpi-icon-4 { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; }
+    .kpi-icon-5 { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
+    .kpi-icon-6 { background: rgba(120, 113, 108, 0.12); border: 1px solid rgba(120, 113, 108, 0.3); color: #a8a29e; }
+    .kpi-icon-7 { background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.3); color: #c084fc; }
+    .kpi-icon-8 { background: rgba(236, 72, 153, 0.12); border: 1px solid rgba(236, 72, 153, 0.3); color: #f472b6; }
+
+    .kpi-info { flex: 1; min-width: 0; }
+    .kpi-label { font-size: 0.65rem; color: var(--muted); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kpi-value { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-top: 1px; }
+
+    /* 2-COLUMN LOWER DASHBOARD GRID */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .lower-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Glass Box Panels */
+    .glass-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .glass-box:hover {
+      border-color: rgba(247, 211, 119, 0.25);
+      box-shadow: 0 16px 40px -5px rgba(0, 0, 0, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    }
+
+    .table-hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .table-hdr-row h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .view-all-link {
+      color: var(--gold-light);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Data Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: left;
+    }
+
+    .data-table th {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 14px;
+      font-size: 0.82rem;
+      color: #f1f5f9;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .status-new { background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.3); color: #60a5fa; }
+    .status-contacted { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.3); color: #c084fc; }
+    .status-pending { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); color: #fbbf24; }
+    .status-review { background: rgba(6, 182, 212, 0.12); border-color: rgba(6, 182, 212, 0.3); color: #22d3ee; }
+    .status-processing { background: rgba(201, 147, 42, 0.12); border-color: rgba(247, 211, 119, 0.3); color: var(--gold-light); }
+    .status-confirmed { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3); color: #34d399; }
+    .status-rejected { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+    .status-cancelled { background: rgba(120, 113, 108, 0.12); border-color: rgba(120, 113, 108, 0.3); color: #a8a29e; }
+
+    /* Priority Badges */
+    .prio-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .prio-high { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .prio-medium { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .prio-low { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+
+    /* Contact Us Panel */
+    .contact-team-box {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .contact-team-box h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .manager-card {
+      background: rgba(7, 11, 18, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .manager-card h4 { color: #ffffff; font-size: 0.95rem; font-weight: 800; margin-bottom: 6px; }
+    .manager-phone { font-size: 0.8rem; color: var(--gold-light); display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
+    .team-table-title {
+      background: linear-gradient(90deg, #c9932a, #8a6015);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .team-grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(7, 11, 18, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+
+    .team-grid-table td {
+      padding: 10px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    .team-grid-table td strong { color: #ffffff; }
+
+    /* Modals & Forms */
+    .modal-overlay {
+      position: fixed; inset:0; z-index:9999;
+      background: rgba(4, 7, 13, 0.8);
+      backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #0d1322;
+      border: 1px solid var(--border-gold);
+      border-radius: 20px;
+      width: 90%; max-width: 580px;
+      max-height: 85vh; overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(201, 147, 42, 0.1);
+    }
+    .modal-hdr {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-hdr h3 { font-family: var(--font-heading); font-size: 1.15rem; color:#fff; font-weight: 800; }
+    .btn-modal-close {
+      background: none; border: none; font-size: 1.5rem; color: var(--muted); cursor: pointer;
+    }
+    .btn-modal-close:hover { color: #ef4444; }
+    .modal-body-scroll { padding: 20px 24px; overflow-y: auto; flex:1; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--gold-light);
+    }
+    .form-group select option { background: #0d1322; color:#fff; }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border-subtle); color: #fff;
+      padding: 10px 18px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+    /* Search & Filter bar for tables */
+    .filter-bar {
+      display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .search-input-wrapper {
+      position: relative; flex: 1; min-width: 240px;
+    }
+    .search-input-wrapper i {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem;
+    }
+    .search-input-wrapper input {
+      width: 100%; padding: 11px 14px 11px 38px;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
+    }
+    .search-input-wrapper input:focus { border-color: var(--gold-light); }
+
+    /* Marketing gallery */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
+    }
+    .creative-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px; overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .creative-card:hover { transform: translateY(-3px); }
+    .creative-img-placeholder {
+      height: 140px; background: linear-gradient(135deg, rgba(201, 147, 42, 0.1), rgba(168, 85, 247, 0.15));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; color: var(--gold-light); position: relative;
+    }
+    .creative-card-body { padding: 16px; }
+    .creative-card-body h4 { font-size: 0.88rem; color:#fff; font-weight: 700; margin-bottom: 6px; }
+    .creative-card-body p { font-size: 0.72rem; color: var(--muted); margin-bottom: 12px; }
+
+    /* Universities List Grid */
+    .univ-cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
+    }
+    .univ-card {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px;
+      transition: all 0.2s ease;
+    }
+    .univ-card:hover { border-color: var(--border-gold); transform: translateY(-2px); }
+    .univ-card-hdr { display: flex; align-items: center; gap: 12px; }
+    .univ-logo-placeholder {
+      width: 44px; height: 44px; border-radius: 10px; background: var(--gold-gradient);
+      color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .univ-card-title h4 { font-size: 0.95rem; color:#fff; font-weight: 800; }
+    .univ-card-title p { font-size: 0.7rem; color: var(--gold-light); font-weight: 600; margin-top: 2px; }
+
+    /* Training resources list */
+    .training-list { display: flex; flex-direction: column; gap: 12px; }
+    .training-item {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.2s;
+    }
+    .training-item:hover { background: rgba(255, 255, 255, 0.04); }
+    .training-info { display: flex; align-items: center; gap: 14px; }
+    .training-icon { font-size: 1.3rem; color: var(--gold-light); }
+    .training-text h4 { font-size: 0.88rem; color:#fff; font-weight: 700; }
+    .training-text p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    /* Mobile Hamburger Menu */
+    .mobile-header {
+      display: none; position: fixed; top:0; left:0; right:0; height: 56px;
+      background: rgba(7, 11, 20, 0.9); border-bottom: 1px solid var(--border-subtle);
+      z-index: 999; align-items: center; justify-content: space-between; padding: 0 16px;
+      backdrop-filter: blur(12px);
+    }
+    .mobile-nav-toggle {
+      background: none; border: none; color: #fff; font-size: 1.25rem; cursor: pointer;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .mobile-header { display: flex; }
+      aside.sidebar {
+        position: fixed; top: 56px; left: 0; height: calc(100vh - 56px);
+        transform: translateX(-100%); transition: transform 0.3s ease;
+      }
+      aside.sidebar.open { transform: translateX(0); }
+      main.workspace {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        padding: 76px 14px 24px 14px;
+        overflow-x: hidden;
+      }
+      .welcome-banner {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 16px !important;
+        padding: 20px !important;
+      }
+      .welcome-banner .btn-add-lead {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+      .welcome-text h1 {
+        font-size: 1.35rem !important;
+      }
+      .kpi-card {
+        padding: 14px;
+      }
+      .glass-box {
+        padding: 16px;
+        border-radius: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECURITY GUARD OVERLAY -->
+  <div id="securityGuardOverlay">
+    <div style="font-size: 2.2rem; margin-bottom: 12px; color: var(--gold-light);">🛡️</div>
+    <h3 style="color:#fff; font-family:var(--font-heading); font-weight: 700;">Authenticating Partner Workspace…</h3>
+    <p style="color:var(--muted); font-size:0.85rem; margin-top:4px;">EduVision Enterprise Security Guard</p>
+  </div>
+
+  <!-- MOBILE HEADER -->
+  <div class="mobile-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:28px; height:28px; border-radius:6px; background:var(--gold-gradient); color:#000; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.75rem;">EV</div>
+      <span style="font-weight:800; font-size:1.05rem; letter-spacing:0.5px; font-family:var(--font-heading);">EduVision</span>
+    </div>
+    <button class="mobile-nav-toggle" onclick="toggleMobileSidebar()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-user-box">
+        <div class="user-avatar-sq" id="avatarSq">AP</div>
+        <div class="user-meta-info">
+          <h4 id="sideNameDisplay">Partner Loading...</h4>
+          <p>Associate Partner</p>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="active" id="nav-dashboard"><a href="#" onclick="switchModule('dashboard', event)"><div class="menu-link-inner"><i class="fa-solid fa-chart-pie"></i> Dashboard</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-univ-courses"><a href="#" onclick="switchModule('univ-courses', event)"><div class="menu-link-inner"><i class="fa-solid fa-graduation-cap"></i> University Courses</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-univ-list"><a href="#" onclick="switchModule('univ-list', event)"><div class="menu-link-inner"><i class="fa-solid fa-building-columns"></i> University List</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-univ-fees"><a href="#" onclick="switchModule('univ-fees', event)"><div class="menu-link-inner"><i class="fa-solid fa-file-invoice-dollar"></i> University Course Fee</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-leads"><a href="#" onclick="switchModule('leads', event)"><div class="menu-link-inner"><i class="fa-solid fa-users"></i> Lead Management</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-creatives"><a href="#" onclick="switchModule('creatives', event)"><div class="menu-link-inner"><i class="fa-solid fa-images"></i> Marketing Creatives</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-training"><a href="#" onclick="switchModule('training', event)"><div class="menu-link-inner"><i class="fa-solid fa-chalkboard-user"></i> Training</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-free-courses"><a href="#" onclick="switchModule('free-courses', event)"><div class="menu-link-inner"><i class="fa-solid fa-gift"></i> Free Courses</div> <span class="arrow-icon">›</span></a></li>
+        <li id="nav-account"><a href="#" onclick="switchModule('account', event)"><div class="menu-link-inner"><i class="fa-solid fa-user-gear"></i> Account</div> <span class="arrow-icon">›</span></a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <button class="btn-side-action signout" onclick="logoutUser()">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+        <a href="../index.html" class="btn-side-action website">
+          <i class="fa-solid fa-globe"></i> Main Website
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="workspace">
+      
+      <!-- welcome top banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h1>Welcome back, <span id="welcomeUserDisplay">Partner</span>!</h1>
+          <p>Here you can track your students and admission status.</p>
+        </div>
+        <button class="btn-add-lead" onclick="openAddStudentModal()">
+          <i class="fa-solid fa-plus-circle"></i> Add New Student
+        </button>
+      </div>
+
+      <!-- MODULE 1: DASHBOARD -->
+      <section class="module-view active" id="mod-dashboard">
+        <!-- 8 STATS CARDS -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-1"><i class="fa-solid fa-address-book"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">All Leads</div>
+              <div class="kpi-value" id="stat-all-leads">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-2"><i class="fa-solid fa-arrows-spin"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Processing</div>
+              <div class="kpi-value" id="stat-processing">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-3"><i class="fa-solid fa-thumbs-up"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Positive</div>
+              <div class="kpi-value" id="stat-positive">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-4"><i class="fa-solid fa-fire"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Hot Leads</div>
+              <div class="kpi-value" id="stat-hot">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-5"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Admission Done</div>
+              <div class="kpi-value" id="stat-done">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-6"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Dead Leads</div>
+              <div class="kpi-value" id="stat-dead">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-7"><i class="fa-solid fa-clock"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Pending</div>
+              <div class="kpi-value" id="stat-pending">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon-box kpi-icon-8"><i class="fa-solid fa-percent"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">Conversion</div>
+              <div class="kpi-value" id="stat-conversion">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOWER DOUBLE GRID -->
+        <div class="lower-grid">
+          <!-- Recent Activities Table -->
+          <div class="glass-box">
+            <div class="table-hdr-row">
+              <h3>Recent Student Referrals</h3>
+              <a href="#" class="view-all-link" onclick="switchModule('leads', event)">View All →</a>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Course / University</th>
+                    <th>Date Added</th>
+                    <th>Funnel Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentLeadsTableBody">
+                  <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No student referrals submitted yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Contact Us Panel -->
+          <div class="glass-box contact-team-box">
+            <h3>Support Directory</h3>
+            
+            <div class="manager-card">
+              <h4 style="color:var(--gold-light); font-size:0.8rem; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px;">EduVision Helpdesk</h4>
+              <div class="manager-phone"><i class="fa-solid fa-phone"></i> +91 9264290397</div>
+              <div class="manager-phone"><i class="fa-solid fa-phone"></i> +91 9155050717</div>
+              <div class="manager-phone" style="font-size:0.75rem; margin-top:4px;"><i class="fa-solid fa-envelope"></i> support@eduvision.in</div>
+            </div>
+
+            <div>
+              <div class="team-table-title">Our Team Leaders</div>
+              <table class="team-grid-table">
+                <tbody>
+                  <tr>
+                    <td><strong>Vikash Kumar</strong></td>
+                    <td>9386014290</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sunny Khan</strong></td>
+                    <td>7491001004</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Yashwant Kumar</strong></td>
+                    <td>8102292997</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Meraj Alam</strong></td>
+                    <td>7481876865</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 2: UNIVERSITY COURSES -->
+      <section class="module-view" id="mod-univ-courses">
+        <div class="glass-box">
+          <div class="table-hdr-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Search Degree Courses</h3>
+              <p style="font-size:0.78rem; color:var(--muted); margin-top:2px;">Browse UGC approved courses from certified partner universities.</p>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="courseSearchInput" placeholder="Search by course name, e.g., MBA, B.Tech..." oninput="filterCoursesGrid()">
+            </div>
+            <select id="courseTypeFilter" onchange="filterCoursesGrid()" style="max-width:180px;">
+              <option value="ALL">All Categories</option>
+              <option value="Online">Online Degrees</option>
+              <option value="Regular">Regular Degrees</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course/Degree</th>
+                  <th>Duration</th>
+                  <th>Eligibility Matrix</th>
+                  <th>Fee Estimate</th>
+                  <th>University Affiliation</th>
+                </tr>
+              </thead>
+              <tbody id="coursesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 3: UNIVERSITY LIST -->
+      <section class="module-view" id="mod-univ-list">
+        <div class="glass-box" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:6px; font-family:var(--font-heading); font-size:1.3rem;">Affiliated Universities Directory</h3>
+          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">List of accredited offline and online universities with NAAC grading status.</p>
+          <div class="filter-bar" style="margin-bottom:20px;">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="univSearchInput" placeholder="Search by university name, location, or programs..." oninput="filterUniversitiesList()">
+            </div>
+            <select id="univCategoryFilter" onchange="filterUniversitiesList()" style="max-width:180px;">
+              <option value="ALL">All Categories</option>
+              <option value="Online">Online Degrees</option>
+              <option value="Regular">Regular Degrees</option>
+            </select>
+          </div>
+          <div class="univ-cards-grid" id="univListGrid"></div>
+        </div>
+      </section>
+
+      <!-- MODULE 4: COURSE FEE MATRIX -->
+      <section class="module-view" id="mod-univ-fees">
+        <div class="glass-box">
+          <div class="table-hdr-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Fee Synchronization Matrix</h3>
+              <p style="font-size:0.78rem; color:var(--muted); margin-top:2px;">Check program cost, registration charges, and EMI options.</p>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <select id="feeUnivSelect" onchange="renderFeeTable()" style="max-width:350px; flex:1;"></select>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course / Program</th>
+                  <th>Duration</th>
+                  <th>Annual / Total Fee</th>
+                  <th>EMI / Flexi Options</th>
+                </tr>
+              </thead>
+              <tbody id="feeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 5: MY STUDENTS / LEAD MANAGEMENT -->
+      <section class="module-view" id="mod-leads">
+        <div class="glass-box">
+          <div class="table-hdr-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Student Referral Registry</h3>
+              <p style="font-size:0.78rem; color:var(--muted); margin-top:2px;">Track admissions, verification status, and notes for all your candidates.</p>
+            </div>
+            <button class="btn-gold" onclick="openAddStudentModal()"><i class="fa-solid fa-plus"></i> Referral Student</button>
+          </div>
+          <div class="filter-bar">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="leadSearchInput" placeholder="Search by student name or contact details..." oninput="renderLeadsList()">
+            </div>
+            <select id="leadStatusFilter" onchange="renderLeadsList()" style="max-width:180px;">
+              <option value="ALL">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Documents Pending">Documents Pending</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Processing">Processing</option>
+              <option value="Admission Confirmed">Admission Confirmed</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Lead ID</th>
+                  <th>Candidate Name</th>
+                  <th>Phone / Email</th>
+                  <th>Target Affiliation</th>
+                  <th>Funnel Stage</th>
+                  <th>Priority</th>
+                  <th>Referral Date</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 6: MARKETING CREATIVES -->
+      <section class="module-view" id="mod-creatives">
+        <div class="glass-box">
+          <h3 style="margin-bottom:6px; font-family:var(--font-heading); font-size:1.3rem;">Marketing Collateral & Banners</h3>
+          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">Approved social creatives, flyers, and university brochures to boost student acquisition.</p>
+          <div class="gallery-grid" id="creativesGrid"></div>
+        </div>
+      </section>
+
+      <!-- MODULE 7: TRAINING & ONBOARDING -->
+      <section class="module-view" id="mod-training">
+        <div class="glass-box">
+          <h3 style="margin-bottom:6px; font-family:var(--font-heading); font-size:1.3rem;">Partner Certification & Training Guides</h3>
+          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">Onboarding files, university details, and document validation procedures.</p>
+          <div class="training-list" id="trainingList"></div>
+        </div>
+      </section>
+
+      <!-- MODULE 8: FREE COURSES -->
+      <section class="module-view" id="mod-free-courses">
+        <div class="glass-box">
+          <h3 style="margin-bottom:6px; font-family:var(--font-heading); font-size:1.3rem;">Free Professional Certification Courses</h3>
+          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">Enrich your higher education counseling skillset with self-paced certification tracks.</p>
+          <div class="gallery-grid" id="freeCoursesGrid"></div>
+        </div>
+      </section>
+
+      <!-- MODULE 9: ACCOUNT -->
+      <section class="module-view" id="mod-account">
+        <div class="glass-box" style="max-width:650px;">
+          <h3 style="margin-bottom:18px; font-family:var(--font-heading); font-size:1.3rem;">Partner Account Configurations</h3>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label>Partner Code</label>
+                <input type="text" id="acc_code" readonly style="background:rgba(255,255,255,0.02); color:var(--gold-light);">
+              </div>
+              <div class="form-group">
+                <label>Organization / Agency</label>
+                <input type="text" id="acc_org" readonly style="background:rgba(255,255,255,0.02);">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contact Manager</label>
+              <input type="text" id="acc_name" readonly style="background:rgba(255,255,255,0.02);">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label>Official Email</label>
+                <input type="text" id="acc_email" readonly style="background:rgba(255,255,255,0.02);">
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="acc_phone" readonly style="background:rgba(255,255,255,0.02);">
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label>Partner Tier</label>
+                <input type="text" id="acc_tier" readonly style="background:rgba(255,255,255,0.02); color:var(--accent-purple);">
+              </div>
+              <div class="form-group">
+                <label>Commission Percentage</label>
+                <input type="text" id="acc_commission" readonly style="background:rgba(255,255,255,0.02); color:#34d399;">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Location Profile</label>
+              <input type="text" id="acc_location" readonly style="background:rgba(255,255,255,0.02);">
+            </div>
+          </div>
+        </div>
+
+        <!-- Change Password Section (Partner Self-Service) -->
+        <div class="glass-box" style="max-width:650px; margin-top:20px; border:1px solid rgba(245,158,11,0.25);">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <div style="width:38px; height:38px; border-radius:10px; background:rgba(245,158,11,0.15); display:flex; align-items:center; justify-content:center; color:var(--gold-light); font-size:1.1rem;">
+              <i class="fa-solid fa-key"></i>
+            </div>
+            <div>
+              <h3 style="font-family:var(--font-heading); font-size:1.2rem; margin:0; color:#fff;">Security & Password Management</h3>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin:2px 0 0;">Update your Associate Partner login credentials. Only you can change your password.</p>
+            </div>
+          </div>
+
+          <form id="partnerChangePasswordForm" onsubmit="handlePartnerChangePassword(event)" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="form-group">
+              <label>Current Password *</label>
+              <div style="position:relative;">
+                <input type="password" id="current_partner_pwd" required placeholder="Enter current password" style="width:100%; padding-right:40px; box-sizing:border-box;">
+                <button type="button" onclick="togglePartnerAccPwd('current_partner_pwd', this)" title="Show/Hide Password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div class="form-group">
+                <label>New Password *</label>
+                <div style="position:relative;">
+                  <input type="password" id="new_partner_pwd" required minlength="6" placeholder="Min 6 characters" style="width:100%; padding-right:40px; box-sizing:border-box;">
+                  <button type="button" onclick="togglePartnerAccPwd('new_partner_pwd', this)" title="Show/Hide Password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px;">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Confirm New Password *</label>
+                <div style="position:relative;">
+                  <input type="password" id="confirm_partner_pwd" required minlength="6" placeholder="Re-type new password" style="width:100%; padding-right:40px; box-sizing:border-box;">
+                  <button type="button" onclick="togglePartnerAccPwd('confirm_partner_pwd', this)" title="Show/Hide Password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px;">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="partnerPwdStatus" style="display:none; font-size:0.82rem; padding:10px 14px; border-radius:8px;"></div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:4px;">
+              <button type="submit" id="btnUpdatePartnerPwd" class="btn-gold" style="padding:10px 22px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-shield-check"></i> Update Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal: Add New Student Lead -->
+  <div class="modal-overlay" id="leadCreateModal">
+    <div class="modal-card">
+      <div class="modal-hdr">
+        <h3>Submit Referral Student</h3>
+        <button class="btn-modal-close" onclick="closeAddStudentModal()">&times;</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form onsubmit="submitStudentLead(event)">
+          <div class="form-group">
+            <label>Student Full Name *</label>
+            <input type="text" id="sl_name" required placeholder="e.g. Ramesh Kumar">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="sl_email" required placeholder="e.g. ramesh@gmail.com">
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="text" id="sl_phone" required placeholder="e.g. 9876543210">
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label>Target University *</label>
+              <select id="sl_univ" required onchange="populateCoursesDropdown()"></select>
+            </div>
+            <div class="form-group">
+              <label>Target Course *</label>
+              <select id="sl_course" required></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Priority Level</label>
+            <select id="sl_priority">
+              <option value="High">High Priority (Hot)</option>
+              <option value="Medium" selected>Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Counselling Notes / Instructions</label>
+            <textarea id="sl_notes" rows="3" placeholder="Add specific student qualifications, background, or timing notes..."></textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
+            <button type="button" class="btn-outline" onclick="closeAddStudentModal()">Cancel</button>
+            <button type="submit" class="btn-gold">Submit Referral</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Dashboard Logic Script -->
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // Supabase Initialization & Helpers
+    // ═══════════════════════════════════════════════════════════════
+    const SUPABASE_URL = 'https://ewxvqpyusveiynplzxed.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
+    
+    let sb = null;
+    try {
+      if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch(e) { console.warn("Supabase load failed, offline mode active.", e); }
+
+    function getSb() {
+      return sb || window.supabaseClient || null;
+    }
+
+    function withTimeout(promise, ms = 15000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Query timeout')), ms))
+      ]);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Session State & Authentication Guard
+    // ═══════════════════════════════════════════════════════════════
+    let currentUser = null;
+    let allPartners = [];
+    let myLeads = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      validateRoleSession('partner');
+      
+      // Load directories
+      loadUniversitiesList();
+      loadMarketingCreatives();
+      loadTrainingGuides();
+      loadFreeCourses();
+
+      // Async loading of dynamic partner data & central universities database
+      await loadPartnerProfileAndSync();
+      await syncStudentLeads();
+      await loadAssociateUniversitiesFromDB();
+    });
+
+    function validateRoleSession(expectedRole) {
+      var raw = localStorage.getItem('eduvision_user');
+      var overlay = document.getElementById('securityGuardOverlay');
+
+      if (!raw) {
+        alert('❌ Session Expired or Unauthenticated! Redirecting to Login...');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        currentUser = JSON.parse(raw);
+        if (currentUser.status === 'Suspended') {
+          alert('🚫 Access Denied: Your partner portal access has been Suspended. Contact EduVision support.');
+          logoutUser();
+          return;
+        }
+        // Both 'partner' and 'associate' roles resolve to partner workspace
+        if (currentUser.role !== 'partner' && currentUser.role !== 'associate') {
+          alert('❌ Security Guard: Unauthorized access category detected! Redirecting to Student Dashboard...');
+          window.location.href = '../student/dashboard.html';
+          return;
+        }
+
+        const name = currentUser.name || 'Associate Partner';
+        document.getElementById('sideNameDisplay').textContent = name;
+        document.getElementById('welcomeUserDisplay').textContent = name;
+        
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('avatarSq').textContent = initials.substring(0, 2) || 'AP';
+
+        setTimeout(() => {
+          if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+          }
+        }, 300);
+      } catch(e) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('eduvision_user');
+      sessionStorage.removeItem('eduvision_pending_auth');
+      window.location.href = 'login.html';
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('appSidebar');
+      if (sidebar) sidebar.classList.toggle('open');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Sync Partner Account & Profile details
+    // ═══════════════════════════════════════════════════════════════
+    async function loadPartnerProfileAndSync() {
+      // Try to load partners from local cache
+      try {
+        const cached = localStorage.getItem('eduvision_partners');
+        if (cached) allPartners = JSON.parse(cached);
+      } catch(e) {}
+
+      // Try to sync with Supabase
+      const _sb = getSb();
+      if (_sb && typeof _sb.from === 'function') {
+        try {
+          const res = await withTimeout(_sb.from('associate_partners').select('*'), 10000);
+          if (res && !res.error && res.data) {
+            allPartners = res.data.map(dbp => ({
+              partner_id: dbp.partner_id,
+              id: dbp.partner_id,
+              partner_code: dbp.partner_code || dbp.partner_id,
+              organization_name: dbp.company_name || 'EduVision Partner',
+              contact_person: dbp.contact_person || dbp.company_name || '--',
+              email: dbp.email || '--',
+              phone: dbp.phone || '--',
+              tier: dbp.tier || 'Gold Agency',
+              commission_rate: dbp.commission_rate || '10%',
+              location: dbp.location || '--',
+              password: dbp.password || ''
+            }));
+            localStorage.setItem('eduvision_partners', JSON.stringify(allPartners));
+          }
+        } catch(e) { console.warn("Supabase partners sync failed:", e.message); }
+      }
+
+      // Match current partner info
+      const activePartner = allPartners.find(p => p.email === currentUser.email || p.phone === currentUser.phone || p.partner_id === currentUser.id);
+      if (activePartner) {
+        document.getElementById('acc_code').value = activePartner.partner_code || activePartner.partner_id;
+        document.getElementById('acc_org').value = activePartner.organization_name;
+        document.getElementById('acc_name').value = activePartner.contact_person;
+        document.getElementById('acc_email').value = activePartner.email;
+        document.getElementById('acc_phone').value = activePartner.phone;
+        document.getElementById('acc_tier').value = activePartner.tier;
+        document.getElementById('acc_commission').value = activePartner.commission_rate;
+        document.getElementById('acc_location').value = activePartner.location;
+      } else {
+        // Use user session values as defaults
+        document.getElementById('acc_code').value = currentUser.id || 'AP-USER';
+        document.getElementById('acc_org').value = 'EduVision Channel Partner';
+        document.getElementById('acc_name').value = currentUser.name;
+        document.getElementById('acc_email').value = currentUser.email || '--';
+        document.getElementById('acc_phone').value = currentUser.phone || '--';
+        document.getElementById('acc_tier').value = 'Gold Agency';
+        document.getElementById('acc_commission').value = '10%';
+        document.getElementById('acc_location').value = 'Not Mapped';
+      }
+    }
+
+    // ── PARTNER PASSWORD MANAGEMENT (SELF-SERVICE) ─────────────────
+    function togglePartnerAccPwd(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPwd = input.type === 'password';
+      input.type = isPwd ? 'text' : 'password';
+      const icon = btn.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('fa-eye', !isPwd);
+        icon.classList.toggle('fa-eye-slash', isPwd);
+      }
+    }
+
+    async function handlePartnerChangePassword(event) {
+      event.preventDefault();
+      const currentPwd = document.getElementById('current_partner_pwd').value.trim();
+      const newPwd = document.getElementById('new_partner_pwd').value.trim();
+      const confirmPwd = document.getElementById('confirm_partner_pwd').value.trim();
+      const statusEl = document.getElementById('partnerPwdStatus');
+      const btn = document.getElementById('btnUpdatePartnerPwd');
+
+      const showMsg = (msg, isErr = true) => {
+        if (!statusEl) return;
+        statusEl.style.display = 'block';
+        statusEl.style.background = isErr ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)';
+        statusEl.style.color = isErr ? '#f87171' : '#4ade80';
+        statusEl.style.border = isErr ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(34,197,94,0.3)';
+        statusEl.innerHTML = (isErr ? '<i class="fa-solid fa-circle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + msg;
+      };
+
+      if (!currentPwd) {
+        showMsg("Please enter your current password.");
+        return;
+      }
+      if (newPwd.length < 6) {
+        showMsg("New password must be at least 6 characters long.");
+        return;
+      }
+      if (newPwd !== confirmPwd) {
+        showMsg("New password and confirmation do not match.");
+        return;
+      }
+
+      // Read current partners from local cache
+      let partnersList = [];
+      try {
+        partnersList = JSON.parse(localStorage.getItem('eduvision_partners') || '[]');
+      } catch(e) {}
+
+      const partnerIdx = partnersList.findIndex(p => 
+        (currentUser.email && p.email === currentUser.email) || 
+        (currentUser.phone && p.phone === currentUser.phone) || 
+        (currentUser.id && (p.partner_id === currentUser.id || p.id === currentUser.id || p.partner_code === currentUser.id))
+      );
+
+      const activePartner = partnerIdx !== -1 ? partnersList[partnerIdx] : null;
+
+      // Verify current password if present
+      if (activePartner && activePartner.password && activePartner.password !== currentPwd) {
+        showMsg("Current password is incorrect. Please re-enter your existing password.");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+      }
+
+      try {
+        const targetPartnerId = activePartner?.partner_id || currentUser.id;
+
+        // 1. Update in Supabase
+        const _sb = getSb();
+        if (_sb && typeof _sb.from === 'function') {
+          try {
+            await _sb.from('associate_partners').update({ password: newPwd }).eq('partner_id', targetPartnerId);
+          } catch(dbErr) {
+            console.warn("Supabase password update error:", dbErr);
+          }
+        }
+
+        // 2. Update local partners cache
+        if (partnerIdx !== -1) {
+          partnersList[partnerIdx].password = newPwd;
+          localStorage.setItem('eduvision_partners', JSON.stringify(partnersList));
+          allPartners = partnersList;
+        }
+
+        // 3. Update active session user
+        if (currentUser) {
+          currentUser.password = newPwd;
+          localStorage.setItem('eduvision_user', JSON.stringify(currentUser));
+          try { sessionStorage.setItem('eduvision_active_session', JSON.stringify(currentUser)); } catch(e){}
+        }
+
+        document.getElementById('partnerChangePasswordForm').reset();
+        showMsg("Password updated successfully! Your new password is now permanently saved.", false);
+        alert("✓ Password updated successfully! Please use your new password for subsequent logins.");
+
+      } catch(err) {
+        showMsg("Failed to update password: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-shield-check"></i> Update Password';
+        }
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Sync Student Leads (Secured to Associate only)
+    // ═══════════════════════════════════════════════════════════════
+    async function syncStudentLeads() {
+      // 1. Load from local cache
+      try {
+        const local = localStorage.getItem('eduvision_leads');
+        if (local) {
+          myLeads = JSON.parse(local);
+        }
+      } catch(e) {}
+
+      // 2. Load from Supabase (if connected)
+      const _sb = getSb();
+      if (_sb && typeof _sb.from === 'function') {
+        try {
+          // Query leads filtered exactly by current associate_id to maintain security
+          const associateId = currentUser.id;
+          const { data, error } = await withTimeout(
+            _sb.from('leads').select('*').eq('associate_id', associateId).order('created_at', { ascending: false }),
+            10000
+          );
+          if (!error && data) {
+            // Replace local storage leads belonging to this associate with Supabase values
+            // Keep other associates' leads intact in localStorage (though client can't see them anyway)
+            let otherLeads = myLeads.filter(l => l.associate_id !== associateId);
+            const syncedLeads = data.map(dbLead => ({
+              lead_id: dbLead.lead_id,
+              student_name: dbLead.student_name || dbLead.full_name || 'Prospect',
+              email: dbLead.email || '--',
+              phone: dbLead.phone || '--',
+              university: dbLead.university || '--',
+              course: dbLead.course || dbLead.interested_course || '--',
+              status: dbLead.status || 'New',
+              priority: dbLead.priority || 'Medium',
+              notes: dbLead.notes || '',
+              associate_id: dbLead.associate_id,
+              created_at: dbLead.created_at || new Date().toISOString()
+            }));
+            
+            myLeads = [...otherLeads, ...syncedLeads];
+            localStorage.setItem('eduvision_leads', JSON.stringify(myLeads));
+          }
+        } catch(e) { console.warn("Supabase leads sync failed:", e.message); }
+      }
+
+      // Filter local leads strictly to only show current associate's students
+      myLeads = myLeads.filter(l => l.associate_id === currentUser.id);
+
+      // Render stats & lists
+      renderStats();
+      renderRecentActivityTable();
+      renderLeadsList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Statistics & Counters Rendering
+    // ═══════════════════════════════════════════════════════════════
+    function renderStats() {
+      const allLeads = myLeads.length;
+      
+      const processing = myLeads.filter(l => ['Processing', 'Under Review', 'Contacted'].includes(l.status)).length;
+      const positive = myLeads.filter(l => ['Admission Confirmed', 'Processing'].includes(l.status)).length;
+      const hot = myLeads.filter(l => l.priority === 'High').length;
+      const done = myLeads.filter(l => l.status === 'Admission Confirmed').length;
+      const dead = myLeads.filter(l => ['Cancelled', 'Rejected'].includes(l.status)).length;
+      const pending = myLeads.filter(l => ['New', 'Documents Pending'].includes(l.status)).length;
+      
+      const convRate = allLeads > 0 ? Math.round((done / allLeads) * 100) + '%' : '0%';
+
+      // Animate/Render counts
+      animateCounter('stat-all-leads', allLeads);
+      animateCounter('stat-processing', processing);
+      animateCounter('stat-positive', positive);
+      animateCounter('stat-hot', hot);
+      animateCounter('stat-done', done);
+      animateCounter('stat-dead', dead);
+      animateCounter('stat-pending', pending);
+      document.getElementById('stat-conversion').textContent = convRate;
+    }
+
+    function animateCounter(id, target) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = target;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Add Student modal & submission handlers
+    // ═══════════════════════════════════════════════════════════════
+    function openAddStudentModal() {
+      // Reset form
+      document.getElementById('sl_name').value = '';
+      document.getElementById('sl_email').value = '';
+      document.getElementById('sl_phone').value = '';
+      document.getElementById('sl_notes').value = '';
+      document.getElementById('sl_priority').value = 'Medium';
+
+      // Populate universities dropdown
+      const univSelect = document.getElementById('sl_univ');
+      if (univSelect) {
+        univSelect.innerHTML = allUniversities.map(u => `<option value="${escapeAttr(u.name)}">${u.name}</option>`).join('');
+        populateCoursesDropdown();
+      }
+
+      document.getElementById('leadCreateModal').classList.add('active');
+    }
+
+    function closeAddStudentModal() {
+      document.getElementById('leadCreateModal').classList.remove('active');
+    }
+
+    function populateCoursesDropdown() {
+      const univSelect = document.getElementById('sl_univ');
+      const courseSelect = document.getElementById('sl_course');
+      if (!univSelect || !courseSelect) return;
+
+      const selectedUnivName = univSelect.value;
+      const univ = allUniversities.find(u => u.name === selectedUnivName || u.code === selectedUnivName);
+      
+      let courses = [];
+      // 1. Resolve from live database courses
+      if (univ && allCourses && allCourses.length > 0) {
+        courses = allCourses
+          .filter(c => (c.university_id && univ.id && c.university_id === univ.id) || 
+                       (c.university_code && univ.code && c.university_code === univ.code) ||
+                       (c.university_name && c.university_name === selectedUnivName))
+          .map(c => c.course_name);
+      }
+
+      // 2. Resolve from programs list if courses table not yet synced
+      if (courses.length === 0 && univ && univ.programs) {
+        courses = univ.programs.split(',').map(s => s.trim()).filter(Boolean);
+      }
+
+      // 3. Fallback standard programs
+      if (courses.length === 0) {
+        courses = ['Online MBA', 'Online MCA', 'Online BBA', 'Online BCA', 'B.Tech CSE', 'M.Sc Data Science'];
+      }
+
+      // Deduplicate courses
+      courses = [...new Set(courses)];
+      courseSelect.innerHTML = courses.map(c => `<option value="${escapeAttr(c)}">${c}</option>`).join('');
+    }
+
+    async function submitStudentLead(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('sl_name').value.trim();
+      const email = document.getElementById('sl_email').value.trim();
+      const phone = document.getElementById('sl_phone').value.trim();
+      const univ = document.getElementById('sl_univ').value;
+      const course = document.getElementById('sl_course').value;
+      const priority = document.getElementById('sl_priority').value;
+      const notes = document.getElementById('sl_notes').value.trim();
+
+      const generatedId = 'LED-' + Math.floor(1000 + Math.random() * 9000);
+      const newLead = {
+        lead_id: generatedId,
+        student_name: name,
+        email: email,
+        phone: phone,
+        university: univ,
+        course: course,
+        status: 'New',
+        priority: priority,
+        notes: notes,
+        associate_id: currentUser.id,
+        created_at: new Date().toISOString()
+      };
+
+      // 1. Save to local state & localStorage
+      let allLeads = [];
+      try {
+        const cached = localStorage.getItem('eduvision_leads');
+        if (cached) allLeads = JSON.parse(cached);
+      } catch(e) {}
+      
+      allLeads.push(newLead);
+      localStorage.setItem('eduvision_leads', JSON.stringify(allLeads));
+
+      // 2. Save to Supabase (in background)
+      const _sb = getSb();
+      if (_sb && typeof _sb.from === 'function') {
+        try {
+          await _sb.from('leads').insert([{
+            lead_id: generatedId,
+            student_name: name,
+            email: email,
+            phone: phone,
+            university: univ,
+            interested_course: course,
+            status: 'New',
+            priority: priority,
+            notes: notes,
+            associate_id: currentUser.id
+          }]);
+        } catch(e) { console.warn("Supabase lead insert failed, stored locally:", e); }
+      }
+
+      closeAddStudentModal();
+      alert('✅ Student referral lead submitted successfully to EduVision processing queue!');
+      await syncStudentLeads();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Tables & Feeds Rendering
+    // ═══════════════════════════════════════════════════════════════
+    function renderRecentActivityTable() {
+      const tbody = document.getElementById('recentLeadsTableBody');
+      if (!tbody) return;
+
+      // Sort by date, show last 5 entries
+      const sorted = [...myLeads].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+      
+      if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No student referrals submitted yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = sorted.map(l => {
+        const statusClass = 'status-' + l.status.toLowerCase().replace(' ', '');
+        const dateStr = new Date(l.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        return `
+          <tr>
+            <td><strong>${l.student_name}</strong></td>
+            <td>
+              <div><strong>${l.course}</strong></div>
+              <div style="font-size:0.7rem; color:var(--muted);">${l.university}</div>
+            </td>
+            <td>${dateStr}</td>
+            <td><span class="status-badge ${statusClass}">${l.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.renderLeadsList = function() {
+      const tbody = document.getElementById('leadsTableBody');
+      if (!tbody) return;
+
+      const filterStatus = document.getElementById('leadStatusFilter')?.value || 'ALL';
+      const searchQuery = (document.getElementById('leadSearchInput')?.value || '').toLowerCase();
+
+      let filtered = myLeads.filter(l => {
+        const matchesStatus = (filterStatus === 'ALL' || l.status === filterStatus);
+        const matchesSearch = (l.student_name.toLowerCase().includes(searchQuery) || l.phone.includes(searchQuery) || l.email.toLowerCase().includes(searchQuery) || l.course.toLowerCase().includes(searchQuery));
+        return matchesStatus && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:30px;">No matching student referrals found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(l => {
+        const statusClass = 'status-' + l.status.toLowerCase().replace(' ', '');
+        const prioClass = 'prio-' + l.priority.toLowerCase();
+        const dateStr = new Date(l.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        
+        return `
+          <tr>
+            <td><strong style="font-family:var(--font-heading); color:var(--gold-light);">${l.lead_id}</strong></td>
+            <td><strong>${l.student_name}</strong></td>
+            <td>
+              <div>${l.phone}</div>
+              <div style="font-size:0.75rem; color:var(--muted);">${l.email}</div>
+            </td>
+            <td>
+              <div><strong>${l.course}</strong></div>
+              <div style="font-size:0.7rem; color:var(--muted);">${l.university}</div>
+            </td>
+            <td><span class="status-badge ${statusClass}">${l.status}</span></td>
+            <td><span class="prio-badge ${prioClass}">${l.priority}</span></td>
+            <td>${dateStr}</td>
+          </tr>
+        `;
+      }).join('');
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // University, Creatives, Training & Free Courses Directories
+    // ═══════════════════════════════════════════════════════════════
+    // Central Database Driven University & Course Engine (View-Only)
+    // ═══════════════════════════════════════════════════════════════
+    function escapeAttr(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    let allUniversities = [
+      { code: 'SANDIP-REG', name: 'Sandip University', category: 'Regular', naac: 'UGC & AICTE Approved • 250+ Acre Campus', location: 'Nashik, Maharashtra & Sijoul, Bihar', programs: 'B.Tech CSE, Civil, Mechanical, Law, B.Sc, MBA', fees: '₹1,20,000 / yr', emi: 'Semester Installments', logoImg: '../logos/sandipuniversity-edu-in-logo.png', brandText: 'SANDIP' },
+      { code: 'MANIPAL-01', name: 'Online Manipal University', category: 'Online', naac: 'NAAC A+ • UGC Approved', location: 'Jaipur, Rajasthan', programs: 'MBA, MCA, BBA, BCA, B.Com Online Degrees', fees: '₹1,50,000 Total', emi: '₹6,250/mo EMI', logoImg: '../logos/1770712107_MU_online.jpg', brandText: 'MANIPAL' },
+      { code: 'AMITY-ONL', name: 'Amity Online', category: 'Online', naac: 'NAAC A+ • WASC (USA) Accredited', location: 'Noida, Uttar Pradesh', programs: 'MBA, MCA, BBA, BCA, M.Com, MA Journalism', fees: '₹1,75,000 Total', emi: '₹7,290/mo EMI', logoImg: '../logos/niu-edu-in-logo.png', brandText: 'AMITY' },
+      { code: 'LPU-ONL', name: 'Lovely Professional University (LPU Online)', category: 'Online', naac: 'NAAC A++ • NIRF Top 30', location: 'Phagwara, Punjab', programs: 'MBA, MCA, M.Sc Data Science, BBA, BCA', fees: '₹1,30,000 Total', emi: '₹5,410/mo EMI', logoImg: '../logos/silveroakuni-ac-in-logo.png', brandText: 'LPU ONLINE' },
+      { code: 'CU-ONL', name: 'Chandigarh University Online', category: 'Online', naac: 'NAAC A+ • NIRF Rank #27', location: 'Mohali, Punjab', programs: 'MBA, MCA, M.Sc Data Science, BBA, BCA', fees: '₹1,35,000 Total', emi: '₹5,625/mo EMI', logoImg: '../logos/srmist-edu-in-logo.png', brandText: 'CHANDIGARH' },
+      { code: 'MUJ-ONL', name: 'Manipal University Jaipur Online', category: 'Online', naac: 'NAAC A+ • UGC-DEB Approved', location: 'Jaipur, Rajasthan', programs: 'MBA, MCA, BBA, BCA, B.Com, M.Com Online', fees: '₹1,50,000 Total', emi: '₹6,250/mo EMI', logoImg: '../logos/1770712107_MU_online.jpg', brandText: 'MANIPAL JAIPUR' },
+      { code: 'JAIN-ONL', name: 'Jain Online', category: 'Online', naac: 'NAAC A++ • Bangalore Campus', location: 'Bangalore, Karnataka', programs: 'MBA in FinTech, IT, AI, Marketing, BBA, MCA', fees: '₹1,60,000 Total', emi: '₹6,660/mo EMI', logoImg: '../logos/silveroakuni-ac-in-logo.png', brandText: 'JAIN ONLINE' },
+      { code: 'UPES-ONL', name: 'UPES Online', category: 'Online', naac: 'NAAC A • QS 5-Star Rated', location: 'Dehradun, Uttarakhand', programs: 'MBA Oil & Gas, Supply Chain, Logistics, BBA', fees: '₹1,50,000 Total', emi: '₹6,250/mo EMI', logoImg: '../logos/vgu-ac-in-logo.png', brandText: 'UPES ONLINE' },
+      { code: 'SHARDA-ONL', name: 'Sharda Online', category: 'Online', naac: 'NAAC A+ • Greater Noida', location: 'Greater Noida, Uttar Pradesh', programs: 'MBA, BBA, B.Com, BCA, MCA Online', fees: '₹1,20,000 Total', emi: '₹5,000/mo EMI', logoImg: '../logos/niu-edu-in-logo.png', brandText: 'SHARDA' },
+      { code: 'DYPATIL-ONL', name: 'DY Patil University Online', category: 'Online', naac: 'NAAC A++ • Pune & Navi Mumbai', location: 'Navi Mumbai, Maharashtra', programs: 'MBA in Hospital & Healthcare, Finance, BBA', fees: '₹1,40,000 Total', emi: '₹5,830/mo EMI', logoImg: '../logos/marwadiuniversity-ac-in-logo.png', brandText: 'DY PATIL' },
+      { code: 'PARUL-ONL', name: 'Parul University Online', category: 'Online', naac: 'NAAC A++ • Vadodara', location: 'Vadodara, Gujarat', programs: 'MBA, MCA, MSW, BBA, BCA, M.Com', fees: '₹95,000 Total', emi: '₹3,950/mo EMI', logoImg: '../logos/silveroakuni-ac-in-logo.png', brandText: 'PARUL' },
+      { code: 'SMU-ONL', name: 'Sikkim Manipal University', category: 'Online', naac: 'NAAC A+ • Pioneer in Distance/Online', location: 'Gangtok, Sikkim', programs: 'MBA, MCA, BBA, BCA, M.Sc IT', fees: '₹1,10,000 Total', emi: '₹4,580/mo EMI', logoImg: '../logos/1770712107_MU_online.jpg', brandText: 'SMU ONLINE' },
+      { code: 'NMIMS-ONL', name: 'NMIMS Online', category: 'Online', naac: 'NAAC A+ • Category 1 Autonomy', location: 'Mumbai, Maharashtra', programs: 'Executive MBA, Business Analytics, BBA', fees: '₹1,80,000 Total', emi: '₹7,500/mo EMI', logoImg: '../logos/marwadiuniversity-ac-in-logo.png', brandText: 'NMIMS' },
+      { code: 'AMRITA-ONL', name: 'Amrita Online', category: 'Online', naac: 'NAAC A++ • NIRF Rank #7', location: 'Coimbatore, Tamil Nadu', programs: 'MBA, MCA, BCA, B.Com, M.Com', fees: '₹1,40,000 Total', emi: '₹5,830/mo EMI', logoImg: '../logos/srmist-edu-in-logo.png', brandText: 'AMRITA AHEAD' },
+      { code: 'GLA-ONL', name: 'GLA University', category: 'Online', naac: 'NAAC A+ • 12B UGC Status', location: 'Mathura, Uttar Pradesh', programs: 'BBA, B.Com, BCA, MBA, MCA Online', fees: '₹85,000 Total', emi: '₹3,540/mo EMI', logoImg: '../logos/mangalayatan-in-logo.jpg', brandText: 'GLA UNIVERSITY' },
+      { code: 'VGU-ONL', name: 'VGU Online (Vivekananda Global)', category: 'Online', naac: 'NAAC A+ • Jaipur Campus', location: 'Jaipur, Rajasthan', programs: 'MBA, MCA, BCA, BBA, M.Sc AI & ML', fees: '₹90,000 Total', emi: '₹3,750/mo EMI', logoImg: '../logos/vgu-ac-in-logo.png', brandText: 'VGU ONLINE' },
+      { code: 'GALGOTIAS-ONL', name: 'Galgotias University', category: 'Online', naac: 'NAAC A+ • Top Placements', location: 'Greater Noida, Uttar Pradesh', programs: 'MBA, MCA, BBA, BCA, B.Com Online', fees: '₹1,15,000 Total', emi: '₹4,790/mo EMI', logoImg: '../logos/niu-edu-in-logo.png', brandText: 'GALGOTIAS' },
+      { code: 'ALLIANCE-ONL', name: 'Alliance University', category: 'Online', naac: 'NAAC A+ • Bangalore Business School', location: 'Bangalore, Karnataka', programs: 'Executive PGDM, MBA, Global Management', fees: '₹1,90,000 Total', emi: '₹7,910/mo EMI', logoImg: '../logos/silveroakuni-ac-in-logo.png', brandText: 'ALLIANCE' },
+      { code: 'VIGNAN-ONL', name: 'Vignan University', category: 'Online', naac: 'NAAC A+ • Andhra Pradesh', location: 'Guntur, Andhra Pradesh', programs: 'MBA, MCA, BBA, BCA Online', fees: '₹95,000 Total', emi: '₹3,950/mo EMI', logoImg: '../logos/srmist-edu-in-logo.png', brandText: 'VIGNAN' },
+      { code: 'KUK-ONL', name: 'Kurukshetra University', category: 'Online', naac: 'NAAC A++ • State Govt Premier', location: 'Kurukshetra, Haryana', programs: 'BA, B.Com, MA, M.Com, MBA, MCA', fees: '₹55,000 Total', emi: '₹2,290/mo EMI', logoImg: '../logos/subharti-org-logo.png', brandText: 'KURUKSHETRA' },
+      { code: 'ANDHRA-ONL', name: 'Andhra University', category: 'Online', naac: 'NAAC A • Premier State Univ', location: 'Visakhapatnam, Andhra Pradesh', programs: 'B.Com, BBA, MA, M.Com, MBA, MCA', fees: '₹60,000 Total', emi: '₹2,500/mo EMI', logoImg: '../logos/subharti-org-logo.png', brandText: 'ANDHRA UNIV' },
+      { code: 'MAHE-ONL', name: 'MAHE (Manipal Academy of Higher Education)', category: 'Online', naac: 'Institute of Eminence • NAAC A++', location: 'Manipal, Karnataka', programs: 'M.Sc Data Science, PG Diploma, MBA, M.Com', fees: '₹2,10,000 Total', emi: '₹8,750/mo EMI', logoImg: '../logos/1770712107_MU_online.jpg', brandText: 'MAHE MANIPAL' },
+      { code: 'UTTARANCHAL-ONL', name: 'Uttaranchal University', category: 'Online', naac: 'NAAC A+ • Dehradun', location: 'Dehradun, Uttarakhand', programs: 'MBA, MCA, BBA, BCA, BA Online', fees: '₹88,000 Total', emi: '₹3,660/mo EMI', logoImg: '../logos/tulas-new.png', brandText: 'UTTARANCHAL' },
+      { code: 'SHOOLINI-ONL', name: 'Shoolini University', category: 'Online', naac: 'NAAC A+ • QS World Ranked', location: 'Solan, Himachal Pradesh', programs: 'MBA, BBA, B.Com, MCA, Data Science', fees: '₹1,10,000 Total', emi: '₹4,580/mo EMI', logoImg: '../logos/tulas-new.png', brandText: 'SHOOLINI' },
+      { code: 'SRM-ONL', name: 'SRM Online', category: 'Online', naac: 'NAAC A++ • Category 1 University', location: 'Chennai, Tamil Nadu', programs: 'MBA, MCA, BBA, BCA, M.Com Online', fees: '₹1,35,000 Total', emi: '₹5,625/mo EMI', logoImg: '../logos/srmist-edu-in-logo.png', brandText: 'SRM ONLINE' },
+      { code: 'ADTU-ONL', name: 'Assam Down Town University', category: 'Online', naac: 'UGC-DEB Approved • Northeast Premier', location: 'Guwahati, Assam', programs: 'MBA, MCA, BBA, BCA, MA, M.Com', fees: '₹75,000 Total', emi: '₹3,125/mo EMI', logoImg: '../logos/umu-ac-in-logo.png', brandText: 'ASSAM DOWN TOWN' },
+      { code: 'MANGAL-REG', name: 'Mangalayatan University', category: 'Regular', naac: 'NAAC A+ • UGC & AICTE Approved', location: 'Aligarh, Uttar Pradesh & Jabalpur', programs: 'B.Tech, Polytechnic, B.Pharm, D.Pharm, MBA, Law', fees: '₹90,000 / yr', emi: 'Semester Installments', logoImg: '../logos/mangalayatan-in-logo.jpg', brandText: 'MANGALAYATAN' },
+      { code: 'VGU-REG', name: 'Vivekananda Global University (VGU)', category: 'Regular', naac: 'NAAC A+ • 45-Acre Smart Campus', location: 'Jaipur, Rajasthan', programs: 'B.Tech CSE, AI, Robotics, Architecture, Law, MBA', fees: '₹1,25,000 / yr', emi: 'Semester Installments', logoImg: '../logos/vgu-ac-in-logo.png', brandText: 'VGU JAIPUR' },
+      { code: 'SRM-REG', name: 'SRM University', category: 'Regular', naac: 'NAAC A++ • NIRF Top 20', location: 'Kattankulathur, Chennai & Sonepat', programs: 'B.Tech CSE, Cyber Security, Mechanical, MBA, B.Sc', fees: '₹2,50,000 / yr', emi: 'Semester Installments', logoImg: '../logos/srmist-edu-in-logo.png', brandText: 'SRM CAMPUS' },
+      { code: 'MANGALORE-REG', name: 'Mangalore Group of Institutions', category: 'Regular', naac: 'AICTE Approved • VTU Affiliated', location: 'Mangalore, Karnataka', programs: 'B.Tech, Marine Engg, Nursing, Allied Health, MBA', fees: '₹1,10,000 / yr', emi: 'Semester Installments', logoImg: '../logos/sandipuniversity-edu-in-logo.png', brandText: 'MANGALORE GROUP' },
+      { code: 'MARWADI-REG', name: 'Marwari University (Marwadi)', category: 'Regular', naac: 'NAAC A+ • 32-Acre Vibrant Campus', location: 'Rajkot, Gujarat', programs: 'B.Tech, B.Pharm, Law, Management, Architecture', fees: '₹1,15,000 / yr', emi: 'Semester Installments', logoImg: '../logos/marwadiuniversity-ac-in-logo.png', brandText: 'MARWADI' },
+      { code: 'SAGE-REG', name: 'SAGE University', category: 'Regular', naac: 'NAAC A+ • Central India Leader', location: 'Indore & Bhopal, Madhya Pradesh', programs: 'B.Tech, Agriculture, Pharmacy, Design, MBA, Law', fees: '₹95,000 / yr', emi: 'Semester Installments', logoImg: '../logos/sageuniversity-in-logo.png', brandText: 'SAGE UNIVERSITY' },
+      { code: 'ARKA-REG', name: 'ARKA Jain University', category: 'Regular', naac: 'NAAC A • Jamshedpur Campus', location: 'Jamshedpur, Jharkhand', programs: 'B.Tech, Polytechnic, B.Com, BBA, MBA, B.Pharm', fees: '₹85,000 / yr', emi: 'Semester Installments', logoImg: '../logos/silveroakuni-ac-in-logo.png', brandText: 'ARKA JAIN' },
+      { code: 'SPU-REG', name: 'Sikkim Professional University', category: 'Regular', naac: 'UGC Recognized • Healthcare & Tech', location: 'Gangtok, Sikkim', programs: 'Nursing, Pharmacy, Allied Health, B.Tech, MBA', fees: '₹80,000 / yr', emi: 'Semester Installments', logoImg: '../logos/umu-ac-in-logo.png', brandText: 'SIKKIM PROF' },
+      { code: 'CSJMU-REG', name: 'CSJMU, Kanpur', category: 'Regular', naac: 'NAAC A++ • Premier State University', location: 'Kanpur, Uttar Pradesh', programs: 'B.Tech, BCA, MCA, Law, Life Sciences, MBA', fees: '₹65,000 / yr', emi: 'Semester Installments', logoImg: '../logos/subharti-org-logo.png', brandText: 'CSJMU KANPUR' },
+      { code: 'GKU-REG', name: 'Guru Kashi University', category: 'Regular', naac: 'NAAC A++ • Bathinda Campus', location: 'Talwandi Sabo, Punjab', programs: 'B.Tech, Agriculture, Law, Nursing, MBA, BCA', fees: '₹75,000 / yr', emi: 'Semester Installments', logoImg: '../logos/jaipur-new.png', brandText: 'GURU KASHI' },
+      { code: 'NIU-REG', name: 'Noida International University', category: 'Regular', naac: 'NAAC A+ • 75-Acre Yamuna Expressway', location: 'Greater Noida, Uttar Pradesh', programs: 'MBBS, B.Tech, Nursing, B.Pharm, Law, MBA', fees: '₹1,40,000 / yr', emi: 'Semester Installments', logoImg: '../logos/niu-edu-in-logo.png', brandText: 'NIU CAMPUS' },
+      { code: 'SUBHARTI-REG', name: 'Subharti University', category: 'Regular', naac: 'NAAC A • 250-Acre Medical & Tech Campus', location: 'Meerut, Uttar Pradesh', programs: 'MBBS, BDS, B.Tech, Law, Nursing, MBA, Hotel Mgmt', fees: '₹1,10,000 / yr', emi: 'Semester Installments', logoImg: '../logos/subharti-org-logo.png', brandText: 'SUBHARTI' },
+      { code: 'NIET-REG', name: 'NIET (Noida Inst. of Engg. & Tech.)', category: 'Regular', naac: 'NAAC A • Autonomous Institute', location: 'Greater Noida, Uttar Pradesh', programs: 'B.Tech CSE, AI, Cloud, B.Pharm, M.Tech, MBA', fees: '₹1,50,000 / yr', emi: 'Semester Installments', logoImg: '../logos/1770383820_GNIOT.jpg', brandText: 'NIET NOIDA' },
+      { code: 'TULAS-REG', name: "Tula's Institute", category: 'Regular', naac: 'NAAC A+ • Dehradun Best Engg College', location: 'Dehradun, Uttarakhand', programs: 'B.Tech, B.Sc Agriculture, BBA, BCA, MBA', fees: '₹1,15,000 / yr', emi: 'Semester Installments', logoImg: '../logos/tulas-new.png', brandText: "TULA'S INST" },
+      { code: 'SHOBHIT-REG', name: 'Shobhit University', category: 'Regular', naac: 'NAAC A • Deemed-to-be-University', location: 'Meerut & Gangoh, Uttar Pradesh', programs: 'B.Tech BioTech, Law, Ayurveda (BAMS), MBA, B.Sc', fees: '₹95,000 / yr', emi: 'Semester Installments', logoImg: '../logos/mangalmay-org-logo.png', brandText: 'SHOBHIT' },
+      { code: 'JNU-REG', name: 'Jaipur National University', category: 'Regular', naac: 'NAAC A+ • UGC & AICTE Approved • Top Ranked', location: 'Jaipur, Rajasthan', programs: 'B.Tech, Medical, Pharmacy, MBA, Law, Agriculture', fees: '₹1,10,000 / yr', emi: 'Semester Installments', logoImg: '../logos/jaipur-new.png', brandText: 'JNU JAIPUR' }
+    ];
+
+    let allCourses = [];
+    let allOtherCharges = [];
+
+    // ═══════════════════════════════════════════════════════════════
+    // Central Supabase Database Integration (Read-Only Controller)
+    // ═══════════════════════════════════════════════════════════════
+    async function loadAssociateUniversitiesFromDB() {
+      // 1. Try restoring from local cache for instant zero-latency view
+      try {
+        const cachedUnis = localStorage.getItem('eduvision_cached_associate_unis');
+        if (cachedUnis) {
+          const parsed = JSON.parse(cachedUnis);
+          if (Array.isArray(parsed) && parsed.length > 0) allUniversities = parsed;
+        }
+        const cachedCourses = localStorage.getItem('eduvision_cached_associate_courses');
+        if (cachedCourses) {
+          const parsedC = JSON.parse(cachedCourses);
+          if (Array.isArray(parsedC) && parsedC.length > 0) allCourses = parsedC;
+        }
+      } catch(e) {}
+
+      // 2. Fetch live approved data from Supabase
+      const _sb = getSb();
+      if (_sb && typeof _sb.from === 'function') {
+        try {
+          // Fetch active universities approved for associate portal
+          const { data: dbUnis, error: uErr } = await withTimeout(
+            _sb.from('partner_universities')
+               .select('*')
+               .eq('status', 'Active')
+               .eq('show_on_associate', true)
+               .order('name', { ascending: true }),
+            10000
+          );
+
+          if (!uErr && Array.isArray(dbUnis) && dbUnis.length > 0) {
+            allUniversities = dbUnis.map(u => ({
+              id: u.id,
+              code: u.univ_code,
+              name: u.name,
+              category: u.category || 'Online',
+              naac: u.accreditation || 'UGC & NAAC Accredited',
+              location: u.location || '',
+              programs: u.programs_summary || '',
+              fees: u.master_fees || 'Standard',
+              emi: u.emi_facility || 'EMI Available',
+              logoImg: u.logo_url || '',
+              brandText: u.brand_text || (u.name ? u.name.split(' ')[0] : 'UNIV'),
+              status: u.status
+            }));
+            localStorage.setItem('eduvision_cached_associate_unis', JSON.stringify(allUniversities));
+          }
+
+          // Fetch active courses from central table
+          const { data: dbCourses, error: cErr } = await withTimeout(
+            _sb.from('university_courses')
+               .select('*')
+               .eq('status', 'Active')
+               .order('course_name', { ascending: true }),
+            10000
+          );
+
+          if (!cErr && Array.isArray(dbCourses) && dbCourses.length > 0) {
+            allCourses = dbCourses;
+            localStorage.setItem('eduvision_cached_associate_courses', JSON.stringify(allCourses));
+          }
+
+          // Fetch other charges
+          const { data: dbCharges } = await withTimeout(
+            _sb.from('university_other_charges').select('*'),
+            6000
+          );
+          if (Array.isArray(dbCharges) && dbCharges.length > 0) {
+            allOtherCharges = dbCharges;
+          }
+        } catch(err) {
+          console.warn('Live partner universities sync info:', err.message);
+        }
+      }
+
+      // Re-render UI components with updated database data
+      loadUniversitiesList();
+    }
+
+    function loadUniversitiesList() {
+      // 1. Populate dropdown for fee filter
+      const feeDropdown = document.getElementById('feeUnivSelect');
+      if (feeDropdown) {
+        const prevSelected = feeDropdown.value;
+        feeDropdown.innerHTML = allUniversities.map(u => `<option value="${escapeAttr(u.name)}">${u.name}</option>`).join('');
+        if (prevSelected && allUniversities.some(u => u.name === prevSelected)) {
+          feeDropdown.value = prevSelected;
+        }
+        renderFeeTable();
+      }
+
+      // 2. Render cards grid
+      filterUniversitiesList();
+
+      // Filter / Render Courses tab too
+      filterCoursesGrid();
+    }
+
+    window.filterUniversitiesList = function() {
+      const grid = document.getElementById('univListGrid');
+      if (!grid) return;
+
+      const search = (document.getElementById('univSearchInput')?.value || '').toLowerCase().trim();
+      const cat = document.getElementById('univCategoryFilter')?.value || 'ALL';
+
+      const filtered = allUniversities.filter(u => {
+        const matchesCat = cat === 'ALL' || u.category === cat;
+        const matchesSearch = (u.name || '').toLowerCase().includes(search) || 
+                              (u.programs || '').toLowerCase().includes(search) || 
+                              (u.location || '').toLowerCase().includes(search) ||
+                              (u.code || '').toLowerCase().includes(search);
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--muted); font-size:0.9rem;">No universities found matching your search.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(u => `
+        <div class="univ-card">
+          <div class="univ-card-hdr">
+            <div class="univ-logo-placeholder" style="background:#fff; padding:2px; overflow:hidden;">
+              ${u.logoImg 
+                ? `<img src="${u.logoImg}" alt="${escapeAttr(u.name)}" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                   <span style="display:none; font-size:0.95rem; color:#c9932a; font-weight:800; width:100%; height:100%; align-items:center; justify-content:center;">${escapeAttr((u.brandText || u.name).substring(0, 2))}</span>`
+                : `<span style="font-size:0.95rem; color:#c9932a; font-weight:800; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">${escapeAttr((u.brandText || u.name).substring(0, 2))}</span>`}
+            </div>
+            <div class="univ-card-title">
+              <h4>${u.name}</h4>
+              <p>${(u.category || 'Online').toUpperCase()} UNIVERSITY</p>
+            </div>
+          </div>
+          <div style="font-size:0.78rem; display:flex; flex-direction:column; gap:6px; border-top:1px solid rgba(255,255,255,0.03); padding-top:12px; margin-top:4px;">
+            <div><span style="color:var(--muted);">Accreditation:</span> <strong style="color:#fff;">${u.naac}</strong></div>
+            <div><span style="color:var(--muted);">Location:</span> <strong>${u.location}</strong></div>
+            <div><span style="color:var(--muted);">Available Programs:</span> <strong style="color:var(--gold-light);">${u.programs}</strong></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.05); padding-top:12px; margin-top:auto;">
+            <div>
+              <div style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Standard Package</div>
+              <strong style="color:var(--gold-light); font-size:0.85rem;"><i class="fa-solid fa-coins"></i> ${u.fees}</strong>
+            </div>
+            <button class="btn-outline" style="padding:6px 14px; font-size:0.75rem; border-radius:8px;" onclick="viewUniversityFees('${escapeAttr(u.name)}')">
+              <i class="fa-solid fa-eye"></i> View Fees
+            </button>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    window.viewUniversityFees = function(univName) {
+      const feeSelect = document.getElementById('feeUnivSelect');
+      if (feeSelect) {
+        feeSelect.value = univName;
+        renderFeeTable();
+      }
+      switchModule('univ-fees');
+    };
+
+    window.filterCoursesGrid = function() {
+      const tbody = document.getElementById('coursesTableBody');
+      if (!tbody) return;
+
+      const searchQuery = (document.getElementById('courseSearchInput')?.value || '').toLowerCase();
+      const courseType = document.getElementById('courseTypeFilter')?.value || 'ALL';
+
+      let rows = [];
+
+      // 1. If live database courses are loaded, filter from allCourses
+      if (allCourses && allCourses.length > 0) {
+        allCourses.forEach(c => {
+          const univ = allUniversities.find(u => (c.university_id && u.id === c.university_id) || (c.university_code && u.code === c.university_code));
+          const univName = univ ? univ.name : (c.university_name || c.university_code || 'Affiliated Partner');
+          const univCategory = univ ? univ.category : (c.category || 'Online');
+
+          if (courseType !== 'ALL' && univCategory !== courseType) return;
+          if (searchQuery && !c.course_name.toLowerCase().includes(searchQuery) && !univName.toLowerCase().includes(searchQuery)) return;
+
+          rows.push({
+            name: c.course_name,
+            university: univName,
+            duration: c.duration || (c.course_name.includes('B.') || c.course_name.includes('BBA') || c.course_name.includes('BCA') ? '3-4 Years' : '2 Years'),
+            eligibility: c.eligibility || (c.course_name.includes('M.') || c.course_name.includes('MBA') || c.course_name.includes('MCA') ? 'Graduate with 50%' : '12th Pass with 45%'),
+            fee: c.total_fee || c.semester_fee || (univ ? univ.fees : 'Contact for Fees')
+          });
+        });
+      } else {
+        // 2. Fallback: Parse programs from allUniversities
+        allUniversities.forEach(u => {
+          if (courseType !== 'ALL' && u.category !== courseType) return;
+          const courses = (u.programs || '').split(',').map(s => s.trim()).filter(Boolean);
+          courses.forEach(c => {
+            if (searchQuery && !c.toLowerCase().includes(searchQuery) && !u.name.toLowerCase().includes(searchQuery)) return;
+            rows.push({
+              name: c,
+              university: u.name,
+              duration: c.includes('B.') || c.includes('BBA') || c.includes('BCA') ? '3-4 Years' : '2 Years',
+              eligibility: c.includes('M.') || c.includes('MBA') || c.includes('MCA') ? 'Graduate with 50%' : '12th Pass with 45%',
+              fee: u.fees
+            });
+          });
+        });
+      }
+
+      if (rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">No matching courses found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td><strong>${r.name}</strong></td>
+          <td>${r.duration}</td>
+          <td>${r.eligibility}</td>
+          <td><strong style="color:var(--gold-light);">${r.fee}</strong></td>
+          <td><strong>${r.university}</strong></td>
+        </tr>
+      `).join('');
+    };
+
+    window.renderFeeTable = function() {
+      const tbody = document.getElementById('feeTableBody');
+      const selectedUniv = document.getElementById('feeUnivSelect')?.value;
+      if (!tbody || !selectedUniv) return;
+
+      const univ = allUniversities.find(u => u.name === selectedUniv);
+      if (!univ) return;
+
+      let feeRows = [];
+
+      // 1. If database courses exist, use exact course records
+      if (allCourses && allCourses.length > 0) {
+        const matches = allCourses.filter(c => (univ.id && c.university_id === univ.id) || 
+                                               (univ.code && c.university_code === univ.code) || 
+                                               (c.university_name === selectedUniv));
+        if (matches.length > 0) {
+          feeRows = matches.map(c => ({
+            name: c.course_name,
+            duration: c.duration || (c.course_name.includes('B.') ? '3 Years' : '2 Years'),
+            fee: c.total_fee || c.semester_fee || univ.fees,
+            emi: c.semester_fee ? `${c.semester_fee} / sem` : univ.emi
+          }));
+        }
+      }
+
+      // 2. Fallback: Parse from programs string
+      if (feeRows.length === 0) {
+        const courses = (univ.programs || '').split(',').map(s => s.trim()).filter(Boolean);
+        feeRows = courses.map(c => {
+          const duration = c.includes('B.') || c.includes('BBA') || c.includes('BCA') ? '3 Years' : '2 Years';
+          return {
+            name: c,
+            duration: duration,
+            fee: univ.fees,
+            emi: univ.emi
+          };
+        });
+      }
+
+      tbody.innerHTML = feeRows.map(r => `
+        <tr>
+          <td><strong>${r.name}</strong></td>
+          <td>${r.duration}</td>
+          <td><strong style="color:var(--gold-light);">${r.fee}</strong></td>
+          <td><span class="status-badge status-processing">${r.emi}</span></td>
+        </tr>
+      `).join('');
+    };
+
+    function loadMarketingCreatives() {
+      const grid = document.getElementById('creativesGrid');
+      if (!grid) return;
+
+      const items = [
+        { title: 'EduVision Corporate Poster', type: 'Flyer/Social Creative', icon: '🎨' },
+        { title: 'MBA Online Admission Banner', type: 'Instagram Post Size', icon: '📊' },
+        { title: 'Sandip University Sijoul Campus Flyer', type: 'Printed Pamphlet Design', icon: '🏛️' },
+        { title: 'Online Manipal Degree Catalog', type: 'UGC Program Guide PDF', icon: '📕' },
+        { title: 'Free Technical Courses Brochure', type: 'Marketing WhatsApp Banner', icon: '📢' },
+        { title: 'Corporate Career Placement Stats', type: 'High-Resolution Poster', icon: '🏆' }
+      ];
+
+      grid.innerHTML = items.map(c => `
+        <div class="creative-card">
+          <div class="creative-img-placeholder">
+            <span>${c.icon}</span>
+            <div style="position:absolute; bottom:10px; right:10px; font-size:0.6rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:4px; color:#fff;">OFFICIAL</div>
+          </div>
+          <div class="creative-card-body">
+            <h4>${c.title}</h4>
+            <p>${c.type}</p>
+            <button class="btn-gold" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.75rem;" onclick="alert('Downloading creative asset...')">
+              <i class="fa-solid fa-download"></i> Download Asset
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadTrainingGuides() {
+      const list = document.getElementById('trainingList');
+      if (!list) return;
+
+      const items = [
+        { title: 'EduVision Partner Onboarding Guide.pdf', size: '2.4 MB', duration: '5 min read' },
+        { title: 'Verification Process of Candidate Documents.pdf', size: '1.8 MB', duration: '12 min read' },
+        { title: 'UGC-DEB Regulations & NAAC Standards Guide.pdf', size: '3.1 MB', duration: '15 min read' },
+        { title: 'Online Portal Counselling Guidelines.mp4', size: '15.2 MB', duration: '8 min watch' }
+      ];
+
+      list.innerHTML = items.map(t => `
+        <div class="training-item">
+          <div class="training-info">
+            <div class="training-icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="training-text">
+              <h4>${t.title}</h4>
+              <p>Size: ${t.size} | Est: ${t.duration}</p>
+            </div>
+          </div>
+          <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem;" onclick="alert('Opening resource...')">
+            <i class="fa-solid fa-eye"></i> View Resource
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function loadFreeCourses() {
+      const grid = document.getElementById('freeCoursesGrid');
+      if (!grid) return;
+
+      const items = [
+        { title: 'Counseling & Admissions Masterclass', desc: 'Master client counseling and documentation basics.', icon: '💡' },
+        { title: 'Higher Education Digital Marketing', desc: 'Acquire student leads organically using social channels.', icon: '📈' },
+        { title: 'Introduction to Career Planning Systems', desc: 'Identify courses fitting candidate capability profiles.', icon: '🧠' }
+      ];
+
+      grid.innerHTML = items.map(c => `
+        <div class="creative-card">
+          <div class="creative-img-placeholder" style="background:linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.15))">
+            <span>${c.icon}</span>
+          </div>
+          <div class="creative-card-body">
+            <h4>${c.title}</h4>
+            <p>${c.desc}</p>
+            <button class="btn-gold" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.75rem;" onclick="alert('Course starting shortly... check credentials')">
+              <i class="fa-solid fa-play"></i> Start Course
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Module Navigation Controllers
+    // ═══════════════════════════════════════════════════════════════
+    window.switchModule = function(modId, event) {
+      if (event) event.preventDefault();
+
+      const modPermMap = {
+        'dashboard': 'associate_dashboard',
+        'univ-courses': 'associate_courses',
+        'univ-list': 'associate_universities',
+        'univ-fees': 'associate_fees',
+        'leads': 'associate_leads',
+        'account': 'associate_account'
+      };
+      const permKey = modPermMap[modId];
+      const targetModule = document.getElementById('mod-' + modId);
+
+      // Central Permission & Feature Lock Check
+      if (window.EduPerms && permKey && !window.EduPerms.isModuleEnabled(permKey)) {
+        document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+        const activeNav = document.getElementById('nav-' + modId);
+        if (activeNav) activeNav.classList.add('active');
+
+        document.querySelectorAll('.module-view').forEach(view => view.classList.remove('active'));
+        if (targetModule) {
+          targetModule.classList.add('active');
+          window.EduPerms.renderLockedState(targetModule, permKey);
+        }
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar) sidebar.classList.remove('open');
+        return;
+      } else if (window.EduPerms && targetModule) {
+        window.EduPerms.unlockState(targetModule);
+      }
+
+      // Deactivate all nav items
+      document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+      
+      // Activate clicked nav item
+      const activeNav = document.getElementById('nav-' + modId);
+      if (activeNav) activeNav.classList.add('active');
+
+      // Hide all modules
+      document.querySelectorAll('.module-view').forEach(view => view.classList.remove('active'));
+
+      // Show selected module
+      if (targetModule) targetModule.classList.add('active');
+
+      // If mobile sidebar is open, close it
+      const sidebar = document.getElementById('appSidebar');
+      if (sidebar) sidebar.classList.remove('open');
+    };
+  </script>
+</body>
+</html>

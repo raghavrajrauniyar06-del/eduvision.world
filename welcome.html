@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="shared/page_guard.js?v=20260919_V1"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Official Apple "hello" — 1:1 Match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #000000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ═══ MASTER STAGE ═══ */
+  #macStage {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1), filter 1.3s ease;
+  }
+
+  #macStage.dissolve {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(14px);
+    pointer-events: none;
+  }
+
+  /* Exact Apple Sonoma Blurred Landscape Wallpaper (1:1 Match to Screenshot) */
+  .wallpaper-bg {
+    position: absolute;
+    inset: -40px;
+    background: 
+      radial-gradient(ellipse 70% 55% at 50% 28%, #3e526a 0%, #1e2938 42%, #0e141c 78%),
+      radial-gradient(circle at 22% 42%, rgba(217, 145, 20, 0.42) 0%, transparent 52%),
+      radial-gradient(circle at 78% 44%, rgba(180, 83, 9, 0.38) 0%, transparent 54%),
+      radial-gradient(ellipse 90% 45% at 50% 88%, #05080c 0%, #000000 100%);
+    filter: blur(36px);
+    transform: scale(1.05);
+  }
+
+  /* ═══ SVG VECTOR STAGE ═══ */
+  .vector-stage {
+    position: relative;
+    z-index: 5;
+    width: 86vw;
+    max-width: 660px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+
+  .hello-svg {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    overflow: visible;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .vector-stage {
+      width: 94vw;
+      max-width: 96vw;
+      padding: 0 4px;
+    }
+    .hello-svg {
+      max-height: 36vh;
+    }
+    .apple-top-badge {
+      top: max(20px, env(safe-area-inset-top, 20px)) !important;
+      font-size: 0.8rem !important;
+      padding: 6px 16px !important;
+      max-width: 90vw;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .apple-get-started {
+      bottom: max(32px, env(safe-area-inset-bottom, 32px)) !important;
+    }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .vector-stage {
+      width: auto;
+      max-width: 62vw;
+    }
+    .hello-svg {
+      max-height: 52vh;
+    }
+    .apple-top-badge {
+      top: 10px !important;
+      font-size: 0.72rem !important;
+    }
+    .apple-get-started {
+      bottom: 12px !important;
+    }
+  }
+
+  /* Official Apple Hand-Drawn Stroke */
+  .apple-stroke {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 62;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.5));
+  }
+
+  .apple-glow {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.25);
+    stroke-width: 100;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: blur(14px);
+  }
+
+  /* Smooth Fluid Letter-Writing Keyframes */
+  @keyframes drawH {
+    0% { stroke-dashoffset: 1665; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  @keyframes drawEllo {
+    0% { stroke-dashoffset: 8135; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  .path-h {
+    stroke-dasharray: 1665;
+    stroke-dashoffset: 1665;
+    animation: drawH 0.75s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+  }
+
+  .path-ello {
+    stroke-dasharray: 8135;
+    stroke-dashoffset: 8135;
+    animation: drawEllo 2.0s 0.68s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  }
+
+  /* Apple "Get Started" Arrow Button (Exact Screenshot Replica) */
+  .apple-get-started {
+    position: absolute;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    opacity: 0;
+    cursor: pointer;
+    animation: fadeInBtn 0.8s 2.8s forwards;
+    transition: transform 0.2s ease;
+  }
+
+  @keyframes fadeInBtn {
+    0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .btn-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .apple-get-started:hover .btn-circle {
+    background: rgba(255, 255, 255, 0.32);
+    transform: scale(1.08);
+  }
+
+  .btn-circle svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .get-started-text {
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.78);
+    letter-spacing: 0.2px;
+  }
+
+  /* ═══ MOCK WEBSITE BEHIND INTRO ═══ */
+  .mock-website {
+    min-height: 100vh;
+    padding: 80px 40px 140px;
+    background: radial-gradient(circle at 50% 0%, #141722 0%, #0a0c10 60%, #030406 100%);
+    position: relative;
+    z-index: 10;
+  }
+
+  .nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto 60px;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 999px;
+  }
+
+  .nav-logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-size: 0.88rem;
+    color: #9ca3af;
+  }
+
+  .hero-card {
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 24px;
+    background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 28px;
+  }
+
+  .hero-card h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-card p {
+    font-size: 1.15rem;
+    color: #9ca3af;
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border: none;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  /* CONTROLLER */
+  .preview-bar {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(18, 20, 26, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+    border-radius: 999px;
+  }
+
+  .bar-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    color: #d1d5db;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+  }
+
+  .bar-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  .bar-btn.active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: 600;
+  }
+
+  .bar-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+</style>
+</head>
+<body>
+
+<div id="macStage">
+  <div class="wallpaper-bg"></div>
+
+<div class="apple-top-badge" id="topBadge" style="position: absolute; top: 32px; left: 50%; transform: translateX(-50%); z-index: 6; display: inline-flex; align-items: center; gap: 8px; padding: 7px 20px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.4); font-size: 0.84rem; font-weight: 600; color: rgba(255, 255, 255, 0.92); letter-spacing: 0.3px; opacity: 0; animation: fadeInTop 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+  <span>✦</span> <span id="badgeText">EduVision • Portal Access Granted</span>
+</div>
+<style>
+@keyframes fadeInTop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+</style>
+
+
+  <div class="vector-stage" id="vectorStage">
+    <!-- EXACT OFFICIAL APPLE VECTOR ARTWORK -->
+    <svg class="hello-svg" viewBox="-280 -140 2920 1040">
+      <path class="apple-glow path-h" id="glow1" d="M -109.06,632.23 C 1.95,570.52 103.11,491.16 217.88,356.08 C 296.0,263.87 338.0,158.58 340.0,85.96 C 341.0,31.96 314.67,-9.0 266.0,-9.0 C 212.0,-9.0 178.0,31.96 157.0,125.99 C 134.0,229.34 117.0,347.92 74.0,728.16" />
+      <path class="apple-glow path-ello" id="glow2" d="M 78.21,691.0 C 100.23,497.47 184.0,356.16 291.0,356.16 C 355.0,356.16 395.67,407.16 384.13,480.16 C 377.62,523.16 370.09,567.16 361.31,618.16 C 351.07,682.16 380.33,732.16 468.96,732.16 C 598.22,732.16 739.24,660.32 811.41,549.06 C 836.0,511.16 846.0,477.16 847.0,444.16 C 848.0,384.16 814.0,339.16 754.0,339.16 C 678.0,339.16 620.0,425.16 620.0,535.16 C 620.0,653.16 684.0,736.16 819.92,736.16 C 1004.72,736.16 1209.42,514.31 1303.48,266.73 C 1330.04,196.83 1340.0,131.92 1340.0,86.56 C 1340.0,32.78 1323.0,-8.52 1275.0,-8.52 C 1228.0,-8.52 1197.0,27.98 1169.0,85.6 C 1136.19,152.43 1111.93,248.83 1102.0,357.8 C 1077.0,631.22 1133.0,732.16 1266.15,732.16 C 1427.61,732.16 1607.12,507.23 1698.77,265.97 C 1725.04,196.83 1735.0,131.92 1735.0,86.56 C 1735.0,32.78 1718.0,-8.52 1670.0,-8.52 C 1623.0,-8.52 1592.0,27.98 1564.0,85.6 C 1531.19,152.43 1506.93,248.83 1497.0,357.8 C 1472.0,631.22 1528.0,732.16 1646.91,732.16 C 1765.62,732.16 1830.11,628.67 1868.78,518.78 C 1907.0,410.16 1954.0,343.16 2052.0,343.16 C 2133.0,343.16 2197.0,403.16 2197.0,516.16 C 2197.0,641.16 2115.9,735.16 2013.42,736.16 C 1923.23,737.16 1864.0,664.16 1870.0,554.16 C 1877.0,432.16 1951.0,343.16 2048.0,343.16 C 2104.0,343.16 2151.04,368.05 2188.0,395.16 C 2288.21,468.26 2365.43,423.08 2395.0,350.8" />
+      <path class="apple-stroke path-h" id="stroke1" d="M -109.06,632.23 C 1.95,570.52 103.11,491.16 217.88,356.08 C 296.0,263.87 338.0,158.58 340.0,85.96 C 341.0,31.96 314.67,-9.0 266.0,-9.0 C 212.0,-9.0 178.0,31.96 157.0,125.99 C 134.0,229.34 117.0,347.92 74.0,728.16" />
+      <path class="apple-stroke path-ello" id="stroke2" d="M 78.21,691.0 C 100.23,497.47 184.0,356.16 291.0,356.16 C 355.0,356.16 395.67,407.16 384.13,480.16 C 377.62,523.16 370.09,567.16 361.31,618.16 C 351.07,682.16 380.33,732.16 468.96,732.16 C 598.22,732.16 739.24,660.32 811.41,549.06 C 836.0,511.16 846.0,477.16 847.0,444.16 C 848.0,384.16 814.0,339.16 754.0,339.16 C 678.0,339.16 620.0,425.16 620.0,535.16 C 620.0,653.16 684.0,736.16 819.92,736.16 C 1004.72,736.16 1209.42,514.31 1303.48,266.73 C 1330.04,196.83 1340.0,131.92 1340.0,86.56 C 1340.0,32.78 1323.0,-8.52 1275.0,-8.52 C 1228.0,-8.52 1197.0,27.98 1169.0,85.6 C 1136.19,152.43 1111.93,248.83 1102.0,357.8 C 1077.0,631.22 1133.0,732.16 1266.15,732.16 C 1427.61,732.16 1607.12,507.23 1698.77,265.97 C 1725.04,196.83 1735.0,131.92 1735.0,86.56 C 1735.0,32.78 1718.0,-8.52 1670.0,-8.52 C 1623.0,-8.52 1592.0,27.98 1564.0,85.6 C 1531.19,152.43 1506.93,248.83 1497.0,357.8 C 1472.0,631.22 1528.0,732.16 1646.91,732.16 C 1765.62,732.16 1830.11,628.67 1868.78,518.78 C 1907.0,410.16 1954.0,343.16 2052.0,343.16 C 2133.0,343.16 2197.0,403.16 2197.0,516.16 C 2197.0,641.16 2115.9,735.16 2013.42,736.16 C 1923.23,737.16 1864.0,664.16 1870.0,554.16 C 1877.0,432.16 1951.0,343.16 2048.0,343.16 C 2104.0,343.16 2151.04,368.05 2188.0,395.16 C 2288.21,468.26 2365.43,423.08 2395.0,350.8" />
+    </svg>
+  </div>
+
+  <div class="apple-get-started" id="appleGetStarted" onclick="proceedToDashboard()">
+    <div class="btn-circle">
+      <svg viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+    <span class="get-started-text">Get Started</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+  let hasNavigated = false;
+  let targetUrl = getTargetDashboard();
+
+  // Define global fallback function
+  window.openWebsiteNow = function() { proceedToDashboard(); };
+
+  // Personalize top badge if user info exists in localStorage
+  try {
+    const rawUser = localStorage.getItem('eduvision_user') || 
+                    localStorage.getItem('eduvision_counsellor') || 
+                    localStorage.getItem('eduvision_team_leader') || 
+                    localStorage.getItem('eduvision_admin');
+    if (rawUser) {
+      const u = JSON.parse(rawUser);
+      const rawName = u.full_name || u.name || u.contact_person || '';
+      const name = rawName ? rawName.split(' ')[0] : 'Raghav';
+      let role = u.role || 'Student';
+      role = role.charAt(0).toUpperCase() + role.slice(1);
+      document.getElementById('badgeText').textContent = '✦ Welcome, ' + name + '! • ' + role + ' Portal';
+    }
+  } catch(e) {}
+
+  function getTargetDashboard() {
+    const params = new URLSearchParams(window.location.search);
+    let redirectParam = params.get('redirect');
+    if (redirectParam) {
+      redirectParam = redirectParam.replace(/^(\.\.\/|\.\/|\/)+/, '');
+      return redirectParam;
+    }
+
+    try {
+      const userStr = localStorage.getItem('eduvision_user') ||
+                      localStorage.getItem('eduvision_counsellor') ||
+                      localStorage.getItem('eduvision_team_leader') ||
+                      localStorage.getItem('eduvision_admin');
+      if (userStr) {
+        const u = JSON.parse(userStr);
+        const roleRoutes = {
+          'student': 'student/dashboard.html',
+          'associate': 'associate/dashboard.html',
+          'partner': 'associate/dashboard.html',
+          'counsellor': 'counsellor/dashboard.html',
+          'branch': 'branch/dashboard.html',
+          'teamleader': 'teamleader/dashboard.html',
+          'team leader': 'teamleader/dashboard.html',
+          'university': 'university/dashboard.html',
+          'admin': 'admin/dashboard.html',
+          'super-admin': 'super-admin/dashboard.html'
+        };
+        const rLower = (u.role || '').toLowerCase();
+        if (roleRoutes[rLower]) return roleRoutes[rLower];
+      }
+    } catch(e) {}
+
+    return 'student/dashboard.html';
+  }
+
+  function proceedToDashboard() {
+    if (hasNavigated) return;
+    hasNavigated = true;
+
+    const stage = document.getElementById('macStage');
+    if (stage) stage.classList.add('dissolve');
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 450);
+  }
+
+  // Hook button and stage clicks
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('appleGetStarted');
+    if (btn) {
+      btn.onclick = function(e) {
+        e.stopPropagation();
+        proceedToDashboard();
+      };
+    }
+    const stage = document.getElementById('macStage');
+    if (stage) {
+      stage.onclick = function() {
+        proceedToDashboard();
+      };
+    }
+  });
+
+  // Automatic smooth transition after handwriting completes (3.4s)
+  setTimeout(() => {
+    proceedToDashboard();
+  }, 3400);
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+      proceedToDashboard();
+    }
+  });
+</script>
+</body>
+</html>

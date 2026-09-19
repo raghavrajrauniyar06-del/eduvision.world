@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <script>
+    if (self !== top) { top.location = self.location; }
+  </script>
+  <title>Verify OTP · Security Authentication | EduVision</title>
+  <meta name="description" content="Verify your mobile number to securely access your EduVision student portal and admission dashboard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="animations/animations.css">
+
+  <style>
+    :root {
+      --bg-dark: #070b12;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --gold: #c9932a;
+      --gold-light: #f7d377;
+      --gold-bright: #fef08a;
+      --gold-gradient: linear-gradient(135deg, #fff0c4 0%, #f7d377 40%, #c9932a 80%, #8a6015 100%);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border-gold: rgba(247, 211, 119, 0.3);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      -webkit-font-smoothing: antialiased;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(201, 147, 42, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(138, 96, 21, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 20% 80%, rgba(15, 23, 42, 0.9) 0%, transparent 60%);
+      background-attachment: fixed;
+    }
+
+    /* Particle Canvas */
+    #goldCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+      background: rgba(7, 11, 18, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-gold);
+    }
+
+    .brand-logo {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-logo span {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .back-login-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 99px;
+      background: rgba(247, 211, 119, 0.08);
+      border: 1px solid rgba(247, 211, 119, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .back-login-link:hover {
+      background: rgba(247, 211, 119, 0.18);
+      transform: translateX(-3px);
+      border-color: var(--gold);
+    }
+
+    /* Main Container & Glassmorphism OTP Card */
+    main {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .otp-card {
+      width: 100%;
+      background: var(--bg-card);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1.5px solid var(--border-gold);
+      border-radius: 28px;
+      padding: clamp(28px, 6vw, 40px);
+      text-align: center;
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(201, 147, 42, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+      animation: cardFloat 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(201, 147, 42, 0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 99px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .card-subtitle strong {
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .change-num-wrap {
+      margin-top: 4px;
+      display: block;
+    }
+
+    .change-num-link {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .change-num-link:hover {
+      color: #ffffff;
+    }
+
+    /* 6-DIGIT OTP INPUT GRID WITH FLOATING CURSOR */
+    .otp-grid-wrap {
+      position: relative;
+      margin: 30px 0 24px;
+    }
+
+    .otp-inputs-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .otp-box {
+      width: clamp(44px, 12vw, 56px);
+      height: clamp(52px, 14vw, 64px);
+      border-radius: 16px;
+      border: 1.5px solid var(--border-gold);
+      background: rgba(7, 11, 18, 0.7);
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+      caret-color: transparent; /* Custom glowing cursor indicator used */
+    }
+
+    .otp-box:focus {
+      border-color: var(--gold-light);
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 
+        0 0 20px rgba(247, 211, 119, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      transform: scale(1.06) translateY(-2px);
+    }
+
+    .otp-box.filled {
+      border-color: var(--gold);
+      background: rgba(201, 147, 42, 0.12);
+      color: var(--gold-bright);
+    }
+
+    /* Animated Sliding Glowing Cursor Dot */
+    .cursor-glow-dot {
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 16px;
+      height: 4px;
+      background: var(--gold-gradient);
+      border-radius: 99px;
+      box-shadow: 0 0 12px var(--gold-light);
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
+      opacity: 0;
+    }
+
+    /* OTP Status & Resend Timer Row */
+    .otp-status-text {
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      min-height: 22px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    .resend-row {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .resend-btn {
+      background: none;
+      border: none;
+      color: var(--gold-light);
+      font-weight: 800;
+      font-family: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+
+    .resend-btn:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    /* Submit Verify Button */
+    .btn-verify-submit {
+      width: 100%;
+      padding: 16px;
+      border-radius: 99px;
+      border: none;
+      background: var(--gold-gradient);
+      color: #070b12;
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(201, 147, 42, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-verify-submit:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 40px rgba(201, 147, 42, 0.5);
+    }
+
+    .btn-verify-submit:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .security-badge {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      z-index: 10;
+    }
+
+    /* SUCCESS ANIMATION OVERLAY */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(7, 11, 18, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .success-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .checkmark-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.2), rgba(247, 211, 119, 0.1));
+      border: 2px solid var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 50px rgba(201, 147, 42, 0.6);
+      margin-bottom: 24px;
+      transform: scale(0.5);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .success-overlay.active .checkmark-box {
+      transform: scale(1);
+    }
+
+    .checkmark-svg {
+      width: 48px;
+      height: 48px;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      transition: stroke-dashoffset 0.8s ease 0.2s;
+    }
+
+    .success-overlay.active .checkmark-svg {
+      stroke-dashoffset: 0;
+    }
+
+    .success-title {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .success-sub {
+      font-size: 0.95rem;
+      color: var(--gold-light);
+    }
+  
+    /* ═══════════════════════════════════════════════════════════
+       APPLE-GRADE MORPHING SUCCESS ANIMATION & GOLD SPARKS
+    ═══════════════════════════════════════════════════════════ */
+    .otp-grid-wrap {
+      position: relative;
+      margin: 30px 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Morphing Central Success Badge */
+    .success-morph-badge {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.3), rgba(247, 211, 119, 0.15));
+      border: 2px solid var(--gold-light);
+      box-shadow: 0 0 50px rgba(201, 147, 42, 0.7), 0 0 25px rgba(247, 211, 119, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.2);
+      pointer-events: none;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+      z-index: 20;
+    }
+
+    .success-morph-badge.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .morph-svg-check {
+      width: 40px;
+      height: 40px;
+    }
+
+    .morph-svg-check path {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      transition: stroke-dashoffset 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+    }
+
+    .success-morph-badge.active .morph-svg-check path {
+      stroke-dashoffset: 0;
+    }
+
+    /* Radial Gold Spark Particles */
+    .gold-spark-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold-bright);
+      box-shadow: 0 0 10px var(--gold-light);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 25;
+      will-change: transform, opacity;
+    }
+
+    .status-success-glow {
+      color: #4ade80 !important;
+      font-size: 1.05rem !important;
+      font-weight: 800 !important;
+      text-shadow: 0 0 16px rgba(74, 222, 128, 0.6);
+      animation: textPulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes textPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════
+       3-PHASE ORBITING SPIN, MERGE & POP-OUT VERIFIED ANIMATION
+    ═══════════════════════════════════════════════════════════ */
+    .otp-inputs-grid {
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .otp-box.spin-orbit {
+      transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.35s ease, border-color 0.3s;
+      will-change: transform, opacity;
+      border-color: var(--gold-bright) !important;
+      box-shadow: 0 0 20px rgba(247, 211, 119, 0.6) !important;
+    }
+
+    .success-morph-badge {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201, 147, 42, 0.35), rgba(247, 211, 119, 0.2));
+      border: 2px solid var(--gold-light);
+      box-shadow: 0 0 60px rgba(201, 147, 42, 0.85), 0 0 30px rgba(247, 211, 119, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0) rotate(-180deg);
+      pointer-events: none;
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+      z-index: 30;
+    }
+
+    .success-morph-badge.pop-active {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+
+    /* Global Luxury Champagne Gold Scrollbar (No White/Gray Native Scrollbars) */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201, 147, 42, 0.5) #070b12;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070b12;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #c9932a 0%, #8a6015 100%);
+      border-radius: 99px;
+      border: 1px solid rgba(247, 211, 119, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f7d377;
+    }
+
+
+    /* GOLDEN LIGHT BEAM / RAY OF LIGHT REVEAL ANIMATION */
+    .pwd-field-wrap {
+      position: relative !important;
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      overflow: hidden !important;
+      border-radius: 12px !important;
+    }
+    .pwd-field-input {
+      width: 100% !important;
+      padding: 14px 48px 14px 16px !important;
+      border-radius: 12px !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid var(--border-gold) !important;
+      color: #ffffff !important;
+      font-size: 0.95rem !important;
+      outline: none !important;
+      box-sizing: border-box !important;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .pwd-field-input:focus {
+      border-color: var(--gold-light) !important;
+      box-shadow: 0 0 15px rgba(247, 211, 119, 0.3) !important;
+    }
+
+    /* Light Beam Ray overlay */
+    .pwd-beam-ray {
+      position: absolute;
+      top: 0;
+      right: 44px;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(270deg, rgba(247, 211, 119, 0.35) 0%, rgba(201, 147, 42, 0.15) 60%, transparent 100%);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      filter: blur(2px);
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .pwd-field-wrap.revealed .pwd-beam-ray {
+      width: calc(100% - 44px);
+      opacity: 1;
+      animation: rayPulse 1.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes rayPulse {
+      0% {
+        opacity: 0.7;
+        filter: blur(2px) drop-shadow(0 0 6px rgba(247, 211, 119, 0.6));
+      }
+      100% {
+        opacity: 0.35;
+        filter: blur(3px) drop-shadow(0 0 12px rgba(201, 147, 42, 0.8));
+      }
+    }
+
+    .pwd-eye-btn {
+      position: absolute !important;
+      right: 14px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      background: transparent !important;
+      border: none !important;
+      color: #f7d377 !important;
+      cursor: pointer !important;
+      font-size: 1.25rem !important;
+      z-index: 20 !important;
+      padding: 4px !important;
+      margin: 0 !important;
+      line-height: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .pwd-eye-btn:hover {
+      transform: translateY(-50%) scale(1.18) !important;
+      filter: drop-shadow(0 0 8px rgba(247, 211, 119, 0.8));
+    }
+    .pwd-field-wrap.revealed .pwd-eye-btn {
+      filter: drop-shadow(0 0 10px rgba(247, 211, 119, 1)) !important;
+      color: #ffffff !important;
+    }
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- PARTICLE CANVAS -->
+  <canvas id="goldCanvas"></canvas>
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="brand-logo">
+      EduVision <span>Consultancy</span>
+    </a>
+    <a href="login.html" class="back-login-link">
+      <span>←</span> Change Number / Login
+    </a>
+  </header>
+
+  <!-- MAIN OTP CARD -->
+  <main>
+    <div class="otp-card">
+      <div id="otpStepContainer">
+        
+      <div class="card-badge">
+        <span>🔒</span> Step 2 of 2 · OTP Verification
+      </div>
+
+      <h1 class="card-title">Verify Your Number</h1>
+      <p class="card-subtitle">
+        We sent a 6-digit verification code to<br>
+        <strong id="displayContact">+91 XXXXXXX123</strong>
+        <span class="change-num-wrap">
+          <a href="login.html" class="change-num-link">← Change Number</a>
+        </span>
+      </p>
+
+      <!-- 6-DIGIT ANIMATED OTP INPUT GRID -->
+      <div class="otp-grid-wrap" id="otpGridWrap">
+        <div class="otp-inputs-grid" id="otpGrid">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="0" autofocus>
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="1">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="2">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="3">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="4">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box" data-index="5">
+        </div>
+        <div class="cursor-glow-dot" id="cursorGlow"></div>
+
+        <!-- Apple Morphing Central Success Badge -->
+        <div class="success-morph-badge" id="morphBadge">
+          <svg class="morph-svg-check" viewBox="0 0 40 40">
+            <path fill="none" stroke="#f7d377" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M10 20.5l7 7 14-14"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- OTP Status Message -->
+      <div class="otp-status-text" id="statusText">💬 Enter the 6-digit OTP code sent via Email</div>
+
+      <!-- Resend Timer Row -->
+      <div class="resend-row">
+        <span>Didn't receive the code?</span>
+        <button id="resendBtn" class="resend-btn" disabled onclick="handleResendOtp()">
+          Resend in <span id="timerCount">30</span>s
+        </button>
+      </div>
+
+      <!-- Submit Verify Button -->
+      <button class="btn-verify-submit" id="btnVerify" onclick="handleVerifyClick()">
+        <span>✦ Verify & Continue</span>
+      </button>
+
+      
+      </div>
+
+      <!-- PASSWORD RESET STEP (REVEALED WHEN VERIFIED FOR RECOVERY) -->
+      <div id="passwordResetStepContainer" style="display:none; animation:fadeIn 0.35s ease;">
+        <div class="card-badge" style="border-color:var(--gold); background:rgba(201,147,42,0.15);">
+          <span></span> Step 2 of 2 • Create New Password
+        </div>
+
+        <h1 class="card-title" style="margin-top:12px;">Create New Password</h1>
+        <p class="card-subtitle" style="margin-bottom:22px;">
+          Identity verified! Enter a secure new password for<br>
+          <strong id="displayResetContact" style="color:var(--gold-light);">student@gmail.com</strong>
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:14px; width:100%; max-width:380px; margin:0 auto 18px;">
+          <!-- New Password -->
+          <div class="pwd-field-wrap" id="wrap_newPasswordInput">
+            <div class="pwd-beam-ray"></div>
+            <input type="password" id="newPasswordInput" class="pwd-field-input" placeholder="Enter new password (min 6 chars)">
+            <button type="button" class="pwd-eye-btn" onclick="toggleOtpPwdWithRay('newPasswordInput', this)" title="Show/Hide Password">👁️</button>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="pwd-field-wrap" id="wrap_confirmPasswordInput">
+            <div class="pwd-beam-ray"></div>
+            <input type="password" id="confirmPasswordInput" class="pwd-field-input" placeholder="Confirm new password">
+            <button type="button" class="pwd-eye-btn" onclick="toggleOtpPwdWithRay('confirmPasswordInput', this)" title="Show/Hide Password">👁️</button>
+          </div>
+        </div>
+
+        <div id="resetStatusText" style="margin-bottom:14px; font-size:0.85rem; color:#ef4444; min-height:18px;"></div>
+
+        <button class="btn-verify-submit" id="btnSavePassword" onclick="handleSaveNewPassword()" style="margin-top:2px;">
+          <span> Save Password & Launch Dashboard</span>
+        </button>
+      </div>
+
+      <div class="security-badge">
+        <span>🛡️ Email Service 2.0 Secure Verify · 256-Bit Encryption</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 EduVision Consultancy. All rights reserved.
+  </footer>
+
+  <!-- SUCCESS CHECKMARK OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="checkmark-box">
+      <svg class="checkmark-svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="23" fill="none" stroke="#f7d377" stroke-width="3"/>
+        <path fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+    <h2 class="success-title">Verified Successfully! 🎉</h2>
+    <p class="success-sub">Opening your Student Dashboard...</p>
+  </div>
+
+  <!-- SCRIPT: Email OTP SDK & APPLE-GRADE INTERACTION ENGINE -->
+  <script>
+    /* ─────────────────────────────────────────────────────────
+       Email Service OFFICIAL SDK CONFIGURATION
+    ───────────────────────────────────────────────────────── */
+    var targetIdentifier = '';
+    var authMode         = 'login';
+    var isVerified       = false;
+
+    var configuration = {
+      widgetId:      '3668616e627a353439383037',
+      tokenAuth:     '556386TOJ7w8etRh6a6df4aaP1',
+      identifier:    '',
+      exposeMethods: true,
+      success: function(data) {
+        console.log('[Email Service OTP Page] ✅ Verification Success:', data);
+        onVerificationSuccess(data);
+      },
+      failure: function(error) {
+        console.log('[Email Service OTP Page] ❌ Verification Failure:', error);
+        onVerificationFailure(error);
+      }
+    };
+
+    /* Load Email OTP SDK with fallback */
+    (function(urls) {
+      var idx = 0;
+      function load() {
+        var s = document.createElement('script');
+        s.src = urls[idx]; s.async = true;
+        s.onload = function() {
+          console.log('[Email Service] SDK loaded successfully on OTP page.');
+          if (typeof window.initSendOTP === 'function' && targetIdentifier) {
+            configuration.identifier = targetIdentifier;
+            try {  } catch(e){}
+          }
+        };
+        s.onerror = function() {
+          if (++idx < urls.length) load();
+        };
+        document.head.appendChild(s);
+      }
+      load();
+    })([
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js'
+    ]);
+
+    /* ─────────────────────────────────────────────────────────
+       /* 
+       SUPABASE CLIENT INITIALIZATION & OTP ENGINE
+     */
+    const SUPABASE_URL = 'https://ewxvqpyusveiynplzxed.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
+    var sbClient = null;
+
+    function getSb() {
+      if (!sbClient && window.supabase) {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      return sbClient;
+    }
+
+    var targetIdentifier = '';
+    var authMode         = 'login';
+    var isVerified       = false;
+
+    /* 
+       INITIALIZATION & SESSION RECOVERY
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+      initGoldParticles();
+
+      var rawPending = sessionStorage.getItem('eduvision_pending_auth');
+      if (rawPending) {
+        try {
+          var p = JSON.parse(rawPending);
+          targetIdentifier = p.identifier || '';
+          authMode         = p.mode || 'login';
+
+          var masked = targetIdentifier;
+          if (targetIdentifier.includes('@')) {
+            var parts = targetIdentifier.split('@');
+            var uName = parts[0];
+            masked = uName.substring(0, 2) + '***@' + parts[1];
+          } else if (/^\d{10,12}$/.test(targetIdentifier)) {
+            var plain = targetIdentifier.replace(/^91/, '');
+            masked = '+91 ' + plain.substring(0, 3) + 'XXXX' + plain.substring(7);
+          }
+          var dEl = document.getElementById('displayContact');
+          if (dEl) dEl.textContent = masked;
+          var rEl = document.getElementById('displayResetContact');
+          if (rEl) rEl.textContent = targetIdentifier;
+
+          if (authMode === 'recovery') {
+            var badge = document.querySelector('.card-badge');
+            if (badge) badge.innerHTML = '<span></span> Step 1 of 2 • Enter Verification OTP';
+            var title = document.querySelector('.card-title');
+            if (title) title.textContent = 'Verify Identity';
+            var sub = document.querySelector('.card-subtitle');
+            if (sub) sub.innerHTML = 'We sent a 6-digit verification code to your registered email<br><strong class="display-contact-target">' + masked + '</strong>';
+          }
+        } catch(e){}
+      } else {
+        var dEl = document.getElementById('displayContact');
+        if (dEl) dEl.textContent = 'Registered Email';
+      }
+
+      setupOtpGridListeners();
+      startResendTimer(30);
+    });
+
+    function toggleOtpPwdWithRay(id, btn) {
+      var inp = document.getElementById(id);
+      var wrap = document.getElementById('wrap_' + id) || (inp ? inp.closest('.pwd-field-wrap') : null);
+      if (!inp) return;
+
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        if (wrap) wrap.classList.add('revealed');
+        if (btn) btn.innerHTML = '✨';
+      } else {
+        inp.type = 'password';
+        if (wrap) wrap.classList.remove('revealed');
+        if (btn) btn.innerHTML = '👁️';
+      }
+    }
+
+    /* 
+       APPLE-GRADE OTP INPUT GRID LISTENERS
+     */
+    function setupOtpGridListeners() {
+      var boxes = document.querySelectorAll('.otp-box');
+      var glow  = document.getElementById('cursorGlow');
+
+      function updateGlowPosition(targetBox) {
+        if (!targetBox || !glow) return;
+        var grid = document.getElementById('otpGrid');
+        if (!grid) return;
+        var gridRect = grid.getBoundingClientRect();
+        var boxRect  = targetBox.getBoundingClientRect();
+        var left     = boxRect.left - gridRect.left + (boxRect.width / 2) - 8;
+        glow.style.transform = 'translateX(' + left + 'px)';
+        glow.style.opacity   = '1';
+      }
+
+      boxes.forEach(function(box, idx) {
+        box.addEventListener('focus', function() {
+          updateGlowPosition(box);
+          box.select();
+        });
+
+        box.addEventListener('input', function(e) {
+          var val = box.value.replace(/[^0-9]/g, '');
+          box.value = val;
+
+          if (val) {
+            box.classList.add('filled');
+            if (idx < boxes.length - 1) {
+              boxes[idx + 1].focus();
+            }
+          } else {
+            box.classList.remove('filled');
+          }
+          checkAutoSubmit();
+        });
+
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' || e.key === 'Delete') {
+            if (!box.value && idx > 0) {
+              boxes[idx - 1].focus();
+              boxes[idx - 1].value = '';
+              boxes[idx - 1].classList.remove('filled');
+            }
+          } else if (e.key === 'ArrowLeft' && idx > 0) {
+            boxes[idx - 1].focus();
+          } else if (e.key === 'ArrowRight' && idx < boxes.length - 1) {
+            boxes[idx + 1].focus();
+          }
+        });
+
+        box.addEventListener('paste', function(e) {
+          e.preventDefault();
+          var pasted = (e.clipboardData || window.clipboardData).getData('text');
+          var digits = pasted.replace(/[^0-9]/g, '').substring(0, 6);
+
+          if (digits) {
+            for (var i = 0; i < digits.length; i++) {
+              if (boxes[i]) {
+                boxes[i].value = digits[i];
+                boxes[i].classList.add('filled');
+              }
+            }
+            var nextIndex = Math.min(digits.length, boxes.length - 1);
+            boxes[nextIndex].focus();
+            checkAutoSubmit();
+          }
+        });
+      });
+
+      if (boxes[0]) {
+        setTimeout(function() {
+          boxes[0].focus();
+          updateGlowPosition(boxes[0]);
+        }, 300);
+      }
+    }
+
+    function getEnteredOtp() {
+      var boxes = document.querySelectorAll('.otp-box');
+      var code  = '';
+      boxes.forEach(function(b){ code += b.value; });
+      return code.trim();
+    }
+
+    function checkAutoSubmit() {
+      var code = getEnteredOtp();
+      if (code.length === 6) {
+        handleVerifyClick();
+      }
+    }
+
+    /* 
+       RESEND COUNTDOWN TIMER ENGINE
+     */
+    var timerInterval = null;
+
+    function startResendTimer(seconds) {
+      clearInterval(timerInterval);
+      var btn   = document.getElementById('resendBtn');
+      var count = document.getElementById('timerCount');
+      if (!btn) return;
+      btn.disabled = true;
+
+      var remaining = seconds;
+      btn.innerHTML = 'Resend in <span id="timerCount">' + remaining + '</span>s';
+
+      timerInterval = setInterval(function() {
+        remaining--;
+        var cEl = document.getElementById('timerCount');
+        if (cEl) cEl.textContent = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          btn.disabled  = false;
+          btn.innerHTML = 'Resend OTP ';
+        }
+      }, 1000);
+    }
+
+    async function handleResendOtp() {
+      if (!targetIdentifier) {
+        alert('Missing contact details! Redirecting to login...');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const statusEl = document.getElementById('statusText');
+      if (statusEl) {
+        statusEl.textContent = '⏳ Sending new OTP code...';
+        statusEl.style.color = 'var(--gold-light)';
+      }
+
+      try {
+        const client = getSb();
+        if (targetIdentifier.includes('@')) {
+          if (client && client.auth) {
+            await client.auth.signInWithOtp({
+              email: targetIdentifier,
+              options: { shouldCreateUser: false }
+            }).catch(() => {});
+          }
+        }
+        if (statusEl) {
+          statusEl.textContent = '✓ New 6-digit OTP code sent successfully!';
+          statusEl.style.color = '#4ade80';
+        }
+      } catch(e) {
+        if (statusEl) statusEl.textContent = 'New code sent.';
+      }
+      startResendTimer(30);
+    }
+
+    /* 
+       VERIFY OTP ENGINE (SUPABASE EMAIL OTP + MSG91 FALLBACK)
+     */
+    async function handleVerifyClick() {
+      var otpCode = getEnteredOtp();
+      if (otpCode.length < 6) {
+        alert('Please enter all 6 digits of your OTP.');
+        return;
+      }
+
+      var statusEl = document.getElementById('statusText');
+      var btn = document.getElementById('btnVerify');
+      if (statusEl) {
+        statusEl.textContent = '⏳ Verifying 6-digit OTP with Supabase...';
+        statusEl.style.color = 'var(--gold-light)';
+      }
+      if (btn) btn.disabled = true;
+
+      try {
+        const client = getSb();
+        if (!client || !client.auth) {
+          throw new Error('Supabase client not initialized. Check internet connection.');
+        }
+
+        if (!targetIdentifier || !targetIdentifier.includes('@')) {
+          throw new Error('Missing verification email identifier. Please restart from login.');
+        }
+
+        // Strictly verify with Supabase Auth (type: 'email' or 'recovery')
+        let verifyRes = await client.auth.verifyOtp({
+          email: targetIdentifier.trim().toLowerCase(),
+          token: otpCode.trim(),
+          type: 'email'
+        });
+
+        if (verifyRes.error) {
+          // Check fallback to recovery type
+          verifyRes = await client.auth.verifyOtp({
+            email: targetIdentifier.trim().toLowerCase(),
+            token: otpCode.trim(),
+            type: 'recovery'
+          });
+        }
+
+        if (verifyRes.error) {
+          // STRICT REJECTION: Throw exact error returned by Supabase
+          const msg = verifyRes.error.message || 'Invalid or expired OTP code.';
+          throw new Error(msg);
+        }
+
+        // Verified successfully!
+        if (statusEl) {
+          statusEl.textContent = '✓ OTP Verified Successfully!';
+          statusEl.style.color = '#4ade80';
+        }
+
+        onVerificationSuccess(verifyRes.data || otpCode);
+
+      } catch(err) {
+        console.error("Strict OTP Verification Rejected:", err);
+        if (statusEl) {
+          statusEl.textContent = '❌ ' + (err.message || 'Invalid OTP code. Please check and try again.');
+          statusEl.style.color = '#ef4444';
+        }
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function onVerificationSuccess(token) {
+      isVerified = true;
+
+      var rawPending = sessionStorage.getItem('eduvision_pending_auth');
+      var mode = 'login';
+      var name = 'Student';
+      var contact = targetIdentifier || 'student@eduvision.in';
+      var role = 'student';
+
+      if (rawPending) {
+        try {
+          var p = JSON.parse(rawPending);
+          mode    = p.mode || mode;
+          name    = p.name || name;
+          contact = p.identifier || contact;
+          role    = p.role || p.portal || 'student';
+        } catch(e){}
+      }
+
+      // If in password recovery mode, reveal the Create New Password section!
+      if (mode === 'recovery') {
+        playAppleSuccessAnimation(function() {
+          var otpContainer = document.getElementById('otpStepContainer');
+          var pwdContainer = document.getElementById('passwordResetStepContainer');
+          if (otpContainer) otpContainer.style.display = 'none';
+          if (pwdContainer) {
+            pwdContainer.style.display = 'block';
+            var dReset = document.getElementById('displayResetContact');
+            if (dReset) dReset.textContent = contact;
+            var inp = document.getElementById('newPasswordInput');
+            if (inp) inp.focus();
+          }
+        });
+        return;
+      }
+
+      // If in normal login mode, redirect to role dashboard
+      var roleRoutes = {
+        'student': 'student/dashboard.html',
+        'counsellor': 'counsellor/dashboard.html',
+        'teamleader': 'teamleader/dashboard.html',
+        'admin': 'admin/dashboard.html'
+      };
+
+      var targetRoute = roleRoutes[role] || 'student/dashboard.html';
+
+      localStorage.setItem('eduvision_user', JSON.stringify({
+        name: name,
+        email: contact,
+        role: role,
+        loggedIn: true,
+        loginTime: new Date().toISOString()
+      }));
+
+      playAppleSuccessAnimation(function() {
+        var status = document.getElementById('statusText');
+        if (status) status.textContent = 'Preparing Your Workspace 🚀';
+        setTimeout(function() {
+          window.location.href = targetRoute;
+        }, 500);
+      });
+    }
+
+    /* 
+       SAVE NEW PASSWORD HANDLER (FOR PASSWORD RECOVERY)
+     */
+    async function handleSaveNewPassword() {
+      var p1El = document.getElementById('newPasswordInput');
+      var p2El = document.getElementById('confirmPasswordInput');
+      var errEl = document.getElementById('resetStatusText');
+      var btn = document.getElementById('btnSavePassword');
+
+      var p1 = p1El ? p1El.value.trim() : '';
+      var p2 = p2El ? p2El.value.trim() : '';
+
+      if (!p1 || p1.length < 6) {
+        if (errEl) errEl.textContent = 'Password must be at least 6 characters long.';
+        if (p1El) p1El.focus();
+        return;
+      }
+
+      if (p1 !== p2) {
+        if (errEl) errEl.textContent = 'Passwords do not match. Please re-enter.';
+        if (p2El) p2El.focus();
+        return;
+      }
+
+      if (errEl) errEl.textContent = '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating Password...';
+      }
+
+      try {
+        const client = getSb();
+        var rawPending = sessionStorage.getItem('eduvision_pending_auth');
+        var contact = targetIdentifier || '';
+        var pRole = 'student';
+        var pName = 'User';
+
+        if (rawPending) {
+          try {
+            var p = JSON.parse(rawPending);
+            contact = p.identifier || contact;
+            pRole = p.role || p.portal || 'student';
+            pName = p.name || pName;
+          } catch(e){}
+        }
+
+        const isEmail = contact.includes('@');
+        const col = isEmail ? 'email' : 'phone';
+        let targetRoute = 'student/dashboard.html';
+
+        if (pRole === 'counsellor') {
+          targetRoute = 'counsellor/dashboard.html';
+          if (client) {
+            try { await client.from('counsellors').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            const { data: cRec } = await client.from('counsellors').select('*').ilike(col, contact).maybeSingle();
+            if (cRec) {
+              localStorage.setItem('eduvision_counsellor', JSON.stringify(cRec));
+            }
+          }
+        } else if (pRole === 'teamleader') {
+          targetRoute = 'teamleader/dashboard.html';
+          if (client) {
+            try { await client.from('team_leaders').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            const { data: tlRec } = await client.from('team_leaders').select('*').ilike(col, contact).maybeSingle();
+            if (tlRec) {
+              localStorage.setItem('eduvision_team_leader', JSON.stringify(tlRec));
+            }
+          }
+        } else if (pRole === 'admin') {
+          targetRoute = 'admin/dashboard.html';
+          if (client) {
+            try { await client.from('admin_users').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            const { data: aRec } = await client.from('admin_users').select('*').ilike(col, contact).maybeSingle();
+            if (aRec) {
+              localStorage.setItem('eduvision_admin', JSON.stringify(aRec));
+            }
+          }
+        } else {
+          // Default: student portal
+          targetRoute = 'student/dashboard.html';
+          let studentUserId = '';
+          let studentRecord = null;
+          let studentProfile = null;
+
+          if (client) {
+            try {
+              await client.from('users').update({ password: p1 }).ilike(col, contact);
+              const { data: uData } = await client.from('users').select('*').ilike(col, contact);
+              if (uData && uData.length > 0) {
+                studentRecord = uData[0];
+                studentUserId = studentRecord.id;
+                pName = studentRecord.full_name || pName;
+              }
+            } catch(e){}
+
+            try {
+              if (studentUserId) {
+                const { data: profData } = await client.from('student_profiles').select('*').eq('user_id', studentUserId);
+                if (profData && profData.length > 0) studentProfile = profData[0];
+              }
+              if (!studentProfile && contact) {
+                const { data: profData2 } = await client.from('student_profiles').select('*').ilike(col, contact);
+                if (profData2 && profData2.length > 0) {
+                  studentProfile = profData2[0];
+                  if (!studentUserId) studentUserId = studentProfile.user_id;
+                }
+              }
+            } catch(e){}
+          }
+
+          const studentEmail = (studentRecord ? studentRecord.email : (studentProfile ? studentProfile.email : (contact.includes('@') ? contact : '')));
+          const studentPhone = (studentRecord ? studentRecord.phone : (studentProfile ? studentProfile.phone : (!contact.includes('@') ? contact : '')));
+
+          const userPayload = {
+            id: studentUserId || (studentProfile ? studentProfile.user_id : 'a63b8d55-fa96-4f55-a2db-160f641bb5e2'),
+            user_id: studentUserId || (studentProfile ? studentProfile.user_id : 'a63b8d55-fa96-4f55-a2db-160f641bb5e2'),
+            name: (studentProfile ? studentProfile.full_name : pName),
+            full_name: (studentProfile ? studentProfile.full_name : pName),
+            email: studentEmail,
+            phone: studentPhone,
+            role: 'student',
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('eduvision_user', JSON.stringify(userPayload));
+          if (studentProfile) {
+            localStorage.setItem('eduvision_cached_student_profile', JSON.stringify(studentProfile));
+          }
+        }
+
+        // Also update Supabase Auth if session active
+        if (client && client.auth) {
+          try { await client.auth.updateUser({ password: p1 }); } catch(e){}
+        }
+
+        // Show Apple-grade success checkmark overlay
+        var overlay = document.getElementById('successOverlay');
+        if (overlay) {
+          overlay.classList.add('active');
+          var title = overlay.querySelector('.success-title');
+          var sub = overlay.querySelector('.success-sub');
+          if (title) title.textContent = 'Password Updated! 🚀';
+          if (sub) sub.textContent = 'Launching your authorized dashboard...';
+        }
+
+        setTimeout(function() {
+          window.location.href = targetRoute;
+        }, 1200);
+
+      } catch(err) {
+        console.error("Save password failed:", err);
+        if (errEl) errEl.textContent = 'Failed to update: ' + (err.message || 'Please try again.');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = 'Save Password & Launch Dashboard';
+        }
+      }
+    }
+
+    function playAppleSuccessAnimation(redirectCallback) {
+      var boxes  = document.querySelectorAll('.otp-box');
+      var grid   = document.getElementById('otpGrid');
+      var glow   = document.getElementById('cursorGlow');
+      var badge  = document.getElementById('morphBadge');
+      var wrap   = document.getElementById('otpGridWrap');
+      var status = document.getElementById('statusText');
+
+      // Disable inputs & hide cursor glow
+      boxes.forEach(function(b) { b.disabled = true; b.blur(); b.classList.add('spin-orbit'); });
+      if (glow) glow.style.opacity = '0';
+
+      var gridRect = grid.getBoundingClientRect();
+      var gridCenterX = gridRect.width / 2;
+      var gridCenterY = gridRect.height / 2;
+
+      // PHASE 1: Boxes Spin & Orbit in a Circle (t = 0ms to 400ms)
+      var orbitRadius = 65; // px
+      boxes.forEach(function(box, i) {
+        var angle = (i / 6) * Math.PI * 2;
+        var boxRect = box.getBoundingClientRect();
+        var boxX = boxRect.left - gridRect.left + (boxRect.width / 2);
+        var boxY = boxRect.top  - gridRect.top  + (boxRect.height / 2);
+
+        var targetX = (gridCenterX + Math.cos(angle) * orbitRadius) - boxX;
+        var targetY = (gridCenterY + Math.sin(angle) * orbitRadius) - boxY;
+
+        box.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.35s ease';
+        box.style.transform  = 'translate3d(' + targetX + 'px, ' + targetY + 'px, 0) rotate(360deg) scale(0.9)';
+      });
+
+      // PHASE 2: Boxes Collapse, Mix to Center & Disappear (t = 420ms to 700ms)
+      setTimeout(function() {
+        boxes.forEach(function(box) {
+          var boxRect = box.getBoundingClientRect();
+          var boxX = boxRect.left - gridRect.left + (boxRect.width / 2);
+          var boxY = boxRect.top  - gridRect.top  + (boxRect.height / 2);
+
+          var centerDeltaX = gridCenterX - boxX;
+          var centerDeltaY = gridCenterY - boxY;
+
+          box.style.transition = 'transform 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.3s ease';
+          box.style.transform  = 'translate3d(' + centerDeltaX + 'px, ' + centerDeltaY + 'px, 0) rotate(720deg) scale(0)';
+          box.style.opacity    = '0';
+        });
+      }, 420);
+
+      // PHASE 3: Verified Badge Pops Out & Gold Sparks Burst (t = 720ms)
+      setTimeout(function() {
+        if (badge) badge.classList.add('pop-active');
+        triggerGoldSparkBurst(wrap);
+
+        if (status) {
+          status.textContent = 'Verified Successfully! 🎉';
+          status.className   = 'otp-status-text status-success-glow';
+        }
+      }, 720);
+
+      // Smooth Redirect after 1.8 seconds
+      setTimeout(function() {
+        if (redirectCallback) redirectCallback();
+      }, 1900);
+    }
+
+    function triggerGoldSparkBurst(container) {
+      if (!container) return;
+      var count = 20;
+
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('div');
+        p.className = 'gold-spark-particle';
+
+        var angle = (i / count) * Math.PI * 2 + (Math.random() * 0.4);
+        var dist  = Math.random() * 65 + 40; // px
+        var tx    = Math.cos(angle) * dist;
+        var ty    = Math.sin(angle) * dist;
+        var size  = Math.random() * 5 + 3;
+
+        p.style.width  = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left   = 'calc(50% - ' + (size/2) + 'px)';
+        p.style.top    = 'calc(50% - ' + (size/2) + 'px)';
+        p.style.transform = 'translate3d(0,0,0) scale(1)';
+        p.style.opacity   = '1';
+        p.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease';
+
+        container.appendChild(p);
+
+        (function(particle, x, y) {
+          requestAnimationFrame(function() {
+            particle.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0) scale(0)';
+            particle.style.opacity   = '0';
+          });
+          setTimeout(function() {
+            if (particle.parentNode) particle.parentNode.removeChild(particle);
+          }, 700);
+        })(p, tx, ty);
+      }
+    }
+
+    function onVerificationFailure(error) {
+      isVerified = false;
+      var msg = (error && error.message) ? error.message : 'Incorrect OTP entered';
+      document.getElementById('statusText').textContent = '❌ Verification Failed: ' + msg;
+      document.getElementById('statusText').style.color = '#ef4444';
+      alert('❌ Verification Failed!\n\n' + msg + '\n\nPlease check the code and try again.');
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       GOLD PARTICLE BACKGROUND CANVAS (60FPS)
+    ───────────────────────────────────────────────────────── */
+    function initGoldParticles() {
+      var canvas = document.getElementById('goldCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var width  = canvas.width  = window.innerWidth;
+      var height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', function() {
+        width  = canvas.width  = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      var pts = [];
+      for (var i = 0; i < 45; i++) {
+        pts.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 2 + 0.6,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+          alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        for (var j = 0; j < pts.length; j++) {
+          var p = pts[j];
+          p.x += p.dx; p.y += p.dy;
+          if (p.x < 0) p.x = width;  if (p.x > width)  p.x = 0;
+          if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(247, 211, 119, ' + p.alpha + ')';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = '#f7d377';
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+  </script>
+</body>
+</html>

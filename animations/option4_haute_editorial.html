@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVision — Option 4: Haute Editorial Prestige</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  :root { --ease-apple: cubic-bezier(0.16, 1, 0.3, 1); }
+  body { background: #000000; color: #f5f5f7; font-family: 'DM Sans', sans-serif; overflow-x: hidden; min-height: 100vh; }
+
+  .apple-controls {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 99999999;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(14, 14, 18, 0.9); backdrop-filter: blur(36px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(232, 180, 42, 0.2);
+    padding: 8px 18px; border-radius: 999px; font-size: 13px;
+  }
+  .active-badge {
+    background: linear-gradient(135deg, #f7d268, #c9932a);
+    color: #000; font-weight: 800; font-size: 12px;
+    padding: 6px 14px; border-radius: 999px; display: flex; align-items: center; gap: 6px;
+  }
+  .ctrl-btn {
+    background: rgba(255, 255, 255, 0.08); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15); padding: 6px 14px;
+    border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); }
+  .ctrl-sep { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.15); }
+
+  .site-canvas { min-height: 100vh; display: flex; flex-direction: column; background: #000; position: relative; }
+  .navbar { height: 86px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 6vw; background: rgba(0,0,0,0.85); backdrop-filter: blur(28px); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { height: 52px; width: auto; filter: drop-shadow(0 2px 14px rgba(232, 180, 42, 0.35)); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: #86868b; text-decoration: none; font-size: 14.5px; }
+  .nav-cta { background: linear-gradient(135deg, #f7d268, #c9932a); color: #000; font-weight: 700; font-size: 13.5px; padding: 11px 26px; border-radius: 999px; border: none; }
+  .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 110px 24px; position: relative; }
+  .ambient-glow { position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%); width: 850px; height: 500px; background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.2) 0%, transparent 70%); filter: blur(80px); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(232, 180, 42, 0.08); border: 1px solid rgba(232, 180, 42, 0.28); color: #f7d268; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; padding: 7px 22px; border-radius: 999px; margin-bottom: 28px; text-transform: uppercase; }
+  .h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 7vw, 92px); font-weight: 700; line-height: 1.05; max-width: 1020px; margin-bottom: 24px; color: #f5f5f7; }
+  .h1 em { font-style: italic; background: linear-gradient(135deg, #ffffff 0%, #fff1cc 35%, #f7d268 70%, #c9932a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .desc { font-size: clamp(17px, 1.9vw, 21px); color: #86868b; max-width: 680px; line-height: 1.6; margin-bottom: 42px; }
+  .hero-cta { background: linear-gradient(135deg, #f7d268, #c9932a); color: #000; font-weight: 700; font-size: 15.5px; padding: 17px 38px; border-radius: 999px; border: none; }
+
+  /* OPTION 4 OVERLAY */
+  #intro-stage {
+    position: fixed; inset: 0; z-index: 1000000; background: #000000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: transform 1.3s var(--ease-apple), opacity 1.3s var(--ease-apple);
+    pointer-events: none;
+  }
+  .hairline {
+    position: absolute; top: 0; left: 0; width: 0%; height: 3px;
+    background: linear-gradient(90deg, #c9932a, #f7d268, #ffffff);
+    box-shadow: 0 0 15px #f7d268; transition: width 1.2s var(--ease-apple);
+  }
+  .mask-container { overflow: hidden; padding-bottom: 8px; }
+  .content-center {
+    position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;
+    transform: translateY(0); transition: transform 1.2s var(--ease-apple);
+  }
+  .txt-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(56px, 8vw, 92px); font-weight: 800; letter-spacing: 0.16em; padding-left: 0.16em;
+    background: linear-gradient(135deg, #ffffff 0%, #fff1cc 35%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    transform: translateY(110%); transition: transform 1.2s var(--ease-apple);
+  }
+  .tagline-serif {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: #e8b42a; letter-spacing: 0.14em; margin-top: 6px;
+    opacity: 0; transform: translateY(10px); transition: all 1s var(--ease-apple);
+  }
+
+  .quote-capsule {
+    margin-top: 36px; max-width: 680px; padding: 16px 38px; text-align: center;
+    background: rgba(18, 18, 24, 0.6); backdrop-filter: blur(36px);
+    border: 1px solid rgba(232, 180, 42, 0.28); border-radius: 999px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(232, 180, 42, 0.15);
+    opacity: 0; transform: translateY(22px); filter: blur(10px);
+    transition: opacity 0.9s var(--ease-apple), transform 0.9s var(--ease-apple), filter 0.9s var(--ease-apple);
+  }
+  .quote-capsule.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+  .q-eye { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; color: #f7d268; text-transform: uppercase; margin-bottom: 5px; }
+  .q-sentence { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.3vw, 24px); font-style: italic; font-weight: 600; color: #ffffff; line-height: 1.35; }
+  .q-author { font-size: 12.5px; font-weight: 600; color: #c9932a; letter-spacing: 0.08em; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="apple-controls">
+  <a href="option3_galaxy_warp.html" class="ctrl-btn">◀ Option 3</a>
+  <div class="active-badge">✦ Option 4: Haute Editorial Prestige</div>
+  <button class="ctrl-btn" onclick="startOption4Animation()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Replay
+  </button>
+  <button class="ctrl-btn" id="loopBtn" onclick="toggleLoop()">Loop: ON</button>
+  <div class="ctrl-sep"></div>
+  <a href="option1_liquid_glass.html" class="ctrl-btn">Back to Option 1 ➔</a>
+</div>
+
+<div class="site-canvas" id="mainWebsite">
+  <header class="navbar">
+    <a href="#" class="brand">
+      <img src="eduvision_correct_logo.png" alt="EduVision" class="nav-logo">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Universities</a></li>
+      <li><a href="#">Mentorship</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <button class="nav-cta">Book Free Session 🔑</button>
+  </header>
+
+  <main class="hero">
+    <div class="ambient-glow"></div>
+    <div class="eyebrow">✦ India's Premier Education Partner</div>
+    <h1 class="h1">Shape Your Tomorrow With<br><em>Unrivalled Career Clarity</em></h1>
+    <p class="desc">1,500+ verified undergraduate & postgraduate degrees. Executive mentorship by CEO Miss Ishika Sharma.</p>
+    <div><button class="hero-cta">Explore 1500+ Courses ✦</button></div>
+  </main>
+</div>
+
+<div id="intro-stage">
+  <div class="hairline" id="line"></div>
+  <div class="content-center" id="box">
+    <div class="mask-container">
+      <div class="txt-logo" id="txt">EDUVISION</div>
+    </div>
+    <div class="tagline-serif" id="tag">Your Future Starts Here</div>
+    <div class="quote-capsule" id="quote">
+      <div class="q-eye">✦ Executive Mentorship ✦</div>
+      <div class="q-sentence">"Your education is an investment that pays the best dividends. Start today!"</div>
+      <div class="q-author">— Miss Ishika Sharma, Founder & CEO</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isLoop = true;
+  let loopTimer = null;
+
+  function toggleLoop() {
+    isLoop = !isLoop;
+    document.getElementById('loopBtn').innerText = 'Loop: ' + (isLoop ? 'ON' : 'OFF');
+    if (isLoop) startOption4Animation();
+    else clearTimeout(loopTimer);
+  }
+
+  function startOption4Animation() {
+    clearTimeout(loopTimer);
+    const ov = document.getElementById('intro-stage');
+    const line = document.getElementById('line');
+    const box = document.getElementById('box');
+    const txt = document.getElementById('txt');
+    const tag = document.getElementById('tag');
+    const q = document.getElementById('quote');
+
+    ov.style.display = 'flex';
+    ov.style.transform = 'translateY(0)';
+    line.style.width = '0%';
+    box.style.transform = 'translateY(0)';
+    txt.style.transform = 'translateY(110%)';
+    tag.style.opacity = '0';
+    tag.style.transform = 'translateY(10px)';
+    q.classList.remove('visible');
+
+    // Step 1: Hairline sweeps, text rises from mask
+    setTimeout(() => {
+      line.style.width = '100%';
+      txt.style.transform = 'translateY(0)';
+      tag.style.opacity = '1';
+      tag.style.transform = 'translateY(0)';
+
+      // Step 2: Glides UP & Quote reveals
+      setTimeout(() => {
+        box.style.transform = 'translateY(-45px)';
+        q.classList.add('visible');
+
+        // Step 3: Silk curtain lift upward!
+        setTimeout(() => {
+          ov.style.transform = 'translateY(-100%)';
+
+          if (isLoop) {
+            loopTimer = setTimeout(startOption4Animation, 4500);
+          }
+        }, 2800);
+
+      }, 1100);
+    }, 200);
+  }
+
+  window.onload = startOption4Animation;
+</script>
+
+</body>
+</html>

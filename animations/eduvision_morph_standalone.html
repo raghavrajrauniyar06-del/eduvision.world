@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVision — Option 1: Seamless Logo Morph (Live 60FPS Player)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0a;
+    color: #f0ede8;
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Floating Player Controls */
+  .player-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000000;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: rgba(18, 18, 22, 0.85);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(201, 147, 42, 0.3);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 30px rgba(201, 147, 42, 0.18);
+    padding: 10px 22px;
+    border-radius: 999px;
+  }
+
+  .player-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e8b42a;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .player-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #e8b42a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e8b42a;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .play-btn {
+    background: linear-gradient(135deg, #c9932a, #e8b42a);
+    color: #000;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .play-btn:hover {
+    box-shadow: 0 4px 16px rgba(232, 180, 42, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .toggle-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  /* ═══ WEBSITE HOMEPAGE (MOCKUP) ═══ */
+  .site-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mock-header {
+    height: 80px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6vw;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 10;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    background: linear-gradient(135deg, #ffffff 40%, #e8b42a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .brand-logo-text.visible {
+    opacity: 1;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: #888580;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: #e8b42a;
+  }
+
+  .nav-cta {
+    background: linear-gradient(135deg, #c9932a, #e8b42a);
+    color: #000;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(201, 147, 42, 0.25);
+  }
+
+  /* Hero */
+  .hero-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(201, 147, 42, 0.2) 0%, rgba(10, 10, 10, 0) 70%);
+    pointer-events: none;
+    filter: blur(50px);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201, 147, 42, 0.1);
+    border: 1px solid rgba(201, 147, 42, 0.3);
+    color: #e8b42a;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 7px 20px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6.8vw, 86px);
+    font-weight: 700;
+    line-height: 1.08;
+    max-width: 980px;
+    margin-bottom: 24px;
+    color: #f0ede8;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, #c9932a, #f7d268);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: #888580;
+    max-width: 680px;
+    line-height: 1.6;
+    margin-bottom: 38px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  .primary-btn {
+    background: linear-gradient(135deg, #c9932a, #e8b42a);
+    color: #000;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px 36px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(201, 147, 42, 0.3);
+  }
+
+  .secondary-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 16px 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+  }
+
+  /* ═══ SEAMLESS LOGO MORPH OVERLAY STAGE ═══ */
+  #stage-morph {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: background-color 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .morph-bg-glow {
+    position: absolute;
+    width: 650px;
+    height: 380px;
+    background: radial-gradient(ellipse at center, rgba(201, 147, 42, 0.32) 0%, rgba(10, 10, 10, 0) 75%);
+    filter: blur(45px);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .morph-logo-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transform-origin: center center;
+    transition: transform 1.25s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s ease;
+  }
+
+  .morph-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(48px, 8vw, 92px);
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    padding-left: 0.32em;
+    background: linear-gradient(135deg, #ffffff 20%, #c9932a 70%, #f7d268 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 50px rgba(201, 147, 42, 0.4);
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(10px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .morph-tagline {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: #888580;
+    margin-top: 14px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #stage-morph.center-revealed .morph-bg-glow { opacity: 1; }
+  #stage-morph.center-revealed .morph-title { opacity: 1; transform: scale(1); filter: blur(0); }
+  #stage-morph.center-revealed .morph-tagline { opacity: 1; transform: translateY(0); }
+
+  #stage-morph.docking { background: rgba(10, 10, 10, 0); }
+  #stage-morph.docking .morph-bg-glow { opacity: 0; }
+  #stage-morph.docking .morph-tagline { opacity: 0; transform: translateY(10px); }
+
+</style>
+</head>
+<body>
+
+<div class="player-bar">
+  <div class="player-badge">Option 1: Seamless Logo Morph</div>
+  <div class="divider"></div>
+  <button class="play-btn" onclick="playMorphAnimation()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Replay Animation
+  </button>
+  <button class="toggle-btn" id="loopToggleBtn" onclick="toggleLoop()">Loop: ON</button>
+</div>
+
+<div class="site-wrapper">
+  <header class="mock-header">
+    <div class="navbar-brand">
+      <div class="brand-logo-text" id="targetNavLogo">EDUVISION</div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Universities</a></li>
+      <li><a href="#">Career Counselling</a></li>
+      <li><a href="#">Study Abroad</a></li>
+      <li><a href="#">About Us</a></li>
+    </ul>
+    <button class="nav-cta">Book Free Session</button>
+  </header>
+
+  <div class="hero-container">
+    <div class="hero-glow"></div>
+    <div class="hero-badge">✦ India's Premium Education Partner</div>
+    <h1 class="hero-title">
+      Shape Your Tomorrow With<br>
+      <em>Unrivalled Career Clarity</em>
+    </h1>
+    <p class="hero-subtitle">
+      1500+ verified undergraduate & post-graduate programs. Personal 1-on-1 mentorship by CEO Miss Ishika Sharma.
+    </p>
+    <div class="hero-actions">
+      <button class="primary-btn">Explore 1500+ Courses</button>
+      <button class="secondary-btn">Free Career Roadmap</button>
+    </div>
+  </div>
+</div>
+
+<div id="stage-morph">
+  <div class="morph-bg-glow"></div>
+  <div class="morph-logo-container" id="morphLogoBox">
+    <div class="morph-title">EDUVISION</div>
+    <div class="morph-tagline">LEARN · GROW · SUCCEED</div>
+  </div>
+</div>
+
+<script>
+  let loopActive = true;
+  let loopTimer = null;
+
+  function toggleLoop() {
+    loopActive = !loopActive;
+    document.getElementById('loopToggleBtn').innerText = 'Loop: ' + (loopActive ? 'ON' : 'OFF');
+    if (loopActive) {
+      playMorphAnimation();
+    } else {
+      clearTimeout(loopTimer);
+    }
+  }
+
+  function playMorphAnimation() {
+    clearTimeout(loopTimer);
+
+    const stage = document.getElementById('stage-morph');
+    const morphBox = document.getElementById('morphLogoBox');
+    const navLogo = document.getElementById('targetNavLogo');
+
+    stage.style.display = 'flex';
+    stage.className = '';
+    morphBox.style.transform = 'translate(0px, 0px) scale(1)';
+    morphBox.style.opacity = '1';
+    navLogo.classList.remove('visible');
+
+    requestAnimationFrame(() => {
+      stage.classList.add('center-revealed');
+    });
+
+    setTimeout(() => {
+      const navRect = navLogo.getBoundingClientRect();
+      const boxRect = morphBox.getBoundingClientRect();
+
+      const startCenterX = boxRect.left + (boxRect.width / 2);
+      const startCenterY = boxRect.top + (boxRect.height / 2);
+
+      const targetCenterX = navRect.left + (navRect.width / 2);
+      const targetCenterY = navRect.top + (navRect.height / 2);
+
+      const deltaX = targetCenterX - startCenterX;
+      const deltaY = targetCenterY - startCenterY;
+      const scaleRatio = 22 / 70;
+
+      stage.classList.add('docking');
+      morphBox.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleRatio})`;
+      morphBox.style.opacity = '0.4';
+
+      setTimeout(() => {
+        navLogo.classList.add('visible');
+        morphBox.style.opacity = '0';
+        stage.style.display = 'none';
+
+        if (loopActive) {
+          loopTimer = setTimeout(() => {
+            playMorphAnimation();
+          }, 2400);
+        }
+      }, 1250);
+    }, 1500);
+  }
+
+  window.onload = () => {
+    playMorphAnimation();
+  };
+</script>
+
+</body>
+</html>

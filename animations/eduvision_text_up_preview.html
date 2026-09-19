@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVision — Text Glides UP Under Logo (Apple Standard)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background: #000000;
+    color: #f5f5f7;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ════ FLOATING CONTROLS (APPLE GLASS) ════ */
+  .apple-controls {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(18, 18, 22, 0.75);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(232, 180, 42, 0.15);
+    padding: 8px 22px;
+    border-radius: 999px;
+  }
+
+  .badge-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #e8b42a;
+  }
+  .badge-title::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e8b42a;
+    box-shadow: 0 0 10px #e8b42a;
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .ctrl-sep {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .pill-btn {
+    background: linear-gradient(135deg, #f7d268, #c9932a);
+    color: #050507;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s var(--ease-apple);
+  }
+  .pill-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 20px rgba(232, 180, 42, 0.5);
+  }
+
+  .sec-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #f5f5f7;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  /* ════ WEBSITE HOMEPAGE CANVAS (BEHIND) ════ */
+  .site-canvas {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #000000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(10px);
+    transition: opacity 1.4s var(--ease-apple), transform 1.4s var(--ease-apple), filter 1.4s var(--ease-apple);
+  }
+  .site-canvas.revealed {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+
+  .header-bar {
+    height: 86px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6vw;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(28px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-logo-img {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 14px rgba(232, 180, 42, 0.35));
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: #86868b;
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+
+  .nav-action-btn {
+    background: linear-gradient(135deg, #f7d268 0%, #c9932a 100%);
+    color: #000;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 11px 26px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Hero */
+  .hero-viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 110px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ambient-mesh {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 850px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.2) 0%, transparent 70%);
+    filter: blur(80px);
+  }
+
+  .eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232, 180, 42, 0.08);
+    border: 1px solid rgba(232, 180, 42, 0.28);
+    color: #f7d268;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 7px 22px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 7vw, 92px);
+    font-weight: 700;
+    line-height: 1.05;
+    max-width: 1020px;
+    margin-bottom: 24px;
+    color: #f5f5f7;
+  }
+  .hero-headline em {
+    font-style: italic;
+    background: linear-gradient(135deg, #ffffff 0%, #fff1cc 35%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-lead {
+    font-size: clamp(17px, 1.9vw, 21px);
+    color: #86868b;
+    max-width: 680px;
+    line-height: 1.6;
+    margin-bottom: 42px;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 18px;
+  }
+  .primary-apple-cta {
+    background: linear-gradient(135deg, #f7d268, #c9932a);
+    color: #000;
+    font-weight: 700;
+    font-size: 15.5px;
+    padding: 17px 38px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     INTRO OVERLAY: STATIONARY EMBLEM + TEXT WRITES & GLIDES UP
+  ══════════════════════════════════════════════════════════════ */
+  #intro-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 1000000;
+    background: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: opacity 1.3s var(--ease-apple), background-color 1.3s var(--ease-apple);
+  }
+
+  .ambient-glow {
+    position: absolute;
+    width: 800px;
+    height: 520px;
+    background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.35) 0%, rgba(201, 147, 42, 0.08) 45%, transparent 72%);
+    filter: blur(65px);
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-apple);
+  }
+  #intro-stage.active .ambient-glow {
+    opacity: 1;
+  }
+
+  /* Central Assembly Area */
+  .center-assembly-area {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+
+  /* 1. THE LOGO EMBLEM (CALM, STATIONARY AT TOP - "LOGO KO MAT LO") */
+  .logo-emblem-stationary {
+    height: 165px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 8;
+  }
+
+  .emblem-img {
+    height: 165px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 35px rgba(232, 180, 42, 0.5)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.9));
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 1.2s var(--ease-apple), transform 1.2s var(--ease-apple);
+  }
+  .emblem-img.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* 2. TEXT WRITING & GLIDING UP CONTAINER ("E" se likhta hua start -> upar jata hai logo ke niche) */
+  .text-glider-track {
+    position: relative;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Starts lower down (translateY: 45px), then glides UP to 0px under logo! */
+    transform: translateY(45px);
+    will-change: transform;
+    transition: transform 1.25s var(--ease-apple);
+  }
+
+  .text-glider-track.glided-up {
+    /* Glides UP to sit snugly right under the emblem ("logo ke niche")! */
+    transform: translateY(-8px);
+  }
+
+  /* Typing Strip */
+  .kinetic-typing-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 72px;
+    position: relative;
+  }
+
+  .letter-node {
+    display: inline-block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    background: linear-gradient(135deg, #ffffff 0%, #fff2cc 30%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(232, 180, 42, 0.45));
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+    filter: blur(12px);
+    transition: opacity 0.4s var(--ease-apple), transform 0.45s var(--ease-apple), filter 0.45s var(--ease-apple);
+  }
+  .letter-node.typed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  .lead-laser-glint {
+    display: inline-block;
+    width: 3px;
+    height: 56px;
+    background: #ffffff;
+    box-shadow: 0 0 18px #ffffff, 0 0 35px #f7d268, 0 0 50px #e8b42a;
+    border-radius: 2px;
+    margin-left: 6px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .lead-laser-glint.active {
+    opacity: 1;
+  }
+
+  /* Tagline */
+  .tagline-fade {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.38em;
+    color: #a8a49c;
+    text-transform: uppercase;
+    margin-top: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.8s var(--ease-apple), transform 0.8s var(--ease-apple);
+  }
+  .tagline-fade.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 3. MOTIVATIONAL INSPIRATION CAPSULE */
+  .quote-capsule {
+    position: relative;
+    z-index: 5;
+    margin-top: 36px;
+    max-width: 660px;
+    padding: 16px 36px;
+    text-align: center;
+    background: rgba(18, 18, 24, 0.55);
+    backdrop-filter: blur(36px) saturate(180%);
+    -webkit-backdrop-filter: blur(36px) saturate(180%);
+    border: 1px solid rgba(232, 180, 42, 0.25);
+    border-radius: 999px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(232, 180, 42, 0.12);
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(10px);
+    transition: opacity 0.9s var(--ease-apple), transform 0.9s var(--ease-apple), filter 0.9s var(--ease-apple);
+  }
+  .quote-capsule.visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  .quote-eyebrow {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: #f7d268;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .quote-sentence {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 2.3vw, 24px);
+    font-style: italic;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.35;
+  }
+
+  .quote-speaker {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #c9932a;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+  }
+
+  /* ════ STAGE REVEAL TRANSITION ════ */
+  #intro-stage.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- FLOATING CONTROLS -->
+<div class="apple-controls">
+  <div class="badge-title">Text Writes ➔ Glides UP Under Logo</div>
+  <div class="ctrl-sep"></div>
+  <button class="pill-btn" onclick="runTextUpAnimation()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Replay
+  </button>
+  <button class="sec-pill" id="loopBtn" onclick="toggleLoop()">Loop: ON</button>
+  <button class="sec-pill" id="speedBtn" onclick="toggleSpeed()">1.0x Realtime</button>
+  <button class="sec-pill" onclick="nextQuote()">Next Quote ✦</button>
+</div>
+
+<!-- WEBSITE MOCKUP (BEHIND) -->
+<div class="site-canvas" id="mainWebsite">
+  <header class="header-bar">
+    <a href="#" class="nav-brand">
+      <img src="eduvision_correct_logo.png" alt="EduVision" class="nav-logo-img">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Universities</a></li>
+      <li><a href="#">Mentorship</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <button class="nav-action-btn">Book Free Session 🔑</button>
+  </header>
+
+  <main class="hero-viewport">
+    <div class="ambient-mesh"></div>
+    <div class="eyebrow-pill">✦ India's Premier Education Partner</div>
+    <h1 class="hero-headline">Shape Your Tomorrow With<br><em>Unrivalled Career Clarity</em></h1>
+    <p class="hero-lead">1,500+ verified undergraduate & postgraduate degrees. Executive mentorship by CEO Miss Ishika Sharma.</p>
+    <div class="hero-cta-row">
+      <button class="primary-apple-cta">Explore 1500+ Courses ✦</button>
+    </div>
+  </main>
+</div>
+
+<!-- INTRO STAGE -->
+<div id="intro-stage">
+  <div class="ambient-glow"></div>
+
+  <div class="center-assembly-area">
+    <!-- 1. Emblem sits serenely at top ("Logo ko mat lo" - stays stationary!) -->
+    <div class="logo-emblem-stationary">
+      <img src="eduvision_emblem.png" alt="EduVision Emblem" class="emblem-img" id="stationaryEmblem">
+    </div>
+
+    <!-- 2. Text writing and gliding UP directly under emblem -->
+    <div class="text-glider-track" id="textGlider">
+      <div class="kinetic-typing-strip" id="letterStrip">
+        <span class="lead-laser-glint" id="laserGlint"></span>
+      </div>
+      <div class="tagline-fade" id="taglineText">YOUR FUTURE STARTS HERE</div>
+    </div>
+  </div>
+
+  <!-- 3. Motivational Quote Capsule -->
+  <div class="quote-capsule" id="quoteCapsule">
+    <div class="quote-eyebrow">✦ Daily Inspiration ✦</div>
+    <div class="quote-sentence" id="quoteSentence">"Your education is an investment that pays the best dividends. Start today!"</div>
+    <div class="quote-speaker" id="quoteSpeaker">— Miss Ishika Sharma, Founder & CEO</div>
+  </div>
+</div>
+
+<script>
+  const QUOTES = [
+    { text: "Your education is an investment that pays the best dividends. Start today!", author: "— Miss Ishika Sharma, Founder & CEO" },
+    { text: "The distance between your dreams and reality is called ACTION. Take yours now!", author: "— EduVision Mentorship" },
+    { text: "Every expert was once a beginner. Your journey to success starts with one step.", author: "— EduVision Education" },
+    { text: "Success is not final, failure is not fatal — it is the courage to continue that counts.", author: "— Winston Churchill" },
+    { text: "Education is the most powerful weapon which you can use to change the world.", author: "— Nelson Mandela" }
+  ];
+
+  let currentQuote = 0;
+  let isLoop = true;
+  let isSlow = false;
+  let loopTimer = null;
+  let animTimer = null;
+
+  const BRAND_CHARS = ['E', 'D', 'U', 'V', 'I', 'S', 'I', 'O', 'N'];
+
+  function initLetters() {
+    const strip = document.getElementById('letterStrip');
+    strip.innerHTML = '';
+    BRAND_CHARS.forEach((ch, idx) => {
+      const span = document.createElement('span');
+      span.className = 'letter-node';
+      span.id = `l-${idx}`;
+      span.innerText = ch;
+      strip.appendChild(span);
+    });
+    const glint = document.createElement('span');
+    glint.className = 'lead-laser-glint';
+    glint.id = 'laserGlint';
+    strip.appendChild(glint);
+  }
+
+  function toggleLoop() {
+    isLoop = !isLoop;
+    document.getElementById('loopBtn').innerText = 'Loop: ' + (isLoop ? 'ON' : 'OFF');
+    if (isLoop) runTextUpAnimation();
+    else clearTimeout(loopTimer);
+  }
+
+  function toggleSpeed() {
+    isSlow = !isSlow;
+    document.getElementById('speedBtn').innerText = isSlow ? '0.5x SlowMo' : '1.0x Realtime';
+    runTextUpAnimation();
+  }
+
+  function nextQuote() {
+    currentQuote = (currentQuote + 1) % QUOTES.length;
+    document.getElementById('quoteSentence').innerText = `"${QUOTES[currentQuote].text}"`;
+    document.getElementById('quoteSpeaker').innerText = QUOTES[currentQuote].author;
+  }
+
+  function runTextUpAnimation() {
+    clearTimeout(animTimer);
+    clearTimeout(loopTimer);
+
+    const stage = document.getElementById('intro-stage');
+    const emblem = document.getElementById('stationaryEmblem');
+    const glider = document.getElementById('textGlider');
+    const tagline = document.getElementById('taglineText');
+    const quote = document.getElementById('quoteCapsule');
+    const site = document.getElementById('mainWebsite');
+
+    const factor = isSlow ? 2.0 : 1.0;
+
+    // Reset Scene
+    stage.style.display = 'flex';
+    stage.className = 'active';
+    site.classList.remove('revealed');
+
+    emblem.classList.remove('visible');
+    glider.classList.remove('glided-up');
+    tagline.classList.remove('visible');
+    quote.classList.remove('visible');
+
+    initLetters();
+    const chars = document.querySelectorAll('.letter-node');
+    const glint = document.getElementById('laserGlint');
+
+    // Step 1: Stationary Emblem manifests softly at top
+    emblem.classList.add('visible');
+    glint.classList.add('active');
+
+    // Step 2: "E" se start hota hua kinetic writing effect
+    let charIdx = 0;
+    const charInterval = 85 * factor;
+
+    function typeChar() {
+      if (charIdx < chars.length) {
+        chars[charIdx].classList.add('typed');
+        charIdx++;
+        setTimeout(typeChar, charInterval);
+      } else {
+        // Typing finished!
+        glint.classList.remove('active');
+        tagline.classList.add('visible');
+
+        // Step 3: "woh jb ho jye toh usko uper le jayo logo ke niche" (Text glides UP under logo!)
+        setTimeout(() => {
+          glider.classList.add('glided-up');
+
+          // Motivational Quote fades in
+          setTimeout(() => {
+            quote.classList.add('visible');
+
+            // Step 4: After few seconds, website opens smoothly!
+            animTimer = setTimeout(() => {
+              stage.classList.add('fade-out');
+              site.classList.add('revealed');
+
+              setTimeout(() => {
+                stage.style.display = 'none';
+
+                if (isLoop) {
+                  loopTimer = setTimeout(() => {
+                    nextQuote();
+                    runTextUpAnimation();
+                  }, 3000 * factor);
+                }
+              }, 1300 * factor);
+
+            }, 2400 * factor); // Hold time for motivational quote
+
+          }, 400 * factor);
+
+        }, 300 * factor);
+      }
+    }
+
+    setTimeout(typeChar, 300 * factor);
+  }
+
+  window.onload = () => {
+    runTextUpAnimation();
+  };
+</script>
+
+</body>
+</html>

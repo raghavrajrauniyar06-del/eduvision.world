@@ -1,0 +1,99 @@
+/* University Hero Card CSS */
+#darkCard {
+  background: #2b2b2e;
+  border: none;
+  padding: 40px;
+  margin-top: 80px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  overflow: visible !important;
+}
+
+#darkCardImg {
+  width: 100%;
+  height: 350px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  margin-top: -100px;
+  box-shadow: 0 30px 60px -12px rgba(0,0,0,0.8);
+  position: relative;
+  transform: perspective(1000px) rotateX(3deg) scale(1.02);
+  transition: transform 0.5s;
+  z-index: 10;
+}
+
+#darkCardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid rgba(255,255,255,0.05);
+}
+
+#darkCard h2 {
+  font-size: 2.2rem;
+  color: #ffd700;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+#darkCard h2 span {
+  font-size: 2.5rem;
+}
+
+#darkCard p {
+  color: #e5e5e5;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.stat-box {
+  background: rgba(201,147,42,0.06);
+  border: 1px solid rgba(201,147,42,0.2);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.hero-banner {
+  animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-banner h1, .hero-banner p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: initial !important;
+  opacity: 1 !important;
+}

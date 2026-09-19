@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../shared/page_guard.js?v=20260919_V1"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <title>Associate Partner Portal | EduVision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.min.js"></script>
+
+  <style>
+    :root {
+      --font-sf: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif;
+      --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif;
+      --glass-bg: rgba(14, 18, 28, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.14);
+      --glass-focus: rgba(255, 255, 255, 0.85);
+      --input-bg: rgba(8, 11, 18, 0.68);
+      --text-main: #ffffff;
+      --text-sub: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-text);
+      background: #020408 url('../assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Ambient Scrim Overlay for Contrast */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 45%, rgba(2, 4, 8, 0.25) 0%, rgba(2, 4, 8, 0.65) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Centered Apple macOS Frosted Glass Card */
+    .login-wrapper {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+      animation: appleCardSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes appleCardSlide {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .auth-container {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 38px 34px 32px;
+      backdrop-filter: blur(45px) saturate(190%);
+      -webkit-backdrop-filter: blur(45px) saturate(190%);
+      box-shadow: 
+        0 35px 90px rgba(0, 0, 0, 0.75),
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Specular Glass Sheen Top Rim */
+    .auth-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .auth-header {
+      margin-bottom: 24px;
+    }
+
+    .auth-header h1 {
+      font-family: var(--font-sf);
+      font-size: 2.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .auth-header p {
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    /* Input Groups */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-field-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: #ffffff;
+      font-family: var(--font-text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .input-field:focus {
+      border-color: var(--glass-focus);
+      background: rgba(14, 18, 30, 0.85);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+    }
+
+    .input-field:focus + .input-icon,
+    .input-field-wrapper:focus-within .input-icon {
+      color: #ffffff;
+    }
+
+    /* Eye toggle */
+    .eye-btn {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 1.05rem;
+      transition: color 0.2s;
+      z-index: 10;
+      padding: 4px;
+    }
+
+    .eye-btn:hover { color: #ffffff; }
+    .eye-btn.active { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+
+    /* Infinity Flashlight Ray */
+    .infinity-ray {
+      position: absolute;
+      right: 35px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 200vw;
+      height: 150vh;
+      background: linear-gradient(to left, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.25) 30%, rgba(255,255,255,0) 80%);
+      clip-path: polygon(100% 50%, 0 0, 0 100%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 9;
+      opacity: 1;
+      transform-origin: right center;
+      animation: rayShoot 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    @keyframes rayShoot {
+      0% { width: 0; opacity: 1; transform: translateY(-50%) scaleY(0.01); filter: brightness(2); }
+      50% { width: 200vw; opacity: 1; transform: translateY(-50%) scaleY(1); filter: brightness(1.5); }
+      100% { width: 200vw; opacity: 1; transform: translateY(-50%) scaleY(1); filter: brightness(1); }
+    }
+
+    /* Controls row: Remember Me & Forgot Password */
+    .auth-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 22px;
+      font-size: 0.86rem;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd5e1;
+      cursor: pointer;
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    .remember-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      accent-color: #ffffff;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #e2e8f0;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* Pure Solid White Apple Liquid Button */
+    .btn-apple-login {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #090d16;
+      font-family: var(--font-sf);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-apple-login:hover {
+      background: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-apple-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-apple-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Secondary Footer Row */
+    .auth-footer {
+      text-align: center;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.86rem;
+      color: var(--text-sub);
+    }
+
+    .auth-footer a {
+      color: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: opacity 0.2s;
+    }
+
+    .auth-footer a:hover { opacity: 0.8; }
+
+    .back-home {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-home:hover { color: var(--text-sub); }
+
+    /* ═══════════════════════════════════════════
+       SMOOTH ORB & SHOCKWAVE ANIMATION
+    ═══════════════════════════════════════════ */
+    .dim-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(2, 4, 8, 0.88); backdrop-filter: blur(14px);
+      z-index: 9000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    }
+    .dim-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .auth-orb {
+      position: fixed; z-index: 10000;
+      width: 50px; height: 50px;
+      background: #ffffff;
+      border-radius: 50%; opacity: 0; pointer-events: none;
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.8), 0 0 70px rgba(255, 255, 255, 0.5);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .auth-orb.show { opacity: 1; }
+    .auth-orb.center {
+      top: 50% !important; left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.2) !important;
+    }
+    .auth-orb::after {
+      content: ""; width: 22px; height: 22px;
+      border: 3px solid rgba(0, 0, 0, 0.2); border-top-color: #000;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .shockwave-base {
+      position: fixed; top: 50%; left: 50%; width: 0; height: 0;
+      border-radius: 50%; z-index: 9500; transform: translate(-50%, -50%); pointer-events: none;
+    }
+    .shockwave-white {
+      background: #ffffff;
+      transition: width 0.6s cubic-bezier(0.85, 0, 0.15, 1), height 0.6s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.6s ease;
+    }
+    .shockwave-color {
+      background: #ffffff; z-index: 9501;
+      transition: width 0.8s cubic-bezier(0.85, 0, 0.15, 1) 0.1s, height 0.8s cubic-bezier(0.85, 0, 0.15, 1) 0.1s;
+    }
+    .shockwave-base.expand { width: 300vw; height: 300vw; opacity: 0; }
+    .shockwave-color.expand { opacity: 1; }
+
+    .takeover-content {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      z-index: 9600; text-align: center; opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease 0.4s;
+    }
+    .takeover-content.show { opacity: 1; }
+    .takeover-logo { font-family: var(--font-sf); font-size: 3.5rem; color: #fff; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.03em; }
+    .takeover-text { font-family: var(--font-text); font-size: 1.15rem; color: rgba(255, 255, 255, 0.85); letter-spacing: 1px; }
+
+    /* ═══════════════════════════════════════════
+       DARK FROSTED LIQUID GLASS MODALS
+    ═══════════════════════════════════════════ */
+    .portal-modal-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 4, 8, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .portal-modal-box {
+      background: rgba(18, 22, 34, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #f8fafc;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 26px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      font-family: var(--font-text);
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .portal-modal-top {
+      padding: 20px 24px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .portal-modal-top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .portal-modal-top-left span.icon { font-size: 1.25rem; }
+    .portal-modal-top-left span.title { font-size: 1.12rem; font-weight: 700; color: #ffffff; font-family: var(--font-sf); }
+
+    .portal-modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 2px 8px;
+      border-radius: 50%;
+      line-height: 1;
+      transition: all 0.2s;
+    }
+
+    .portal-modal-close-btn:hover { color: #ef4444; }
+
+    .portal-modal-content {
+      padding: 22px 24px;
+    }
+
+    .portal-modal-content p {
+      margin: 0 0 16px;
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .portal-modal-field {
+      margin-bottom: 14px;
+    }
+
+    .portal-modal-field label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .portal-modal-input {
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: rgba(8, 11, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-size: 0.94rem;
+      outline: none;
+      box-sizing: border-box;
+      font-family: var(--font-text);
+      transition: all 0.25s;
+    }
+
+    .portal-modal-input:focus {
+      border-color: #ffffff;
+      background: rgba(14, 18, 30, 0.85);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+    }
+
+    .portal-modal-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: #ffffff;
+      color: #090d16;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+      margin-top: 8px;
+      transition: all 0.25s;
+      font-family: var(--font-sf);
+    }
+
+    .portal-modal-btn:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
+    }
+
+    .portal-modal-bottom-strip {
+      padding: 12px 24px;
+      background: rgba(8, 11, 18, 0.5);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      color: #64748b;
+      gap: 6px;
+    }
+  </style>
+<style id="apple-vision-liquid-glass">
+
+  /* ═══════════════════════════════════════════════════════════
+     AUTHENTIC APPLE macOS / VisionOS LIQUID GLASS THEME
+     ═══════════════════════════════════════════════════════════ */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif !important;
+    background: #020408 url('../assets/mac_liquid_wallpaper.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  body::before {
+    content: '' !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: radial-gradient(ellipse at 50% 45%, rgba(2, 4, 8, 0.22) 0%, rgba(2, 4, 8, 0.68) 100%) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .login-wrapper {
+    width: 100% !important;
+    max-width: 460px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+    animation: appleCardSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  @keyframes appleCardSlide {
+    from { opacity: 0; transform: translateY(40px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .auth-container {
+    width: 100% !important;
+    background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(10, 14, 24, 0.76) 100%) !important;
+    backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    -webkit-backdrop-filter: blur(60px) saturate(230%) contrast(108%) brightness(112%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    border-radius: 30px !important;
+    padding: 38px 34px 32px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.65),
+      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.45),
+      inset 0 0 45px rgba(255, 255, 255, 0.05),
+      0 40px 100px -15px rgba(0, 0, 0, 0.9),
+      0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+    overflow: hidden !important;
+  }
+
+  /* Specular Top Rim Sheen with Prismatic Glint */
+  .auth-container::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 10% !important;
+    right: 10% !important;
+    height: 1.5px !important;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 1) 50%, rgba(180, 220, 255, 0.9) 65%, transparent 100%) !important;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) !important;
+    pointer-events: none !important;
+    z-index: 20 !important;
+  }
+
+  /* Interactive Specular Glare (follows mouse cursor) */
+  .auth-container::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 30px !important;
+    background: radial-gradient(circle 380px at var(--glare-x, 50%) var(--glare-y, 25%), rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 75%) !important;
+    pointer-events: none !important;
+    z-index: 15 !important;
+    opacity: 0.95 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .auth-header {
+    margin-bottom: 24px !important;
+    text-align: left !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .auth-header h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 2.05rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.025em !important;
+    line-height: 1.15 !important;
+    margin-bottom: 6px !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .auth-header p {
+    color: #94a3b8 !important;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    line-height: 1.45 !important;
+  }
+
+  .input-group {
+    margin-bottom: 16px !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .input-field-wrapper {
+    position: relative !important;
+    width: 100% !important;
+  }
+
+  .input-icon {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #94a3b8 !important;
+    font-size: 0.95rem !important;
+    pointer-events: none !important;
+    transition: color 0.2s !important;
+    z-index: 5 !important;
+  }
+
+  /* Liquid Glass Inputs */
+  .input-field {
+    width: 100% !important;
+    padding: 14px 16px 14px 44px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+    backdrop-filter: blur(25px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 1px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    color: #ffffff !important;
+    font-size: 0.95rem !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .input-field:focus {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.18) !important;
+  }
+
+  .auth-controls-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 4px !important;
+    margin-bottom: 22px !important;
+    font-size: 0.86rem !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .remember-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: #cbd5e1 !important;
+    cursor: pointer !important;
+    font-size: 0.85rem !important;
+    user-select: none !important;
+  }
+
+  .remember-label input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 4px !important;
+    accent-color: #ffffff !important;
+    cursor: pointer !important;
+  }
+
+  .forgot-link {
+    color: #e2e8f0 !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: color 0.2s !important;
+    font-size: 0.86rem !important;
+  }
+
+  .forgot-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+  }
+
+  /* Pure Solid White Apple Button with Tactile Press */
+  .btn-submit, .btn-apple-login {
+    width: 100% !important;
+    padding: 14px !important;
+    border: none !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    color: #090d16 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    letter-spacing: -0.01em !important;
+    cursor: pointer !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px #ffffff, 0 0 25px rgba(255, 255, 255, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .btn-submit:hover, .btn-apple-login:hover {
+    background: #f8fafc !important;
+    transform: translateY(-2px) scale(1.015) !important;
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.35), inset 0 1px 1px #ffffff !important;
+  }
+
+  .btn-submit:active, .btn-apple-login:active {
+    transform: scale(0.96) translateY(2px) !important;
+  }
+
+  .auth-footer {
+    text-align: center !important;
+    margin-top: 22px !important;
+    padding-top: 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.82rem !important;
+    color: #64748b !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .auth-footer a {
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    transition: color 0.2s !important;
+  }
+
+  .auth-footer a:hover { color: #ffffff !important; }
+
+</style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN AUTH CARD (EXACT APPLE MAC LIQUID DESIGN)
+  ═══════════════════════════════════════════ -->
+  <div class="login-wrapper">
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>Hello, Partner!</h1>
+        <p>Log in to access your company workspace.</p>
+      </div>
+
+      <form id="associateForm" autocomplete="off">
+        <div class="input-group">
+          <div class="input-field-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="text" id="partner_id" class="input-field" required placeholder="Mobile Number, Email or Partner Code" autocomplete="username">
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <div class="input-field-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="password" class="input-field" required placeholder="Password" style="padding-right: 42px;" autocomplete="current-password">
+            <i class="fa-solid fa-eye eye-btn" onclick="toggleInfinityPassword(this, 'password')"></i>
+          </div>
+        </div>
+
+        <div class="auth-controls-row">
+          <label class="remember-label">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember me</span>
+          </label>
+          <a href="javascript:void(0)" onclick="openRoleForgotModal()" class="forgot-link">
+            Forgot Password?
+          </a>
+        </div>
+
+        <button type="submit" class="btn-apple-login" id="submitBtn">
+          Log in
+        </button>
+
+        <div class="auth-footer">
+          New to EduVision? 
+          <a href="javascript:void(0)" onclick="openApplyModal()">Apply for Partnership ➔</a>
+          <div>
+            <a href="../index.html" class="back-home">
+              ← Return to EduVision Homepage
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SMOOTH ORB & SHOCKWAVE ELEMENTS
+  ═══════════════════════════════════════════ -->
+  <div class="dim-overlay" id="dimOverlay"></div>
+  <div class="auth-orb" id="authOrb"></div>
+  <div class="shockwave-base shockwave-white" id="shockWhite"></div>
+  <div class="shockwave-base shockwave-color" id="shockColor"></div>
+  
+  <div class="takeover-content" id="takeoverContent">
+    <div class="takeover-logo">EduVision</div>
+    <div class="takeover-text" id="takeoverText">Authenticating Partner Workspace...</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL 1: APPLY FOR ASSOCIATE PARTNERSHIP
+  ═══════════════════════════════════════════ -->
+  <div class="portal-modal-wrap" id="applyModal">
+    <div class="portal-modal-box" style="max-width: 480px;">
+      <div class="portal-modal-top">
+        <div class="portal-modal-top-left">
+          <span class="icon">🤝</span>
+          <span class="title">Apply for Associate Partnership</span>
+        </div>
+        <button type="button" class="portal-modal-close-btn" onclick="closeApplyModal()">&times;</button>
+      </div>
+
+      <div class="portal-modal-content">
+        <p>Join India's leading education network. Refer students, earn commissions, and manage admissions seamlessly.</p>
+
+        <form id="applyPartnerForm" onsubmit="handleApplyPartner(event)">
+          <div class="portal-modal-field">
+            <label>Company / Consultancy Name</label>
+            <input type="text" id="applyCompany" class="portal-modal-input" required placeholder="e.g. Apex Career Solutions">
+          </div>
+
+          <div class="portal-modal-field">
+            <label>Contact Person (Full Name)</label>
+            <input type="text" id="applyName" class="portal-modal-input" required placeholder="e.g. Ramesh Kumar">
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="portal-modal-field">
+              <label>Official Email</label>
+              <input type="email" id="applyEmail" class="portal-modal-input" required placeholder="email@company.com">
+            </div>
+            <div class="portal-modal-field">
+              <label>Mobile Number</label>
+              <input type="tel" id="applyPhone" class="portal-modal-input" required placeholder="+91 9876543210">
+            </div>
+          </div>
+
+          <div class="portal-modal-field">
+            <label>City / Location</label>
+            <input type="text" id="applyLocation" class="portal-modal-input" required placeholder="e.g. Patna, Bihar">
+          </div>
+
+          <div class="portal-modal-field">
+            <label>Create Password</label>
+            <div class="input-field-wrapper">
+              <input type="password" id="applyPassword" class="portal-modal-input" required placeholder="Minimum 6 characters" minlength="6" style="padding-right:42px;">
+              <i class="fa-solid fa-eye eye-btn" onclick="toggleInfinityPassword(this, 'applyPassword')"></i>
+            </div>
+          </div>
+
+          <div id="applyStatus" style="font-size:0.85rem; margin-bottom:12px; min-height:18px;"></div>
+
+          <button type="submit" class="portal-modal-btn" id="btnApplySubmit">
+            Submit Application 🚀
+          </button>
+        </form>
+      </div>
+
+      <div class="portal-modal-bottom-strip">
+        <i class="fa-solid fa-shield-halved"></i> 256-Bit SSL Encrypted • Instant Partner Onboarding
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL 2: ASSOCIATE FORGOT PASSWORD (OTP)
+  ═══════════════════════════════════════════ -->
+  <div class="portal-modal-wrap" id="roleForgotModal">
+    <div class="portal-modal-box">
+      <div class="portal-modal-top">
+        <div class="portal-modal-top-left">
+          <span class="icon">🔑</span>
+          <span class="title">Associate Password Reset</span>
+        </div>
+        <button type="button" class="portal-modal-close-btn" onclick="closeRoleForgotModal()">&times;</button>
+      </div>
+
+      <div class="portal-modal-content">
+        <p>
+          Enter your registered <strong>Mobile Number</strong> or <strong>Official Email</strong>. We will locate your account and send a 6-digit OTP code to verify your identity.
+        </p>
+
+        <div class="portal-modal-field">
+          <label>Registered Mobile No. or Email</label>
+          <input type="text" id="roleForgotInput" class="portal-modal-input" placeholder="e.g. registered phone or email">
+        </div>
+
+        <div id="roleForgotStatus" style="font-size:0.85rem; margin-bottom:12px; min-height:18px;"></div>
+
+        <button type="button" id="btnSendRoleForgot" onclick="handleSendRoleForgot('associate', 'associate_partners')" class="portal-modal-btn">
+          Find Account & Send 6-Digit OTP ➔
+        </button>
+      </div>
+
+      <div class="portal-modal-bottom-strip">
+        <i class="fa-solid fa-lock"></i> EduVision Partner Security & Verification
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CONTROLLER JAVASCRIPT
+  ═══════════════════════════════════════════ -->
+  <script>
+    // Supabase Initialization
+    const SUPABASE_PROJECT_URL = 'https://ewxvqpyusveiynplzxed.supabase.co';
+    const SUPABASE_ANON_KEY    = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
+    const sb = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+
+    // Orb Animations
+    function startOrbLoader(btnEvent) {
+      var btn = btnEvent.currentTarget || btnEvent.target;
+      var rect = btn.getBoundingClientRect();
+      var orb = document.getElementById('authOrb');
+      
+      orb.style.top = (rect.top + rect.height/2) + 'px';
+      orb.style.left = (rect.left + rect.width/2) + 'px';
+      orb.style.transform = 'translate(-50%, -50%) scale(0.5)';
+      
+      document.getElementById('dimOverlay').classList.add('active');
+      orb.classList.add('show');
+      
+      setTimeout(function() { orb.classList.add('center'); }, 50);
+    }
+
+    function stopOrbLoader() {
+      var orb = document.getElementById('authOrb');
+      orb.classList.remove('center');
+      orb.classList.remove('show');
+      document.getElementById('dimOverlay').classList.remove('active');
+    }
+
+    function triggerOrbSuccess(colorHex, welcomeText, callback) {
+      var orb = document.getElementById('authOrb');
+      var shockWhite = document.getElementById('shockWhite');
+      var shockColor = document.getElementById('shockColor');
+      var takeoverText = document.getElementById('takeoverText');
+      
+      var color = colorHex || '#ffffff';
+      var shadow = color + '80';
+      document.documentElement.style.setProperty('--orb-color', color);
+      document.documentElement.style.setProperty('--orb-shadow', shadow);
+      
+      takeoverText.textContent = welcomeText || 'Loading Workspace...';
+      
+      setTimeout(function() {
+        shockWhite.classList.add('expand');
+        shockColor.classList.add('expand');
+        document.getElementById('takeoverContent').classList.add('show');
+        orb.classList.remove('show');
+        
+        setTimeout(function() { if(callback) callback(); }, 1500);
+      }, 400);
+    }
+
+    // Infinity Flashlight Password Toggle
+    function toggleInfinityPassword(btn, inputId) {
+      const input = document.getElementById(inputId);
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      
+      btn.classList.toggle('active');
+      btn.classList.toggle('fa-eye');
+      btn.classList.toggle('fa-eye-slash');
+
+      const wrapper = btn.parentElement;
+      const oldRay = wrapper.querySelector('.infinity-ray');
+
+      if (isPassword) {
+        if (!oldRay) {
+          const ray = document.createElement('div');
+          ray.className = 'infinity-ray';
+          wrapper.appendChild(ray);
+        }
+      } else {
+        if (oldRay) oldRay.remove();
+      }
+    }
+
+    // Auto-redirect if already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      // Prefill remembered user
+      const remembered = localStorage.getItem('eduvision_remember_partner');
+      if (remembered) {
+        document.getElementById('partner_id').value = remembered;
+        document.getElementById('rememberMe').checked = true;
+      }
+
+      const session = localStorage.getItem('eduvision_user');
+      if (session) {
+        try {
+          const user = JSON.parse(session);
+          if (user.partner_code) {
+            document.getElementById('partner_id').value = user.partner_code;
+          }
+        } catch(e) {}
+      }
+
+      // Login Form Submit
+      const form = document.getElementById('associateForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const partnerInput = document.getElementById('partner_id').value.trim();
+        const pwd = document.getElementById('password').value.trim();
+        const btn = document.getElementById('submitBtn');
+        const remember = document.getElementById('rememberMe').checked;
+        
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+        btn.textContent = 'Authenticating...';
+        
+        startOrbLoader(e);
+
+        try {
+          const rawInput = partnerInput.trim();
+          const digits = rawInput.replace(/\D/g, '');
+          const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+
+          let orParts = [
+            `partner_code.eq.${rawInput}`,
+            `email.ilike.${rawInput}`
+          ];
+          if (last10) {
+            orParts.push(`phone.ilike.*${last10}*`);
+            orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (rawInput.length >= 3) {
+            orParts.push(`phone.ilike.*${rawInput}*`);
+          }
+
+          // Query associate_partners table in Supabase
+          const { data, error } = await sb
+            .from('associate_partners')
+            .select('*')
+            .or(orParts.join(','))
+            .eq('password', pwd);
+
+          if (error) {
+            console.error("Associate Supabase error:", error);
+          }
+
+          let partner = (data && data.length > 0) ? data[0] : null;
+
+          // Offline fallback check if not found in cloud table
+          if (!partner) {
+            const cached = localStorage.getItem('eduvision_partners');
+            if (cached) {
+              const list = JSON.parse(cached);
+              partner = list.find(p => {
+                if (p.password !== pwd) return false;
+                if (p.partner_code === rawInput || (p.email && p.email.toLowerCase() === rawInput.toLowerCase())) return true;
+                if (last10 && (p.phone || '').replace(/\D/g, '').slice(-10) === last10) return true;
+                return false;
+              });
+            }
+          }
+
+          if (!partner) {
+            alert('Invalid Mobile Number, Email, Partner Code or Password.');
+            btn.textContent = 'Log in';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            stopOrbLoader();
+            return;
+          }
+
+          if (partner.status !== 'Active') {
+            alert('Your account is currently "' + partner.status + '". Please contact EduVision administrator.');
+            btn.textContent = 'Log in';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            stopOrbLoader();
+            return;
+          }
+
+          // Handle remember me
+          if (remember) {
+            localStorage.setItem('eduvision_remember_partner', partnerInput);
+          } else {
+            localStorage.removeItem('eduvision_remember_partner');
+          }
+
+          // Build session user payload matching dashboard requirements
+          const sessionUser = {
+            id: partner.partner_id,
+            partner_id: partner.partner_id,
+            partner_code: partner.partner_code,
+            name: partner.contact_person || partner.company_name || 'Associate Partner',
+            contact_person: partner.contact_person,
+            company: partner.company_name,
+            company_name: partner.company_name,
+            email: partner.email,
+            phone: partner.phone,
+            role: 'partner',
+            status: partner.status || 'Active',
+            tier: partner.tier || 'Gold Agency',
+            commission_rate: partner.commission_rate || '10%',
+            location: partner.location || '--',
+            login_time: new Date().toISOString()
+          };
+
+          triggerOrbSuccess('#ffffff', 'Welcome, ' + (partner.contact_person || 'Partner') + '!', function() {
+            localStorage.setItem('eduvision_user', JSON.stringify(sessionUser));
+            window.location.href = '../welcome.html?redirect=associate/dashboard.html';
+          });
+
+        } catch (err) {
+          console.error(err);
+          alert('Authentication Error: ' + err.message);
+          btn.textContent = 'Log in';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          stopOrbLoader();
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════
+    // APPLY MODAL HANDLER
+    // ═══════════════════════════════════════════
+    function openApplyModal() {
+      const modal = document.getElementById('applyModal');
+      if (modal) modal.style.display = 'flex';
+      const status = document.getElementById('applyStatus');
+      if (status) status.textContent = '';
+      setTimeout(() => {
+        const inp = document.getElementById('applyCompany');
+        if (inp) inp.focus();
+      }, 100);
+    }
+
+    function closeApplyModal() {
+      const modal = document.getElementById('applyModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleApplyPartner(e) {
+      e.preventDefault();
+      const company = document.getElementById('applyCompany').value.trim();
+      const name = document.getElementById('applyName').value.trim();
+      const email = document.getElementById('applyEmail').value.trim();
+      const phone = document.getElementById('applyPhone').value.trim();
+      const location = document.getElementById('applyLocation').value.trim();
+      const password = document.getElementById('applyPassword').value.trim();
+      const btn = document.getElementById('btnApplySubmit');
+      const statusEl = document.getElementById('applyStatus');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+      statusEl.textContent = 'Connecting to partner registry...';
+      statusEl.style.color = '#cbd5e1';
+
+      try {
+        const { data: existing } = await sb
+          .from('associate_partners')
+          .select('partner_id')
+          .or(`email.eq.${email},phone.eq.${phone}`);
+
+        if (existing && existing.length > 0) {
+          throw new Error('An account with this Email or Phone is already registered. Please login.');
+        }
+
+        const partnerId = 'AP-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase();
+        const codePrefix = name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase() || 'PART';
+        const partnerCode = 'AP-' + codePrefix + Math.floor(1000 + Math.random() * 9000);
+
+        const newPartner = {
+          partner_id: partnerId,
+          partner_code: partnerCode,
+          company_name: company,
+          contact_person: name,
+          email: email,
+          phone: phone,
+          location: location,
+          password: password,
+          status: 'Active',
+          tier: 'Gold Agency',
+          commission_rate: '10%',
+          mapped_universities: [],
+          employees: []
+        };
+
+        const { error: insertErr } = await sb.from('associate_partners').insert([newPartner]);
+        if (insertErr) throw insertErr;
+
+        statusEl.innerHTML = '<i class="fa-solid fa-check"></i> Registration Approved! Partner Code: <strong>' + partnerCode + '</strong>';
+        statusEl.style.color = '#4ade80';
+
+        const sessionUser = {
+          id: partnerId,
+          partner_id: partnerId,
+          partner_code: partnerCode,
+          name: name,
+          contact_person: name,
+          company: company,
+          company_name: company,
+          email: email,
+          phone: phone,
+          role: 'partner',
+          status: 'Active',
+          tier: 'Gold Agency',
+          commission_rate: '10%',
+          location: location,
+          login_time: new Date().toISOString()
+        };
+
+        closeApplyModal();
+
+        triggerOrbSuccess('#ffffff', 'Welcome, ' + name + '!', function() {
+          localStorage.setItem('eduvision_user', JSON.stringify(sessionUser));
+          window.location.href = '../welcome.html?redirect=associate/dashboard.html';
+        });
+
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = '❌ ' + (err.message || 'Registration failed.');
+        statusEl.style.color = '#ef4444';
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Application 🚀';
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    // FORGOT PASSWORD MODAL HANDLER
+    // ═══════════════════════════════════════════
+    function openRoleForgotModal() {
+      const modal = document.getElementById('roleForgotModal');
+      const inp = document.getElementById('roleForgotInput');
+      const statusEl = document.getElementById('roleForgotStatus');
+      const btn = document.getElementById('btnSendRoleForgot');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔';
+      }
+      if (statusEl) statusEl.textContent = '';
+      if (inp) inp.value = '';
+      if (modal) modal.style.display = 'flex';
+      setTimeout(() => { if (inp) inp.focus(); }, 120);
+    }
+
+    function closeRoleForgotModal() {
+      const modal = document.getElementById('roleForgotModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function handleSendRoleForgot(portalName, tableName) {
+      const inp = document.getElementById('roleForgotInput');
+      const statusEl = document.getElementById('roleForgotStatus');
+      const btn = document.getElementById('btnSendRoleForgot');
+      const val = inp ? inp.value.trim() : '';
+
+      if (!val) {
+        if (statusEl) { statusEl.textContent = 'Please enter your registered mobile or email.'; statusEl.style.color = '#ef4444'; }
+        if (inp) inp.focus();
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching Account...'; }
+      if (statusEl) { statusEl.textContent = 'Verifying partner records in database...'; statusEl.style.color = '#cbd5e1'; }
+
+      try {
+        const isEmail = val.includes('@');
+        let rec = null;
+
+        try {
+          let query = sb.from(tableName).select('*');
+          if (isEmail) {
+            query = query.ilike('email', val);
+          } else {
+            query = query.or(`phone.eq.${val},partner_code.eq.${val},partner_id.eq.${val}`);
+          }
+          const { data, error } = await query;
+          if (data && data.length > 0) rec = data[0];
+        } catch(e) { console.warn("Supabase forgot lookup note:", e); }
+
+        // Local cache fallback
+        if (!rec) {
+          try {
+            const cached = JSON.parse(localStorage.getItem('eduvision_partners') || '[]');
+            rec = cached.find(p => isEmail 
+              ? (p.email && p.email.toLowerCase() === val.toLowerCase())
+              : (p.phone === val || p.partner_code === val || p.partner_id === val)
+            );
+          } catch(e) {}
+        }
+
+        if (!rec) {
+          throw new Error('No partner account found with this ' + (isEmail ? 'email address' : 'mobile number or Partner ID') + '.');
+        }
+
+        const targetEmail = (rec.email || '').trim().toLowerCase();
+        if (!targetEmail || !targetEmail.includes('@')) {
+          throw new Error('This partner account does not have a registered email address for OTP delivery.');
+        }
+
+        if (statusEl) {
+          statusEl.textContent = '✓ Account verified (' + (rec.contact_person || rec.company_name || 'Partner') + ')! Sending 6-digit OTP...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        try {
+          await sb.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } });
+        } catch(e){}
+
+        sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({
+          identifier: targetEmail,
+          phone: rec.phone || '',
+          name: rec.contact_person || rec.company_name || 'Associate Partner',
+          mode: 'recovery',
+          role: 'partner',
+          portal: 'associate'
+        }));
+
+        if (statusEl) {
+          statusEl.textContent = '✓ 6-Digit OTP sent to ' + targetEmail + '! Redirecting...';
+          statusEl.style.color = '#4ade80';
+        }
+
+        setTimeout(() => {
+          window.location.href = '../otp-verify.html';
+        }, 700);
+
+      } catch(err) {
+        console.error("Forgot OTP Error:", err);
+        if (statusEl) { statusEl.textContent = '❌ ' + (err.message || 'Failed to send OTP.'); statusEl.style.color = '#ef4444'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔'; }
+      }
+    }
+  </script>
+
+  <!-- APPLE VISIONOS CURSOR SPECULAR GLARE ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        const targets = document.querySelectorAll('.auth-container, .auth-slider-box, .login-wrapper, .admin-login-card');
+        targets.forEach(function(card) {
+          card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            this.style.setProperty('--glare-x', x.toFixed(1) + '%');
+            this.style.setProperty('--glare-y', y.toFixed(1) + '%');
+          });
+        });
+      });
+    })();
+  </script>
+
+<!-- APPLE MAC 120FPS DYNAMIC LIQUID GLASS & CLICK ANIMATION ENGINE -->
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        initAppleLiquidGlassEngine();
+      });
+
+      function initAppleLiquidGlassEngine() {
+        // High-Performance 120fps rAF Cursor Glare (Zero Layout Thrashing)
+        const targets = document.querySelectorAll('.portal-modal-container, .auth-container, .auth-slider-box, .portal-modal-box');
+        targets.forEach(function(el) {
+          let cardRect = null;
+          let ticking = false;
+
+          function updateRect() {
+            cardRect = el.getBoundingClientRect();
+          }
+
+          el.addEventListener('mouseenter', updateRect);
+          window.addEventListener('resize', updateRect);
+          window.addEventListener('scroll', updateRect, { passive: true });
+
+          el.addEventListener('mousemove', function(e) {
+            if (!cardRect) updateRect();
+            if (!ticking) {
+              requestAnimationFrame(function() {
+                if (cardRect && cardRect.width > 0) {
+                  const x = ((e.clientX - cardRect.left) / cardRect.width) * 100;
+                  const y = ((e.clientY - cardRect.top) / cardRect.height) * 100;
+                  el.style.setProperty('--glare-x', x.toFixed(1) + '%');
+                  el.style.setProperty('--glare-y', y.toFixed(1) + '%');
+                }
+                ticking = false;
+              });
+              ticking = true;
+            }
+          });
+        });
+
+        // Tactile Apple Click & Smooth Navigation on Portal Cards
+        const cards = document.querySelectorAll('.portal-card');
+        cards.forEach(function(card) {
+          card.addEventListener('click', function(e) {
+            const targetHref = this.getAttribute('href');
+            const hasCustomClick = this.hasAttribute('onclick');
+
+            const rect = this.getBoundingClientRect();
+            const rx = e.clientX - rect.left;
+            const ry = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'mac-click-ripple';
+            ripple.style.left = rx + 'px';
+            ripple.style.top = ry + 'px';
+            this.appendChild(ripple);
+
+            this.classList.add('mac-card-clicked');
+            const icon = this.querySelector('.portal-icon-box');
+            if (icon) icon.classList.add('mac-icon-spring');
+
+            if (targetHref && targetHref !== 'javascript:void(0)' && !hasCustomClick) {
+              e.preventDefault();
+              setTimeout(function() {
+                window.location.href = targetHref;
+              }, 200);
+            } else {
+              setTimeout(function() {
+                card.classList.remove('mac-card-clicked');
+                if (icon) icon.classList.remove('mac-icon-spring');
+                ripple.remove();
+              }, 400);
+            }
+          });
+        });
+      }
+
+      // Smooth Window Opening & Minimizing
+      const origOpen = window.openPortalSelectionModal;
+      window.openPortalSelectionModal = function() {
+        if (typeof origOpen === 'function') origOpen();
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'none';
+            container.style.transform = 'scale(0.92) translateY(24px) translateZ(0)';
+            container.style.opacity = '0';
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                container.style.transition = 'transform 0.40s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease';
+                container.style.transform = 'scale(1) translateY(0) translateZ(0)';
+                container.style.opacity = '1';
+              });
+            });
+          }
+        }
+      };
+
+      const origClose = window.closePortalModal;
+      window.closePortalModal = function() {
+        const overlay = document.getElementById('portalModalOverlay');
+        if (overlay) {
+          const container = overlay.querySelector('.portal-modal-container');
+          if (container) {
+            container.style.transition = 'transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease';
+            container.style.transform = 'scale(0.94) translateY(18px) translateZ(0)';
+            container.style.opacity = '0';
+          }
+          setTimeout(function() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+          }, 260);
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

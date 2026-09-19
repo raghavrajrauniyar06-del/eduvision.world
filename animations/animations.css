@@ -1,0 +1,1309 @@
+/* CSS overrides for GSAP & UI animations (Ultra-Optimized 60FPS Performance) */
+
+#heroCourseName {
+  display: inline-block;
+  min-width: 150px;
+}
+
+.slide-image {
+  overflow: hidden;
+}
+
+.btn-apply-nav, .btn-cta, .hero-btn-primary, .uni-btn-primary, .svc-btn-primary {
+  transform-origin: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Liquid sweep beam effect on main CTAs */
+.btn-apply-nav::after, .btn-cta::after, .hero-btn-primary::after, .btn-apply-form::after, .uni-btn-primary::after, .svc-btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: rotate(25deg);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+.btn-apply-nav:hover::after, .btn-cta:hover::after, .hero-btn-primary:hover::after, .btn-apply-form:hover::after, .uni-btn-primary:hover::after, .svc-btn-primary:hover::after {
+  transform: translate(300%, 0) rotate(25deg);
+}
+
+.fee-blocks {
+  overflow: hidden;
+}
+
+/* --- TEXT VISIBILITY FIXES --- */
+.hero-banner {
+  color: #ffffff !important;
+}
+.hero-banner h1, .hero-banner p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: initial !important;
+}
+.slide-title, .slide-desc {
+  color: var(--text) !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+/* --- RESTORE SMOOTH SCROLL --- */
+html, body {
+  scroll-behavior: smooth !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHTWEIGHT 60FPS MICRO-ANIMATIONS & HOVER EFFECTS
+═══════════════════════════════════════════════════════════ */
+
+/* 1. Placement Salary Bars */
+.salary-bar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 50px;
+  overflow: hidden;
+  height: 10px;
+  position: relative;
+}
+
+.salary-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #16a34a, #22c55e, #4ade80) !important;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+  transform-origin: left center !important;
+  transform: scaleX(0);
+}
+
+.in-view .salary-bar-fill,
+.salary-bar-fill.in-view,
+.salary-bars.in-view .salary-bar-fill,
+#salaryBars.in-view .salary-bar-fill,
+.salary-section.in-view .salary-bar-fill {
+  animation: growGreenBar 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes growGreenBar {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* 2. UNIVERSITY PARTNER CARDS & LOGO BOXES - HARDWARE ACCELERATED HOVER */
+.partner-card, 
+.why-card, 
+.career-card, 
+.scope-card, 
+.stat-card, 
+.svc-card, 
+.about-item, 
+.uni-menu-item,
+#uniSecRegular a, #uniSecRegular div[onclick],
+#uniSecOnline a, #uniSecOnline div[onclick],
+#uniSecDistance a, #uniSecDistance div[onclick] {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0); /* Force GPU compositing layer safely */
+}
+
+.partner-card:hover, 
+.why-card:hover, 
+.career-card:hover, 
+.scope-card:hover, 
+.stat-card:hover, 
+.svc-card:hover,
+#uniSecRegular a:hover, #uniSecRegular div[onclick]:hover,
+#uniSecOnline a:hover, #uniSecOnline div[onclick]:hover,
+#uniSecDistance a:hover, #uniSecDistance div[onclick]:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(201, 147, 42, 0.7) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 16px rgba(201, 147, 42, 0.25) !important;
+}
+
+/* 3. PERFECT FIT LOGOS (DESKTOP & LAPTOP & MOBILE) */
+.partner-logo-wrap {
+  height: 115px !important;
+  min-height: 115px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important;
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06) !important;
+}
+
+.partner-logo-wrap img {
+  max-width: 94% !important;
+  max-height: 94% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  transition: transform 0.25s ease !important;
+}
+
+.partner-card:hover .partner-logo-wrap img,
+#uniSecOnline .partner-card:hover .partner-logo-wrap img,
+#uniSecRegular a:hover img, #uniSecRegular div[onclick]:hover img,
+#uniSecDistance a:hover img, #uniSecDistance div[onclick]:hover img {
+  transform: scale(1.08) !important;
+}
+
+/* 4. Icons & Badges */
+.career-icon, .scope-icon, .why-num, .svc-modal-ico {
+  transition: transform 0.25s ease, color 0.25s ease !important;
+}
+
+.career-card:hover .career-icon, .scope-card:hover .scope-icon {
+  transform: scale(1.15) translateY(-2px);
+}
+
+.why-card:hover .why-num {
+  transform: scale(1.1) translateY(-2px);
+  color: #f0c84a !important;
+}
+
+/* 5. Interactive Pills & Filter Tabs */
+.prog-pill, .skill-chip, .uni-tab, .crs-tab, .partners-badge {
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.prog-pill:hover, .skill-chip:hover {
+  background: #fefce8 !important;
+  border-color: #c9932a !important;
+  color: #9a650d !important;
+  transform: translateY(-2px) !important;
+}
+.partners-badge:hover {
+  transform: translateY(-2px) !important;
+}
+
+.uni-tab:hover, .crs-tab:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* 6. Recruiter Track Continuous Marquee */
+#recruiterTrack, .recruiter-track {
+  display: flex;
+  gap: 16px;
+  animation: marqueeGlide 30s linear infinite;
+  transform: translateZ(0);
+}
+
+#recruiterTrack:hover, .recruiter-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeGlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.recruiter-chip {
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.recruiter-chip:hover {
+  border-color: var(--gold, #c9932a) !important;
+  color: #f0c84a !important;
+  transform: translateY(-2px);
+}
+
+/* 7. Fee Table Interactive Hover */
+.fee-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.fee-table tbody tr:hover {
+  background-color: rgba(201, 147, 42, 0.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   8. LIGHTWEIGHT SILKY 60FPS SCROLL REVEAL ANIMATION
+═══════════════════════════════════════════════════════════ */
+.reveal, .reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active, .reveal.in-view, .reveal.visible,
+.reveal-up.active, .reveal-up.in-view, .reveal-up.visible,
+.reveal-left.active, .reveal-left.in-view, .reveal-left.visible,
+.reveal-right.active, .reveal-right.in-view, .reveal-right.visible {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  visibility: visible !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   9. MOBILE & TABLET RESPONSIVE GRID LAYOUTS
+═══════════════════════════════════════════════════════════ */
+.uni-logo-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  margin-bottom: 30px !important;
+}
+
+@media (max-width: 900px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"],
+  #uniSecOnline .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  #uniSecRegular a, #uniSecRegular div[onclick],
+  #uniSecDistance a, #uniSecDistance div[onclick] {
+    height: 105px !important;
+    padding: 6px !important;
+  }
+
+  .partner-logo-wrap {
+    height: 90px !important;
+    min-height: 90px !important;
+    padding: 4px 8px !important;
+  }
+
+  .partner-logo-wrap img {
+    transform: scale(1.02) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .uni-logo-grid,
+  #uniSecRegular > div[style*="grid"],
+  #uniSecDistance > div[style*="grid"],
+  #uniSecOnline .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  #uniSecRegular a, #uniSecRegular div[onclick],
+  #uniSecDistance a, #uniSecDistance div[onclick] {
+    height: 95px !important;
+    padding: 4px !important;
+  }
+
+  .partner-logo-wrap {
+    height: 80px !important;
+    min-height: 80px !important;
+    padding: 4px 6px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10. TOUCH DEVICE FEEDBACK (LIGHTWEIGHT & SNAPPY)
+═══════════════════════════════════════════════════════════ */
+@media (hover: none) or (max-width: 768px) {
+  .partner-card:active, 
+  .why-card:active, 
+  .career-card:active, 
+  .scope-card:active, 
+  .stat-card:active, 
+  .svc-card:active,
+  #uniSecRegular a:active, #uniSecRegular div[onclick]:active,
+  #uniSecOnline a:active, #uniSecOnline div[onclick]:active,
+  #uniSecDistance a:active, #uniSecDistance div[onclick]:active {
+    transform: scale(0.97) !important;
+    border-color: var(--gold, #c9932a) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. 3D ZERO-GRAVITY AIR FLOAT ("HAWA ME JHOOLNE WALA") ANIMATION SUITE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. RIGHT SIDE HERO CARD 3D STABILITY & HOVER LEVITATION */
+.hero-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 2. INNER STAT CARDS ASYNCHRONOUS ZERO-GRAVITY LEVITATION */
+.hero-stat {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, background 0.4s;
+  animation: heroStatFloat 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.hero-stat:nth-child(1) { animation-delay: 0s; }
+.hero-stat:nth-child(2) { animation-delay: 1.2s; }
+.hero-stat:nth-child(3) { animation-delay: 2.4s; }
+
+@keyframes heroStatFloat {
+  0%, 100% { transform: translateY(0px) translateZ(0px); }
+  50%     { transform: translateY(-7px) translateZ(12px); }
+}
+
+.hero-stat:hover {
+  transform: translateY(-10px) scale(1.03) translateZ(25px) !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.3), 0 0 25px rgba(212,175,55,0.4) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* 3. CEO FOUNDER PROFILE BADGE AIR FLOAT */
+.hero-ceo {
+  animation: heroCeoFloat 5.5s ease-in-out 1.8s infinite;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+@keyframes heroCeoFloat {
+  0%, 100% { transform: translateY(0px) translateZ(0px); }
+  50%     { transform: translateY(-8px) translateZ(15px); }
+}
+
+.hero-ceo:hover {
+  transform: translateY(-10px) scale(1.02) translateZ(30px) !important;
+}
+
+/* 4. LEFT SIDE HERO CONTENT AIR FLOAT ELEMENTS */
+/* Top Badge "INDIA'S TRUSTED EDUCATION PARTNER" */
+.hero-eyebrow, .hero-tag, .hero-badge {
+  display: inline-block;
+  animation: heroTagFloat 4.8s ease-in-out infinite !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+@keyframes heroTagFloat {
+  0%, 100% { transform: translateY(0px) translateZ(0); }
+  50%     { transform: translateY(-8px) translateZ(10px); }
+}
+
+.hero-eyebrow:hover, .hero-tag:hover, .hero-badge:hover {
+  transform: translateY(-11px) scale(1.05) translateZ(20px) !important;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6) !important;
+}
+
+/* Main Title "Your Future Starts Here." Levitation on Hover */
+.hero-title, .hero-banner h1 {
+  animation: heroTitleFloat 7s ease-in-out 0.5s infinite !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.4s ease;
+  will-change: transform;
+}
+
+@keyframes heroTitleFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%     { transform: translateY(-6px) rotate(-0.5deg); }
+}
+
+.hero-title:hover, .hero-banner h1:hover {
+  transform: translateY(-10px) scale(1.02) translateZ(25px) !important;
+  text-shadow: 0 10px 30px rgba(212, 175, 55, 0.5) !important;
+}
+
+/* Hero Buttons ("APPLY NOW", "Book Free Counseling", "WhatsApp") Levitation */
+.hero-actions, .hero-btns {
+  animation: heroButtonsFloat 6s ease-in-out 1s infinite !important;
+}
+
+@keyframes heroButtonsFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%     { transform: translateY(-6px); }
+}
+
+.hero-actions a, .hero-btns a, .btn-primary, .btn-ghost {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, background 0.35s !important;
+}
+
+.hero-actions a:hover, .hero-btns a:hover, .btn-primary:hover, .btn-ghost:hover {
+  transform: translateY(-10px) scale(1.06) translateZ(30px) !important;
+  box-shadow: 0 18px 45px rgba(212, 175, 55, 0.6), 0 0 30px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Avatars & "1K+ Happy Students" Badge Floating Wave */
+.hero-trust, .trusted-by, .hero-avatars {
+  animation: heroTrustFloat 5.2s ease-in-out 1.5s infinite !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+@keyframes heroTrustFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%     { transform: translateY(-7px); }
+}
+
+.hero-trust:hover, .trusted-by:hover, .hero-avatars:hover {
+  transform: translateY(-10px) scale(1.04) translateZ(20px) !important;
+}
+
+.trust-avatar, .avatar-group img {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.trust-avatar:hover, .avatar-group img:hover {
+  transform: translateY(-8px) scale(1.25) rotate(6deg) translateZ(40px) !important;
+  z-index: 10 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12. SEAMLESS HERO → COURSES CONTINUOUS CANVAS SYSTEM
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── HERO: keep overflow visible so the bg bleeds down ─── */
+#hero {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 5 !important;
+  /* bg-color / bg-image stay exactly as defined in the inline <style> */
+}
+
+/* ─── HERO bottom edge: fade to the same dark-warm tone ─── */
+#hero::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important; right: 0 !important; bottom: 0 !important;
+  height: 220px !important;
+  top: auto !important;
+  pointer-events: none !important;
+  z-index: 2 !important;   /* sits on top of the hero ::before image */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(20, 16, 11, 0.55) 60%,
+    rgba(20, 16, 11, 0.85) 100%
+  ) !important;
+}
+
+/* ─── MARQUEE: no blur (performance) — solid warm dark bar ─── */
+.marquee-strip {
+  position: relative !important;
+  z-index: 6 !important;
+  background: rgba(18, 14, 9, 0.88) !important; /* NO backdrop-filter - causes lag */
+  border-top: 1px solid rgba(212, 175, 55, 0.28) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: none !important;
+  --bg: #14100b;
+}
+/* Override hard-black fade edges */
+.marquee-strip::before {
+  background: linear-gradient(90deg, #14100b, transparent) !important;
+}
+.marquee-strip::after {
+  background: linear-gradient(-90deg, #14100b, transparent) !important;
+}
+
+/* ─── COURSES: EXACT same champagne_hero_bg.jpg, positioned to continue ─── */
+#courses {
+  position: relative !important;
+  z-index: 4 !important;
+  /* Kill the dark navy from the inline stylesheet */
+  background-color: #14100b !important;
+  background-image:
+    /* warm dark scrim — same as hero's ::after but from top this time */
+    linear-gradient(
+      to bottom,
+      rgba(20, 16, 11, 0.72) 0%,
+      rgba(20, 16, 11, 0.55) 25%,
+      rgba(20, 16, 11, 0.45) 55%,
+      rgba(20, 16, 11, 0.60) 80%,
+      rgba(20, 16, 11, 0.78) 100%
+    ),
+    /* the SAME silky champagne image, offset downward so it looks like one fabric */
+    url('../champagne_hero_bg.jpg') !important;
+  background-size: auto, cover !important;
+  background-position: center center, center 40% !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll, scroll !important;
+  margin-top: 0 !important;
+}
+
+/* Remove the old ::before particle layer — it was causing colour mismatch */
+#courses::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* ─── Typography ─── */
+#courses .section-label {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1px solid rgba(212, 175, 55, 0.40) !important;
+  color: #f7d377 !important;
+  font-weight: 700 !important;
+}
+#courses .section-heading { color: #ffffff !important; }
+#courses .gold-word {
+  background: linear-gradient(135deg, #fff0c4, #f7d377, #d4af37) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* ─── Course cards ─── */
+#courses .crs-card {
+  background: rgba(22, 17, 12, 0.92) !important; /* solid, NO backdrop-filter */
+  border: 1.5px solid rgba(212, 175, 55, 0.28) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.40) !important; /* lighter shadow */
+  border-radius: 20px !important;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+  will-change: transform !important;
+}
+#courses .crs-card:hover {
+  background: rgba(30, 23, 14, 0.96) !important;
+  border-color: rgba(212, 175, 55, 0.75) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.55), 0 0 20px rgba(212,175,55,0.20) !important;
+  transform: translateY(-8px) !important;
+}
+#courses .crs-name   { color: #ffffff !important; font-weight: 700 !important; }
+#courses .crs-desc,
+#courses .crs-duration,
+#courses .crs-meta,
+#courses .crs-hint   { color: rgba(240,228,210,0.85) !important; }
+#courses .crs-level,
+#courses .crs-tag {
+  background: linear-gradient(135deg, rgba(212,175,55,0.22), rgba(201,147,42,0.12)) !important;
+  border: 1px solid rgba(212,175,55,0.48) !important;
+  color: #f7d377 !important;
+  font-weight: 700 !important;
+}
+
+/* ─── Filter tabs ─── */
+#courses .crs-tab {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(212,175,55,0.22) !important;
+  color: rgba(245,235,215,0.82) !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEAVY PREMIUM MICRO-ANIMATIONS & SHIMMER EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Shimmer Sweep Beam Effect on Cards, Pills, & Badges */
+.prog-pill, .partners-badge, .uni-tab, .crs-tab, .partner-card, .crs-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.prog-pill::after, .partners-badge::after, .uni-tab::after, .crs-tab::after, .partner-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  transform: rotate(25deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.prog-pill:hover::after, .partners-badge:hover::after, .uni-tab:hover::after, .crs-tab:hover::after, .partner-card:hover::after {
+  transform: translate(350%, 0) rotate(25deg);
+}
+
+/* Gentle Floating animation for Badges */
+.partners-badge-row .partners-badge {
+  animation: badgeFloat 4s ease-in-out infinite alternate;
+}
+.partners-badge-row .partners-badge:nth-child(2) { animation-delay: 0.6s; }
+.partners-badge-row .partners-badge:nth-child(3) { animation-delay: 1.2s; }
+.partners-badge-row .partners-badge:nth-child(4) { animation-delay: 1.8s; }
+
+@keyframes badgeFloat {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-4px); }
+}
+
+/* Enhanced 3D Hover & Glow for Cards & Buttons */
+.partner-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 24px rgba(201,147,42,0.3) !important;
+  border-color: #c9932a !important;
+}
+
+.uni-tab:hover, .crs-tab:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(201,147,42,0.35) !important;
+}
+
+.prog-pill:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important;
+  background: #fefce8 !important;
+  border-color: #c9932a !important;
+  color: #9a650d !important;
+}
+
+/* Active Tab Glow Pulse */
+.uni-tab.active, .crs-tab.active {
+  animation: activeTabGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes activeTabGlow {
+  0% { box-shadow: 0 6px 20px rgba(201,147,42,0.4); }
+  100% { box-shadow: 0 10px 28px rgba(201,147,42,0.7); }
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   WORLD-CLASS SAAS MICRO-INTERACTION & MOTION DESIGN SUITE
+═══════════════════════════════════════════════════════════ */
+
+/* 1. BUTTON MICRO-INTERACTIONS & LIQUID GLOW */
+button:not(#chatToggle):not(.toggle-pwd):not(.pwd-eye-btn), .btn-primary, .btn-secondary, .hero-btn-primary, .banner-btn-main, 
+.banner-btn-secondary, .btn-login-submit, .btn-social, .nav-highlight-btn, 
+.btn-cta, .uni-btn-primary, .svc-btn-primary {
+  position: relative !important;
+  overflow: hidden !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease, 
+              background 0.3s ease !important;
+  will-change: transform, box-shadow !important;
+}
+
+button:not(#chatToggle):not(.toggle-pwd):not(.pwd-eye-btn):hover, .btn-primary:hover, .hero-btn-primary:hover, .banner-btn-main:hover, 
+.btn-login-submit:hover, .nav-highlight-btn:hover, .uni-btn-primary:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 12px 30px rgba(201, 147, 42, 0.45), 0 0 20px rgba(247, 211, 119, 0.3) !important;
+}
+
+button:not(#chatToggle):not(.toggle-pwd):not(.pwd-eye-btn):active, .btn-primary:active, .hero-btn-primary:active, .banner-btn-main:active, 
+.btn-login-submit:active, .nav-highlight-btn:active, .uni-btn-primary:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.25) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Button Icon Shift on Hover */
+button:not(#chatToggle):not(.toggle-pwd):not(.pwd-eye-btn):hover svg, button:not(#chatToggle):not(.toggle-pwd):not(.pwd-eye-btn):hover i, .banner-btn-main:hover svg, .hero-btn-primary:hover svg {
+  transform: translateX(4px) scale(1.08) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 2. GOLD TRANSLUCENT RIPPLE ELEMENT */
+.gold-ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 211, 119, 0.6) 0%, rgba(201, 147, 42, 0.2) 60%, transparent 80%);
+  transform: scale(0);
+  animation: goldRippleExpand 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes goldRippleExpand {
+  0% { transform: scale(0); opacity: 0.9; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* 3. NAVBAR CENTER-GROWING UNDERLINE */
+.nav-links a {
+  position: relative !important;
+  transition: color 0.25s ease !important;
+}
+
+.nav-links a::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -4px !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 2px !important;
+  background: var(--gold-gradient, linear-gradient(90deg, #f7d377, #c9932a)) !important;
+  border-radius: 99px !important;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nav-links a:hover::after {
+  width: 100% !important;
+  left: 0 !important;
+}
+
+/* 4. INPUT FOCUS GLOW & FLOATING LABEL SHIFT */
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select, textarea, .form-input {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease !important;
+}
+
+input:focus, select:focus, textarea:focus, .form-input:focus {
+  border-color: rgba(247, 211, 119, 0.75) !important;
+  box-shadow: 0 0 20px rgba(247, 211, 119, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 5. FLOATING DASHBOARD & UNIVERSITY CARDS */
+.partner-card, .crs-card, .why-card, .career-card, .scope-card, .stat-card, .svc-card, .featured-banner {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+  will-change: transform !important;
+}
+
+/* 6. SPRING DROPDOWN OPEN */
+.user-dropdown-menu, .dropdown-menu {
+  transform-origin: top right !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   7. MASTER LIQUID GLASS DESIGN SYSTEM (APPLE-GRADE SPECULAR SHEEN)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Universal Liquid Glass Container & Cards */
+.liquid-glass-card, .liquid-glass-panel, .glass-box, .metric-card, .stat-card, .crm-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(8, 12, 22, 0.8) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 16px !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease !important;
+}
+
+/* Liquid Glass Hover Shimmer */
+.liquid-glass-card:hover, .liquid-glass-panel:hover, .glass-box:hover, .metric-card:hover, .stat-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(247, 211, 119, 0.4) !important;
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(247, 211, 119, 0.2),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Radiant Gold-Rimmed Liquid Glass Highlight */
+.liquid-glass-gold {
+  background: linear-gradient(135deg, rgba(247, 211, 119, 0.12) 0%, rgba(201, 147, 42, 0.05) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
+  border: 1px solid rgba(247, 211, 119, 0.35) !important;
+  box-shadow: 
+    0 12px 35px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(247, 211, 119, 0.18),
+    inset 0 1.5px 2px rgba(255, 240, 196, 0.45) !important;
+}
+
+/* Liquid Glass Pill & Badges */
+.liquid-glass-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 5px 12px !important;
+  border-radius: 99px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.liquid-glass-pill:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(247, 211, 119, 0.5) !important;
+  transform: translateY(-1px) scale(1.03) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   8. UNIVERSAL MOBILE & LAPTOP RESPONSIVE ADAPTATION ENGINE
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Universal Responsive Table Container with Touch Momentum */
+.table-responsive-liquid, .table-container, .admin-table-wrap, .data-table-container, .table-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: thin !important;
+  border-radius: 12px !important;
+  position: relative !important;
+}
+
+/* Smooth Touch Scrollbars */
+.table-responsive-liquid::-webkit-scrollbar,
+.table-container::-webkit-scrollbar,
+.admin-table-wrap::-webkit-scrollbar {
+  height: 5px !important;
+}
+.table-responsive-liquid::-webkit-scrollbar-thumb,
+.table-container::-webkit-scrollbar-thumb,
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(247, 211, 119, 0.3) !important;
+  border-radius: 99px !important;
+}
+
+/* Universal Modals & Drawers Mobile Auto-Constraint */
+@media (max-width: 768px) {
+  /* Prevent horizontal document blowout */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  /* Modals auto-scale to phone viewport */
+  .tl-modal-overlay > div, .modal-content, .wa-group-content, .cto-modal-box {
+    max-width: 94vw !important;
+    width: 94vw !important;
+    margin: 10px auto !important;
+    border-radius: 16px !important;
+  }
+
+  /* CRM Drawers fit full mobile screen cleanly */
+  .crm-drawer, .wa-details-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  /* Grid metrics auto-adapt on mobile phones */
+  .metrics-grid, .kpi-grid, .stat-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Form grids collapse to single column on mobile */
+  .form-grid, .form-grid-2col, .grid-2col {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* Ultra-Compact Phone Optimization (<= 480px) */
+@media (max-width: 480px) {
+  .metrics-grid, .kpi-grid, .stat-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Make interactive tap targets thumb-friendly */
+  button, .nav-item, .nav-link, .btn-login-submit, .wa-send-btn {
+    min-height: 40px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   9. MASTER LIQUID GLASS CENTERED MODALS & TABLE ACTION BUTTONS
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Universal Dark Backdrop Overlay for Modals & Drawers */
+.drawer-overlay, .modal-overlay, .tl-modal-overlay, .crm-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(3, 6, 16, 0.78) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  z-index: 90000 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  box-sizing: border-box !important;
+}
+
+.drawer-overlay.open, .drawer-overlay.active, .drawer-overlay.show,
+.modal-overlay.open, .modal-overlay.active, .modal-overlay.show,
+.tl-modal-overlay.open, .tl-modal-overlay.active, .tl-modal-overlay.show,
+.tl-modal.open, .tl-modal.active, .tl-modal.show {
+  display: flex !important;
+}
+
+/* Universal Centered Liquid Glass Floating Modal Card — Exact Counsellor CRM Drawer */
+.modal-card, .tl-modal-content, .mac-modal-window {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 960px !important;
+  max-height: 88vh !important;
+  height: auto !important;
+  margin: auto !important;
+  background: radial-gradient(135% 125% at 20% 0%, rgba(30, 42, 74, 0.78) 0%, rgba(10, 14, 26, 0.95) 100%), rgba(8, 12, 22, 0.94) !important;
+  backdrop-filter: blur(48px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(220%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 26px !important;
+  box-shadow: 
+    0 35px 100px rgba(0, 0, 0, 0.88),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(201, 147, 42, 0.12) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  z-index: 90001 !important;
+  animation: macModalLiquid 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes macModalLiquid {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(20px);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* CRM Drawer stays slide-in from right */
+.crm-drawer {
+  z-index: 89995 !important;
+}
+
+.crm-drawer.open, .crm-drawer.active {
+  transform: translateX(0) !important;
+}
+
+/* Apple Liquid Glass Table Action Buttons across all Dashboards */
+.btn-action, .btn-action-glass, .btn-liquid-glass, .btn-view, .btn-edit, button.btn-action-icon, .action-btn {
+  padding: 6px 14px !important;
+  border-radius: 12px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: #fef08a !important;
+  background: linear-gradient(135deg, rgba(247, 211, 119, 0.22), rgba(201, 147, 42, 0.32)) !important;
+  border: 1px solid rgba(247, 211, 119, 0.45) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35),
+              0 0 12px rgba(247, 211, 119, 0.18),
+              inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+}
+
+.btn-action:hover, .btn-action-glass:hover, .btn-liquid-glass:hover, .btn-view:hover, .btn-edit:hover, button.btn-action-icon:hover, .action-btn:hover {
+  background: linear-gradient(135deg, rgba(247, 211, 119, 0.42), rgba(201, 147, 42, 0.52)) !important;
+  border-color: rgba(247, 211, 119, 0.85) !important;
+  transform: translateY(-2px) scale(1.04) !important;
+  box-shadow: 0 8px 22px rgba(247, 211, 119, 0.45),
+              0 0 22px rgba(247, 211, 119, 0.35),
+              inset 0 1.5px 2px rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.btn-action:active, .btn-action-glass:active, .btn-liquid-glass:active, .btn-view:active, .btn-edit:active, button.btn-action-icon:active, .action-btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   10. ICONIC macOS GENIE MINIMIZE & MAXIMIZE WARP ENGINE
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Authentic macOS Liquid Glass Spring Open (100% Centered & Responsive) */
+@keyframes macOsSpringOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(30px);
+    filter: blur(10px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.02) translateY(-4px);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes macOsSpringClose {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(30px);
+    filter: blur(12px);
+  }
+}
+
+/* Modal Open & Close Triggers */
+#cModal.open .cm-panel,
+#uniModal.open #uniPanel,
+.uni-modal-panel.open,
+.crs-modal-panel.open {
+  animation: macOsSpringOpen 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  pointer-events: all !important;
+}
+
+#cModal.closing .cm-panel,
+#uniModal.closing #uniPanel,
+.uni-modal-panel.closing,
+.crs-modal-panel.closing {
+  animation: macOsSpringClose 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+/* Authentic macOS Spring Click Micro-Interaction on Cards, Courses & CTAs */
+.partner-card, .crs-card, .why-card, .career-card, .scope-card, .stat-card, .svc-card, .btn-gold, .btn-action, .prog-pill, .uni-tab, .crs-tab {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease !important;
+}
+
+.partner-card:active, .crs-card:active, .why-card:active, .career-card:active, .scope-card:active, .stat-card:active, .svc-card:active, .btn-gold:active, .prog-pill:active {
+  transform: scale(0.93) translateY(2px) !important;
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Single Elegant Liquid Glass Cross (X) Close Button Style */
+.mac-cross-btn, .modal-close-btn, .close-modal, .btn-modal-close, #uniModalClose, #cmClose, .drawer-close-btn {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  color: #e2e8f0 !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.mac-cross-btn:hover, .modal-close-btn:hover, .close-modal:hover, .btn-modal-close:hover, #uniModalClose:hover, #cmClose:hover, .drawer-close-btn:hover {
+  background: rgba(239, 68, 68, 0.28) !important;
+  border-color: rgba(239, 68, 68, 0.65) !important;
+  color: #ffffff !important;
+  transform: scale(1.12) rotate(90deg) !important;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
+}
+
+.mac-cross-btn:active, .modal-close-btn:active, .close-modal:active, .btn-modal-close:active, #uniModalClose:active, #cmClose:active, .drawer-close-btn:active {
+  transform: scale(0.9) rotate(90deg) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   11. UNIVERSAL ENTERPRISE MOBILE & TABLET RESPONSIVE ENGINE (v3.0)
+   Zero-Overflow, Fluid Touch Ergonomics & Responsive Modals (320px - 768px)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Global Root Containment */
+html, body {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+/* Tablet & Mobile Breakpoints (<= 1024px) */
+@media (max-width: 1024px) {
+  .crm-overview-two-col,
+  .lower-grid,
+  .two-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* Mobile Breakpoint (<= 768px) */
+@media (max-width: 768px) {
+  /* 1. Universal Zero-Overflow & Typography */
+  body {
+    font-size: 14px !important;
+  }
+
+  /* 2. Universal Modals & Overlays (Bottom Sheet on Mobile) */
+  .modal-overlay, .drawer-overlay, .tl-modal-overlay, .crm-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+  }
+
+  .modal-card, .tl-modal-content, .mac-modal-window, .modal-widescreen-liquid,
+  #univDetailsModal .modal-card, #partnerDetailsModal .modal-card, #partnerCreateModal .modal-card,
+  #createStaffModal .modal-card, #editStaffModal .modal-card, #mapUnivModal .modal-card, #addPartnerEmpModal .modal-card {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    max-height: 94vh !important;
+    height: auto !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+  }
+
+  .modal-hdr {
+    padding: 14px 18px !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .modal-hdr h3, .modal-hdr h4 {
+    font-size: 1.15rem !important;
+  }
+
+  .modal-body-scroll {
+    padding: 14px 16px !important;
+    max-height: calc(94vh - 120px) !important;
+    overflow-y: auto !important;
+    gap: 14px !important;
+  }
+
+  /* 3. Multi-Section Forms & Column Collapsing */
+  .form-grid, .form-row, .grid-2, .grid-3, .grid-4, .row-2col, .row-3col,
+  .crm-detail-row-grid, .crm-kpi-secondary-strip,
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1.6fr 1fr"],
+  [style*="grid-template-columns:1.6fr 1fr"],
+  [style*="grid-template-columns: 1.2fr 1fr"],
+  [style*="grid-template-columns:1.2fr 1fr"],
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns:repeat(3"],
+  [style*="grid-template-columns: repeat(4"],
+  [style*="grid-template-columns:repeat(4"] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .form-group input, .form-group select, .form-group textarea,
+  input.admin-input, select.admin-input {
+    width: 100% !important;
+    font-size: 16px !important; /* Prevents iOS auto-zoom on input focus */
+    padding: 12px 14px !important;
+    min-height: 44px !important;
+  }
+
+  /* 4. Tab Navigation Strips Horizontal Scroll */
+  .drawer-tab-strip,
+  div[style*="overflow-x:auto"],
+  .nav-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+    scrollbar-width: none !important;
+  }
+  .drawer-tab-strip::-webkit-scrollbar,
+  div[style*="overflow-x:auto"]::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .drawer-tab, .tab-btn {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    font-size: 0.78rem !important;
+    padding: 8px 12px !important;
+  }
+
+  /* 5. Data Tables & Card Transformations */
+  .data-table, .crm-pipeline-table, table {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .data-table th, .data-table td,
+  .crm-pipeline-table th, .crm-pipeline-table td,
+  table th, table td {
+    padding: 8px 10px !important;
+    font-size: 0.78rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* 6. Touch Targets & Sticky Action Footers */
+  .btn-gold, .btn-primary, .btn-outline, .btn-action, button[type="submit"] {
+    min-height: 44px !important;
+    font-size: 0.88rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .modal-actions, .form-actions {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .modal-actions button, .form-actions button {
+    width: 100% !important;
+  }
+}
+
+/* Compact Smartphones (<= 480px - iPhone SE, Android 360px - 414px) */
+@media (max-width: 480px) {
+  .kpi-grid, .metrics-grid, .stat-grid, .crm-kpi-spotlight-strip {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .crm-kpi-spotlight {
+    padding: 14px 16px !important;
+  }
+
+  .crm-spotlight-num {
+    font-size: 1.8rem !important;
+  }
+
+  .topbar-title {
+    font-size: 1rem !important;
+  }
+
+  .admin-content, .workspace, .main-content, .view-section {
+    padding: 10px !important;
+  }
+}
+
+
+

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVision — Pure Text E-Typing ➔ Glides UP ➔ Website Opens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  :root { --ease-apple: cubic-bezier(0.16, 1, 0.3, 1); }
+  body { background: #000; color: #f5f5f7; font-family: 'DM Sans', sans-serif; overflow-x: hidden; min-height: 100vh; }
+
+  .apple-controls {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 99999999;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(14, 14, 18, 0.9); backdrop-filter: blur(36px);
+    border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    padding: 8px 18px; border-radius: 999px; font-size: 13px;
+  }
+  .active-badge {
+    background: linear-gradient(135deg, #f7d268, #c9932a); color: #000; font-weight: 800; font-size: 12px;
+    padding: 6px 14px; border-radius: 999px;
+  }
+  .ctrl-btn {
+    background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 12.5px;
+  }
+
+  .site-canvas {
+    min-height: 100vh; display: flex; flex-direction: column; background: #000; position: relative;
+    opacity: 0; filter: blur(10px); transform: scale(0.985);
+    transition: opacity 1.2s var(--ease-apple), filter 1.2s var(--ease-apple), transform 1.2s var(--ease-apple);
+  }
+  .site-canvas.revealed { opacity: 1; filter: blur(0); transform: scale(1); }
+
+  .navbar {
+    height: 86px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 6vw;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(28px); position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { height: 52px; width: auto; filter: drop-shadow(0 2px 14px rgba(232, 180, 42, 0.35)); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: #86868b; text-decoration: none; font-size: 14.5px; font-weight: 500; }
+  .nav-cta {
+    background: linear-gradient(135deg, #f7d268, #c9932a); color: #000;
+    font-weight: 700; font-size: 13.5px; padding: 11px 26px; border-radius: 999px; border: none; cursor: pointer;
+  }
+
+  .hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 110px 24px; position: relative;
+  }
+  .ambient-glow {
+    position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%);
+    width: 850px; height: 500px; background: radial-gradient(ellipse at center, rgba(232, 180, 42, 0.2) 0%, transparent 70%); filter: blur(80px);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; background: rgba(232, 180, 42, 0.08);
+    border: 1px solid rgba(232, 180, 42, 0.28); color: #f7d268; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.14em; padding: 7px 22px; border-radius: 999px; margin-bottom: 28px; text-transform: uppercase;
+  }
+  .h1 {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 7vw, 92px); font-weight: 700;
+    line-height: 1.05; max-width: 1020px; margin-bottom: 24px; color: #f5f5f7;
+  }
+  .h1 em {
+    font-style: italic; background: linear-gradient(135deg, #ffffff 0%, #fff1cc 35%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .desc { font-size: clamp(17px, 1.9vw, 21px); color: #86868b; max-width: 680px; line-height: 1.6; margin-bottom: 42px; }
+  .hero-cta {
+    background: linear-gradient(135deg, #f7d268, #c9932a); color: #000; font-weight: 700;
+    font-size: 15.5px; padding: 17px 38px; border-radius: 999px; border: none; cursor: pointer;
+  }
+
+  /* INTRO STAGE */
+  #intro-stage {
+    position: fixed; inset: 0; z-index: 1000000; background: #000000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: none; transition: opacity 1.2s var(--ease-apple);
+  }
+  .center-glider {
+    position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;
+    transform: translateY(0); transition: transform 1.15s var(--ease-apple);
+  }
+  .center-glider.glided-up { transform: translateY(-45px); }
+
+  .type-box {
+    display: flex; align-items: center; justify-content: center; height: 80px;
+  }
+  .txt-typed {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(48px, 6.5vw, 76px); font-weight: 800; letter-spacing: 0.16em;
+    padding-left: 0.16em;
+    background: linear-gradient(135deg, #ffffff 0%, #fff2cc 30%, #f7d268 70%, #c9932a 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 35px rgba(232, 180, 42, 0.55));
+  }
+  .laser-beam {
+    width: 3.5px; height: 60px; background: #ffffff;
+    box-shadow: 0 0 18px #ffffff, 0 0 35px #f7d268, 0 0 50px #e8b42a;
+    border-radius: 2px; margin-left: 6px;
+  }
+  .tagline {
+    font-size: 14.5px; font-weight: 700; letter-spacing: 0.42em; color: #a8a49c;
+    text-transform: uppercase; margin-top: 12px; opacity: 0; transform: translateY(8px);
+    transition: opacity 0.8s var(--ease-apple), transform 0.8s var(--ease-apple);
+  }
+  .tagline.visible { opacity: 1; transform: translateY(0); }
+
+  #intro-stage.fade-out { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="apple-controls">
+  <div class="active-badge">✦ Pure E-Typing ➔ Glides UP</div>
+  <button class="ctrl-btn" onclick="startAnim()">Replay</button>
+  <button class="ctrl-btn" id="loopBtn" onclick="toggleLoop()">Loop: ON</button>
+</div>
+
+<div class="site-canvas" id="mainWebsite">
+  <header class="navbar">
+    <a href="#" class="brand">
+      <img src="eduvision_correct_logo.png" alt="EduVision" class="nav-logo">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Universities</a></li>
+      <li><a href="#">Mentorship</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <button class="nav-cta">Book Free Session 🔑</button>
+  </header>
+
+  <main class="hero">
+    <div class="ambient-glow"></div>
+    <div class="eyebrow">✦ India's Premier Education Partner</div>
+    <h1 class="h1">Shape Your Tomorrow With<br><em>Unrivalled Career Clarity</em></h1>
+    <p class="desc">1,500+ verified undergraduate & postgraduate degrees. Executive mentorship by CEO Miss Ishika Sharma.</p>
+    <div><button class="hero-cta">Explore 1500+ Courses ✦</button></div>
+  </main>
+</div>
+
+<div id="intro-stage">
+  <div class="center-glider" id="glider">
+    <div class="type-box">
+      <span class="txt-typed" id="typedOutput"></span>
+      <span class="laser-beam" id="laserBeam"></span>
+    </div>
+    <div class="tagline" id="tagline">YOUR FUTURE STARTS HERE</div>
+  </div>
+</div>
+
+<script>
+  let isLoop = true;
+  let loopTimer = null;
+  let animTimer = null;
+  const WORD = "EDUVISION";
+
+  function toggleLoop() {
+    isLoop = !isLoop;
+    document.getElementById('loopBtn').innerText = 'Loop: ' + (isLoop ? 'ON' : 'OFF');
+    if (isLoop) startAnim();
+    else clearTimeout(loopTimer);
+  }
+
+  function startAnim() {
+    clearTimeout(animTimer);
+    clearTimeout(loopTimer);
+
+    const stage = document.getElementById('intro-stage');
+    const glider = document.getElementById('glider');
+    const typed = document.getElementById('typedOutput');
+    const laser = document.getElementById('laserBeam');
+    const tag = document.getElementById('tagline');
+    const site = document.getElementById('mainWebsite');
+
+    stage.style.display = 'flex';
+    stage.classList.remove('fade-out');
+    site.classList.remove('revealed');
+    glider.classList.remove('glided-up');
+    tag.classList.remove('visible');
+    laser.style.display = 'inline-block';
+    typed.innerText = '';
+
+    let i = 0;
+    function typeStep() {
+      if (i <= WORD.length) {
+        typed.innerText = WORD.substring(0, i);
+        i++;
+        setTimeout(typeStep, 95);
+      } else {
+        laser.style.display = 'none';
+        tag.classList.add('visible');
+
+        // Glides UP!
+        setTimeout(() => {
+          glider.classList.add('glided-up');
+
+          // Hold 1.8s then website opens smoothly!
+          animTimer = setTimeout(() => {
+            stage.classList.add('fade-out');
+            site.classList.add('revealed');
+
+            setTimeout(() => {
+              stage.style.display = 'none';
+              if (isLoop) loopTimer = setTimeout(startAnim, 3500);
+            }, 1200);
+
+          }, 1800);
+
+        }, 350);
+      }
+    }
+    setTimeout(typeStep, 250);
+  }
+  window.onload = startAnim;
+</script>
+</body>
+</html>
