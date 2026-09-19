@@ -1384,3 +1384,25 @@ html, body {
     contain: paint layout !important;
   }
 }
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   UNIVERSITY PARTNERS 100% VISIBILITY (ZERO BLANK VOID)
+   ═══════════════════════════════════════════════════════════ */
+.partner-card, 
+.partners-grid, 
+.uni-logo-grid, 
+#uniSecRegular, 
+#uniSecOnline, 
+#uniSecDistance {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.partner-card.reveal,
+.partner-card {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
