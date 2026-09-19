@@ -276,7 +276,23 @@ nav.scrolled .nav-highlight-btn:hover {
   100%{transform:scale(1);}
 }
 @media(prefers-reduced-motion:reduce){#hero::before{animation:none;}}
-@media(max-width:960px){#hero::before{background-position:center center;}}
+@media(max-width:960px){
+  #hero::before{
+    background-position:center center;
+    animation: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  .ambient-glow, .hero-orb {
+    display: none !important;
+    animation: none !important;
+    filter: none !important;
+  }
+  .hero-card, .hero-eyebrow, .btn-ghost {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
 /* soft warm gold champagne scrim so background stays bright and gold */
 #hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
   background:linear-gradient(100deg,rgba(20,16,11,.45) 0%,rgba(20,16,11,.25) 45%,transparent 80%);
