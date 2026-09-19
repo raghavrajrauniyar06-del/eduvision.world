@@ -1344,11 +1344,7 @@ html, body {
     background: rgba(13, 20, 36, 0.94) !important;
   }
   
-  /* GPU containment to skip offscreen layout processing */
-  section:not(:first-of-type), .perf-cv-section, #universities, #testimonials, #faq, #stats-strip, #gallery, #courses, #why, #counters {
-    content-visibility: auto;
-    contain-intrinsic-size: 500px;
-  }
+  
 }
 
 
