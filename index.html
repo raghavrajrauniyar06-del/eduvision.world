@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="shared/page_guard.js?v=20260919_V1"></script>
@@ -5441,6 +5441,19 @@ nav.scrolled {
 /* Note: EduVision AI Chatbot optical liquid glass and spring animations are consolidated in the Chatbot Beast section */
 </style>
   <link rel="stylesheet" href="animations/animations.css">
+<style id="edu-perf-boost">
+.perf-cv-section, #universities, #testimonials, #faq, #stats-strip, #gallery {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, video {
+  content-visibility: auto;
+}
+</style>
 </head>
 <body class="loading">
 
@@ -9490,7 +9503,7 @@ const isLowEnd = devCores <= 4;
   function rz(){ cW = c.width = c.offsetWidth; cH = c.height = c.offsetHeight; }
   rz(); window.addEventListener('resize', rz, { passive: true });
 
-  const SHAPE_COUNT = isMobile ? (isLowEnd ? 3 : 6) : (isLowEnd ? 12 : 18);
+  const SHAPE_COUNT = isMobile ? 3 : 6;
   const shapes = [];
 
   class Shape3D {
@@ -10462,126 +10475,99 @@ if(!isTouch){
 }
 
 /* ═══════════════════════════════════════════
-   NETWORK BACKGROUND CANVAS
+   NETWORK BACKGROUND CANVAS (ULTRA-FAST 60FPS)
 ═══════════════════════════════════════════ */
 (function(){
   const cv = document.getElementById('networkCanvas');
   if(!cv) return;
-  // Skip canvas on very small screens for max mobile perf
-  /* Network always active — mobile uses lighter node count */
-  const cx = cv.getContext('2d');
+  const cx = cv.getContext('2d', { alpha: true });
   let W, H, nodes=[], mouse={x:-9999,y:-9999};
-  const NODE_COUNT = isMobile 
-    ? (window.innerWidth < 480 ? (isLowEnd ? 10 : 22) : (isLowEnd ? 16 : 28))  // always-on mobile
-    : (window.innerWidth < 1024 ? (isLowEnd ? 40 : 55) : (isLowEnd ? 65 : 95));
-  const CONNECT_DIST = isMobile ? 100 : 180;
-  const MOUSE_REACH = 280;
-  const MOUSE_REPEL = 120;
-  const LANDMARK_PCT = 0.15;
+  const NODE_COUNT = isMobile ? 8 : (isLowEnd ? 16 : 24);
+  const CONNECT_DIST = isMobile ? 75 : 120;
+  const MOUSE_REPEL = 80;
 
   function resz(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
   resz(); window.addEventListener('resize', resz, { passive: true });
 
   if(!isTouch){
-    window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;},{passive:true});
+    let mousePending = false;
+    window.addEventListener('mousemove',e=>{
+      if (mousePending) return;
+      mousePending = true;
+      requestAnimationFrame(()=>{ mouse.x=e.clientX; mouse.y=e.clientY; mousePending = false; });
+    },{passive:true});
   }
 
-  const COLORS=[[201,147,42],[240,196,42],[255,215,70],[232,184,50],[255,255,220]];
+  const COLORS=[[201,147,42],[240,196,42],[255,215,70],[232,184,50]];
 
   class Node{
     constructor(i){
       this.id=i; this.x=Math.random()*W; this.y=Math.random()*H;
-      this.vx=(Math.random()-.5)*.5; this.vy=(Math.random()-.5)*.5;
-      this.landmark=Math.random()<LANDMARK_PCT;
-      if(this.landmark){ this.r=Math.random()*4+5; this.maxAlpha=1; this.col=Math.random()<.6?COLORS[0]:COLORS[2]; }
-      else{ this.r=Math.random()*2+1.5; this.maxAlpha=Math.random()*.5+.4; this.col=COLORS[Math.floor(Math.random()*COLORS.length)]; }
-      this.base_r=this.r; this.t=Math.random()*Math.PI*2; this.ts=.008+Math.random()*.018;
+      this.vx=(Math.random()-.5)*.35; this.vy=(Math.random()-.5)*.35;
+      this.landmark = i % 4 === 0;
+      this.r = this.landmark ? 4 : 2;
+      this.maxAlpha = this.landmark ? 0.8 : 0.4;
+      this.col = COLORS[i % COLORS.length];
+      this.base_r = this.r; this.t = Math.random()*Math.PI*2;
     }
     update(){
-      this.t+=this.ts;
-      const pulse=.65+Math.sin(this.t)*.35;
-      this.dr=this.base_r*pulse; this.da=this.maxAlpha*pulse;
-      const dx=this.x-mouse.x, dy=this.y-mouse.y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<MOUSE_REPEL&&d>0){ const f=(MOUSE_REPEL-d)/MOUSE_REPEL*1.2; this.vx+=dx/d*f; this.vy+=dy/d*f; }
-      this.vx*=.975; this.vy*=.975;
-      const spd=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
-      if(spd>2){this.vx=this.vx/spd*2;this.vy=this.vy/spd*2;}
-      this.x+=this.vx; this.y+=this.vy;
-      if(this.x<-30)this.x=W+30; if(this.x>W+30)this.x=-30;
-      if(this.y<-30)this.y=H+30; if(this.y>H+30)this.y=-30;
+      this.t += 0.012;
+      const pulse = 0.8 + Math.sin(this.t)*0.2;
+      this.dr = this.base_r * pulse;
+      this.da = this.maxAlpha * pulse;
+      const dx = this.x - mouse.x, dy = this.y - mouse.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if(d < MOUSE_REPEL && d > 0){
+        const f = (MOUSE_REPEL - d)/MOUSE_REPEL * 0.7;
+        this.vx += (dx/d)*f; this.vy += (dy/d)*f;
+      }
+      this.vx *= 0.98; this.vy *= 0.98;
+      this.x += this.vx; this.y += this.vy;
+      if(this.x < -20) this.x = W + 20; if(this.x > W + 20) this.x = -20;
+      if(this.y < -20) this.y = H + 20; if(this.y > H + 20) this.y = -20;
     }
     draw(){
-      const [r,g,b]=this.col; cx.save();
-      if(this.landmark){
-        const g2=cx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.dr*7);
-        g2.addColorStop(0,`rgba(${r},${g},${b},${this.da*.55})`);
-        g2.addColorStop(.35,`rgba(${r},${g},${b},${this.da*.18})`);
-        g2.addColorStop(1,`rgba(${r},${g},${b},0)`);
-        cx.beginPath();cx.arc(this.x,this.y,this.dr*7,0,Math.PI*2);cx.fillStyle=g2;cx.fill();
-      } else {
-        const g4=cx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.dr*3);
-        g4.addColorStop(0,`rgba(${r},${g},${b},${this.da*.45})`);
-        g4.addColorStop(1,`rgba(${r},${g},${b},0)`);
-        cx.beginPath();cx.arc(this.x,this.y,this.dr*3,0,Math.PI*2);cx.fillStyle=g4;cx.fill();
-      }
-      cx.beginPath();cx.arc(this.x,this.y,this.dr,0,Math.PI*2);
-      cx.fillStyle=`rgba(${r},${g},${b},${this.da})`;cx.fill();cx.restore();
+      const [r,g,b] = this.col;
+      cx.beginPath(); cx.arc(this.x, this.y, this.dr, 0, Math.PI*2);
+      cx.fillStyle = `rgba(${r},${g},${b},${this.da})`; cx.fill();
     }
   }
 
   for(let i=0;i<NODE_COUNT;i++) nodes.push(new Node(i));
 
   function drawConnections(){
+    cx.lineWidth = 1;
     for(let i=0;i<nodes.length;i++){
+      const a = nodes[i];
       for(let j=i+1;j<nodes.length;j++){
-        const a=nodes[i],b=nodes[j];
-        const dx=a.x-b.x,dy=a.y-b.y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d>CONNECT_DIST) continue;
-        const fade=1-d/CONNECT_DIST; cx.save();
-        if(a.landmark||b.landmark){
-          // Removed expensive createLinearGradient for performance
-          cx.strokeStyle=`rgba(240,200,74,${fade*.85})`; cx.lineWidth=fade*2.2+.4;
-        } else { cx.strokeStyle=`rgba(201,147,42,${fade*.35})`; cx.lineWidth=fade*.9+.3; }
-        cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();cx.restore();
+        const b = nodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d > CONNECT_DIST) continue;
+        const fade = 1 - d/CONNECT_DIST;
+        cx.strokeStyle = `rgba(201,147,42,${fade * 0.25})`;
+        cx.beginPath(); cx.moveTo(a.x,a.y); cx.lineTo(b.x,b.y); cx.stroke();
       }
     }
   }
 
-  function drawMouseWeb(){
-    if(isTouch) return;
-    const closest=[];
-    nodes.forEach(n=>{const dx=n.x-mouse.x,dy=n.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy); if(d<MOUSE_REACH)closest.push({n,d});});
-    closest.sort((a,b)=>a.d-b.d);
-    closest.slice(0,8).forEach(({n,d})=>{
-      const fade=1-d/MOUSE_REACH; cx.save();
-      // Removed createLinearGradient to fix GC stutters
-      cx.strokeStyle=`rgba(201,151,42,${fade*.8})`; cx.lineWidth=fade*2+.5;
-      cx.beginPath();cx.moveTo(mouse.x,mouse.y);cx.lineTo(n.x,n.y);cx.stroke();
-      cx.beginPath();cx.arc(mouse.x,mouse.y,3.5,0,Math.PI*2);
-      cx.fillStyle=`rgba(201,151,42,${fade*.9})`;cx.fill();cx.restore();
-    });
-  }
-
-  // Delta-time based loop — smooth at 60Hz, 90Hz AND 120Hz+
-  const TARGET_FPS = 90;
-  const FRAME_TIME = 1000 / TARGET_FPS;
-  let _lastTime = 0;
-  let _paused = false;
+  const FRAME_TIME = 1000 / 60;
+  let _lastTime = 0, _paused = false;
   document.addEventListener('visibilitychange', () => { _paused = document.hidden; });
 
   function loop(ts){
     requestAnimationFrame(loop);
     if (_paused) return;
+    const introEl = document.getElementById('intro');
+    if (introEl && introEl.style.display !== 'none' && introEl.dataset.exited !== 'true') return;
     const cModal = document.getElementById('cModal');
     if (cModal && cModal.classList.contains('open')) return;
     const delta = ts - _lastTime;
-    if (delta < FRAME_TIME) return; // skip frame on 120Hz to maintain 60fps logic
+    if (delta < FRAME_TIME) return;
     _lastTime = ts - (delta % FRAME_TIME);
     cx.clearRect(0,0,W,H);
-    drawConnections(); drawMouseWeb();
-    nodes.forEach(n=>{n.update();n.draw();});
+    drawConnections();
+    nodes.forEach(n => { n.update(); n.draw(); });
   }
   requestAnimationFrame(loop);
 })();
