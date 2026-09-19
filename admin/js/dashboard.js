@@ -5141,15 +5141,37 @@ function updateAdminProfileUI() {
     heroName.textContent = heroText;
   }
 
-  const roleUpper = (currentAdmin.role || '').toUpperCase();
-  const desigUpper = (currentAdmin.designation || '').toUpperCase();
-  const empUpper = (currentAdmin.employee_id || '').toUpperCase();
-  const isCTO = roleUpper === 'CTO' || desigUpper.includes('CTO') || desigUpper.includes('TECHNOLOGY') || empUpper.startsWith('CTO');
+  // Raghav Raj Rauniyar (CTO / System Owner) Strict Identity Guard
+  const isRaghav = isRaghavCto();
 
   const secBtn = document.getElementById('navSecurityBtn');
   if (secBtn) {
-    secBtn.style.display = isCTO ? 'flex' : 'none';
+    secBtn.style.display = isRaghav ? 'flex' : 'none';
   }
+
+  // CTO Control Center is EXCLUSIVELY visible only to Raghav Raj Rauniyar
+  const navGov = document.getElementById('navSectionGovernance');
+  const navPerms = document.getElementById('navPermissionsBtn');
+  if (navGov) navGov.style.display = isRaghav ? 'block' : 'none';
+  if (navPerms) navPerms.style.display = isRaghav ? 'flex' : 'none';
+}
+
+function isRaghavCto() {
+  if (!currentAdmin) return false;
+  const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || '').toUpperCase();
+  const roleUpper = (currentAdmin.role || '').toUpperCase();
+  const desigUpper = (currentAdmin.designation || '').toUpperCase();
+  const emailUpper = (currentAdmin.email || '').toUpperCase();
+  const nameUpper = (currentAdmin.full_name || '').toUpperCase();
+
+  return empUpper === 'CTO001' || 
+         empUpper.startsWith('CTO') || 
+         roleUpper === 'CTO' || 
+         desigUpper.includes('CHIEF TECHNOLOGY OFFICER') || 
+         desigUpper.includes('CTO') || 
+         emailUpper.includes('RAGHAVRAJRAUNIYAR') || 
+         nameUpper.includes('RAGHAV') ||
+         Boolean(window.EduPerms && window.EduPerms.isCto);
 }
 
 window.logoutAdmin = function() {
@@ -5179,23 +5201,22 @@ function setupModuleNavigation() {
 }
 
 window.switchAdminModule = function(modId) {
-  const roleUpper = (currentAdmin?.role || '').toUpperCase();
-  const desigUpper = (currentAdmin?.designation || '').toUpperCase();
-  const empUpper = (currentAdmin?.employee_id || currentAdmin?.admin_id || '').toUpperCase();
-  const emailUpper = (currentAdmin?.email || '').toUpperCase();
-  const nameUpper = (currentAdmin?.full_name || '').toUpperCase();
+  const isCTO = isRaghavCto();
 
-  const isCTO = empUpper === 'CTO001' || 
-                roleUpper === 'CTO' || 
-                roleUpper === 'SUPER ADMIN' ||
-                roleUpper === 'SUPER_ADMIN' ||
-                desigUpper.includes('CHIEF TECHNOLOGY OFFICER') || 
-                desigUpper.includes('CTO') || 
-                emailUpper.includes('RAGHAVRAJRAUNIYAR') ||
-                nameUpper.includes('RAGHAV') ||
-                Boolean(window.EduPerms && window.EduPerms.isCto);
+  if (modId === 'permissions') {
+    const authSurface = document.getElementById('ctoAuthorizedSurface');
+    const deniedGate = document.getElementById('ctoAccessDeniedGate');
 
-  
+    if (!isCTO) {
+      if (authSurface) authSurface.style.display = 'none';
+      if (deniedGate) deniedGate.style.display = 'block';
+      showToast("Access Restricted: CTO Control Center is strictly and exclusively restricted to Raghav Raj Rauniyar (System Owner).", "error");
+    } else {
+      if (authSurface) authSurface.style.display = 'block';
+      if (deniedGate) deniedGate.style.display = 'none';
+      if (typeof loadCtoMasterMatrix === 'function') loadCtoMasterMatrix();
+    }
+  }
 
   const adminModPermMap = {
     'overview': 'admin_dashboard',

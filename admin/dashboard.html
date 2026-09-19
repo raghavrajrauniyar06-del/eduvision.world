@@ -4625,6 +4625,14 @@ body:has(#mod-chat.active) .admin-main {
         </a>
 
         
+              <!-- 5. GOVERNANCE & MASTER PERMISSION CONTROL (STRICTLY & EXCLUSIVELY RAGHAV RAJ RAUNIYAR) -->
+        <div class="nav-section-label" style="margin-top:16px; color:#f59e0b; display:none;" id="navSectionGovernance">
+          <i class="fa-solid fa-crown" style="font-size:0.6rem; margin-right:3px;"></i> GOVERNANCE &amp; CONTROL
+        </div>
+        <a href="#permissions" class="nav-item nav-cto-only" id="navPermissionsBtn" data-module="permissions" style="position:relative; display:none;">
+          <i class="fa-solid fa-fingerprint" style="color: #f59e0b;"></i> <span>CTO Control Center</span>
+          <span style="margin-left:auto; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.3)); color:#fbbf24; border:1px solid rgba(245,158,11,0.45); font-size:0.62rem; padding:2px 7px; border-radius:6px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(245,158,11,0.2);">CTO</span>
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -5419,6 +5427,91 @@ body:has(#mod-chat.active) .admin-main {
               <div>[READY] Level-5 security monitor online. Ready for diagnostics.</div>
             </div>
           </div>
+        </div>
+      </section>
+
+            <!-- ── MODULE 9: CTO MASTER PERMISSION & FEATURE CONTROL CENTER (STRICTLY RAGHAV RAJ RAUNIYAR) ── -->
+      <section class="module-view" id="mod-permissions" style="display:none;">
+        
+        <!-- Non-Raghav Access Barrier -->
+        <div id="ctoAccessDeniedGate" style="display:none;">
+          <div class="eduvision-feature-locked-container" style="padding:40px 20px; text-align:center;">
+            <div class="locked-card-liquid" style="max-width:540px; margin:0 auto; padding:32px 24px; border-radius:20px; background:rgba(15,23,42,0.9); border:1px solid rgba(239,68,68,0.35); box-shadow:0 15px 40px rgba(0,0,0,0.6);">
+              <div class="locked-icon-halo" style="width:60px; height:60px; border-radius:50%; margin:0 auto 16px; background:linear-gradient(135deg, rgba(239,68,68,0.3), rgba(185,28,28,0.4)); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:#ef4444;">
+                <i class="fa-solid fa-user-lock"></i>
+              </div>
+              <h3 class="locked-title" style="color:#fca5a5; font-size:1.3rem; margin-bottom:8px; font-weight:800;">ACCESS RESTRICTED</h3>
+              <p class="locked-subtitle" style="color:#cbd5e1; font-size:0.9rem; line-height:1.5; margin-bottom:20px;">
+                The Central Master Permission Control Center is strictly and exclusively restricted to <strong>CTO Raghav Raj Rauniyar (System Owner)</strong>.
+              </p>
+              <button class="btn-gold" onclick="switchAdminModule('overview')" style="padding:10px 24px; font-weight:700;">
+                <i class="fa-solid fa-arrow-left"></i> Return to Executive Overview
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Authorized CTO Command Surface -->
+        <div id="ctoAuthorizedSurface" style="display:none;">
+          
+          <!-- 1. Master CTO Executive Header -->
+          <div class="glass-box mac-stagger-1" style="padding:22px 28px; margin-bottom:20px; border:1px solid rgba(245,158,11,0.3); background:radial-gradient(circle at 10% 20%, rgba(201,147,42,0.12) 0%, rgba(13,20,36,0.7) 100%);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+              <div style="display:flex; align-items:center; gap:16px;">
+                <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, #f59e0b, #d97706); display:flex; align-items:center; justify-content:center; color:#070b14; font-size:1.6rem; box-shadow:0 6px 20px rgba(245,158,11,0.4); border:1px solid #fde68a;">
+                  <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <h2 style="font-family:var(--font-heading); font-size:1.4rem; font-weight:800; color:#fff; margin:0; letter-spacing:0.4px;">
+                      CTO RAGHAV RAJ RAUNIYAR
+                    </h2>
+                    <span style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#070b14; font-weight:800; font-size:0.65rem; padding:3px 8px; border-radius:6px; letter-spacing:0.8px; text-transform:uppercase; box-shadow:0 2px 8px rgba(245,158,11,0.3);">
+                      SYSTEM OWNER · MASTER CONTROL
+                    </span>
+                  </div>
+                  <p style="color:var(--text-muted); font-size:0.82rem; margin-top:4px; margin-bottom:0;">
+                    Centralized platform governance, role permission matrices, administrative feature locks, and audit controls.
+                  </p>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-gold" onclick="loadCtoMasterMatrix()" style="padding:9px 18px; font-size:0.82rem;">
+                  <i class="fa-solid fa-rotate"></i> Refresh Matrix
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Master Feature Governance Grid -->
+          <div class="glass-box" style="padding:22px; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+              <h3 style="font-size:1.05rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-sliders" style="color:#f59e0b;"></i> Live Platform Permissions Matrix
+              </h3>
+              <span style="font-size:0.75rem; color:#94a3b8;">Click toggles to instantly lock/unlock features across all portals</span>
+            </div>
+            <div id="ctoMatrixLoading" style="text-align:center; padding:30px; color:#94a3b8;">
+              <i class="fa-solid fa-circle-notch fa-spin"></i> Loading permissions matrix...
+            </div>
+            <div id="ctoMatrixContent" style="display:none; overflow-x:auto;">
+              <table class="data-table" id="ctoMatrixTable">
+                <thead>
+                  <tr>
+                    <th>Module / Feature</th>
+                    <th>Category</th>
+                    <th style="text-align:center;">Student</th>
+                    <th style="text-align:center;">Counsellor</th>
+                    <th style="text-align:center;">Team Leader</th>
+                    <th style="text-align:center;">Admin</th>
+                    <th style="text-align:center;">Global Switch</th>
+                  </tr>
+                </thead>
+                <tbody id="ctoMatrixTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </section>
 
