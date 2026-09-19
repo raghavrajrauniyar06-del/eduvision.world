@@ -961,7 +961,26 @@ function diRefresh(e) {
    ════════════════════════════════════════════════════════════════ */
 let _diLastChatPopupId = null;
 
+
+function isSystemNotification(m) {
+  if (!m) return true;
+  const mid = String(m.id || '');
+  if (mid === '00000000-0000-0000-0000-000000000404' || mid === '00000000-0000-0000-0000-000000000405' || mid.startsWith('00000000-') || mid.startsWith('sys_')) return true;
+  const cat = String(m.category || '');
+  if (cat.startsWith('MASTER_') || cat.startsWith('SYSTEM_') || cat.startsWith('PAGE_') || cat === 'SYSTEM' || cat === 'PAGE_GUARD_SYNC' || cat === 'MASTER_MATRIX_SYNC' || cat === 'PAGE_CONTROLS_SYNC') return true;
+  const title = String(m.title || '');
+  if (title.startsWith('CTO_') || title.startsWith('SYSTEM_') || title.startsWith('PAGE_GUARD')) return true;
+  const msg = String(m.message || '').trim();
+  if (msg.startsWith('{') || msg.startsWith('[') || msg.includes('"modules"') || msg.includes('"portal_')) return true;
+  return false;
+}
+
 function diShowChatPopup(sender, message, groupName) {
+  if (!message) return;
+  const rawMsg = String(message).trim();
+  if (rawMsg.startsWith('{') || rawMsg.startsWith('[') || rawMsg.includes('"modules"') || rawMsg.includes('"portal_')) return;
+  if (groupName && (groupName.startsWith('MASTER_') || groupName.startsWith('CTO_') || groupName.startsWith('PAGE_'))) return;
+  sender = (sender || 'Someone').replace(/\s*\(CTO\s*Owner\)/gi, ' (CTO)').replace(/\s*\(System\s*Owner\)/gi, '').replace(/\bOwner\b/gi, '').trim();
   const old = document.getElementById("di-chat-popup");
   if (old) old.remove();
 
@@ -1387,6 +1406,7 @@ async function loadDynamicIsland(sb, currentUser) {
 
       if (!ce && msgs) {
         const unreadMsgs = msgs.filter(function(m) {
+          if (isSystemNotification(m)) return false;
           if (m.sender_id === userId) return false;
           if ((m.sender_name || "") === userName) return false;
           let readList = [];
@@ -1472,6 +1492,7 @@ setInterval(function() {
         .limit(10);
 
       (msgs || []).forEach(function(m) {
+        if (isSystemNotification(m)) return;
         if (m.sender_id === userId) return;
         if ((m.sender_name || "") === userName) return;
         let readList = [];
@@ -1479,7 +1500,8 @@ setInterval(function() {
         if (!Array.isArray(readList)) readList = [];
         if (!readList.includes(userName) && m.id !== _diLastChatPopupId) {
           _diLastChatPopupId = m.id;
-          diShowChatPopup(m.sender_name || "Someone", m.message || "", "New Message");
+          const cleanSender = (m.sender_name || "Someone").replace(/\s*\(CTO\s*Owner\)/gi, ' (CTO)').replace(/\s*\(System\s*Owner\)/gi, '').replace(/\bOwner\b/gi, '').trim();
+          diShowChatPopup(cleanSender, m.message || "", "New Message");
         }
       });
     } catch(e) {}

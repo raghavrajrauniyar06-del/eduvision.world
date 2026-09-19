@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // EDUVISION CENTRAL CTO PAGE & SECTION KILL-SWITCH GUARD (404 GATEKEEPER)
-// MASTER ARCHITECT & SYSTEM OWNER: CTO — RAGHAV RAJ RAUNIYAR
+// MASTER ARCHITECT: CTO — RAGHAV RAJ RAUNIYAR
 // ══════════════════════════════════════════════════════════════════════════════
 
 (function() {
@@ -420,7 +420,7 @@
         message: JSON.stringify(controls),
         priority: 'High',
         sender_role: 'CTO',
-        sender_name: actorInfo || 'CTO Raghav (System Owner)',
+        sender_name: actorInfo || 'CTO Raghav',
         category: 'PAGE_CONTROLS_SYNC',
         created_at: new Date().toISOString()
       };
@@ -515,7 +515,7 @@
 
       activeControls[controlId].enabled = !!isEnabled;
       activeControls[controlId].updatedAt = new Date().toISOString();
-      activeControls[controlId].updatedBy = actorInfo || 'CTO Raghav (System Owner)';
+      activeControls[controlId].updatedBy = actorInfo || 'CTO Raghav';
 
       saveControls(activeControls, true);
       enforceSectionGuards();
@@ -532,7 +532,7 @@
         if (activeControls[k].group === 'public_pages') {
           activeControls[k].enabled = !!isEnabled;
           activeControls[k].updatedAt = new Date().toISOString();
-          activeControls[k].updatedBy = actorInfo || 'CTO Raghav (System Owner)';
+          activeControls[k].updatedBy = actorInfo || 'CTO Raghav';
         }
       }
       saveControls(activeControls, true);
@@ -546,7 +546,7 @@
         if (activeControls[k].group === 'home_sections') {
           activeControls[k].enabled = !!isEnabled;
           activeControls[k].updatedAt = new Date().toISOString();
-          activeControls[k].updatedBy = actorInfo || 'CTO Raghav (System Owner)';
+          activeControls[k].updatedBy = actorInfo || 'CTO Raghav';
         }
       }
       saveControls(activeControls, true);
@@ -561,7 +561,7 @@
         if (activeControls[k].group === 'portals') {
           activeControls[k].enabled = !!isEnabled;
           activeControls[k].updatedAt = new Date().toISOString();
-          activeControls[k].updatedBy = actorInfo || 'CTO Raghav (System Owner)';
+          activeControls[k].updatedBy = actorInfo || 'CTO Raghav';
         }
       }
       saveControls(activeControls, true);
@@ -574,7 +574,7 @@
       activeControls = JSON.parse(JSON.stringify(DEFAULT_PAGE_CONTROLS));
       for (const k in activeControls) {
         activeControls[k].updatedAt = new Date().toISOString();
-        activeControls[k].updatedBy = actorInfo || 'CTO Raghav (System Owner)';
+        activeControls[k].updatedBy = actorInfo || 'CTO Raghav';
       }
       saveControls(activeControls, true);
       enforceSectionGuards();

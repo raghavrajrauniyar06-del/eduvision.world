@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // EDUVISION CENTRAL PERMISSION & FEATURE CONTROL ENGINE (v2.0 ENTERPRISE)
-// EXCLUSIVE MASTER OWNER: CTO — RAGHAV
+// CTO CONTROL ENGINE — RAGHAV
 // ══════════════════════════════════════════════════════════════════════════════
 
 (function() {
@@ -575,7 +575,7 @@
       }
 
       const isLocked = !this.isModuleEnabled(moduleKey, targetUser);
-      let reason = (isGloballyLocked ? gLock?.lock_reason : null) || perm.lock_reason || 'Administrative restriction by system owner';
+      let reason = (isGloballyLocked ? gLock?.lock_reason : null) || perm.lock_reason || 'Administrative restriction by CTO';
       if (userOv && (userOv.is_locked || userOv.is_enabled === false) && userOv.lock_reason) {
         reason = userOv.lock_reason;
       }
@@ -629,12 +629,12 @@
           </h3>
 
           <p style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.55; max-width: 480px; margin: 0 auto 22px auto;">
-            This module has been restricted and locked by <strong>CTO Raghav (System Owner)</strong>. All operational interactions, data sync, and permissions for this feature are temporarily suspended.
+            This module has been restricted and locked by <strong>CTO Raghav</strong>. All operational interactions, data sync, and permissions for this feature are temporarily suspended.
           </p>
 
           <div class="locked-meta-box" style="background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px 20px; text-align: left; margin-bottom: 22px;">
             <div class="locked-meta-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82rem;">
-              <span class="locked-meta-label" style="color: #94a3b8;"><i class="fa-solid fa-crown" style="color: #f7d377; margin-right: 6px;"></i> System Owner</span>
+              <span class="locked-meta-label" style="color: #94a3b8;"><i class="fa-solid fa-shield-halved" style="color: #60a5fa; margin-right: 6px;"></i> CTO Management</span>
               <span class="locked-meta-value" style="color: #f7d377; font-weight: 800;">CTO Raghav</span>
             </div>
             <div class="locked-meta-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82rem;">

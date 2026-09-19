@@ -5141,7 +5141,7 @@ function updateAdminProfileUI() {
     heroName.textContent = heroText;
   }
 
-  // Raghav Raj Rauniyar (CTO / System Owner) Strict Identity Guard
+  // Raghav Raj Rauniyar (CTO) Strict Identity Guard
   const isRaghav = isRaghavCto();
 
   const secBtn = document.getElementById('navSecurityBtn');
@@ -5230,7 +5230,7 @@ window.switchAdminModule = function(modId) {
     if (!isCTO) {
       if (authSurface) authSurface.style.display = 'none';
       if (deniedGate) deniedGate.style.display = 'block';
-      showToast("Access Restricted: CTO Control Center is strictly and exclusively restricted to Raghav Raj Rauniyar (System Owner).", "error");
+      showToast("Access Restricted: CTO Control Center is strictly and exclusively restricted to Raghav Raj Rauniyar (CTO).", "error");
     } else {
       if (authSurface) authSurface.style.display = 'block';
       if (deniedGate) deniedGate.style.display = 'none';
@@ -15222,7 +15222,7 @@ async function pushMasterMatrixToCloud() {
       message: JSON.stringify(ctoMasterMatrix),
       priority: 'High',
       sender_role: 'CTO',
-      sender_name: 'Raghav Raj Rauniyar (CTO Owner)',
+      sender_name: 'Raghav Raj Rauniyar (CTO)',
       category: 'MASTER_MATRIX_SYNC',
       created_at: new Date().toISOString()
     };
@@ -15968,7 +15968,7 @@ function getMembersForRole(roleKey) {
         id: 'CTO001',
         name: 'Raghav',
         role: 'CTO',
-        roleTitle: 'Chief Technology Officer & System Owner',
+        roleTitle: 'Chief Technology Officer (CTO)',
         branch: 'Corporate HQ',
         isSuperAdmin: true
       },
@@ -16297,7 +16297,7 @@ function renderRoleAccordionMembers(roleKey) {
           ` : ''}
 
           ${isSuperAdmin ? `
-            <div style="display:flex; align-items:center; gap:5px;" title="CTO Raghav &amp; CEO are Master Owners and cannot be turned OFF">
+            <div style="display:flex; align-items:center; gap:5px;" title="CTO Raghav &amp; CEO have full administrative access">
               <label class="cto-switch" style="margin:0; opacity:0.8; cursor:not-allowed;">
                 <input type="checkbox" checked disabled>
                 <span class="cto-slider"></span>
@@ -16618,7 +16618,7 @@ function handleDrawerMemberToggle(memberId, isChecked, memberName, roleKey, expl
   if (!featKey) return;
 
   if (memberId === 'CTO001' || memberId === 'CEO001') {
-    showToast('Super Admin (CTO & CEO) are Master Owners and cannot be turned OFF!', 'warning');
+    showToast('Super Admin (CTO & CEO) have full administrative access and cannot be turned OFF!', 'warning');
     const sw = document.getElementById('memberSwitch_' + memberId);
     if (sw) sw.checked = true;
     return;
@@ -17232,7 +17232,7 @@ async function toggleCtoPageControl(controlId) {
 
   const newStatus = !currentItem.enabled;
   const adminName = (currentAdmin && currentAdmin.full_name) ? currentAdmin.full_name : 'CTO Raghav';
-  const actor = `${adminName} (CTO Owner)`;
+  const actor = `${adminName} (CTO)`;
 
   const success = await window.EduPageGuard.setControl(controlId, newStatus, actor);
 
@@ -17256,7 +17256,7 @@ async function toggleCtoPageControl(controlId) {
           await sbClient.from('master_permission_audit_trail').insert({
             actor_name: adminName,
             actor_id: (currentAdmin && currentAdmin.employee_id) || 'CTO001',
-            actor_role: 'CTO (System Owner)',
+            actor_role: 'CTO',
             action: newStatus ? 'PAGE_ACTIVATE' : 'PAGE_KILL_SWITCH_404',
             target_module: controlId,
             details: `CTO Raghav set ${currentItem.name} (${controlId}) to ${newStatus ? 'LIVE' : 'OFFLINE (404 Redirect)'}`,
