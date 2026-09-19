@@ -4,7 +4,7 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/eduvision_emblem.png',
+  '/eduvision_app_icon.png',
   '/animations/animations.css'
 ];
 

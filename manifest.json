@@ -1,13 +1,13 @@
 {
   "name": "EduVision World",
   "short_name": "EduVision",
-  "description": "EduVision - Premier Global Education, University Admissions & Career Counselling Platform",
+  "description": "EduVision - Learn • Grow • Succeed | Premier Global Education & Career Counselling Platform",
   "start_url": "/",
   "id": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#070b12",
-  "theme_color": "#c9932a",
+  "background_color": "#ffffff",
+  "theme_color": "#0a1931",
   "orientation": "portrait-primary",
   "lang": "en",
   "categories": [
@@ -17,25 +17,25 @@
   ],
   "icons": [
     {
-      "src": "/eduvision_emblem.png",
+      "src": "/eduvision_app_icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/eduvision_emblem.png",
+      "src": "/eduvision_app_icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logos/eduvision_emblem.png",
-      "sizes": "192x192",
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     },
     {
-      "src": "/logos/eduvision_emblem.png",
+      "src": "/icons/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
