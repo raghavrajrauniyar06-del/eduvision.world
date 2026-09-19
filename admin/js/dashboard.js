@@ -5195,21 +5195,7 @@ window.switchAdminModule = function(modId) {
                 nameUpper.includes('RAGHAV') ||
                 Boolean(window.EduPerms && window.EduPerms.isCto);
 
-  if (modId === 'permissions') {
-    const authSurface = document.getElementById('ctoAuthorizedSurface');
-    const deniedGate = document.getElementById('ctoAccessDeniedGate');
-
-    if (!isCTO) {
-      if (authSurface) authSurface.style.display = 'none';
-      if (deniedGate) deniedGate.style.display = 'block';
-      showToast("Access Denied: Permission Control Center is strictly restricted to CTO Raghav.", "error");
-    } else {
-      if (authSurface) authSurface.style.display = 'block';
-      if (deniedGate) deniedGate.style.display = 'none';
-      if (typeof loadCtoMasterMatrix === 'function') loadCtoMasterMatrix();
-      if (typeof initCtoPageKillSwitches === 'function') initCtoPageKillSwitches();
-    }
-  }
+  
 
   const adminModPermMap = {
     'overview': 'admin_dashboard',
