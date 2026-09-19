@@ -79,7 +79,7 @@
         '<img src="/eduvision_app_icon.png" style="width:38px; height:38px; border-radius:10px; border:1px solid rgba(201,147,42,0.5); object-fit:contain; background:#070b12; flex-shrink:0;">',
         '<div style="min-width:0;">',
           '<div style="font-family:Outfit,sans-serif; font-weight:700; font-size:0.85rem; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Install EduVision App</div>',
-          '<div style="font-size:0.68rem; color:#cbd5e1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Fast 120Hz Standalone Experience</div>',
+          '<div style="font-size:0.68rem; color:#cbd5e1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Learn • Grow • Succeed — Shape Your Career ✦</div>',
         '</div>',
       '</div>',
       '<div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">',
