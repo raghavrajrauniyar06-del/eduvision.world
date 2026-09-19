@@ -51,9 +51,7 @@
 }
 
 /* --- RESTORE SMOOTH SCROLL --- */
-html, body {
-  scroll-behavior: smooth !important;
-}
+html, body { scroll-behavior: auto !important; }
 
 /* ═══════════════════════════════════════════════════════════
    LIGHTWEIGHT 60FPS MICRO-ANIMATIONS & HOVER EFFECTS
@@ -1312,11 +1310,7 @@ html, body {
 /* ═══════════════════════════════════════════════════════════
    120Hz PROMOTION & BUTTER-SMOOTH MOBILE SCROLL ENGINE
    ═══════════════════════════════════════════════════════════ */
-@media (min-width: 992px) and (pointer: fine) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
+html, body { scroll-behavior: auto !important; }
 
 @media (max-width: 991px), (pointer: coarse) {
   html {

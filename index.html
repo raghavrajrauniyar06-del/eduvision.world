@@ -1680,7 +1680,7 @@ footer{
 
 /* Smooth multi-refresh rate (60Hz, 90Hz, 120Hz+) scroll optimization without altering animation behaviour */
 @supports (scroll-behavior: smooth) {
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto !important; }
 }
 @media (max-width: 768px) {
   html { scroll-behavior: auto; } /* Disable default smooth scroll on touch mobile to eliminate touch lag */
@@ -2144,7 +2144,7 @@ footer{
 ════════════════════════════════════════════════════ */
 
 /* Smooth 120hz scrolling */
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto !important; }
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* Hero — cinematic entrance animations */
@@ -2319,7 +2319,7 @@ nav.scrolled {
     display:none!important;
   }
   /* Smooth scroll */
-  html{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  html{scroll-behavior:auto !important;-webkit-overflow-scrolling:touch;}
   /* Touch target sizes */
   .btn-primary,.btn-ghost,.nav-cta{min-height:44px;touch-action:manipulation;}
   /* Reduce blur radius */
@@ -2504,7 +2504,7 @@ nav.scrolled {
 .chat-body{
   flex:1;overflow-y:auto;padding:16px;
   display:flex;flex-direction:column;gap:10px;
-  scroll-behavior:smooth;
+  scroll-behavior:auto !important;
 }
 .chat-body::-webkit-scrollbar{width:3px;}
 .chat-body::-webkit-scrollbar-track{background:transparent;}
@@ -10601,9 +10601,8 @@ if(!isTouch){
     if (introEl && introEl.style.display !== 'none' && introEl.dataset.exited !== 'true') return;
     const cModal = document.getElementById('cModal');
     if (cModal && cModal.classList.contains('open')) return;
-    const delta = ts - _lastTime;
-    if (delta < FRAME_TIME) return;
-    _lastTime = ts - (delta % FRAME_TIME);
+    // Native monitor refresh rate sync
+    _lastTime = ts;
     cx.clearRect(0,0,W,H);
     drawConnections();
     nodes.forEach(n => { n.update(); n.draw(); });
@@ -14425,9 +14424,7 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")closeUniModa
 /* ═══════════════════════════════════════════════════════════
      CRYSTAL-CLEAR APPLE macOS / VisionOS LIQUID GLASS SYSTEM
      ═══════════════════════════════════════════════════════════ */
-  html {
-    scroll-behavior: smooth !important;
-  }
+  html { scroll-behavior: auto !important; }
 
   /* Custom Apple Glass Scrollbar for Entire Page */
   ::-webkit-scrollbar {
