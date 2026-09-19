@@ -5179,21 +5179,23 @@ function setupModuleNavigation() {
 }
 
 window.switchAdminModule = function(modId) {
+  const roleUpper = (currentAdmin?.role || '').toUpperCase();
+  const desigUpper = (currentAdmin?.designation || '').toUpperCase();
+  const empUpper = (currentAdmin?.employee_id || currentAdmin?.admin_id || '').toUpperCase();
+  const emailUpper = (currentAdmin?.email || '').toUpperCase();
+  const nameUpper = (currentAdmin?.full_name || '').toUpperCase();
+
+  const isCTO = empUpper === 'CTO001' || 
+                roleUpper === 'CTO' || 
+                roleUpper === 'SUPER ADMIN' ||
+                roleUpper === 'SUPER_ADMIN' ||
+                desigUpper.includes('CHIEF TECHNOLOGY OFFICER') || 
+                desigUpper.includes('CTO') || 
+                emailUpper.includes('RAGHAVRAJRAUNIYAR') ||
+                nameUpper.includes('RAGHAV') ||
+                Boolean(window.EduPerms && window.EduPerms.isCto);
+
   if (modId === 'permissions') {
-    const roleUpper = (currentAdmin?.role || '').toUpperCase();
-    const desigUpper = (currentAdmin?.designation || '').toUpperCase();
-    const empUpper = (currentAdmin?.employee_id || currentAdmin?.admin_id || '').toUpperCase();
-    const emailUpper = (currentAdmin?.email || '').toUpperCase();
-    const nameUpper = (currentAdmin?.full_name || '').toUpperCase();
-
-    const isCTO = empUpper === 'CTO001' || 
-                  roleUpper === 'CTO' || 
-                  desigUpper.includes('CHIEF TECHNOLOGY OFFICER') || 
-                  desigUpper.includes('CTO') || 
-                  emailUpper.includes('RAGHAVRAJRAUNIYAR') ||
-                  nameUpper.includes('RAGHAV') ||
-                  (window.EduPerms && window.EduPerms.isCto);
-
     const authSurface = document.getElementById('ctoAuthorizedSurface');
     const deniedGate = document.getElementById('ctoAccessDeniedGate');
 
@@ -5225,32 +5227,15 @@ window.switchAdminModule = function(modId) {
   const permKey = adminModPermMap[modId];
   const activeView = document.getElementById('mod-' + modId);
 
-  // ── 1. CENTRAL CTO LOCK & PERMISSION CHECK (EVALUATED FIRST!) ──
+  // ── 1. CENTRAL CTO LOCK & PERMISSION CHECK ──
   let isFeatureLocked = false;
   let lockedFeatureKey = permKey;
 
-  if (modId !== 'permissions' && window.EduPerms) {
-    if (permKey && !window.EduPerms.isModuleEnabled(permKey)) {
+  // CTO / System Owner is NEVER locked out!
+  if (!isCTO && modId !== 'permissions' && window.EduPerms) {
+    if (permKey && typeof window.EduPerms.isModuleEnabled === 'function' && !window.EduPerms.isModuleEnabled(permKey)) {
       isFeatureLocked = true;
       lockedFeatureKey = permKey;
-    } else if (modId === 'leads' && (!window.EduPerms.isModuleEnabled('admin_leads') || !window.EduPerms.isModuleEnabled('counsellor_leads'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('admin_leads') ? 'admin_leads' : 'counsellor_leads';
-    } else if (modId === 'attendance' && (!window.EduPerms.isModuleEnabled('admin_attendance') || !window.EduPerms.isModuleEnabled('counsellor_attendance'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('admin_attendance') ? 'admin_attendance' : 'counsellor_attendance';
-    } else if (modId === 'chat' && (!window.EduPerms.isModuleEnabled('comm_chat') || !window.EduPerms.isModuleEnabled('comm_direct_messaging'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('comm_chat') ? 'comm_chat' : 'comm_direct_messaging';
-    } else if (modId === 'students' && (!window.EduPerms.isModuleEnabled('admin_students') || !window.EduPerms.isModuleEnabled('student_dashboard'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('admin_students') ? 'admin_students' : 'student_dashboard';
-    } else if (modId === 'universities' && (!window.EduPerms.isModuleEnabled('admin_universities') || !window.EduPerms.isModuleEnabled('student_universities') || !window.EduPerms.isModuleEnabled('associate_universities'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('admin_universities') ? 'admin_universities' : 'student_universities';
-    } else if (modId === 'partners' && (!window.EduPerms.isModuleEnabled('admin_partners') || !window.EduPerms.isModuleEnabled('associate_dashboard'))) {
-      isFeatureLocked = true;
-      lockedFeatureKey = !window.EduPerms.isModuleEnabled('admin_partners') ? 'admin_partners' : 'associate_dashboard';
     }
   }
 
@@ -5271,7 +5256,7 @@ window.switchAdminModule = function(modId) {
       activeView.style.display = 'block';
       window.EduPerms.renderLockedState(activeView, lockedFeatureKey);
     }
-    return; // STOP! DO NOT LOAD MODULE DATA OR RUN TIMERS!
+    return; // STOP!
   } else if (window.EduPerms && activeView) {
     window.EduPerms.unlockState(activeView);
   }

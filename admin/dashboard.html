@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="../shared/page_guard.js?v=20260919_V1"></script>
@@ -4222,6 +4222,62 @@ body:has(#mod-chat.active) .admin-main {
 }
 </style>
 
+<style id="edu-admin-mobile-fix">
+@media (max-width: 768px) {
+  #mobileSidebarOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(4, 6, 12, 0.78) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.28s ease !important;
+    z-index: 9998 !important;
+  }
+  #mobileSidebarOverlay.active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    width: 285px !important;
+    min-width: 285px !important;
+    transform: translateX(-100%) !important;
+    z-index: 9999 !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 20px 0 50px rgba(0,0,0,0.85) !important;
+    pointer-events: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: #080c18 !important;
+  }
+  .admin-sidebar.open, .admin-sidebar.mobile-open {
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+  }
+  .admin-sidebar .nav-item {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 10001 !important;
+    padding: 12px 16px !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 4px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(168, 85, 247, 0.2) !important;
+  }
+  .admin-sidebar .nav-item:active {
+    background: rgba(168, 85, 247, 0.2) !important;
+  }
+}
+</style>
 </head>
 
 <body class="admin-body">
@@ -4234,6 +4290,7 @@ body:has(#mod-chat.active) .admin-main {
     <div style="position:absolute; top:35%; right:30%; width:540px; height:540px; border-radius:50%; background:radial-gradient(circle, rgba(245, 158, 11, 0.09) 0%, rgba(245, 158, 11, 0) 70%); filter:blur(70px); animation: macAuroraFloat3 26s ease-in-out infinite alternate;"></div>
   </div>
 
+  <div id="mobileSidebarOverlay" onclick="toggleMobileSidebar()"></div>
   <div class="admin-layout">
     
     <!-- ── SIDEBAR ───────────────────────────────────────────────────────────── -->
