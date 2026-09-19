@@ -1406,3 +1406,250 @@ html, body {
   transform: none !important;
   visibility: visible !important;
 }
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   UNIVERSAL MOBILE CRM DASHBOARD & INTELLIGENCE SUITE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+  /* 1. Header & Meta Rows */
+  .crm-hero-header {
+    padding: 16px 18px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+  
+  .crm-hero-left {
+    width: 100% !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .crm-hero-name {
+    font-size: 1.2rem !important;
+    line-height: 1.25 !important;
+    word-break: break-word !important;
+  }
+
+  .crm-hero-meta-row {
+    font-size: 0.75rem !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .crm-hero-right {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .crm-attendance-pill {
+    padding: 5px 12px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .crm-segmented-track-wrap {
+    padding: 8px 14px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .crm-workspace-body {
+    padding: 16px 14px !important;
+  }
+
+  /* 2. Master Layout & Grid Conversion */
+  .crm-overview-two-col,
+  .crm-workspace-grid,
+  .crm-kpi-grid,
+  .kpi-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  .crm-col-left,
+  .crm-col-right {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* 3. Primary Spotlight Strips */
+  .crm-kpi-primary-strip,
+  .crm-kpi-spotlight-strip,
+  .crm-spotlight-strip,
+  .crm-kpi-strip {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .crm-kpi-spotlight,
+  .crm-spotlight-card,
+  .act-kpi-card {
+    padding: 16px 18px !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .crm-spotlight-lbl {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.5px !important;
+    white-space: normal !important;
+  }
+
+  .crm-spotlight-num,
+  .act-kpi-val {
+    font-size: 1.85rem !important;
+    line-height: 1.15 !important;
+    word-break: break-word !important;
+  }
+
+  .crm-spotlight-sub {
+    font-size: 0.73rem !important;
+    white-space: normal !important;
+    line-height: 1.3 !important;
+  }
+
+  /* 4. Secondary Metrics & Attendance Strips */
+  .crm-kpi-secondary-strip,
+  .crm-att-summary-grid,
+  .metrics-grid,
+  .stat-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .crm-sec-card,
+  .crm-att-stat-cell {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+    gap: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .crm-sec-val,
+  .att-stat-num {
+    font-size: 1.25rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .crm-sec-lbl,
+  .att-stat-lbl {
+    font-size: 0.70rem !important;
+    white-space: normal !important;
+    line-height: 1.3 !important;
+  }
+
+  /* 5. Panel Boxes & Headers */
+  .crm-panel-box {
+    padding: 16px !important;
+    border-radius: 16px !important;
+    gap: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .crm-panel-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .crm-panel-title {
+    font-size: 0.95rem !important;
+    line-height: 1.35 !important;
+    word-break: break-word !important;
+  }
+
+  .crm-panel-sub {
+    font-size: 0.72rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .btn-panel-link {
+    font-size: 0.75rem !important;
+    padding: 4px 10px !important;
+    align-self: flex-start !important;
+  }
+
+  /* 6. Tables & Horizontal Scroll Container */
+  .crm-table-wrap,
+  .data-table-wrap,
+  .table-responsive {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 8px !important;
+    display: block !important;
+  }
+
+  .crm-pipeline-table,
+  .data-table {
+    min-width: 540px !important;
+    width: 100% !important;
+    font-size: 0.78rem !important;
+  }
+
+  .crm-pipeline-table th,
+  .crm-pipeline-table td,
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 7. Timeline Stream */
+  .crm-timeline-stream {
+    max-height: 350px !important;
+    padding-right: 2px !important;
+  }
+
+  .crm-timeline-item {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+
+  .crm-timeline-text {
+    font-size: 0.78rem !important;
+    line-height: 1.4 !important;
+    word-break: break-word !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .crm-kpi-secondary-strip,
+  .crm-att-summary-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .crm-sec-card {
+    padding: 10px 12px !important;
+  }
+
+  .crm-sec-icon {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .crm-att-latest-bar {
+    font-size: 0.75rem !important;
+    padding: 8px 10px !important;
+  }
+}
