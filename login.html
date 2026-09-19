@@ -4545,9 +4545,7 @@
 /* ═══════════════════════════════════════════════════════════
      CRYSTAL-CLEAR APPLE macOS / VisionOS LIQUID GLASS SYSTEM
      ═══════════════════════════════════════════════════════════ */
-  html {
-    scroll-behavior: smooth !important;
-  }
+  @media (min-width: 992px) { html { scroll-behavior: smooth !important; } } @media (max-width: 991px) { html { scroll-behavior: auto !important; -webkit-overflow-scrolling: touch !important; } }
 
   /* Custom Apple Glass Scrollbar for Entire Page */
   ::-webkit-scrollbar {
