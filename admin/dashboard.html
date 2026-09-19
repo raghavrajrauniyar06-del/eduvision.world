@@ -4575,49 +4575,49 @@ body:has(#mod-chat.active) .admin-main {
       <nav class="sidebar-nav">
         <!-- 1. MAIN DASHBOARD -->
         <div class="nav-section-label">MAIN DASHBOARD</div>
-        <a href="#overview" class="nav-item active" data-module="overview">
+        <a href="#overview" class="nav-item active" data-module="overview" onclick="switchAdminModule('overview'); return false;">
           <i class="fa-solid fa-chart-pie" style="color: #f7d377;"></i> <span>Executive Overview</span>
         </a>
 
         <!-- 2. STAFF & ORGANIZATION -->
         <div class="nav-section-label" style="margin-top:16px;">STAFF &amp; ORGANIZATION</div>
-        <a href="#staff" class="nav-item" data-module="staff">
+        <a href="#staff" class="nav-item" data-module="staff" onclick="switchAdminModule('staff'); return false;">
           <i class="fa-solid fa-users-gear" style="color: #c084fc;"></i> <span>Staff &amp; Role Promotions</span>
         </a>
-                <a href="#attendance" class="nav-item" data-module="attendance">
+                <a href="#attendance" class="nav-item" data-module="attendance" onclick="switchAdminModule('attendance'); return false;">
           <i class="fa-solid fa-calendar-check" style="color: #f7d377;"></i> <span>Staff Attendance Hub</span>
         </a>
-        <a href="#counsellorcrm" class="nav-item" data-module="counsellorcrm">
+        <a href="#counsellorcrm" class="nav-item" data-module="counsellorcrm" onclick="switchAdminModule('counsellorcrm'); return false;">
           <i class="fa-solid fa-address-card" style="color: #38bdf8;"></i> <span>Counsellor CRM</span>
         </a>
-        <a href="#partners" class="nav-item" data-module="partners">
+        <a href="#partners" class="nav-item" data-module="partners" onclick="switchAdminModule('partners'); return false;">
           <i class="fa-solid fa-handshake" style="color: #2dd4bf;"></i> <span>Associate Partners</span>
         </a>
 
         <!-- 3. ACADEMIC & PIPELINE -->
         <div class="nav-section-label" style="margin-top:16px;">ACADEMIC &amp; PIPELINE</div>
-        <a href="#students" class="nav-item" data-module="students">
+        <a href="#students" class="nav-item" data-module="students" onclick="switchAdminModule('students'); return false;">
           <i class="fa-solid fa-user-graduate" style="color: #38bdf8;"></i> <span>Students &amp; Admissions</span>
         </a>
-        <a href="#leads" class="nav-item" data-module="leads">
+        <a href="#leads" class="nav-item" data-module="leads" onclick="switchAdminModule('leads'); return false;">
           <i class="fa-solid fa-filter-circle-dollar" style="color: #f43f5e;"></i> <span>Leads CRM Oversight</span>
         </a>
-        <a href="#recordings" class="nav-item" data-module="recordings">
+        <a href="#recordings" class="nav-item" data-module="recordings" onclick="switchAdminModule('recordings'); return false;">
           <i class="fa-solid fa-microphone-lines" style="color: #10b981;"></i> <span>Call Recordings Vault</span>
         </a>
-        <a href="#webforms" class="nav-item" data-module="webforms">
+        <a href="#webforms" class="nav-item" data-module="webforms" onclick="switchAdminModule('webforms'); return false;">
           <i class="fa-solid fa-file-signature" style="color: #38bdf8;"></i> <span>Web Submissions</span>
         </a>
-        <a href="#universities" class="nav-item" data-module="universities">
+        <a href="#universities" class="nav-item" data-module="universities" onclick="switchAdminModule('universities'); return false;">
           <i class="fa-solid fa-building-columns" style="color: #facc15;"></i> <span>Universities &amp; Courses</span>
         </a>
 
         <!-- 4. OPERATIONS & HEALTH -->
         <div class="nav-section-label" style="margin-top:16px;">OPERATIONS &amp; HEALTH</div>
-        <a href="#chat" class="nav-item" data-module="chat">
+        <a href="#chat" class="nav-item" data-module="chat" onclick="switchAdminModule('chat'); return false;">
           <i class="fa-solid fa-comments" style="color: #34d399;"></i> <span>Command Chat Hub</span>
         </a>
-        <a href="#security" class="nav-item nav-security" id="navSecurityBtn" data-module="security">
+        <a href="#security" class="nav-item nav-security" id="navSecurityBtn" data-module="security" onclick="switchAdminModule('security'); return false;">
           <i class="fa-solid fa-shield-halved" style="color: #ef4444;"></i> <span>System Health &amp; Security</span>
         </a>
         <a href="javascript:void(0)" class="nav-item" onclick="openAdminProfileModal()" style="cursor:pointer;">
@@ -4629,7 +4629,7 @@ body:has(#mod-chat.active) .admin-main {
         <div class="nav-section-label" style="margin-top:16px; color:#f59e0b; display:none;" id="navSectionGovernance">
           <i class="fa-solid fa-crown" style="font-size:0.6rem; margin-right:3px;"></i> GOVERNANCE &amp; CONTROL
         </div>
-        <a href="#permissions" class="nav-item nav-cto-only" id="navPermissionsBtn" data-module="permissions" style="position:relative; display:none;">
+        <a href="#permissions" class="nav-item nav-cto-only" id="navPermissionsBtn" data-module="permissions" onclick="switchAdminModule('permissions'); return false;" style="position:relative; display:none;">
           <i class="fa-solid fa-fingerprint" style="color: #f59e0b;"></i> <span>CTO Control Center</span>
           <span style="margin-left:auto; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.3)); color:#fbbf24; border:1px solid rgba(245,158,11,0.45); font-size:0.62rem; padding:2px 7px; border-radius:6px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(245,158,11,0.2);">CTO</span>
         </a>

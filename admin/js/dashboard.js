@@ -5158,11 +5158,11 @@ function updateAdminProfileUI() {
 
 function isRaghavCto() {
   if (!currentAdmin) return false;
-  const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || '').toUpperCase();
+  const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || currentAdmin.id || '').toUpperCase();
   const roleUpper = (currentAdmin.role || '').toUpperCase();
   const desigUpper = (currentAdmin.designation || '').toUpperCase();
   const emailUpper = (currentAdmin.email || '').toUpperCase();
-  const nameUpper = (currentAdmin.full_name || '').toUpperCase();
+  const nameUpper = (currentAdmin.full_name || currentAdmin.name || '').toUpperCase();
 
   return empUpper === 'CTO001' || 
          empUpper.startsWith('CTO') || 
@@ -5172,6 +5172,24 @@ function isRaghavCto() {
          emailUpper.includes('RAGHAVRAJRAUNIYAR') || 
          nameUpper.includes('RAGHAV') ||
          Boolean(window.EduPerms && window.EduPerms.isCto);
+}
+
+function isIshikaCeo() {
+  if (!currentAdmin) return false;
+  const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || currentAdmin.id || '').toUpperCase();
+  const roleUpper = (currentAdmin.role || '').toUpperCase();
+  const desigUpper = (currentAdmin.designation || '').toUpperCase();
+  const emailUpper = (currentAdmin.email || '').toUpperCase();
+  const nameUpper = (currentAdmin.full_name || currentAdmin.name || '').toUpperCase();
+
+  return empUpper === 'CEO001' || 
+         roleUpper === 'CEO' || 
+         roleUpper === 'SUPER_ADMIN' ||
+         desigUpper.includes('CHIEF EXECUTIVE') || 
+         desigUpper.includes('CEO') || 
+         nameUpper.includes('ISHIKA') ||
+         emailUpper.includes('ceo') ||
+         Boolean(window.EduPerms && window.EduPerms.isCeo);
 }
 
 window.logoutAdmin = function() {
@@ -5202,6 +5220,8 @@ function setupModuleNavigation() {
 
 window.switchAdminModule = function(modId) {
   const isCTO = isRaghavCto();
+  const isCEO = isIshikaCeo();
+  const isLeadership = isCTO || isCEO || (currentAdmin && ['ADMIN', 'SUPER_ADMIN', 'CEO'].includes((currentAdmin.role || '').toUpperCase()));
 
   if (modId === 'permissions') {
     const authSurface = document.getElementById('ctoAuthorizedSurface');
@@ -5239,8 +5259,8 @@ window.switchAdminModule = function(modId) {
   let isFeatureLocked = false;
   let lockedFeatureKey = permKey;
 
-  // CTO / System Owner is NEVER locked out!
-  if (!isCTO && modId !== 'permissions' && window.EduPerms) {
+  // CTO, CEO, and Admins are NEVER locked out of operational modules unless globally locked
+  if (!isLeadership && modId !== 'permissions' && window.EduPerms) {
     if (permKey && typeof window.EduPerms.isModuleEnabled === 'function' && !window.EduPerms.isModuleEnabled(permKey)) {
       isFeatureLocked = true;
       lockedFeatureKey = permKey;

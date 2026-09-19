@@ -261,15 +261,20 @@
         const rawAdmin = localStorage.getItem('eduvision_admin');
         if (rawAdmin) {
           const admin = JSON.parse(rawAdmin);
-          this.currentUserId = admin.employee_id || admin.admin_id || admin.id || '';
+          this.currentUserId = (admin.employee_id || admin.admin_id || admin.id || '').toUpperCase();
           this.currentRole = (admin.role || 'Admin').toLowerCase();
           const desig = (admin.designation || '').toLowerCase();
-          if (this.currentUserId === 'CTO001' || desig.includes('technology') || desig.includes('cto') || (admin.email && admin.email.toLowerCase().includes('raghavrajrauniyar'))) {
+          const name = (admin.full_name || admin.name || '').toLowerCase();
+          const email = (admin.email || '').toLowerCase();
+
+          if (this.currentUserId === 'CTO001' || desig.includes('technology') || desig.includes('cto') || email.includes('raghavrajrauniyar') || name.includes('raghav')) {
             this.isCto = true;
             this.currentRole = 'cto';
-          } else if (this.currentUserId === 'CEO001' || desig.includes('chief executive') || desig.includes('ceo') || this.currentRole === 'ceo') {
+          } else if (this.currentUserId === 'CEO001' || desig.includes('chief executive') || desig.includes('ceo') || this.currentRole === 'ceo' || name.includes('ishika') || email.includes('ceo')) {
             this.isCeo = true;
             this.currentRole = 'ceo';
+          } else {
+            this.currentRole = 'admin';
           }
           this.currentUser = admin;
           return;
@@ -313,7 +318,7 @@
     hydrateFromMatrix(matrix) {
       if (!matrix || !matrix.modules) return;
       const rawRole = (this.currentRole || 'student').toLowerCase().replace(/\s+/g, '_');
-      const role = (rawRole === 'cto' || rawRole === 'super_admin' || rawRole === 'admin') ? 'admin' : rawRole;
+      const role = (rawRole === 'cto' || rawRole === 'super_admin' || rawRole === 'admin' || rawRole === 'ceo') ? 'admin' : rawRole;
       const globalLocks = matrix.globalLocks || {};
       const rolePerms = matrix.rolePermissions || [];
       this.rolePermissionsList = rolePerms;
@@ -466,14 +471,16 @@
     generateDefaultMatrix(role) {
       const map = {};
       const normRole = (role || 'student').toLowerCase();
+      const isLeadership = ['cto', 'super_admin', 'super admin', 'admin', 'ceo'].includes(normRole);
+
       Object.keys(FALLBACK_MODULE_CATALOG).forEach(k => {
         const item = FALLBACK_MODULE_CATALOG[k];
         let accessible = true;
         if (item.category === 'system' && normRole !== 'cto') accessible = false;
-        if (item.category === 'admin' && !['cto', 'super_admin', 'super admin', 'admin'].includes(normRole)) accessible = false;
-        if (item.category === 'teamleader' && !['cto', 'super_admin', 'admin', 'team_leader', 'team leader'].includes(normRole)) accessible = false;
-        if (item.category === 'counsellor' && !['cto', 'super_admin', 'admin', 'team_leader', 'team leader', 'senior_counsellor', 'senior counsellor', 'counsellor'].includes(normRole)) accessible = false;
-        if (item.category === 'associate' && !['cto', 'super_admin', 'admin', 'associate', 'partner'].includes(normRole)) accessible = false;
+        if (item.category === 'admin' && !isLeadership) accessible = false;
+        if (item.category === 'teamleader' && !(isLeadership || ['team_leader', 'team leader'].includes(normRole))) accessible = false;
+        if (item.category === 'counsellor' && !(isLeadership || ['team_leader', 'team leader', 'senior_counsellor', 'senior counsellor', 'counsellor'].includes(normRole))) accessible = false;
+        if (item.category === 'associate' && !(isLeadership || ['associate', 'partner'].includes(normRole))) accessible = false;
 
         map[k] = {
           display_name: item.name,
@@ -485,7 +492,7 @@
           is_accessible: accessible,
           locked_by_name: 'CTO Raghav',
           lock_reason: 'Role restriction',
-          actions: { view: accessible, create: accessible, edit: accessible, delete: (normRole === 'cto') }
+          actions: { view: accessible, create: accessible, edit: accessible, delete: (normRole === 'cto' || isLeadership) }
         };
       });
       return map;
@@ -493,9 +500,9 @@
 
     // Check if Module is Accessible (Evaluates Global Lock -> User Override -> Role Access)
     isModuleEnabled(moduleKey, targetUser = null) {
-      // 0. Master CTO Permission Control Centre is ALWAYS accessible so CTO can manage/unlock features
+      // 0. Master CTO Permission Control Centre is ALWAYS accessible only to CTO
       if (moduleKey === 'system_permission_control' || moduleKey === 'permissions') {
-        return true;
+        return this.isCto || (this.currentUserId === 'CTO001');
       }
 
       // 1. Global Administrative Lock: If globally locked, no user or role can access ("kuch bhi off")
@@ -510,6 +517,7 @@
       const uid = (user && (user.employee_id || user.counsellor_id || user.team_leader_id || user.id || user.student_id || user.user_id)) || this.currentUserId;
       const cleanUid = uid ? uid.toString().trim().toLowerCase() : '';
       const userRole = (user && user.role ? user.role : this.currentRole || 'student').toLowerCase().replace(/\s+/g, '_');
+      const isLeadershipUser = this.isCto || this.isCeo || cleanUid === 'cto001' || cleanUid === 'ceo001' || ['cto', 'ceo', 'admin', 'super_admin'].includes(userRole);
 
       // 2. Individual Employee / User Override (HIGHEST PRIORITY: "kisi keliye off")
       // Allows CTO Raghav to grant/deny permission to specific employees
@@ -551,9 +559,14 @@
         }
       }
 
+      // Leadership (CEO, Admin, Super Admin, CTO) always has full access to operational admin modules
+      if (isLeadershipUser && moduleKey !== 'permissions' && moduleKey !== 'system_permission_control') {
+        return true;
+      }
+
       // 3. Role-Level Access Check ("role keliye off")
       const targetRole = (targetUser && targetUser.role ? targetUser.role : this.currentRole || 'student').toLowerCase().replace(/\s+/g, '_');
-      const normalizedRole = (targetRole === 'cto' || targetRole === 'super_admin' || targetRole === 'admin') ? 'admin' : targetRole;
+      const normalizedRole = (targetRole === 'cto' || targetRole === 'super_admin' || targetRole === 'admin' || targetRole === 'ceo') ? 'admin' : targetRole;
       
       const rolePerms = this.rolePermissionsList || (typeof ctoMasterMatrix !== 'undefined' && ctoMasterMatrix?.rolePermissions) || [];
       if (rolePerms && rolePerms.length > 0) {
@@ -737,7 +750,7 @@
     decorateSidebar() {
       const role = (this.currentRole || 'student').toLowerCase();
       let rolePrefix = 'student_';
-      if (['cto', 'super_admin', 'super admin', 'admin'].includes(role)) rolePrefix = 'admin_';
+      if (['cto', 'super_admin', 'super admin', 'admin', 'ceo'].includes(role)) rolePrefix = 'admin_';
       else if (['team_leader', 'team leader'].includes(role)) rolePrefix = 'team_';
       else if (['senior_counsellor', 'senior counsellor', 'counsellor'].includes(role)) rolePrefix = 'counsellor_';
       else if (['associate', 'partner'].includes(role)) rolePrefix = 'associate_';
