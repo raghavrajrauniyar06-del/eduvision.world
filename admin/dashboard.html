@@ -5430,7 +5430,7 @@ body:has(#mod-chat.active) .admin-main {
         </div>
       </section>
 
-            <!-- ── MODULE 9: CTO MASTER PERMISSION & FEATURE CONTROL CENTER (STRICTLY RAGHAV RAJ RAUNIYAR) ── -->
+            <!-- ── MODULE 9: CTO MASTER PERMISSION & KILL-SWITCH CONTROL CENTER (STRICTLY RAGHAV RAJ RAUNIYAR) ── -->
       <section class="module-view" id="mod-permissions" style="display:none;">
         
         <!-- Non-Raghav Access Barrier -->
@@ -5455,7 +5455,7 @@ body:has(#mod-chat.active) .admin-main {
         <div id="ctoAuthorizedSurface" style="display:none;">
           
           <!-- 1. Master CTO Executive Header -->
-          <div class="glass-box mac-stagger-1" style="padding:22px 28px; margin-bottom:20px; border:1px solid rgba(245,158,11,0.3); background:radial-gradient(circle at 10% 20%, rgba(201,147,42,0.12) 0%, rgba(13,20,36,0.7) 100%);">
+          <div class="glass-box mac-stagger-1" style="padding:22px 28px; margin-bottom:20px; border:1px solid rgba(245,158,11,0.3); background:radial-gradient(circle at 10% 20%, rgba(201,147,42,0.14) 0%, rgba(13,20,36,0.85) 100%);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
               <div style="display:flex; align-items:center; gap:16px;">
                 <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, #f59e0b, #d97706); display:flex; align-items:center; justify-content:center; color:#070b14; font-size:1.6rem; box-shadow:0 6px 20px rgba(245,158,11,0.4); border:1px solid #fde68a;">
@@ -5471,45 +5471,99 @@ body:has(#mod-chat.active) .admin-main {
                     </span>
                   </div>
                   <p style="color:var(--text-muted); font-size:0.82rem; margin-top:4px; margin-bottom:0;">
-                    Centralized platform governance, role permission matrices, administrative feature locks, and audit controls.
+                    Centralized platform governance, 404 page kill-switches, role permission matrices, and real-time security overrides.
                   </p>
                 </div>
               </div>
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn-gold" onclick="loadCtoMasterMatrix()" style="padding:9px 18px; font-size:0.82rem;">
-                  <i class="fa-solid fa-rotate"></i> Refresh Matrix
+                <button class="btn-gold" onclick="refreshCtoControlCenter()" style="padding:9px 18px; font-size:0.82rem;">
+                  <i class="fa-solid fa-rotate"></i> Sync Controls
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- 2. Master Feature Governance Grid -->
-          <div class="glass-box" style="padding:22px; margin-bottom:20px;">
+          <!-- 2. Master Metrics Cluster -->
+          <div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div class="glass-box" style="padding:16px 20px;">
+              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Total System Modules</div>
+              <div style="font-size:1.6rem; font-weight:800; color:#38bdf8; margin-top:4px;" id="statTotalModules">0</div>
+            </div>
+            <div class="glass-box" style="padding:16px 20px;">
+              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Guarded Public Pages</div>
+              <div style="font-size:1.6rem; font-weight:800; color:#34d399; margin-top:4px;" id="statGuardedPages">0</div>
+            </div>
+            <div class="glass-box" style="padding:16px 20px;">
+              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Active Global Locks</div>
+              <div style="font-size:1.6rem; font-weight:800; color:#f87171; margin-top:4px;" id="statGlobalLocks">0</div>
+            </div>
+          </div>
+
+          <!-- 3. Sub-Navigation Tabs: [ ⚡ Page & 404 Kill-Switches ] vs [ 🛡️ Role Permission Matrix ] -->
+          <div style="display:flex; gap:10px; margin-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; flex-wrap:wrap;">
+            <button class="btn-tab active" id="tabBtnCtoPages" onclick="switchCtoSubTab('pages')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35)); border:1px solid rgba(247,211,119,0.45); color:#f7d377; cursor:pointer;">
+              <i class="fa-solid fa-power-off"></i> ⚡ Public Pages &amp; 404 Kill-Switches
+            </button>
+            <button class="btn-tab" id="tabBtnCtoMatrix" onclick="switchCtoSubTab('matrix')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-shield-halved"></i> 🛡️ Role Permission Matrix
+            </button>
+          </div>
+
+          <!-- SUB-VIEW A: PUBLIC WEBPAGES & 404 KILL-SWITCHES -->
+          <div id="ctoSubViewPages" class="glass-box" style="padding:22px; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-door-closed" style="color:#ef4444;"></i> Public Webpage &amp; Portal 404 Gatekeepers
+                </h3>
+                <p style="font-size:0.78rem; color:#94a3b8; margin:2px 0 0;">
+                  Toggle any webpage or home section OFF to instantly activate 404 Page Gatekeeper across all devices.
+                </p>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="ctoPageSearchInput" placeholder="Search page (e.g. login, course)..." oninput="handleCtoPageSearch(this.value)" style="padding:8px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:0.85rem; width:220px;">
+              </div>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div id="ctoPageFilterPills" style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+              <button class="btn-outline active" onclick="filterCtoPageCategory('all', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">All Targets (<span id="ctoCountAll">0</span>)</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('public_pages', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Public Webpages (404 Gate)</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('home_sections', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Homepage Sections</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('portals', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Staff &amp; Student Portals</button>
+            </div>
+
+            <!-- Page Cards Dynamic Grid -->
+            <div id="ctoPageCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px;"></div>
+          </div>
+
+          <!-- SUB-VIEW B: ROLE PERMISSION MATRIX & GLOBAL MODULE LOCKS -->
+          <div id="ctoSubViewMatrix" class="glass-box" style="padding:22px; margin-bottom:20px; display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-              <h3 style="font-size:1.05rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-sliders" style="color:#f59e0b;"></i> Live Platform Permissions Matrix
-              </h3>
-              <span style="font-size:0.75rem; color:#94a3b8;">Click toggles to instantly lock/unlock features across all portals</span>
+              <div>
+                <h3 style="font-size:1.1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-sliders" style="color:#f59e0b;"></i> Role Permission &amp; Module Control Matrix
+                </h3>
+                <p style="font-size:0.78rem; color:#94a3b8; margin:2px 0 0;">
+                  Click any role badge (ADMIN, TL, CNS, STU) or Global Lock to instantly restrict features.
+                </p>
+              </div>
+              <input type="text" id="ctoSearchFilterInput" placeholder="Filter permission modules..." oninput="handleCtoSearchFilter(this.value)" style="padding:8px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:0.85rem; width:220px;">
             </div>
-            <div id="ctoMatrixLoading" style="text-align:center; padding:30px; color:#94a3b8;">
-              <i class="fa-solid fa-circle-notch fa-spin"></i> Loading permissions matrix...
+
+            <!-- Category filter pills for Matrix -->
+            <div id="ctoCategoryPillsWrap" style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+              <button class="btn-outline active" onclick="filterCtoCategory('all', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">All Modules</button>
+              <button class="btn-outline" onclick="filterCtoCategory('core', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Core</button>
+              <button class="btn-outline" onclick="filterCtoCategory('communication', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Communication</button>
+              <button class="btn-outline" onclick="filterCtoCategory('student', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Student</button>
+              <button class="btn-outline" onclick="filterCtoCategory('counsellor', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Counsellor</button>
+              <button class="btn-outline" onclick="filterCtoCategory('teamleader', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Team Leader</button>
+              <button class="btn-outline" onclick="filterCtoCategory('admin', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Admin</button>
             </div>
-            <div id="ctoMatrixContent" style="display:none; overflow-x:auto;">
-              <table class="data-table" id="ctoMatrixTable">
-                <thead>
-                  <tr>
-                    <th>Module / Feature</th>
-                    <th>Category</th>
-                    <th style="text-align:center;">Student</th>
-                    <th style="text-align:center;">Counsellor</th>
-                    <th style="text-align:center;">Team Leader</th>
-                    <th style="text-align:center;">Admin</th>
-                    <th style="text-align:center;">Global Switch</th>
-                  </tr>
-                </thead>
-                <tbody id="ctoMatrixTbody"></tbody>
-              </table>
-            </div>
+
+            <!-- Feature Cards Dynamic Grid -->
+            <div id="ctoFeatureCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px;"></div>
           </div>
 
         </div>

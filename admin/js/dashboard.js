@@ -1,4 +1,4 @@
-﻿window.skipAudio = function(btn, seconds) {
+window.skipAudio = function(btn, seconds) {
   const container = btn.closest('.pro-audio-player-wrap') || btn.parentElement;
   const audio = container ? container.querySelector('audio') : null;
   if (audio) {
@@ -5214,6 +5214,7 @@ window.switchAdminModule = function(modId) {
     } else {
       if (authSurface) authSurface.style.display = 'block';
       if (deniedGate) deniedGate.style.display = 'none';
+      if (typeof initCtoPageKillSwitches === 'function') initCtoPageKillSwitches();
       if (typeof loadCtoMasterMatrix === 'function') loadCtoMasterMatrix();
     }
   }
@@ -17035,6 +17036,8 @@ function renderCtoPageCards() {
   // Update counter
   const countEl = document.getElementById('ctoCountAll');
   if (countEl) countEl.textContent = keys.length;
+  const guardedEl = document.getElementById('statGuardedPages');
+  if (guardedEl) guardedEl.textContent = keys.length;
 
   let filteredKeys = keys.filter(key => {
     const item = controls[key];
@@ -17219,3 +17222,66 @@ function resetCtoPageControls() {
   }
 }
 window.resetCtoPageControls = resetCtoPageControls;
+
+function switchCtoSubTab(tabName) {
+  const btnPages = document.getElementById('tabBtnCtoPages');
+  const btnMatrix = document.getElementById('tabBtnCtoMatrix');
+  const viewPages = document.getElementById('ctoSubViewPages');
+  const viewMatrix = document.getElementById('ctoSubViewMatrix');
+
+  if (tabName === 'matrix') {
+    if (btnMatrix) {
+      btnMatrix.classList.add('active');
+      btnMatrix.style.background = 'linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35))';
+      btnMatrix.style.border = '1px solid rgba(247,211,119,0.45)';
+      btnMatrix.style.color = '#f7d377';
+    }
+    if (btnPages) {
+      btnPages.classList.remove('active');
+      btnPages.style.background = 'rgba(255,255,255,0.05)';
+      btnPages.style.border = '1px solid rgba(255,255,255,0.1)';
+      btnPages.style.color = '#cbd5e1';
+    }
+    if (viewPages) viewPages.style.display = 'none';
+    if (viewMatrix) viewMatrix.style.display = 'block';
+
+    if (typeof renderCtoFeatureMatrix === 'function') renderCtoFeatureMatrix();
+  } else {
+    if (btnPages) {
+      btnPages.classList.add('active');
+      btnPages.style.background = 'linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35))';
+      btnPages.style.border = '1px solid rgba(247,211,119,0.45)';
+      btnPages.style.color = '#f7d377';
+    }
+    if (btnMatrix) {
+      btnMatrix.classList.remove('active');
+      btnMatrix.style.background = 'rgba(255,255,255,0.05)';
+      btnMatrix.style.border = '1px solid rgba(255,255,255,0.1)';
+      btnMatrix.style.color = '#cbd5e1';
+    }
+    if (viewPages) viewPages.style.display = 'block';
+    if (viewMatrix) viewMatrix.style.display = 'none';
+
+    if (typeof renderCtoPageCards === 'function') renderCtoPageCards();
+  }
+}
+window.switchCtoSubTab = switchCtoSubTab;
+
+async function refreshCtoControlCenter() {
+  try {
+    if (window.EduPageGuard && typeof window.EduPageGuard.refresh === 'function') {
+      window.EduPageGuard.refresh();
+    }
+    await Promise.all([
+      typeof initCtoPageKillSwitches === 'function' ? initCtoPageKillSwitches() : Promise.resolve(),
+      typeof loadCtoMasterMatrix === 'function' ? loadCtoMasterMatrix() : Promise.resolve()
+    ]);
+    if (typeof showToast === 'function') {
+      showToast("⚡ CTO Control Center & Page Kill-Switches Synchronized", "success");
+    }
+  } catch(err) {
+    console.error("CTO refresh error:", err);
+  }
+}
+window.refreshCtoControlCenter = refreshCtoControlCenter;
+
