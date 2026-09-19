@@ -420,46 +420,82 @@
     }
   });
 
-  // Async Background Hydration from Supabase (system_page_controls / site_settings)
-  async function hydrateFromSupabase() {
+  // ── ENTERPRISE CLOUD SYNC ENGINE (Direct Supabase REST API, Zero Dependencies) ──
+  async function pushControlsToCloud(controls, actorInfo) {
     try {
-      let sbClient = null;
-      if (window.supabase && typeof window.supabase.createClient === 'function') {
-        sbClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
-      } else if (window.sb) {
-        sbClient = window.sb;
-      }
+      const payload = {
+        id: '00000000-0000-0000-0000-000000000404',
+        title: 'CTO_PAGE_CONTROLS_STATE',
+        message: JSON.stringify(controls),
+        priority: 'High',
+        sender_role: 'CTO',
+        sender_name: actorInfo || 'CTO Raghav (System Owner)',
+        category: 'PAGE_CONTROLS_SYNC',
+        created_at: new Date().toISOString()
+      };
 
-      if (!sbClient) return;
-
-      const { data, error } = await sbClient
-        .from('system_page_controls')
-        .select('*');
-
-      if (!error && Array.isArray(data) && data.length > 0) {
-        let changed = false;
-        data.forEach(row => {
-          if (row.control_id && activeControls[row.control_id]) {
-            if (activeControls[row.control_id].enabled !== row.is_enabled) {
-              activeControls[row.control_id].enabled = row.is_enabled;
-              changed = true;
-            }
-          }
-        });
-        if (changed) {
-          saveControls(activeControls, true);
-          enforcePageGuard();
-          enforceSectionGuards();
-        }
-      }
-    } catch (err) {
-      // Supabase table hydration is non-blocking
+      await fetch(SUPABASE_PROJECT_URL + '/rest/v1/notifications', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.warn('[EduPageGuard] Cloud push error:', e);
     }
   }
 
-  // Run async hydration if not blocked
+  // Fast Background Hydration from Supabase (Zero external library required)
+  async function hydrateFromSupabase() {
+    try {
+      const res = await fetch(SUPABASE_PROJECT_URL + '/rest/v1/notifications?id=eq.00000000-0000-0000-0000-000000000404&select=*', {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+        }
+      });
+
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0 && data[0].message) {
+        let cloudControls = null;
+        try {
+          cloudControls = JSON.parse(data[0].message);
+        } catch(pe) {}
+
+        if (cloudControls && typeof cloudControls === 'object') {
+          let changed = false;
+          for (const k in cloudControls) {
+            if (activeControls[k]) {
+              if (activeControls[k].enabled !== cloudControls[k].enabled) {
+                activeControls[k].enabled = cloudControls[k].enabled;
+                changed = true;
+              }
+            } else {
+              activeControls[k] = cloudControls[k];
+              changed = true;
+            }
+          }
+
+          if (changed) {
+            saveControls(activeControls, true);
+            enforcePageGuard();
+            enforceSectionGuards();
+          }
+        }
+      }
+    } catch (err) {
+      // Supabase hydration is non-blocking
+    }
+  }
+
+  // Run instant hydration if not already redirecting
   if (!isRedirecting && typeof window !== 'undefined') {
-    setTimeout(hydrateFromSupabase, 800);
+    hydrateFromSupabase();
   }
 
   // ════════════════════════════════════════════════════════════════════════════
@@ -493,28 +529,8 @@
       saveControls(activeControls, true);
       enforceSectionGuards();
 
-      // Attempt Supabase sync
-      try {
-        let sbClient = (window.supabase && typeof window.supabase.createClient === 'function')
-          ? window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY)
-          : (window.sb || null);
-
-        if (sbClient) {
-          await sbClient
-            .from('system_page_controls')
-            .upsert({
-              control_id: controlId,
-              is_enabled: !!isEnabled,
-              name: activeControls[controlId].name,
-              category: activeControls[controlId].group,
-              updated_by: actorInfo || 'CTO Raghav',
-              updated_at: new Date().toISOString()
-            }, { onConflict: 'control_id' });
-        }
-      } catch (e) {
-        console.warn('[EduPageGuard] Supabase persistence fallback:', e);
-      }
-
+      // Broadcast and persist directly to Supabase cloud
+      await pushControlsToCloud(activeControls, actorInfo);
       return true;
     },
 
@@ -529,6 +545,7 @@
         }
       }
       saveControls(activeControls, true);
+      await pushControlsToCloud(activeControls, actorInfo);
       return true;
     },
 
@@ -543,6 +560,7 @@
       }
       saveControls(activeControls, true);
       enforceSectionGuards();
+      await pushControlsToCloud(activeControls, actorInfo);
       return true;
     },
 
@@ -556,11 +574,12 @@
         }
       }
       saveControls(activeControls, true);
+      await pushControlsToCloud(activeControls, actorInfo);
       return true;
     },
 
     // Reset all controls to factory default
-    resetDefaults: function(actorInfo) {
+    resetDefaults: async function(actorInfo) {
       activeControls = JSON.parse(JSON.stringify(DEFAULT_PAGE_CONTROLS));
       for (const k in activeControls) {
         activeControls[k].updatedAt = new Date().toISOString();
@@ -568,12 +587,14 @@
       }
       saveControls(activeControls, true);
       enforceSectionGuards();
+      await pushControlsToCloud(activeControls, actorInfo);
       return activeControls;
     },
 
     // Refresh state manually
-    refresh: function() {
+    refresh: async function() {
       activeControls = loadStoredControls();
+      await hydrateFromSupabase();
       enforcePageGuard();
       enforceSectionGuards();
       return activeControls;
