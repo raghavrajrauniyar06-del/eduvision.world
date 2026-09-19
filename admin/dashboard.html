@@ -4278,6 +4278,264 @@ body:has(#mod-chat.active) .admin-main {
   }
 }
 </style>
+<style id="edu-staff-mobile-glass-css">
+/* ── STAFF MODULE APPLE LIQUID GLASS STYLING ── */
+.staff-header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.staff-search-filter-group {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  min-width: 260px;
+  max-width: 600px;
+}
+.staff-search-input-wrap {
+  position: relative;
+  flex: 1;
+}
+.staff-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+.staff-search-field {
+  width: 100%;
+  padding: 11px 14px 11px 38px !important;
+  background: rgba(10, 15, 29, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-size: 0.88rem !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+.staff-search-field:focus {
+  border-color: rgba(247, 211, 119, 0.7) !important;
+  box-shadow: 0 0 14px rgba(247, 211, 119, 0.25) !important;
+}
+.staff-filter-select-wrap {
+  width: 170px;
+}
+.staff-role-select {
+  width: 100%;
+  padding: 11px 14px !important;
+  background: rgba(10, 15, 29, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #f8fafc !important;
+  font-size: 0.88rem !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+.staff-add-btn {
+  padding: 11px 20px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 15px rgba(201, 147, 42, 0.35) !important;
+}
+
+/* Mobile Glass Card Defaults */
+.staff-mobile-cards-list {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .staff-module-box {
+    padding: 14px !important;
+    background: rgba(10, 15, 28, 0.6) !important;
+  }
+  .staff-header-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .staff-search-filter-group {
+    flex-direction: column;
+    max-width: 100%;
+    min-width: 100%;
+    gap: 8px;
+  }
+  .staff-filter-select-wrap {
+    width: 100%;
+  }
+  .staff-add-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px !important;
+  }
+  
+  /* Hide heavy horizontal table on mobile */
+  .staff-desktop-table-wrap {
+    display: none !important;
+  }
+
+  /* Show Luxury Frosted Glass Cards on Mobile */
+  .staff-mobile-cards-list {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .staff-liquid-glass-card {
+    background: linear-gradient(135deg, rgba(20, 29, 51, 0.82) 0%, rgba(10, 16, 30, 0.9) 100%) !important;
+    backdrop-filter: blur(20px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+    border: 1px solid rgba(247, 211, 119, 0.22) !important;
+    border-radius: 18px !important;
+    padding: 16px !important;
+    box-shadow: 0 8px 25px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    transition: transform 0.2s ease, border-color 0.2s ease !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .staff-liquid-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f7d377, #c9932a, #8a6015);
+    opacity: 0.85;
+  }
+
+  /* Top Row: Character Avatar & Details */
+  .staff-card-top-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .staff-card-avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .staff-card-identity {
+    flex: 1;
+    min-width: 0;
+  }
+  .staff-card-name-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .staff-card-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+  .staff-card-empid-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    color: var(--gold-light, #f7d377);
+    font-weight: 700;
+    background: rgba(201, 147, 42, 0.15);
+    border: 1px solid rgba(247, 211, 119, 0.3);
+    padding: 2px 7px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 3px;
+  }
+
+  /* Pills Grid */
+  .staff-card-pills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .staff-info-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .staff-info-pill i {
+    color: var(--gold-light, #f7d377);
+    font-size: 0.8rem;
+    width: 14px;
+    text-align: center;
+  }
+
+  /* Action Buttons Bottom Row */
+  .staff-card-actions-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 12px;
+  }
+  .btn-staff-action-edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .btn-staff-action-edit:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .btn-staff-action-promote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(201, 147, 42, 0.25), rgba(138, 96, 21, 0.35));
+    border: 1px solid rgba(247, 211, 119, 0.45);
+    color: #f7d377;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .btn-staff-action-promote:active {
+    background: rgba(201, 147, 42, 0.45);
+  }
+}
+</style>
 </head>
 
 <body class="admin-body">
@@ -4511,26 +4769,50 @@ body:has(#mod-chat.active) .admin-main {
 
       <!-- ── MODULE 2: STAFF & ROLES ────────────────────────────────────────── -->
       <section class="module-view" id="mod-staff">
-        <div class="glass-box" style="padding:20px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
-            <div style="display:flex; gap:10px; flex:1; max-width:500px;">
-              <input type="text" id="staffSearchInput" placeholder="Search staff by name, employee ID, branch..." oninput="filterStaffTable()" style="width:100%; padding:10px 14px; background:rgba(0,0,0,0.4); border:1px solid var(--border-subtle); border-radius:8px; color:#fff;">
-              <select id="staffRoleFilter" onchange="filterStaffTable()" style="padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff;">
-                <option value="ALL">All Roles</option>
-                <option value="Team Leader">Team Leaders</option>
-                <option value="Senior Counsellor">Senior Counsellors</option>
-                <option value="Counsellor">Counsellors</option>
-              </select>
+        <div class="glass-box staff-module-box" style="padding:22px;">
+          
+          <!-- Staff Search & Control Header -->
+          <div class="staff-header-controls">
+            <div class="staff-search-filter-group">
+              <div class="staff-search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass staff-search-icon"></i>
+                <input type="text" id="staffSearchInput" class="staff-search-field" placeholder="Search by name, ID, branch..." oninput="filterStaffTable()">
+              </div>
+              <div class="staff-filter-select-wrap">
+                <select id="staffRoleFilter" class="staff-role-select" onchange="filterStaffTable()">
+                  <option value="ALL">All Staff Roles</option>
+                  <option value="Team Leader">Team Leaders (TL)</option>
+                  <option value="Senior Counsellor">Senior Counsellors</option>
+                  <option value="Counsellor">Counsellors</option>
+                </select>
+              </div>
             </div>
-            <button class="btn-gold" onclick="openStaffModal()"><i class="fa-solid fa-user-plus"></i> Add Staff Member</button>
+            <button class="btn-gold staff-add-btn" onclick="openStaffModal()">
+              <i class="fa-solid fa-user-plus"></i> <span>Add Staff Member</span>
+            </button>
           </div>
 
-          <div style="overflow-x:auto;">
+          <!-- Desktop Executive Table View -->
+          <div class="staff-desktop-table-wrap" style="overflow-x:auto;">
             <table class="data-table">
-              <thead><tr><th>EMP ID</th><th>Staff Name</th><th>Contact</th><th>Branch</th><th>Role / Designation</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>EMP ID</th>
+                  <th>Staff Member</th>
+                  <th>Contact</th>
+                  <th>Branch</th>
+                  <th>Role & Designation</th>
+                  <th>Status</th>
+                  <th style="text-align:center;">Actions</th>
+                </tr>
+              </thead>
               <tbody id="staffTableBody"></tbody>
             </table>
           </div>
+
+          <!-- Mobile Liquid Glass Staff Cards (Ultra-Premium Phone View) -->
+          <div class="staff-mobile-cards-list" id="staffMobileCards"></div>
+
         </div>
       </section>
 

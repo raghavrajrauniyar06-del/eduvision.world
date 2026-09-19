@@ -5690,43 +5690,114 @@ window.loadStaffDirectory = async function() {
 
 function renderStaffTable(staffList) {
   const tbody = document.getElementById('staffTableBody');
-  if (!tbody) return;
+  const mobileContainer = document.getElementById('staffMobileCards');
 
   if (staffList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</td></tr>';
+    if (mobileContainer) mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</div>';
     return;
   }
 
-  tbody.innerHTML = staffList.map(s => {
-    const isTL = s.staffType === 'Team Leader';
-    const roleBadge = isTL ? 'badge-tl' : (s.role === 'Senior Counsellor' ? 'badge-senior' : 'badge-counsellor');
-    const statusText = s.status || 'Active';
-    const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
+  // 1. Render Desktop Table Rows
+  if (tbody) {
+    tbody.innerHTML = staffList.map(s => {
+      const isTL = s.staffType === 'Team Leader';
+      const roleBadge = isTL ? 'badge-tl' : (s.role === 'Senior Counsellor' ? 'badge-senior' : 'badge-counsellor');
+      const statusText = s.status || 'Active';
+      const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
 
-    return `
-      <tr>
-        <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${s.employee_id || 'EMP-00'}</strong></td>
-        <td>
-          <strong style="color:#fff;">${s.full_name || 'Staff Member'}</strong>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${s.email || '--'}</div>
-        </td>
-        <td>${s.phone || '--'}</td>
-        <td>${s.branch || 'Head Office'}</td>
-        <td><span class="badge-role ${roleBadge}">${s.designation || s.role}</span></td>
-        <td><span class="badge-status ${statusClass}">${statusText}</span></td>
-        <td>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-action-icon" title="Edit Employee Account" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
+      return `
+        <tr>
+          <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${s.employee_id || 'EMP-00'}</strong></td>
+          <td>
+            <strong style="color:#fff;">${s.full_name || 'Staff Member'}</strong>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${s.email || '--'}</div>
+          </td>
+          <td>${s.phone || '--'}</td>
+          <td>${s.branch || 'Head Office'}</td>
+          <td><span class="badge-role ${roleBadge}">${s.designation || s.role}</span></td>
+          <td><span class="badge-status ${statusClass}">${statusText}</span></td>
+          <td>
+            <div style="display:flex; gap:6px; justify-content:center;">
+              <button class="btn-action-icon" title="Edit Employee Account" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
+                <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
+              </button>
+              <button class="btn-action-icon" title="Promote / Reassign Role" onclick="quickPromoteStaff('${s.id}', '${s.staffType}', '${s.full_name}', '${s.role}', '${s.branch}')">
+                <i class="fa-solid fa-arrow-up-right-dots" style="color:var(--gold-light);"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // 2. Render Mobile Liquid Glass Staff Cards
+  if (mobileContainer) {
+    const avatarGradients = [
+      'linear-gradient(135deg, #f59e0b, #d97706)',
+      'linear-gradient(135deg, #a855f7, #7e22ce)',
+      'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+      'linear-gradient(135deg, #10b981, #047857)',
+      'linear-gradient(135deg, #ec4899, #be185d)'
+    ];
+
+    mobileContainer.innerHTML = staffList.map((s, idx) => {
+      const isTL = s.staffType === 'Team Leader';
+      const roleBadge = isTL ? 'badge-tl' : (s.role === 'Senior Counsellor' ? 'badge-senior' : 'badge-counsellor');
+      const statusText = s.status || 'Active';
+      const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
+      const name = s.full_name || 'Staff Member';
+      const initials = name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'S';
+      const grad = avatarGradients[idx % avatarGradients.length];
+
+      return `
+        <div class="staff-liquid-glass-card">
+          <div class="staff-card-top-row">
+            <div class="staff-card-avatar" style="background:${grad};">
+              ${initials}
+            </div>
+            <div class="staff-card-identity">
+              <div class="staff-card-name-line">
+                <h4 class="staff-card-name">${name}</h4>
+                <span class="badge-status ${statusClass}" style="font-size:0.68rem; padding:2px 7px;">${statusText}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:3px;">
+                <span class="staff-card-empid-badge">${s.employee_id || 'EMP-00'}</span>
+                <span class="badge-role ${roleBadge}" style="font-size:0.68rem; padding:2px 7px;">${s.designation || s.role}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="staff-card-pills-grid">
+            <div class="staff-info-pill">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>${s.branch || 'Head Office'}</span>
+            </div>
+            <div class="staff-info-pill">
+              <i class="fa-solid fa-phone"></i>
+              <span>${s.phone || '--'}</span>
+            </div>
+            <div class="staff-info-pill" style="grid-column: span 2;">
+              <i class="fa-solid fa-envelope"></i>
+              <span>${s.email || '--'}</span>
+            </div>
+          </div>
+
+          <div class="staff-card-actions-row">
+            <button class="btn-staff-action-edit" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
               <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
+              <span>Edit Account</span>
             </button>
-            <button class="btn-action-icon" title="Promote / Reassign Role" onclick="quickPromoteStaff('${s.id}', '${s.staffType}', '${s.full_name}', '${s.role}', '${s.branch}')">
-              <i class="fa-solid fa-arrow-up-right-dots" style="color:var(--gold-light);"></i>
+            <button class="btn-staff-action-promote" onclick="quickPromoteStaff('${s.id}', '${s.staffType}', '${s.full_name}', '${s.role}', '${s.branch}')">
+              <i class="fa-solid fa-arrow-up-right-dots"></i>
+              <span>Promote / Role</span>
             </button>
           </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
+        </div>
+      `;
+    }).join('');
+  }
 }
 
 window.filterStaffTable = function() {
