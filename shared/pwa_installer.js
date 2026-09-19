@@ -24,9 +24,24 @@
       btn.style.display = 'inline-flex';
     });
 
-    // Show floating PWA Install Card on mobile if not installed
-    showPwaInstallBanner();
+    // Show floating PWA Install Card ONLY on mobile
+    if (isMobileDevice()) {
+      showPwaInstallBanner();
+    }
     window.dispatchEvent(new CustomEvent('pwa-installable'));
+  });
+
+  function isMobileDevice() {
+    var hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    var isNarrow = window.innerWidth <= 768;
+    var isMobileAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return isNarrow || (hasTouch && isMobileAgent);
+  }
+
+  window.addEventListener('resize', function() {
+    if (!isMobileDevice()) {
+      hidePwaInstallBanner();
+    }
   });
 
   window.installEduVisionApp = async function() {
@@ -47,9 +62,17 @@
   });
 
   function showPwaInstallBanner() {
+    if (!isMobileDevice()) return; // strictly mobile only - never show on desktop/laptop
     if (localStorage.getItem('eduvision_pwa_dismissed') === 'true') return;
     if (window.matchMedia('(display-mode: standalone)').matches) return; // already installed
     if (document.getElementById('pwa-install-banner')) return;
+
+    if (!document.getElementById('pwa-mobile-banner-style')) {
+      var styleEl = document.createElement('style');
+      styleEl.id = 'pwa-mobile-banner-style';
+      styleEl.textContent = '@media (min-width: 769px) { #pwa-install-banner { display: none !important; } }';
+      document.head.appendChild(styleEl);
+    }
 
     var banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
