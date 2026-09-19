@@ -5454,6 +5454,27 @@ img, video {
   content-visibility: auto;
 }
 </style>
+<style id="edu-mobile-smooth-perf">
+@media (max-width: 768px) {
+  /* Disable heavy battery/GPU drains on phone */
+  #networkCanvas, #heroCanvas {
+    display: none !important;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  .svc-card, .fcard, .why-card, .cnt-card, .t-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(13, 20, 36, 0.95) !important;
+    transform: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+}
+</style>
 </head>
 <body class="loading">
 
@@ -9748,7 +9769,7 @@ function startCinematicIntro() {
               if (introEl.dataset.exited !== 'true') {
                 completeIntroHandover();
               }
-            }, 2800);
+            }, (isMobile ? 700 : 2200);
 
           }, 300);
 
