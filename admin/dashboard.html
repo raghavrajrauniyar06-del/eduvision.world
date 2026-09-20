@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
@@ -4812,7 +4812,7 @@ body:has(#mod-chat.active) .admin-main {
           </div>
 
           <!-- Desktop Executive Table View -->
-          <div class="staff-desktop-table-wrap" style="overflow-x:auto;">
+          <div class="staff-desktop-table-wrap desktop-table-only" style="overflow-x:auto;">
             <table class="data-table">
               <thead>
                 <tr>
@@ -4830,7 +4830,7 @@ body:has(#mod-chat.active) .admin-main {
           </div>
 
           <!-- Mobile Liquid Glass Staff Cards (Ultra-Premium Phone View) -->
-          <div class="staff-mobile-cards-list" id="staffMobileCards"></div>
+          <div class="staff-mobile-cards-list mobile-cards-only" id="staffMobileCards"></div>
 
         </div>
       </section>
@@ -4842,12 +4842,15 @@ body:has(#mod-chat.active) .admin-main {
             <input type="text" id="partnerSearchInput" placeholder="Search partners by organization, contact person..." oninput="filterPartnerTable()" style="max-width:400px; width:100%; padding:10px 14px; background:rgba(0,0,0,0.4); border:1px solid var(--border-subtle); border-radius:8px; color:#fff;">
             <button class="btn-gold" onclick="openPartnerModal()"><i class="fa-solid fa-plus"></i> Add Partner</button>
           </div>
-          <div style="overflow-x:auto;">
+          <!-- Desktop Table View -->
+          <div class="desktop-table-only" style="overflow-x:auto;">
             <table class="data-table">
               <thead><tr><th>Partner Code</th><th>Organization</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>Status</th><th>Tier</th><th>Actions</th></tr></thead>
               <tbody id="partnerTableBody"></tbody>
             </table>
           </div>
+          <!-- Mobile Liquid Glass Partner Cards -->
+          <div class="mobile-cards-only" id="partnerMobileCards"></div>
         </div>
       </section>
 
@@ -4862,12 +4865,15 @@ body:has(#mod-chat.active) .admin-main {
               </button>
             </div>
           </div>
-          <div style="overflow-x:auto;">
+          <!-- Desktop Table View -->
+          <div class="desktop-table-only" style="overflow-x:auto;">
             <table class="data-table">
               <thead><tr><th>Candidate ID</th><th>Student Name</th><th>Phone</th><th>University</th><th>Course</th><th>Admission Status</th><th>Dossier</th></tr></thead>
               <tbody id="studentTableBody"></tbody>
             </table>
           </div>
+          <!-- Mobile Liquid Glass Student Cards -->
+          <div class="mobile-cards-only" id="studentMobileCards"></div>
         </div>
       </section>
 
@@ -4878,12 +4884,15 @@ body:has(#mod-chat.active) .admin-main {
             <input type="text" id="leadsSearchInput" placeholder="Search leads by name, phone, course..." oninput="filterLeadsTable()" style="max-width:400px; width:100%; padding:10px 14px; background:rgba(0,0,0,0.4); border:1px solid var(--border-subtle); border-radius:8px; color:#fff;">
             <button class="btn-gold" onclick="openCreateLeadModal()"><i class="fa-solid fa-plus"></i> Add New Lead</button>
           </div>
-          <div style="overflow-x:auto;">
+          <!-- Desktop Table View -->
+          <div class="desktop-table-only" style="overflow-x:auto;">
             <table class="data-table">
               <thead><tr><th>Lead ID</th><th>Prospect Name</th><th>Phone</th><th>Target Course</th><th>Funnel Stage</th><th>Assigned Specialist</th><th>Call Recording</th><th>Action</th></tr></thead>
               <tbody id="leadsTableBody"></tbody>
             </table>
           </div>
+          <!-- Mobile Liquid Glass Leads Cards -->
+          <div class="mobile-cards-only" id="leadsMobileCards"></div>
         </div>
       </section>
 
@@ -4969,7 +4978,8 @@ body:has(#mod-chat.active) .admin-main {
             </div>
           </div>
 
-          <div style="overflow-x:auto;">
+          <!-- Desktop Table View -->
+          <div class="desktop-table-only" style="overflow-x:auto;">
             <table class="data-table">
               <thead>
                 <tr>
@@ -4990,6 +5000,8 @@ body:has(#mod-chat.active) .admin-main {
               </tbody>
             </table>
           </div>
+          <!-- Mobile Liquid Glass Submissions Cards -->
+          <div class="mobile-cards-only" id="webFormMobileCards"></div>
         </div>
       </section>
 
@@ -5934,31 +5946,102 @@ body:has(#mod-chat.active) .admin-main {
     </div>
   </div>
 
-  <!-- MODAL 3: STUDENT DETAILS -->
+  <!-- MODAL 3: STUDENT DETAILS & EDITABLE APPLICATION DOSSIER -->
   <div class="modal-overlay" id="studentDetailsModal" style="display:none;">
-    <div class="modal-card" style="">
-      <div class="modal-hdr">
+    <div class="modal-card" style="max-width:720px; width:95vw; max-height:90vh; overflow-y:auto; background:linear-gradient(135deg, rgba(17, 25, 46, 0.96) 0%, rgba(10, 15, 28, 0.98) 100%); border:1px solid rgba(247, 211, 119, 0.35); border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.85);">
+      <div class="modal-hdr" style="border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:14px;">
         <div>
-          <h3 id="dossierName" style="color:#fff; margin:0;">Application Dossier</h3>
-          <span id="dossierId" style="font-size:0.75rem; color:var(--gold-light);">Candidate ID</span>
+          <h3 id="dossierName" style="color:#fff; margin:0; font-size:1.25rem;">Candidate Application Dossier</h3>
+          <span id="dossierId" style="font-size:0.75rem; color:#f7d377; font-weight:700;">Candidate ID</span>
         </div>
         <button class="btn-modal-close" onclick="closeStudentModal()">&times;</button>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; font-size:0.85rem;">
-        <div><strong>Father's Name:</strong> <span id="dossierFather">--</span></div>
-        <div><strong>Mother's Name:</strong> <span id="dossierMother">--</span></div>
-        <div><strong>DOB:</strong> <span id="dossierDOB">--</span></div>
-        <div><strong>Gender:</strong> <span id="dossierGender">--</span></div>
-        <div><strong>Phone:</strong> <span id="dossierPhone">--</span></div>
-        <div><strong>Email:</strong> <span id="dossierEmail">--</span></div>
-        <div style="grid-column:1/-1;"><strong>Address:</strong> <span id="dossierAddress">--</span></div>
-        <div><strong>University:</strong> <span id="dossierUniv">--</span></div>
-        <div><strong>Course:</strong> <span id="dossierCourse">--</span></div>
-        <div><strong>Specialization:</strong> <span id="dossierSpec">--</span></div>
-        <div><strong>Payment:</strong> <span id="dossierPay">--</span></div>
-        <div><strong>Documents:</strong> <span id="dossierDoc">--</span></div>
-        <div><strong>Admission Status:</strong> <span id="dossierStatus">--</span></div>
-      </div>
+      <form id="studentDossierForm" onsubmit="saveStudentDossierEdits(event)" style="padding-top:16px;">
+        <input type="hidden" id="edit_dossier_userId">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-bottom:18px;">
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Full Name</label>
+            <input type="text" id="edit_dossier_name" required style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Mobile Phone</label>
+            <input type="text" id="edit_dossier_phone" required style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Email Address</label>
+            <input type="email" id="edit_dossier_email" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Father's Name</label>
+            <input type="text" id="edit_dossier_father" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Mother's Name</label>
+            <input type="text" id="edit_dossier_mother" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Date of Birth</label>
+            <input type="text" id="edit_dossier_dob" placeholder="YYYY-MM-DD" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Gender</label>
+            <select id="edit_dossier_gender" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Target University</label>
+            <input type="text" id="edit_dossier_univ" required style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Target Course</label>
+            <input type="text" id="edit_dossier_course" required style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Specialization</label>
+            <input type="text" id="edit_dossier_spec" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Admission Status</label>
+            <select id="edit_dossier_status" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+              <option value="Enrolled">Enrolled</option>
+              <option value="Accepted">Accepted</option>
+              <option value="In Review">In Review</option>
+              <option value="Pending Documents">Pending Documents</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Payment Status</label>
+            <select id="edit_dossier_pay" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+              <option value="Verified">Verified</option>
+              <option value="Pending">Pending</option>
+              <option value="Partial">Partial</option>
+              <option value="Refunded">Refunded</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Documents Status</label>
+            <select id="edit_dossier_doc" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+              <option value="Uploaded">Uploaded</option>
+              <option value="Verified">Verified</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+          <div style="grid-column:1/-1;">
+            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:4px;">Permanent Address</label>
+            <input type="text" id="edit_dossier_address" style="width:100%; padding:9px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:9px; color:#fff; font-size:0.86rem;">
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
+          <button type="button" class="btn-outline" onclick="closeStudentModal()" style="padding:9px 18px; border-radius:10px;">Cancel</button>
+          <button type="submit" id="btnSaveStudentDossier" class="btn-gold" style="padding:9px 24px; border-radius:10px; font-weight:700;">
+            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

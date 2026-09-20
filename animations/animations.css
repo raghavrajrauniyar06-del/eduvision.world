@@ -1106,37 +1106,6 @@ input:focus, select:focus, textarea:focus, .form-input:focus {
   transform: scale(1.12) rotate(90deg) !important;
   box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
 }
-
-.mac-cross-btn:active, .modal-close-btn:active, .close-modal:active, .btn-modal-close:active, #uniModalClose:active, #cmClose:active, .drawer-close-btn:active {
-  transform: scale(0.9) rotate(90deg) !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   11. UNIVERSAL ENTERPRISE MOBILE & TABLET RESPONSIVE ENGINE (v3.0)
-   Zero-Overflow, Fluid Touch Ergonomics & Responsive Modals (320px - 768px)
-   ═══════════════════════════════════════════════════════════════════ */
-
-/* Global Root Containment */
-html, body {
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-  -webkit-text-size-adjust: 100%;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box !important;
-}
-
-/* Tablet & Mobile Breakpoints (<= 1024px) */
-@media (max-width: 1024px) {
-  .crm-overview-two-col,
-  .lower-grid,
-  .two-col-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-}
-
 /* Mobile Breakpoint (<= 768px) */
 @media (max-width: 768px) {
   /* 1. Universal Zero-Overflow & Typography */
@@ -1217,7 +1186,7 @@ html, body {
 
   /* 4. Tab Navigation Strips Horizontal Scroll */
   .drawer-tab-strip,
-  div[style*="overflow-x:auto"],
+  .crm-segmented-track-wrap,
   .nav-tabs {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -1228,7 +1197,7 @@ html, body {
     scrollbar-width: none !important;
   }
   .drawer-tab-strip::-webkit-scrollbar,
-  div[style*="overflow-x:auto"]::-webkit-scrollbar {
+  .crm-segmented-track-wrap::-webkit-scrollbar {
     display: none !important;
   }
 
@@ -1239,8 +1208,8 @@ html, body {
     padding: 8px 12px !important;
   }
 
-  /* 5. Data Tables & Card Transformations */
-  .data-table, .crm-pipeline-table, table {
+  /* 5. Data Tables Horizontal Scrolling Container */
+  .data-table-wrap, .table-responsive, .crm-table-wrap {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -1249,8 +1218,7 @@ html, body {
   }
 
   .data-table th, .data-table td,
-  .crm-pipeline-table th, .crm-pipeline-table td,
-  table th, table td {
+  .crm-pipeline-table th, .crm-pipeline-table td {
     padding: 8px 10px !important;
     font-size: 0.78rem !important;
     white-space: nowrap !important;
@@ -1645,5 +1613,46 @@ html, body { scroll-behavior: auto !important; }
   .crm-att-latest-bar {
     font-size: 0.75rem !important;
     padding: 8px 10px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UNIVERSAL LIQUID GLASS MOBILE SUITE (ACROSS ALL ROLES & DASHBOARDS)
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Mode Selector Grid */
+  [id$="_modeSelector"], .admin-mode-segmented, .btn-att-mode-group {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+
+  .btn-att-mode, .admin-mode-pill {
+    padding: 8px 4px !important;
+    font-size: 0.75rem !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    border-radius: 9px !important;
+  }
+
+  [id$="_btnCheckIn"], [id$="_btnCheckOut"], .btn-admin-punch-in, .btn-admin-punch-out {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 12px 18px !important;
+    font-size: 0.9rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Responsive Display Toggles */
+  .desktop-table-only {
+    display: none !important;
+  }
+
+  .mobile-cards-only {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
   }
 }

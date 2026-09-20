@@ -5989,53 +5989,121 @@ window.loadAssociatePartners = async function(skipSync = false) {
 function renderPartnerTable(partnerList) {
   console.log(">>> renderPartnerTable called. Total partners in list:", partnerList.length, partnerList);
   const tbody = document.getElementById('partnerTableBody');
-  if (!tbody) return;
-
+  const mobileContainer = document.getElementById('partnerMobileCards');
+  
   // Filter out Deleted partners so they never appear on the page
-  const activePartners = partnerList.filter(p => p.status !== 'Deleted');
+  const activePartners = (partnerList || []).filter(p => p.status !== 'Deleted');
 
-  if (activePartners.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No associate partners found.</td></tr>';
-    return;
+  // 1. Desktop Table Rows
+  if (tbody) {
+    if (activePartners.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No associate partners found.</td></tr>';
+    } else {
+      tbody.innerHTML = activePartners.map(p => {
+        const isSuspended = p.status === 'Suspended';
+        const statusBadge = isSuspended ? 'status-inactive' : 'status-active';
+        const statusLabel = isSuspended ? 'Suspended' : 'Active';
+        const suspendIcon = isSuspended ? 'fa-circle-check' : 'fa-ban';
+        const suspendColor = isSuspended ? '#34d399' : '#fbbf24';
+        const suspendTitle = isSuspended ? 'Activate Partner' : 'Suspend Partner';
+        const targetId = p.partner_id || p.id || '';
+
+        return `
+          <tr>
+            <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${p.partner_code || 'AP-00'}</strong></td>
+            <td><strong>${p.organization_name || p.full_name || 'B2B Partner'}</strong></td>
+            <td>${p.contact_person || p.full_name || '--'}</td>
+            <td>${p.email || '--'}</td>
+            <td>${p.phone || '--'}</td>
+            <td><span class="badge-status ${statusBadge}">${statusLabel}</span></td>
+            <td><span class="badge-role badge-admin">${p.tier || 'Gold Agency'}</span></td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="btn-action-icon" title="View Partner" onclick="viewPartnerDetails('${targetId}')">
+                  <i class="fa-solid fa-eye" style="color:var(--gold-light);"></i>
+                </button>
+                <button type="button" class="btn-action-icon" title="Edit Partner" onclick="openPartnerModal('${targetId}')">
+                  <i class="fa-solid fa-pen-to-square" style="color:#60a5fa;"></i>
+                </button>
+                <button type="button" class="btn-action-icon" title="${suspendTitle}" onclick="toggleSuspendPartner('${targetId}', '${p.status || 'Active'}')">
+                  <i class="fa-solid ${suspendIcon}" style="color:${suspendColor};"></i>
+                </button>
+                <button type="button" class="btn-action-icon btn-delete" title="Delete Partner" onclick="deletePartner('${targetId}')">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
   }
 
-  tbody.innerHTML = activePartners.map(p => {
-    const isSuspended = p.status === 'Suspended';
-    const statusBadge = isSuspended ? 'status-inactive' : 'status-active';
-    const statusLabel = isSuspended ? 'Suspended' : 'Active';
-    const suspendIcon = isSuspended ? 'fa-circle-check' : 'fa-ban';
-    const suspendColor = isSuspended ? '#34d399' : '#fbbf24';
-    const suspendTitle = isSuspended ? 'Activate Partner' : 'Suspend Partner';
-    const targetId = p.partner_id || p.id || '';
+  // 2. Mobile Liquid Glass Cards
+  if (mobileContainer) {
+    if (activePartners.length === 0) {
+      mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No associate partners found.</div>';
+    } else {
+      mobileContainer.innerHTML = activePartners.map(p => {
+        const isSuspended = p.status === 'Suspended';
+        const statusBadge = isSuspended ? 'status-inactive' : 'status-active';
+        const statusLabel = isSuspended ? 'Suspended' : 'Active';
+        const targetId = p.partner_id || p.id || '';
+        const org = p.organization_name || p.full_name || 'B2B Partner';
+        const contact = p.contact_person || p.full_name || '--';
+        const initial = (org[0] || 'P').toUpperCase();
+        const tier = p.tier || 'Gold Agency';
 
-    return `
-      <tr>
-        <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${p.partner_code || 'AP-00'}</strong></td>
-        <td><strong>${p.organization_name || p.full_name || 'B2B Partner'}</strong></td>
-        <td>${p.contact_person || p.full_name || '--'}</td>
-        <td>${p.email || '--'}</td>
-        <td>${p.phone || '--'}</td>
-        <td><span class="badge-status ${statusBadge}">${statusLabel}</span></td>
-        <td><span class="badge-role badge-admin">${p.tier || 'Gold Agency'}</span></td>
-        <td>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="btn-action-icon" title="View Partner" onclick="viewPartnerDetails('${targetId}')">
-              <i class="fa-solid fa-eye" style="color:var(--gold-light);"></i>
-            </button>
-            <button type="button" class="btn-action-icon" title="Edit Partner" onclick="openPartnerModal('${targetId}')">
-              <i class="fa-solid fa-pen-to-square" style="color:#60a5fa;"></i>
-            </button>
-            <button type="button" class="btn-action-icon" title="${suspendTitle}" onclick="toggleSuspendPartner('${targetId}', '${p.status || 'Active'}')">
-              <i class="fa-solid ${suspendIcon}" style="color:${suspendColor};"></i>
-            </button>
-            <button type="button" class="btn-action-icon btn-delete" title="Delete Partner" onclick="deletePartner('${targetId}')">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
+        return `
+          <div class="liquid-glass-card">
+            <div class="liquid-card-header">
+              <div class="liquid-card-title-row">
+                <div class="liquid-card-avatar" style="background:linear-gradient(135deg, #f59e0b, #d97706);">
+                  ${initial}
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <h4 class="liquid-card-title">${org}</h4>
+                  <div class="liquid-card-sub"><i class="fa-solid fa-user-tie" style="color:var(--gold-light);"></i> ${contact}</div>
+                </div>
+              </div>
+              <span class="badge-status ${statusBadge}" style="font-size:0.68rem; padding:2px 8px;">${statusLabel}</span>
+            </div>
+            
+            <div class="liquid-card-grid">
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-id-badge"></i>
+                <span>${p.partner_code || 'AP-00'}</span>
+              </div>
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-crown"></i>
+                <span>${tier}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-envelope"></i>
+                <span>${p.email || '--'}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-phone"></i>
+                <span>${p.phone || '--'}</span>
+              </div>
+            </div>
+
+            <div class="liquid-card-actions">
+              <button type="button" class="btn-liquid-action btn-liquid-gold" onclick="viewPartnerDetails('${targetId}')">
+                <i class="fa-solid fa-eye"></i> View Details
+              </button>
+              <button type="button" class="btn-liquid-action btn-liquid-outline" onclick="openPartnerModal('${targetId}')">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+              </button>
+              <button type="button" class="btn-liquid-action ${isSuspended ? 'btn-liquid-gold' : 'btn-liquid-outline'}" onclick="toggleSuspendPartner('${targetId}', '${p.status || 'Active'}')">
+                <i class="fa-solid ${isSuspended ? 'fa-circle-check' : 'fa-ban'}"></i> ${isSuspended ? 'Activate' : 'Suspend'}
+              </button>
+            </div>
           </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
+        `;
+      }).join('');
+    }
+  }
 }
 
 window.filterPartnerTable = function() {
@@ -6058,38 +6126,100 @@ window.loadStudentsData = async function() {
 
 function renderStudentTable(studentList) {
   const tbody = document.getElementById('studentTableBody');
-  if (!tbody) return;
+  const mobileContainer = document.getElementById('studentMobileCards');
 
-  if (studentList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No enrolled students found.</td></tr>';
-    return;
+  // 1. Desktop Table View
+  if (tbody) {
+    if (studentList.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No enrolled students found.</td></tr>';
+    } else {
+      tbody.innerHTML = studentList.map(st => {
+        let statusBadge = 'status-pending';
+        const admStatus = (st.admission_status || st.application_status || 'Pending').toLowerCase();
+        if (admStatus.includes('accept') || admStatus.includes('enroll') || admStatus.includes('complete')) statusBadge = 'status-active';
+        else if (admStatus.includes('reject')) statusBadge = 'status-inactive';
+
+        return `
+          <tr>
+            <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${st.student_id || 'STU-00'}</strong></td>
+            <td>
+              <strong style="color:#fff;">${st.full_name || 'Candidate'}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${st.email || '--'}</div>
+            </td>
+            <td>${st.phone || '--'}</td>
+            <td><strong>${st.university || 'Sandip University'}</strong></td>
+            <td>${st.course || 'B.Tech'}</td>
+            <td><span class="badge-status ${statusBadge}">${st.admission_status || 'Enrolled'}</span></td>
+            <td>
+              <button class="btn-action-icon" title="View Application Dossier" onclick="viewStudentDetails('${st.user_id || st.student_id}')">
+                <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
   }
 
-  tbody.innerHTML = studentList.map(st => {
-    let statusBadge = 'status-pending';
-    const admStatus = (st.admission_status || st.application_status || 'Pending').toLowerCase();
-    if (admStatus.includes('accept') || admStatus.includes('enroll') || admStatus.includes('complete')) statusBadge = 'status-active';
-    else if (admStatus.includes('reject')) statusBadge = 'status-inactive';
+  // 2. Mobile Liquid Glass Student Cards
+  if (mobileContainer) {
+    if (studentList.length === 0) {
+      mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No enrolled students found.</div>';
+    } else {
+      mobileContainer.innerHTML = studentList.map(st => {
+        let statusBadge = 'status-pending';
+        const admStatus = (st.admission_status || st.application_status || 'Pending').toLowerCase();
+        if (admStatus.includes('accept') || admStatus.includes('enroll') || admStatus.includes('complete')) statusBadge = 'status-active';
+        else if (admStatus.includes('reject')) statusBadge = 'status-inactive';
 
-    return `
-      <tr>
-        <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${st.student_id || 'STU-00'}</strong></td>
-        <td>
-          <strong style="color:#fff;">${st.full_name || 'Candidate'}</strong>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${st.email || '--'}</div>
-        </td>
-        <td>${st.phone || '--'}</td>
-        <td><strong>${st.university || 'Sandip University'}</strong></td>
-        <td>${st.course || 'B.Tech'}</td>
-        <td><span class="badge-status ${statusBadge}">${st.admission_status || 'Enrolled'}</span></td>
-        <td>
-          <button class="btn-action-icon" title="View Application Dossier" onclick="viewStudentDetails('${st.user_id || st.student_id}')">
-            <i class="fa-solid fa-eye" style="color:var(--gold-light);"></i>
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
+        const name = st.full_name || 'Student Candidate';
+        const initial = (name[0] || 'S').toUpperCase();
+        const targetId = st.user_id || st.student_id || st.id || '';
+
+        return `
+          <div class="liquid-glass-card">
+            <div class="liquid-card-header">
+              <div class="liquid-card-title-row">
+                <div class="liquid-card-avatar" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                  ${initial}
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <h4 class="liquid-card-title">${name}</h4>
+                  <div class="liquid-card-sub">${st.email || '--'}</div>
+                </div>
+              </div>
+              <span class="badge-status ${statusBadge}" style="font-size:0.68rem; padding:2px 8px;">${st.admission_status || 'Enrolled'}</span>
+            </div>
+
+            <div class="liquid-card-grid">
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-id-badge"></i>
+                <span>${st.student_id || 'STU-00'}</span>
+              </div>
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>${st.course || 'Degree Program'}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>${st.university || 'Sandip University'}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-phone"></i>
+                <span>${st.phone || '--'}</span>
+              </div>
+            </div>
+
+            <div class="liquid-card-actions">
+              <button type="button" class="btn-liquid-action btn-liquid-gold" onclick="viewStudentDetails('${targetId}')">
+                <i class="fa-solid fa-pen-to-square"></i> View &amp; Edit Dossier
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
 }
 
 window.filterStudentTable = function() {
@@ -6137,33 +6267,96 @@ window.syncStudentsToDriveSpreadsheet = async function(btnEl) {
 };
 
 window.viewStudentDetails = function(userId) {
-  const st = allStudents.find(s => s.user_id === userId || s.student_id === userId);
+  const st = allStudents.find(s => s.user_id === userId || s.student_id === userId || s.id === userId);
   if (!st) return;
 
   const modal = document.getElementById('studentDetailsModal');
   if (!modal) return;
 
-  document.getElementById('dossierName').textContent = st.full_name || 'Student Application';
-  document.getElementById('dossierId').textContent = 'Candidate ID: ' + (st.student_id || 'EDU260001');
-  document.getElementById('dossierFather').textContent = st.father_name || '--';
-  document.getElementById('dossierMother').textContent = st.mother_name || '--';
-  document.getElementById('dossierDOB').textContent = st.dob || '--';
-  document.getElementById('dossierGender').textContent = st.gender || '--';
-  document.getElementById('dossierPhone').textContent = st.phone || '--';
-  document.getElementById('dossierEmail').textContent = st.email || '--';
-  document.getElementById('dossierAddress').textContent = st.address || '--';
-  document.getElementById('dossierUniv').textContent = st.university || 'Sandip University';
-  document.getElementById('dossierCourse').textContent = st.course || 'B-TECH Developer';
-  document.getElementById('dossierSpec').textContent = st.specialization || '--';
-  document.getElementById('dossierPay').textContent = st.payment_status || 'Verified';
-  document.getElementById('dossierDoc').textContent = st.documents_status || st.pending_documents || 'Uploaded';
-  document.getElementById('dossierStatus').textContent = st.admission_status || 'Accepted';
+  const targetUserId = st.user_id || st.student_id || st.id || '';
+  if (document.getElementById('edit_dossier_userId')) document.getElementById('edit_dossier_userId').value = targetUserId;
+  if (document.getElementById('dossierName')) document.getElementById('dossierName').textContent = st.full_name || 'Candidate Application Dossier';
+  if (document.getElementById('dossierId')) document.getElementById('dossierId').textContent = 'Candidate ID: ' + (st.student_id || 'EDU260001');
 
-  modal.classList.add('active');
+  if (document.getElementById('edit_dossier_name')) document.getElementById('edit_dossier_name').value = st.full_name || '';
+  if (document.getElementById('edit_dossier_phone')) document.getElementById('edit_dossier_phone').value = st.phone || '';
+  if (document.getElementById('edit_dossier_email')) document.getElementById('edit_dossier_email').value = st.email || '';
+  if (document.getElementById('edit_dossier_father')) document.getElementById('edit_dossier_father').value = st.father_name || '';
+  if (document.getElementById('edit_dossier_mother')) document.getElementById('edit_dossier_mother').value = st.mother_name || '';
+  if (document.getElementById('edit_dossier_dob')) document.getElementById('edit_dossier_dob').value = st.dob || '';
+  if (document.getElementById('edit_dossier_gender')) document.getElementById('edit_dossier_gender').value = st.gender || 'Male';
+  if (document.getElementById('edit_dossier_address')) document.getElementById('edit_dossier_address').value = st.address || '';
+  if (document.getElementById('edit_dossier_univ')) document.getElementById('edit_dossier_univ').value = st.university || 'Sandip University';
+  if (document.getElementById('edit_dossier_course')) document.getElementById('edit_dossier_course').value = st.course || 'B.Tech';
+  if (document.getElementById('edit_dossier_spec')) document.getElementById('edit_dossier_spec').value = st.specialization || '';
+  if (document.getElementById('edit_dossier_status')) document.getElementById('edit_dossier_status').value = st.admission_status || 'Enrolled';
+  if (document.getElementById('edit_dossier_pay')) document.getElementById('edit_dossier_pay').value = st.payment_status || 'Verified';
+  if (document.getElementById('edit_dossier_doc')) document.getElementById('edit_dossier_doc').value = st.documents_status || st.pending_documents || 'Uploaded';
+
+  modal.style.display = 'flex';
+  modal.classList.add('active', 'show');
 };
 
 window.closeStudentModal = function() {
-  document.getElementById('studentDetailsModal')?.classList.remove('active');
+  const modal = document.getElementById('studentDetailsModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('active', 'show');
+  }
+};
+
+window.saveStudentDossierEdits = async function(event) {
+  if (event) event.preventDefault();
+  const userId = document.getElementById('edit_dossier_userId')?.value;
+  if (!userId) return;
+
+  const btn = document.getElementById('btnSaveStudentDossier');
+  let origBtn = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+  }
+
+  const updatedData = {
+    full_name: document.getElementById('edit_dossier_name')?.value?.trim(),
+    phone: document.getElementById('edit_dossier_phone')?.value?.trim(),
+    email: document.getElementById('edit_dossier_email')?.value?.trim(),
+    father_name: document.getElementById('edit_dossier_father')?.value?.trim(),
+    mother_name: document.getElementById('edit_dossier_mother')?.value?.trim(),
+    dob: document.getElementById('edit_dossier_dob')?.value?.trim(),
+    gender: document.getElementById('edit_dossier_gender')?.value,
+    address: document.getElementById('edit_dossier_address')?.value?.trim(),
+    university: document.getElementById('edit_dossier_univ')?.value?.trim(),
+    course: document.getElementById('edit_dossier_course')?.value?.trim(),
+    specialization: document.getElementById('edit_dossier_spec')?.value?.trim(),
+    admission_status: document.getElementById('edit_dossier_status')?.value,
+    payment_status: document.getElementById('edit_dossier_pay')?.value,
+    documents_status: document.getElementById('edit_dossier_doc')?.value
+  };
+
+  try {
+    if (sb) {
+      await sb.from('student_profiles')
+        .update(updatedData)
+        .or(`user_id.eq.${userId},student_id.eq.${userId},id.eq.${userId}`);
+    }
+
+    const idx = allStudents.findIndex(s => s.user_id === userId || s.student_id === userId || s.id === userId);
+    if (idx !== -1) {
+      allStudents[idx] = { ...allStudents[idx], ...updatedData };
+    }
+    renderStudentTable(allStudents);
+    closeStudentModal();
+    showToast('✅ Student application dossier updated successfully!', 'success');
+  } catch(err) {
+    console.error("Save student dossier error:", err);
+    showToast('Failed to save student changes.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origBtn;
+    }
+  }
 };
 
 // ── 8. LEADS CRM PIPELINE ────────────────────────────────────────────────────
@@ -6188,51 +6381,132 @@ window.loadLeadsCRM = async function() {
 
 function renderLeadsTable(leadsList) {
   const tbody = document.getElementById('leadsTableBody');
-  if (!tbody) return;
+  const mobileContainer = document.getElementById('leadsMobileCards');
 
-  if (leadsList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No CRM leads found.</td></tr>';
-    return;
+  // 1. Desktop Table Rows
+  if (tbody) {
+    if (leadsList.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No CRM leads found.</td></tr>';
+    } else {
+      tbody.innerHTML = leadsList.map(l => {
+        const lId = (l.lead_id || '').toLowerCase().trim();
+        const lName = (l.full_name || '').toLowerCase().trim();
+        const rec = (allAdminLeadRecordings || []).find(r => 
+          (lId && r.lead_id && r.lead_id.toLowerCase().trim() === lId) ||
+          (lName && lName.length > 2 && r.student_name && r.student_name.toLowerCase().trim() === lName)
+        );
+
+        let audioCol = '<span style="color:#f87171; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-microphone-slash"></i> Audio Not Found</span>';
+        if (rec) {
+          const streamUrl = `http://localhost:5000/api/recordings/stream/${rec.drive_file_id}`;
+          audioCol = `
+            <div style="display:flex; align-items:center; gap:6px;">
+              <audio controls preload="none" src="${streamUrl}" style="height:28px; width:140px; border-radius:6px;"></audio>
+              <button onclick="deleteAdminRecording('${rec.recording_id || rec.drive_file_id}', '${(l.full_name || 'Lead').replace(/'/g, "\\'")}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:3px 6px; border-radius:5px; font-size:0.75rem; cursor:pointer;" title="Delete Recording">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          `;
+        }
+
+        return `
+          <tr>
+            <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${l.lead_id || 'LEAD-00'}</strong></td>
+            <td><strong style="color:#fff;">${l.full_name || 'Prospect'}</strong></td>
+            <td>${l.phone || '--'}</td>
+            <td>${l.interested_course || 'Online MBA / B.Tech'}</td>
+            <td><span class="badge-role badge-admin">${l.status || 'New Lead'}</span></td>
+            <td><span style="font-size:0.8rem; color:#cbd5e1;">${l.counsellor_id ? 'Assigned' : 'Unassigned'}</span></td>
+            <td>${audioCol}</td>
+            <td>
+              <button class="btn-outline" style="padding:4px 10px; font-size:0.75rem;" onclick="openReassignModal('${l.lead_id}', '${l.full_name}')">
+                <i class="fa-solid fa-user-tag"></i> Assign
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
   }
 
-  tbody.innerHTML = leadsList.map(l => {
-    const lId = (l.lead_id || '').toLowerCase().trim();
-    const lName = (l.full_name || '').toLowerCase().trim();
-    const rec = (allAdminLeadRecordings || []).find(r => 
-      (lId && r.lead_id && r.lead_id.toLowerCase().trim() === lId) ||
-      (lName && lName.length > 2 && r.student_name && r.student_name.toLowerCase().trim() === lName)
-    );
+  // 2. Mobile Liquid Glass Leads Cards
+  if (mobileContainer) {
+    if (leadsList.length === 0) {
+      mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No CRM leads found.</div>';
+    } else {
+      mobileContainer.innerHTML = leadsList.map(l => {
+        const lId = (l.lead_id || '').toLowerCase().trim();
+        const lName = (l.full_name || '').toLowerCase().trim();
+        const name = l.full_name || 'Prospect';
+        const initial = (name[0] || 'L').toUpperCase();
+        const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
 
-    let audioCol = '<span style="color:#f87171; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-microphone-slash"></i> Audio Not Found</span>';
-    if (rec) {
-      const streamUrl = `http://localhost:5000/api/recordings/stream/${rec.drive_file_id}`;
-      audioCol = `
-        <div style="display:flex; align-items:center; gap:6px;">
-          <audio controls preload="none" src="${streamUrl}" style="height:28px; width:140px; border-radius:6px;"></audio>
-          <button onclick="deleteAdminRecording('${rec.recording_id || rec.drive_file_id}', '${(l.full_name || 'Lead').replace(/'/g, "\\'")}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:3px 6px; border-radius:5px; font-size:0.75rem; cursor:pointer;" title="Delete Recording">
-            <i class="fa-regular fa-trash-can"></i>
-          </button>
-        </div>
-      `;
+        const rec = (allAdminLeadRecordings || []).find(r => 
+          (lId && r.lead_id && r.lead_id.toLowerCase().trim() === lId) ||
+          (lName && lName.length > 2 && r.student_name && r.student_name.toLowerCase().trim() === lName)
+        );
+
+        let audioBlock = '';
+        if (rec) {
+          const streamUrl = `http://localhost:5000/api/recordings/stream/${rec.drive_file_id}`;
+          audioBlock = `
+            <div style="margin-top:6px; display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+              <i class="fa-solid fa-microphone-lines" style="color:#10b981; font-size:0.85rem;"></i>
+              <audio controls preload="none" src="${streamUrl}" style="height:26px; width:100%; max-width:200px; border-radius:6px; flex:1;"></audio>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="liquid-glass-card">
+            <div class="liquid-card-header">
+              <div class="liquid-card-title-row">
+                <div class="liquid-card-avatar" style="background:linear-gradient(135deg, #a855f7, #7e22ce);">
+                  ${initial}
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <h4 class="liquid-card-title">${name}</h4>
+                  <div class="liquid-card-sub">${l.lead_id || 'LEAD-00'}</div>
+                </div>
+              </div>
+              <span class="badge-role badge-admin" style="font-size:0.68rem; padding:2px 8px;">${l.status || 'New Lead'}</span>
+            </div>
+
+            <div class="liquid-card-grid">
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>${l.interested_course || 'Course'}</span>
+              </div>
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>${l.counsellor_id ? 'Assigned' : 'Unassigned'}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-phone"></i>
+                <span>${l.phone || '--'}</span>
+              </div>
+            </div>
+
+            ${audioBlock}
+
+            <div class="liquid-card-actions">
+              ${cleanPhone ? `
+                <a href="tel:${cleanPhone}" class="btn-liquid-action btn-liquid-outline" style="min-width:44px; flex:0 0 44px; padding:8px;" title="Call">
+                  <i class="fa-solid fa-phone" style="color:#34d399;"></i>
+                </a>
+                <a href="https://wa.me/${cleanPhone}" target="_blank" class="btn-liquid-action btn-liquid-outline" style="min-width:44px; flex:0 0 44px; padding:8px;" title="WhatsApp">
+                  <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i>
+                </a>
+              ` : ''}
+              <button type="button" class="btn-liquid-action btn-liquid-gold" onclick="openReassignModal('${l.lead_id}', '${(l.full_name || 'Lead').replace(/'/g, "\\'")}')">
+                <i class="fa-solid fa-user-tag"></i> Assign / Reassign
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
-
-    return `
-      <tr>
-        <td><strong style="color:var(--gold-light); font-family:var(--font-mono);">${l.lead_id || 'LEAD-00'}</strong></td>
-        <td><strong style="color:#fff;">${l.full_name || 'Prospect'}</strong></td>
-        <td>${l.phone || '--'}</td>
-        <td>${l.interested_course || 'Online MBA / B.Tech'}</td>
-        <td><span class="badge-role badge-admin">${l.status || 'New Lead'}</span></td>
-        <td><span style="font-size:0.8rem; color:#cbd5e1;">${l.counsellor_id ? 'Assigned' : 'Unassigned'}</span></td>
-        <td>${audioCol}</td>
-        <td>
-          <button class="btn-outline" style="padding:4px 10px; font-size:0.75rem;" onclick="openReassignModal('${l.lead_id}', '${l.full_name}')">
-            <i class="fa-solid fa-user-tag"></i> Assign
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
+  }
 }
 
 window.filterLeadsTable = function() {
@@ -6418,59 +6692,135 @@ window.loadAdminWebForms = async function() {
 
 window.renderAdminWebFormsTable = function(list) {
   const tbody = document.getElementById('webFormsTableBody');
-  if (!tbody) return;
+  const mobileContainer = document.getElementById('webFormMobileCards');
+  const items = list || [];
 
-  if (!list || list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:8px; opacity:0.5;"></i>No web form submissions found.</td></tr>';
-    return;
+  // 1. Desktop Table View
+  if (tbody) {
+    if (items.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:8px; opacity:0.5;"></i>No web form submissions found.</td></tr>';
+    } else {
+      tbody.innerHTML = items.map(w => {
+        const subId = w.submission_id || 'WF-UNKNOWN';
+        const name = w.full_name || 'Prospect';
+        const phone = w.phone || '--';
+        const course = w.course_name || 'General Counselling';
+        const university = w.university_name || 'General / Not Specified';
+        const utm = w.utm_source ? `${w.utm_source}${w.utm_campaign ? ' / ' + w.utm_campaign : ''}` : (w.form_type || 'Organic Web');
+        const status = w.submission_status || 'New';
+        const leadId = w.lead_id || '';
+        const dateStr = w.created_at ? new Date(w.created_at).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '--';
+
+        let statusBadge = '<span class="badge-role badge-admin" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">New</span>';
+        if (status === 'Linked') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);"><i class="fa-solid fa-link"></i> Linked</span>';
+        } else if (status === 'Processed') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(201,147,42,0.15); color:var(--gold-light); border:1px solid rgba(201,147,42,0.3);"><i class="fa-solid fa-check"></i> Processed</span>';
+        } else if (status === 'Duplicate') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">Duplicate</span>';
+        }
+
+        const leadCol = leadId 
+          ? `<button class="btn-outline" style="padding:2px 8px; font-size:0.72rem; color:var(--gold-light);" onclick="openLeadInCrm('${leadId}')"><i class="fa-solid fa-id-card"></i> ${leadId}</button>`
+          : `<span style="color:#64748b; font-size:0.75rem;">--</span>`;
+
+        return `
+          <tr>
+            <td><strong style="color:var(--gold-light); font-family:var(--font-mono); font-size:0.8rem;">${subId}</strong></td>
+            <td><strong style="color:#fff;">${name}</strong></td>
+            <td><span style="font-family:var(--font-mono);">${phone}</span></td>
+            <td><span style="font-size:0.82rem; color:#cbd5e1;">${course}</span></td>
+            <td><span style="font-size:0.82rem; color:#94a3b8;">${university}</span></td>
+            <td><span style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; font-size:0.72rem; color:#e2e8f0;">${utm}</span></td>
+            <td>${statusBadge}</td>
+            <td>${leadCol}</td>
+            <td><span style="font-size:0.75rem; color:#94a3b8;">${dateStr}</span></td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-outline" style="padding:4px 9px; font-size:0.74rem;" onclick="viewWebFormDetails('${subId}')" title="View Submission Dossier">
+                  <i class="fa-solid fa-eye"></i> Details
+                </button>
+                ${leadId ? `<button class="btn-outline" style="padding:4px 9px; font-size:0.74rem; color:var(--gold-light);" onclick="openLeadInCrm('${leadId}')" title="Open in Leads CRM"><i class="fa-solid fa-up-right-from-square"></i></button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
   }
 
-  tbody.innerHTML = list.map(w => {
-    const subId = w.submission_id || 'WF-UNKNOWN';
-    const name = w.full_name || 'Prospect';
-    const phone = w.phone || '--';
-    const course = w.course_name || 'General Counselling';
-    const university = w.university_name || 'General / Not Specified';
-    const utm = w.utm_source ? `${w.utm_source}${w.utm_campaign ? ' / ' + w.utm_campaign : ''}` : (w.form_type || 'Organic Web');
-    const status = w.submission_status || 'New';
-    const leadId = w.lead_id || '';
-    const dateStr = w.created_at ? new Date(w.created_at).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '--';
+  // 2. Mobile Liquid Glass Submissions Cards
+  if (mobileContainer) {
+    if (items.length === 0) {
+      mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No web form submissions found.</div>';
+    } else {
+      mobileContainer.innerHTML = items.map(w => {
+        const subId = w.submission_id || 'WF-UNKNOWN';
+        const name = w.full_name || 'Prospect';
+        const initial = (name[0] || 'W').toUpperCase();
+        const course = w.course_name || 'General Course';
+        const university = w.university_name || 'University';
+        const status = w.submission_status || 'New';
+        const leadId = w.lead_id || '';
+        const cleanPhone = (w.phone || '').replace(/[^0-9]/g, '');
 
-    let statusBadge = '<span class="badge-role badge-admin" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">New</span>';
-    if (status === 'Linked') {
-      statusBadge = '<span class="badge-role badge-admin" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);"><i class="fa-solid fa-link"></i> Linked</span>';
-    } else if (status === 'Processed') {
-      statusBadge = '<span class="badge-role badge-admin" style="background:rgba(201,147,42,0.15); color:var(--gold-light); border:1px solid rgba(201,147,42,0.3);"><i class="fa-solid fa-check"></i> Processed</span>';
-    } else if (status === 'Duplicate') {
-      statusBadge = '<span class="badge-role badge-admin" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">Duplicate</span>';
-    }
+        let statusBadge = '<span class="badge-role badge-admin" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">New</span>';
+        if (status === 'Linked') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);"><i class="fa-solid fa-link"></i> Linked</span>';
+        } else if (status === 'Processed') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(201,147,42,0.15); color:var(--gold-light); border:1px solid rgba(201,147,42,0.3);"><i class="fa-solid fa-check"></i> Processed</span>';
+        } else if (status === 'Duplicate') {
+          statusBadge = '<span class="badge-role badge-admin" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">Duplicate</span>';
+        }
 
-    const leadCol = leadId 
-      ? `<button class="btn-outline" style="padding:2px 8px; font-size:0.72rem; color:var(--gold-light);" onclick="openLeadInCrm('${leadId}')"><i class="fa-solid fa-id-card"></i> ${leadId}</button>`
-      : `<span style="color:#64748b; font-size:0.75rem;">--</span>`;
+        return `
+          <div class="liquid-glass-card">
+            <div class="liquid-card-header">
+              <div class="liquid-card-title-row">
+                <div class="liquid-card-avatar" style="background:linear-gradient(135deg, #06b6d4, #0891b2);">
+                  ${initial}
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <h4 class="liquid-card-title">${name}</h4>
+                  <div class="liquid-card-sub">${subId}</div>
+                </div>
+              </div>
+              ${statusBadge}
+            </div>
 
-    return `
-      <tr>
-        <td><strong style="color:var(--gold-light); font-family:var(--font-mono); font-size:0.8rem;">${subId}</strong></td>
-        <td><strong style="color:#fff;">${name}</strong></td>
-        <td><span style="font-family:var(--font-mono);">${phone}</span></td>
-        <td><span style="font-size:0.82rem; color:#cbd5e1;">${course}</span></td>
-        <td><span style="font-size:0.82rem; color:#94a3b8;">${university}</span></td>
-        <td><span style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; font-size:0.72rem; color:#e2e8f0;">${utm}</span></td>
-        <td>${statusBadge}</td>
-        <td>${leadCol}</td>
-        <td><span style="font-size:0.75rem; color:#94a3b8;">${dateStr}</span></td>
-        <td>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-outline" style="padding:4px 9px; font-size:0.74rem;" onclick="viewWebFormDetails('${subId}')" title="View Submission Dossier">
-              <i class="fa-solid fa-eye"></i> Details
-            </button>
-            ${leadId ? `<button class="btn-outline" style="padding:4px 9px; font-size:0.74rem; color:var(--gold-light);" onclick="openLeadInCrm('${leadId}')" title="Open in Leads CRM"><i class="fa-solid fa-up-right-from-square"></i></button>` : ''}
+            <div class="liquid-card-grid">
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>${course}</span>
+              </div>
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>${university}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-phone"></i>
+                <span>${w.phone || '--'}</span>
+              </div>
+            </div>
+
+            <div class="liquid-card-actions">
+              ${cleanPhone ? `
+                <a href="tel:${cleanPhone}" class="btn-liquid-action btn-liquid-outline" style="min-width:44px; flex:0 0 44px; padding:8px;" title="Call">
+                  <i class="fa-solid fa-phone" style="color:#34d399;"></i>
+                </a>
+                <a href="https://wa.me/${cleanPhone}" target="_blank" class="btn-liquid-action btn-liquid-outline" style="min-width:44px; flex:0 0 44px; padding:8px;" title="WhatsApp">
+                  <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i>
+                </a>
+              ` : ''}
+              <button type="button" class="btn-liquid-action btn-liquid-gold" onclick="viewWebFormDetails('${subId}')">
+                <i class="fa-solid fa-eye"></i> Review Dossier
+              </button>
+            </div>
           </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
+        `;
+      }).join('');
+    }
+  }
 };
 
 window.filterAdminWebFormsTable = function() {

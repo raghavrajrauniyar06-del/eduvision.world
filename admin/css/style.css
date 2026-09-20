@@ -158,7 +158,23 @@ h1, h2, h3, h4 { font-family: var(--font-heading); }
 
 /* Dashboard Layout */
 .admin-layout { display: flex; min-height: 100vh; }
-.admin-sidebar { width: 280px; background: rgba(5, 5, 5, 0.95); border-right: 1px solid var(--border-subtle); padding: 24px 0 20px 0; display: flex; flex-direction: column; backdrop-filter: blur(20px); z-index: 10; height: 100vh; max-height: 100vh; overflow: hidden; box-sizing: border-box; }
+.admin-sidebar { 
+  width: 280px; 
+  background: linear-gradient(180deg, rgba(13, 20, 36, 0.88) 0%, rgba(8, 12, 22, 0.95) 100%) !important; 
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important; 
+  padding: 24px 0 20px 0; 
+  display: flex; 
+  flex-direction: column; 
+  backdrop-filter: blur(28px) saturate(190%) !important; 
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important; 
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06), 10px 0 35px rgba(0, 0, 0, 0.5) !important;
+  z-index: 10; 
+  height: 100vh; 
+  max-height: 100vh; 
+  overflow: hidden; 
+  box-sizing: border-box; 
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
 .sidebar-logo { font-family: var(--font-heading); font-size: 2.1rem; font-weight: 700; color: transparent; background: var(--gold-gradient); -webkit-background-clip: text; text-align: center; margin-bottom: 4px; flex-shrink: 0; }
 .sidebar-subtitle { text-align: center; font-size: 0.8rem; color: var(--gold-primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; flex-shrink: 0; }
 .nav-menu { display: flex; flex-direction: column; gap: 6px; padding: 0 16px; flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; scrollbar-width: thin; scrollbar-color: rgba(212, 175, 55, 0.3) transparent; }
@@ -166,9 +182,34 @@ h1, h2, h3, h4 { font-family: var(--font-heading); }
 .nav-menu::-webkit-scrollbar-track { background: transparent; }
 .nav-menu::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
 .nav-menu::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.6); }
-.nav-item { padding: 11px 18px; border-radius: 10px; color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.92rem; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.nav-item:hover { background: rgba(212, 175, 55, 0.1); color: var(--gold-light); transform: translateX(3px); }
-.nav-item.active { background: var(--gold-gradient); color: #000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); font-weight: 600; }
+.nav-item { 
+  padding: 11px 16px; 
+  border-radius: 12px; 
+  color: #94a3b8; 
+  text-decoration: none; 
+  font-weight: 600; 
+  font-size: 0.88rem; 
+  cursor: pointer; 
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  flex-shrink: 0; 
+  border: 1px solid transparent;
+}
+.nav-item:hover { 
+  background: rgba(255, 255, 255, 0.05); 
+  color: #f7d377; 
+  border-color: rgba(247, 211, 119, 0.2); 
+  transform: translateX(3px); 
+}
+.nav-item.active { 
+  background: linear-gradient(135deg, rgba(201, 147, 42, 0.25) 0%, rgba(13, 20, 36, 0.9) 100%) !important; 
+  color: #f7d377 !important; 
+  border: 1px solid rgba(247, 211, 119, 0.45) !important;
+  box-shadow: 0 4px 18px rgba(201, 147, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; 
+  font-weight: 700; 
+}
 .nav-item.logout-btn { margin-top: 12px; color: #ef4444; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); }
 .nav-item.logout-btn:hover { background: rgba(239, 68, 68, 0.15); color: #f87171; transform: translateX(3px); }
 
@@ -402,4 +443,186 @@ tr:hover td { background: rgba(212,175,55,0.03); }
   top: 0;
   z-index: 10;
   background: #111a2e !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UNIVERSAL PURE LIQUID GLASS CARDS SUITE & RESPONSIVE TOGGLES
+   ══════════════════════════════════════════════════════════════════════════ */
+.desktop-table-only {
+  display: block;
+}
+.mobile-cards-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-table-only {
+    display: none !important;
+  }
+  .mobile-cards-only {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+}
+
+.liquid-glass-card {
+  background: linear-gradient(135deg, rgba(17, 25, 46, 0.82) 0%, rgba(10, 15, 28, 0.92) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.liquid-glass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(247, 211, 119, 0.35) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(201, 147, 42, 0.15) !important;
+}
+
+.liquid-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.liquid-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.liquid-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.liquid-card-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liquid-card-sub {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liquid-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.liquid-card-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+  padding: 6px 10px;
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.liquid-card-pill i {
+  color: #f7d377;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.liquid-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.btn-liquid-action {
+  flex: 1;
+  min-width: 100px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-liquid-gold {
+  background: linear-gradient(135deg, #f7d377 0%, #c9932a 100%);
+  color: #070b12;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.25);
+}
+
+.btn-liquid-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(201, 147, 42, 0.4);
+}
+
+.btn-liquid-outline {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.btn-liquid-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(247, 211, 119, 0.4);
+  color: #f7d377;
+}
+
+.btn-liquid-danger {
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.btn-liquid-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
 }
