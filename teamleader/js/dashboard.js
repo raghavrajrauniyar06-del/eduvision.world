@@ -4802,42 +4802,102 @@ window.loadTlPartners = async function() {
 
 window.renderTlPartnersTable = function(partners) {
   const tbody = document.getElementById('tlPartnersTableBody');
-  if (!tbody) return;
+  const mobileContainer = document.getElementById('tlPartnersMobileCards');
+  const activeList = (partners || []).filter(p => p.status !== 'Deleted');
 
-  if (!partners || partners.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="padding:24px; text-align:center; color:#94a3b8;">No associate partners found.</td></tr>';
-    return;
+  // 1. Desktop Table Rows
+  if (tbody) {
+    if (activeList.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:24px; text-align:center; color:#94a3b8;">No associate partners found.</td></tr>';
+    } else {
+      tbody.innerHTML = activeList.map(p => {
+        const code = p.partner_code || p.partner_id || p.id || 'PRT-00';
+        const org = p.company_name || p.organization_name || 'Partner Org';
+        const contact = p.contact_person || '--';
+        const phone = p.phone || '--';
+        const tier = p.tier || 'Gold Agency';
+        const status = p.status || 'Active';
+        const statusClass = status.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
+        const pId = p.partner_id || p.id || code;
+
+        return `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px 16px;"><strong style="color:var(--primary, #c9932a); font-family:monospace;">${code}</strong></td>
+            <td style="padding:14px 16px;">
+              <strong style="color:#fff;">${org}</strong>
+              <div style="font-size:0.75rem; color:#94a3b8;">${p.location || 'Head Office'}</div>
+            </td>
+            <td style="padding:14px 16px; color:#cbd5e1;">${contact}</td>
+            <td style="padding:14px 16px; color:#cbd5e1;">${phone}</td>
+            <td style="padding:14px 16px;"><span class="badge-role" style="background:rgba(201,147,42,0.15); color:var(--primary, #c9932a); padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:600;">${tier}</span></td>
+            <td style="padding:14px 16px;"><span class="status-badge ${statusClass}">${status}</span></td>
+            <td style="padding:14px 16px; text-align:right;">
+              <button class="action-btn" onclick="openTlPartnerModal('${pId}')" title="Edit Partner" style="background:rgba(201,147,42,0.15); border:1px solid rgba(201,147,42,0.3); color:var(--primary, #c9932a); padding:6px 12px; border-radius:6px; cursor:pointer;">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
   }
 
-  tbody.innerHTML = partners.map(p => {
-    const code = p.partner_code || p.partner_id || p.id || 'PRT-00';
-    const org = p.company_name || p.organization_name || 'Partner Org';
-    const contact = p.contact_person || '--';
-    const phone = p.phone || '--';
-    const tier = p.tier || 'Gold Agency';
-    const status = p.status || 'Active';
-    const statusClass = status.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
-    const pId = p.partner_id || p.id || code;
+  // 2. Mobile Liquid Glass Cards
+  if (mobileContainer) {
+    if (activeList.length === 0) {
+      mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No associate partners found.</div>';
+    } else {
+      mobileContainer.innerHTML = activeList.map(p => {
+        const code = p.partner_code || p.partner_id || p.id || 'PRT-00';
+        const org = p.company_name || p.organization_name || 'Partner Org';
+        const contact = p.contact_person || '--';
+        const phone = p.phone || '--';
+        const tier = p.tier || 'Gold Agency';
+        const status = p.status || 'Active';
+        const statusClass = status.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
+        const pId = p.partner_id || p.id || code;
+        const initial = (org[0] || 'P').toUpperCase();
 
-    return `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-        <td style="padding:14px 16px;"><strong style="color:var(--primary, #c9932a); font-family:monospace;">${code}</strong></td>
-        <td style="padding:14px 16px;">
-          <strong style="color:#fff;">${org}</strong>
-          <div style="font-size:0.75rem; color:#94a3b8;">${p.location || 'Head Office'}</div>
-        </td>
-        <td style="padding:14px 16px; color:#cbd5e1;">${contact}</td>
-        <td style="padding:14px 16px; color:#cbd5e1;">${phone}</td>
-        <td style="padding:14px 16px;"><span class="badge-role" style="background:rgba(201,147,42,0.15); color:var(--primary, #c9932a); padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:600;">${tier}</span></td>
-        <td style="padding:14px 16px;"><span class="status-badge ${statusClass}">${status}</span></td>
-        <td style="padding:14px 16px; text-align:right;">
-          <button class="action-btn" onclick="openTlPartnerModal('${pId}')" title="Edit Partner" style="background:rgba(201,147,42,0.15); border:1px solid rgba(201,147,42,0.3); color:var(--primary, #c9932a); padding:6px 12px; border-radius:6px; cursor:pointer;">
-            <i class="fa-solid fa-pen-to-square"></i> Edit
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
+        return `
+          <div class="liquid-glass-card">
+            <div class="liquid-card-header">
+              <div class="liquid-card-title-row">
+                <div class="liquid-card-avatar" style="background:linear-gradient(135deg, #f59e0b, #d97706);">
+                  ${initial}
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <h4 class="liquid-card-title">${org}</h4>
+                  <div class="liquid-card-sub"><i class="fa-solid fa-user-tie" style="color:var(--gold-light);"></i> ${contact}</div>
+                </div>
+              </div>
+              <span class="badge-status ${statusClass}" style="font-size:0.68rem; padding:2px 8px;">${status}</span>
+            </div>
+
+            <div class="liquid-card-grid">
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-id-badge"></i>
+                <span>${code}</span>
+              </div>
+              <div class="liquid-card-pill">
+                <i class="fa-solid fa-crown"></i>
+                <span>${tier}</span>
+              </div>
+              <div class="liquid-card-pill" style="grid-column: span 2;">
+                <i class="fa-solid fa-phone"></i>
+                <span>${phone}</span>
+              </div>
+            </div>
+
+            <div class="liquid-card-actions">
+              <button type="button" class="btn-liquid-action btn-liquid-gold" onclick="openTlPartnerModal('${pId}')">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Partner
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
 };
 
 window.filterTlPartners = function() {
