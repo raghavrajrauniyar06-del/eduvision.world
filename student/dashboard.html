@@ -3982,10 +3982,8 @@
 
     async function loadStudentChatModule() {
       await fetchUserGroups();
-      if (userGroups.length > 0) {
-        activeWaChatGroup = userGroups[0].id;
-        switchWaChat(activeWaChatGroup);
-      }
+      activeWaChatGroup = null;
+      switchWaChat(null);
       await fetchWaMessages();
       waLoaded = true;
       initWaRealtime();

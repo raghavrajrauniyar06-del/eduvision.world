@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="shared/page_guard.js?v=20260919_V2"></script>
@@ -3437,7 +3437,7 @@
       const honeypot = document.getElementById('bot_check');
       if (honeypot && honeypot.value) {
         console.warn("Security Alert: Automated Bot detected.");
-        return; // Silent drop for bots
+        return;
       }
 
       // --- ADVANCED SECURITY: BRUTE FORCE LOCKOUT ---
@@ -3454,12 +3454,11 @@
       const phoneInput = phoneEl ? phoneEl.value.trim() : '';
       const passwordInput = passwordEl ? passwordEl.value.trim() : '';
 
-      console.log("================ SUPABASE LOGIN ATTEMPT ================");
-      console.log("1. Phone entered:", phoneInput);
-      console.log("2. Password entered:", passwordInput);
+      console.log("================ UNIVERSAL LOGIN ATTEMPT ================");
+      console.log("Identifier:", phoneInput);
 
       if (!phoneInput) {
-        alert('Please enter your Mobile Number or Email.');
+        alert('Please enter your Mobile Number, Email, or Employee ID.');
         if (phoneEl) phoneEl.focus();
         return;
       }
@@ -3474,193 +3473,353 @@
       const originalText = submitBtn ? submitBtn.innerHTML : 'Login 🔑';
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '⚡ Logging in...';
+        submitBtn.innerHTML = '⚡ Authenticating...';
       }
 
       try {
-        let data = null;
-        let error = null;
+        let authUser = null;
+        let authRole = 'student';
+        let targetDashboard = 'student/dashboard.html';
 
-        try {
-          const client = getSupabaseClient();
-          if (client) {
-            // Query Supabase users table dynamically checking for phone or email
-            const isEmail = phoneInput.includes('@');
-            const queryField = isEmail ? 'email' : 'phone';
-            const res = await client
-              .from('users')
-              .select('*')
-              .eq(queryField, phoneInput);
-            data = res.data;
-            error = res.error;
-          }
-        } catch (supaErr) {
-          console.warn("Supabase network query error (falling back):", supaErr);
-        }
+        const client = getSupabaseClient();
+        const rawInput = phoneInput.trim();
+        const isEmail = rawInput.includes('@');
+        const digits = rawInput.replace(/\D/g, '');
+        const last10 = digits.length >= 10 ? digits.slice(-10) : '';
 
-        // If no user found and logging in as Associate Partner, query associate_partners table or localStorage fallback!
-        if ((!data || data.length === 0) && (window.currentLoginType === 'partner' || window.location.search.includes('portal=partner'))) {
+        // ─────────────────────────────────────────────────────────────────
+        // 1. CHECK ADMIN_USERS TABLE (For CTO, Super Admin, Admins)
+        // ─────────────────────────────────────────────────────────────────
+        if (client) {
           try {
-            const client = getSupabaseClient();
-            if (client) {
-              const { data: apData } = await client
-                .from('associate_partners')
-                .select('*')
-                .or(`partner_code.eq.${phoneInput},email.eq.${phoneInput}`);
-              
-              if (apData && apData.length > 0) {
-                const ap = apData[0];
-                if (ap.status === 'Suspended') {
-                  alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
-                  if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                  }
-                  return;
-                }
-                data = [{
-                  id: ap.partner_id,
-                  full_name: ap.contact_person || ap.company_name || 'Associate Partner',
-                  phone: ap.phone,
-                  email: ap.email,
-                  role: 'partner',
-                  status: ap.status,
-                  password: ap.password
-                }];
-                error = null;
+            let adminFilter = `employee_id.eq.${rawInput},email.ilike.${rawInput}`;
+            if (rawInput.length === 36 && rawInput.includes('-')) adminFilter += `,admin_id.eq.${rawInput}`;
+            if (last10) adminFilter += `,phone.ilike.*${last10}*`;
+
+            const { data: admData } = await client
+              .from('admin_users')
+              .select('*')
+              .or(adminFilter);
+
+            if (admData && admData.length > 0) {
+              const adm = admData[0];
+              if (adm.password === passwordInput) {
+                authUser = {
+                  id: adm.admin_id,
+                  admin_id: adm.admin_id,
+                  employee_id: adm.employee_id || 'ADM001',
+                  full_name: adm.full_name,
+                  email: adm.email,
+                  phone: adm.phone,
+                  role: adm.role || 'Admin',
+                  designation: adm.designation || 'Administrator',
+                  branch: adm.branch || 'Head Office',
+                  status: adm.status || 'Active'
+                };
+                authRole = (adm.role || 'admin').toLowerCase();
+                targetDashboard = 'admin/dashboard.html';
+                
+                localStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+                sessionStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+              } else {
+                alert('Incorrect password for Administrator account.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
               }
             }
-          } catch(e) { console.error("Error querying associate_partners table:", e); }
-
-          // Offline fallback
-          if (!data || data.length === 0) {
-            try {
-              const cachedPartners = localStorage.getItem('eduvision_partners');
-              if (cachedPartners) {
-                const partnersList = JSON.parse(cachedPartners);
-                const localAP = partnersList.find(p => p.partner_code === phoneInput || p.email === phoneInput);
-                if (localAP) {
-                  if (localAP.status === 'Suspended') {
-                    alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
-                    if (submitBtn) {
-                      submitBtn.disabled = false;
-                      submitBtn.innerHTML = originalText;
-                    }
-                    return;
-                  }
-                  data = [{
-                    id: localAP.partner_id || localAP.id,
-                    full_name: localAP.contact_person || localAP.organization_name || 'Associate Partner',
-                    phone: localAP.phone,
-                    email: localAP.email,
-                    role: 'partner',
-                    status: localAP.status,
-                    password: localAP.password
-                  }];
-                  error = null;
-                }
-              }
-            } catch(e) { console.error("Error checking offline fallback partners:", e); }
+          } catch (admErr) {
+            console.warn("admin_users check error:", admErr);
           }
         }
 
-        console.log("3. Supabase data response:", data);
-        console.log("4. Supabase error response:", error);
+        // ─────────────────────────────────────────────────────────────────
+        // 2. CHECK TEAM_LEADERS TABLE (For Team Leaders & Supervisors)
+        // ─────────────────────────────────────────────────────────────────
+        if (!authUser && client) {
+          try {
+            let tlFilter = `employee_id.eq.${rawInput},team_leader_id.eq.${rawInput},email.ilike.${rawInput}`;
+            if (last10) tlFilter += `,phone.ilike.*${last10}*`;
 
-        if (error) {
-          console.error("Supabase Error:", error);
-          // Don't fail outright on Supabase network glitch if credentials provided
-          data = null;
+            const { data: tlData } = await client
+              .from('team_leaders')
+              .select('*')
+              .or(tlFilter);
+
+            if (tlData && tlData.length > 0) {
+              const tl = tlData[0];
+              if (tl.password === passwordInput) {
+                authUser = {
+                  id: tl.team_leader_id || tl.employee_id,
+                  team_leader_id: tl.team_leader_id || tl.employee_id,
+                  employee_id: tl.employee_id || tl.team_leader_id,
+                  full_name: tl.full_name,
+                  email: tl.email,
+                  phone: tl.phone,
+                  role: tl.role || 'Team Leader',
+                  designation: tl.designation || 'Team Leader',
+                  branch: tl.branch || 'Head Office',
+                  status: tl.status || 'Active'
+                };
+                authRole = 'teamleader';
+                targetDashboard = 'teamleader/dashboard.html';
+
+                localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+                sessionStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+              } else {
+                alert('Incorrect password for Team Leader account.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
+              }
+            }
+          } catch(tlErr) {
+            console.warn("team_leaders check error:", tlErr);
+          }
         }
 
-        // Demo / offline fallback if not found in database
-        if (!data || data.length === 0) {
+        // ─────────────────────────────────────────────────────────────────
+        // 3. CHECK COUNSELLORS TABLE (For Counsellors)
+        // ─────────────────────────────────────────────────────────────────
+        if (!authUser && client) {
+          try {
+            let cnsFilter = `employee_id.eq.${rawInput},counsellor_id.eq.${rawInput},email.ilike.${rawInput}`;
+            if (last10) cnsFilter += `,phone.ilike.*${last10}*`;
+
+            const { data: cnsData } = await client
+              .from('counsellors')
+              .select('*')
+              .or(cnsFilter);
+
+            if (cnsData && cnsData.length > 0) {
+              const cns = cnsData[0];
+              if (cns.password === passwordInput) {
+                const isTL = ((cns.role || '') + ' ' + (cns.designation || '')).toLowerCase().includes('leader');
+                authUser = {
+                  id: cns.counsellor_id || cns.employee_id,
+                  counsellor_id: cns.counsellor_id || cns.employee_id,
+                  employee_id: cns.employee_id || cns.counsellor_id,
+                  full_name: cns.full_name,
+                  email: cns.email,
+                  phone: cns.phone,
+                  role: cns.role || (isTL ? 'Team Leader' : 'Counsellor'),
+                  designation: cns.designation || (isTL ? 'Team Leader' : 'Senior Counsellor'),
+                  branch: cns.branch || 'Head Office',
+                  status: cns.status || 'Active'
+                };
+                authRole = isTL ? 'teamleader' : 'counsellor';
+                targetDashboard = isTL ? 'teamleader/dashboard.html' : 'counsellor/dashboard.html';
+
+                if (isTL) {
+                  localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+                } else {
+                  localStorage.setItem('eduvision_counsellor', JSON.stringify(authUser));
+                }
+              } else {
+                alert('Incorrect password for Counsellor account.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
+              }
+            }
+          } catch(cnsErr) {
+            console.warn("counsellors check error:", cnsErr);
+          }
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // 4. CHECK ASSOCIATE_PARTNERS TABLE (For B2B Partners)
+        // ─────────────────────────────────────────────────────────────────
+        if (!authUser && client) {
+          try {
+            let prtFilter = `partner_code.eq.${rawInput},partner_id.eq.${rawInput},email.ilike.${rawInput}`;
+            if (last10) prtFilter += `,phone.ilike.*${last10}*`;
+
+            const { data: prtData } = await client
+              .from('associate_partners')
+              .select('*')
+              .or(prtFilter);
+
+            if (prtData && prtData.length > 0) {
+              const prt = prtData[0];
+              if (prt.status === 'Suspended') {
+                alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
+              }
+              if (prt.password === passwordInput) {
+                authUser = {
+                  id: prt.partner_id,
+                  partner_id: prt.partner_id,
+                  partner_code: prt.partner_code,
+                  full_name: prt.contact_person || prt.company_name || 'Associate Partner',
+                  email: prt.email,
+                  phone: prt.phone,
+                  role: 'associate',
+                  tier: prt.tier || 'Gold Agency',
+                  status: prt.status || 'Active'
+                };
+                authRole = 'associate';
+                targetDashboard = 'associate/dashboard.html';
+                localStorage.setItem('eduvision_partner', JSON.stringify(authUser));
+              } else {
+                alert('Incorrect password for Associate Partner account.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
+              }
+            }
+          } catch(prtErr) {
+            console.warn("associate_partners check error:", prtErr);
+          }
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // 5. CHECK UNIVERSAL USERS & STUDENT PROFILES (For Students & All Roles)
+        // ─────────────────────────────────────────────────────────────────
+        if (!authUser && client) {
+          try {
+            let matchedUser = null;
+
+            // Check student_profiles by student_id, email, or phone
+            let sOrParts = [
+              `student_id.eq.${rawInput}`,
+              `email.ilike.${rawInput}`
+            ];
+            if (last10) {
+              sOrParts.push(`phone.ilike.*${last10}*`);
+              sOrParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+            } else if (rawInput.length >= 3) {
+              sOrParts.push(`phone.ilike.*${rawInput}*`);
+            }
+
+            const { data: sProfiles } = await client
+              .from('student_profiles')
+              .select('*')
+              .or(sOrParts.join(','));
+
+            if (sProfiles && sProfiles.length > 0) {
+              const sp = sProfiles[0];
+              // Check user in users table by user_id or email or phone
+              const { data: uFromS } = await client
+                .from('users')
+                .select('*')
+                .or(`id.eq.${sp.user_id},email.ilike.${sp.email || rawInput}`);
+
+              if (uFromS && uFromS.length > 0) {
+                const u = uFromS[0];
+                if (u.password === passwordInput) {
+                  matchedUser = {
+                    id: sp.user_id || u.id,
+                    student_id: sp.student_id,
+                    full_name: sp.full_name || u.full_name || 'Student',
+                    email: sp.email || u.email,
+                    phone: sp.phone || u.phone,
+                    role: 'student',
+                    status: sp.admission_status || 'Active'
+                  };
+                } else {
+                  alert('Incorrect password. Please try again.');
+                  if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                  return;
+                }
+              }
+            }
+
+            // Direct users table lookup if not matched via student_profiles
+            if (!matchedUser) {
+              let uOrParts = [
+                `email.ilike.${rawInput}`
+              ];
+              if (last10) {
+                uOrParts.push(`phone.ilike.*${last10}*`);
+              } else if (rawInput.length >= 3) {
+                uOrParts.push(`phone.ilike.*${rawInput}*`);
+              }
+
+              const { data: uData } = await client
+                .from('users')
+                .select('*')
+                .or(uOrParts.join(','));
+
+              if (uData && uData.length > 0) {
+                const u = uData[0];
+                if (u.password === passwordInput) {
+                  const uRole = (u.role || 'student').toLowerCase();
+                  matchedUser = {
+                    id: u.id,
+                    full_name: u.full_name || 'Student',
+                    email: u.email,
+                    phone: u.phone,
+                    role: u.role || 'student',
+                    status: 'Active'
+                  };
+                } else {
+                  alert('Incorrect password. Please try again.');
+                  if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                  return;
+                }
+              }
+            }
+
+            if (matchedUser) {
+              const uRole = (matchedUser.role || 'student').toLowerCase();
+              authUser = matchedUser;
+              authRole = uRole;
+
+              const roleRoutes = {
+                'student': 'student/dashboard.html',
+                'associate': 'associate/dashboard.html',
+                'partner': 'associate/dashboard.html',
+                'counsellor': 'counsellor/dashboard.html',
+                'teamleader': 'teamleader/dashboard.html',
+                'admin': 'admin/dashboard.html',
+                'super-admin': 'super-admin/dashboard.html'
+              };
+              targetDashboard = roleRoutes[uRole] || 'student/dashboard.html';
+            }
+          } catch(uErr) {
+            console.warn("users check error:", uErr);
+          }
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // 6. DEMO / OFFLINE FALLBACK
+        // ─────────────────────────────────────────────────────────────────
+        if (!authUser) {
           const cleanPhone = phoneInput.toLowerCase().trim();
-          const isDemo = ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone) ||
-                         (passwordInput.length >= 3 && (cleanPhone.includes('@') || cleanPhone.length >= 5));
+          const isDemo = ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone);
           if (isDemo) {
             const demoName = cleanPhone.includes('@') ? cleanPhone.split('@')[0] : (cleanPhone === '8303632103' ? 'Raghav' : 'Student');
-            data = [{
+            authUser = {
               id: 'demo_' + Date.now(),
               full_name: demoName.charAt(0).toUpperCase() + demoName.slice(1),
               phone: cleanPhone.includes('@') ? '9876543210' : cleanPhone,
               email: cleanPhone.includes('@') ? cleanPhone : 'student@eduvision.in',
               role: 'student',
-              status: 'Active',
-              password: passwordInput
-            }];
-            error = null;
+              status: 'Active'
+            };
+            authRole = 'student';
+            targetDashboard = 'student/dashboard.html';
           }
         }
 
-        if (data && data.length > 0) {
-          const userRecord = data[0];
-          
-          if (userRecord.password && userRecord.password !== passwordInput && !String(userRecord.id).startsWith('demo_')) {
-            // Password incorrect
-            stopOrbLoader();
-            let attempts = parseInt(localStorage.getItem('login_failed_attempts') || '0');
-            attempts++;
-            localStorage.setItem('login_failed_attempts', attempts);
-            
-            if (attempts >= 5) {
-              localStorage.setItem('login_lockout_until', new Date().getTime() + 60000);
-              localStorage.setItem('login_failed_attempts', '0');
-              alert('Security System: Maximum failed attempts reached. Please wait 60 seconds.');
-            } else {
-              alert('Incorrect password. Please try again.');
-            }
-
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalText;
-            }
-            return;
-          }
-
-          // Record found & password matches, login successful
-          localStorage.removeItem('login_failed_attempts'); // Reset security counter
-          const userName = userRecord.full_name || 'Student';
-          const userRole = userRecord.role || 'student';
-          
+        // ─────────────────────────────────────────────────────────────────
+        // 7. FINALIZE SESSION & TRANSITION
+        // ─────────────────────────────────────────────────────────────────
+        if (authUser) {
+          localStorage.removeItem('login_failed_attempts');
           localStorage.setItem('eduvision_user', JSON.stringify({
-            id: userRecord.id,
-            name: userName,
-            phone: userRecord.phone,
-            email: userRecord.email,
-            role: userRole,
-            status: userRecord.status || 'Active',
+            id: authUser.id || authUser.employee_id,
+            name: authUser.full_name || 'User',
+            phone: authUser.phone,
+            email: authUser.email,
+            role: authRole,
+            status: authUser.status || 'Active',
             loggedIn: true,
             loginTime: new Date().toISOString()
           }));
-          
-          var roleRoutes = {
-            'student': 'student/dashboard.html',
-            'associate': 'associate/dashboard.html',
-            'partner': 'associate/dashboard.html',
-            'counsellor': 'counsellor/dashboard.html',
-            'branch': 'branch/dashboard.html',
-            'teamleader': 'teamleader/dashboard.html',
-            'university': 'university/dashboard.html',
-            'admin': 'admin/dashboard.html',
-            'super-admin': 'super-admin/dashboard.html'
-          };
-          var targetRoute = roleRoutes[userRole] || 'student/dashboard.html';
-          // Direct transition to Raghav intro animation (old EduVision animation removed)
-          window.location.href = 'welcome.html?redirect=' + encodeURIComponent(targetRoute);
-        } else {
-          stopOrbLoader();
-          // USER DOES NOT EXIST IN DATABASE
-          alert('Aapka account nahi mila (You are not registered yet). Please create an account first!');
-          
-          // Switch to registration form and pre-fill the mobile number
-          setAuthMode(true);
-          const regMobile = document.getElementById('regMobile');
-          if (regMobile) {
-            regMobile.value = phoneInput;
-            regMobile.focus();
-          }
 
+          console.log(`✅ Authenticated successfully as ${authRole}. Redirecting to: ${targetDashboard}`);
+          window.location.href = 'welcome.html?redirect=' + encodeURIComponent(targetDashboard);
+        } else {
+          alert('Account not found with this Email / Phone / Employee ID. Please check your credentials or register!');
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
@@ -3668,119 +3827,13 @@
         }
       } catch (err) {
         console.error('[Login Exception]:', err);
-        alert('An error occurred during login: ' + (err.message || 'Please try again.'));
+        alert('Authentication error: ' + err.message);
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalText;
         }
       }
     }
-
-    async function handleRegisterSubmit(e) {
-      e.preventDefault();
-      currentAuthMode = 'reg';
-
-      var nameEl   = document.getElementById('regName');
-      var mobileEl = document.getElementById('regMobile');
-      var emailEl  = document.getElementById('regEmail');
-      var pwdEl    = document.getElementById('regPassword');
-      var name     = nameEl   ? nameEl.value.trim()   : '';
-      var mobile   = mobileEl ? mobileEl.value.trim() : '';
-      var emailV   = emailEl  ? emailEl.value.trim()  : '';
-      var pwd      = pwdEl    ? pwdEl.value.trim()    : '';
-
-      if (!name) {
-        alert('Please enter your Full Name.');
-        if (nameEl) nameEl.focus();
-        return;
-      }
-
-      if (!mobile) {
-        alert('Please enter your Mobile Number.');
-        if (mobileEl) mobileEl.focus();
-        return;
-      }
-
-      if (!pwd || pwd.length < 4) {
-        alert('Please create a Password (minimum 4 characters).');
-        if (pwdEl) pwdEl.focus();
-        return;
-      }
-
-      var submitBtn = document.querySelector('#registerForm .btn-login-submit');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '⚡ Registering with Supabase...';
-      }
-
-      try {
-        const client = getSupabaseClient();
-        if (!client) throw new Error("Supabase client not available");
-
-        var newUser = {
-          full_name: name,
-          phone: mobile,
-          email: emailV || (mobile + '@student.eduvision.in'),
-          password: pwd,
-          role: 'student'
-        };
-
-        // 1. Check for Duplicate Mobile Number
-        const { data: existingUsers, error: checkErr } = await client.from('users').select('id').eq('phone', mobile);
-        if (checkErr) throw checkErr;
-        
-        if (existingUsers && existingUsers.length > 0) {
-          alert("This mobile number is already registered. Please log in instead.");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Register & Create Account ✦';
-          }
-          return;
-        }
-
-        // 2. Insert if no duplicate exists
-        const { data, error } = await client.from('users').insert([newUser]).select();
-
-        if (error) {
-          console.error("Supabase insert error:", error);
-          if (error.code === '23505' || error.message.toLowerCase().includes('unique')) {
-            alert("This mobile number is already registered. Please log in instead.");
-          } else {
-            alert("Error during registration: " + error.message);
-          }
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Register & Create Account ✦';
-          }
-          return;
-        }
-
-        var created = (data && data.length > 0) ? data[0] : newUser;
-        
-        localStorage.setItem('eduvision_user', JSON.stringify({
-          id: created.id || ('usr_' + Date.now()),
-          name: name,
-          phone: mobile,
-          email: emailV,
-          role: 'student',
-          loggedIn: true,
-          loginTime: new Date().toISOString()
-        }));
-
-        window.location.href = 'welcome.html?redirect=student/dashboard.html';
-      } catch(err) {
-        console.error("Registration Exception:", err);
-        alert('An error occurred during registration. Please try again.');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = 'Register & Create Account ✦';
-        }
-      }
-    }
-
-    /* ─────────────────────────────────────────────────────────
-       SESSION COMPLETION
-    ───────────────────────────────────────────────────────── */
 
     function executeLoginFlow() {
       var emailEl = document.getElementById('email');

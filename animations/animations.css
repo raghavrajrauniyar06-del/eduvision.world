@@ -869,9 +869,27 @@ input:focus, select:focus, textarea:focus, .form-input:focus {
   }
 
   /* CRM Drawers fit full mobile screen cleanly */
-  .crm-drawer, .wa-details-drawer {
+  .crm-drawer {
     width: 100vw !important;
     max-width: 100vw !important;
+  }
+  .wa-details-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+  .wa-details-drawer:not(.open) {
+    transform: translateX(100%) !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  .wa-details-drawer.open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
   }
 
   /* Grid metrics auto-adapt on mobile phones */

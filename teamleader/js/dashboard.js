@@ -3434,10 +3434,9 @@ function playNotificationSound(isSent = false) {
 
 async function loadAlertsModule() {
   await fetchUserGroups();
-  if (userGroups.length > 0) {
-    activeWaChatGroup = userGroups[0].id;
-    switchWaChat(activeWaChatGroup);
-  }
+  // Do NOT auto select group - give user the choice
+  activeWaChatGroup = null;
+  switchWaChat(null);
   await fetchWaMessages();
   waLoaded = true;
 
