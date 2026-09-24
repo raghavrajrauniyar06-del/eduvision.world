@@ -2010,10 +2010,21 @@ html, body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 
-  #mod-chat,
-  #view-alerts,
-  #module-alerts,
-  #tab-support {
+  /* Hide inactive module views strictly on mobile to prevent overlapping */
+  .module-view:not(.active),
+  .view-section:not(.active),
+  #mod-chat:not(.active),
+  #view-recordings:not(.active),
+  #view-alerts:not(.active),
+  #module-alerts:not(.active),
+  #tab-support:not(.active) {
+    display: none !important;
+  }
+
+  #mod-chat.active,
+  #view-alerts.active,
+  #module-alerts.active,
+  #tab-support.active {
     flex: 1 1 0% !important;
     min-height: 0 !important;
     height: 100% !important;
@@ -2024,6 +2035,24 @@ html, body {
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
+  }
+
+  /* Universal Responsive Grid for all Modal Forms on Mobile */
+  .modal-body-scroll div[style*="grid-template-columns"],
+  .modal-body div[style*="grid-template-columns"],
+  .modal-form-grid,
+  #partnerCreateForm div[style*="grid-template-columns"],
+  .crm-drawer div[style*="grid-template-columns"],
+  .partner-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .form-group label {
+    font-size: 0.76rem !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
   }
 
   .wa-container {

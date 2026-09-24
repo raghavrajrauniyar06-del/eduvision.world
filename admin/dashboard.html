@@ -9740,51 +9740,96 @@ body:has(#mod-chat.active) .admin-main {
         
         <!-- TAB 1: PERSONAL DETAILS -->
         <div id="adminTabContent-personal" class="admin-tab-pane">
-          <div style="font-size:0.72rem; color:var(--accent-gold); font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px;">
-            <i class="fa-solid fa-id-card"></i> Official Executive Profile Dossier
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+            <div style="font-size:0.72rem; color:var(--accent-gold); font-weight:800; letter-spacing:1px; text-transform:uppercase;">
+              <i class="fa-solid fa-id-card"></i> Official Executive Profile Dossier
+            </div>
+            <button type="button" id="btnToggleAdminEdit" onclick="toggleAdminProfileEditMode()" style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); border:1px solid rgba(245,158,11,0.4); color:var(--accent-gold); padding:5px 12px; border-radius:10px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
+              <i class="fa-solid fa-pen-to-square"></i> <span id="adminEditToggleText">Edit Profile</span>
+            </button>
           </div>
           
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Full Legal Name</div>
-              <div id="adminDetailFullName" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
+          <!-- View Mode: Read-Only Cards -->
+          <div id="adminProfileViewMode">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Full Legal Name</div>
+                <div id="adminDetailFullName" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Employee ID / Code</div>
+                <div id="adminDetailEmpId" style="font-size:0.92rem; font-weight:700; color:var(--accent-gold); font-family:'JetBrains Mono', monospace; margin-top:3px;">--</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Primary Email Address</div>
+                <div id="adminDetailEmail" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Official Phone Number</div>
+                <div id="adminDetailPhone" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Clearance &amp; Role</div>
+                <div id="adminDetailRole" style="font-size:0.92rem; font-weight:700; color:#c084fc; margin-top:3px;">--</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Headquarters Branch</div>
+                <div id="adminDetailBranch" style="font-size:0.92rem; font-weight:700; color:#38bdf8; margin-top:3px;">Main Campus HQ</div>
+              </div>
             </div>
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Employee ID / Code</div>
-              <div id="adminDetailEmpId" style="font-size:0.92rem; font-weight:700; color:var(--accent-gold); font-family:'JetBrains Mono', monospace; margin-top:3px;">--</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Primary Email Address</div>
-              <div id="adminDetailEmail" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Official Phone Number</div>
-              <div id="adminDetailPhone" style="font-size:0.92rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Clearance &amp; Role</div>
-              <div id="adminDetailRole" style="font-size:0.92rem; font-weight:700; color:#c084fc; margin-top:3px;">--</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:12px 16px;">
-              <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Headquarters Branch</div>
-              <div id="adminDetailBranch" style="font-size:0.92rem; font-weight:700; color:#38bdf8; margin-top:3px;">Main Campus HQ</div>
+
+            <div style="margin-top:20px; background:linear-gradient(135deg, rgba(247,211,119,0.08) 0%, rgba(192,132,252,0.04) 100%); border:1px solid rgba(247,211,119,0.2); border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; border-radius:12px; background:rgba(247,211,119,0.15); display:flex; align-items:center; justify-content:center; color:var(--accent-gold); font-size:1.1rem;">
+                  <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.85rem; font-weight:800; color:#fff;">Executive Oversight Authority</div>
+                  <div style="font-size:0.72rem; color:#94a3b8;">High command clearance for staff promotions, fee audits, and permissions.</div>
+                </div>
+              </div>
+              <span style="font-size:0.7rem; font-weight:800; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:4px 12px; border-radius:20px;">
+                <i class="fa-solid fa-shield-check"></i> MASTER PRIVILEGES
+              </span>
             </div>
           </div>
 
-          <div style="margin-top:20px; background:linear-gradient(135deg, rgba(247,211,119,0.08) 0%, rgba(192,132,252,0.04) 100%); border:1px solid rgba(247,211,119,0.2); border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:42px; height:42px; border-radius:12px; background:rgba(247,211,119,0.15); display:flex; align-items:center; justify-content:center; color:var(--accent-gold); font-size:1.1rem;">
-                <i class="fa-solid fa-crown"></i>
+          <!-- Edit Mode: Interactive Form -->
+          <form id="adminProfileEditForm" onsubmit="submitAdminProfileEdit(event)" style="display:none; flex-direction:column; gap:14px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:4px; display:block;">Full Legal Name *</label>
+                <input type="text" id="editAdminFullName" required class="pwd-glass-input" style="width:100%; box-sizing:border-box;">
               </div>
-              <div>
-                <div style="font-size:0.85rem; font-weight:800; color:#fff;">Executive Oversight Authority</div>
-                <div style="font-size:0.72rem; color:#94a3b8;">High command clearance for staff promotions, fee audits, and permissions.</div>
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:4px; display:block;">Primary Email Address *</label>
+                <input type="email" id="editAdminEmail" required class="pwd-glass-input" style="width:100%; box-sizing:border-box;">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:4px; display:block;">Official Phone Number *</label>
+                <input type="text" id="editAdminPhone" required class="pwd-glass-input" style="width:100%; box-sizing:border-box;">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:4px; display:block;">Designation / Clearance</label>
+                <input type="text" id="editAdminRole" class="pwd-glass-input" style="width:100%; box-sizing:border-box;">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.75rem; color:#cbd5e1; font-weight:700; margin-bottom:4px; display:block;">Headquarters Branch</label>
+                <input type="text" id="editAdminBranch" class="pwd-glass-input" style="width:100%; box-sizing:border-box;">
               </div>
             </div>
-            <span style="font-size:0.7rem; font-weight:800; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:4px 12px; border-radius:20px;">
-              <i class="fa-solid fa-shield-check"></i> MASTER PRIVILEGES
-            </span>
-          </div>
+
+            <div id="adminProfileEditStatus" style="display:none; padding:10px 14px; border-radius:10px; font-size:0.82rem;"></div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+              <button type="button" onclick="toggleAdminProfileEditMode(false)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; padding:8px 16px; border-radius:10px; font-size:0.8rem; font-weight:700; cursor:pointer;">
+                Cancel
+              </button>
+              <button type="submit" id="btnSaveAdminProfile" class="btn-submit-animated" style="padding:8px 20px; font-size:0.82rem;">
+                <i class="fa-solid fa-floppy-disk"></i> <span id="adminProfileBtnText">Save Profile Changes</span>
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- TAB 2: ACHIEVEMENTS & GOVERNANCE -->
@@ -9930,6 +9975,145 @@ body:has(#mod-chat.active) .admin-main {
 
   <script>
   /* ── ADMIN MAC OS PROFILE & SETTINGS CONTROLLER ── */
+  
+  window.toggleAdminProfileEditMode = function(forceState) {
+    const viewMode = document.getElementById('adminProfileViewMode');
+    const editForm = document.getElementById('adminProfileEditForm');
+    const toggleText = document.getElementById('adminEditToggleText');
+    if (!viewMode || !editForm) return;
+
+    let isEditing = (editForm.style.display !== 'none');
+    if (typeof forceState === 'boolean') isEditing = !forceState;
+
+    if (isEditing) {
+      // Switch to View Mode
+      viewMode.style.display = 'block';
+      editForm.style.display = 'none';
+      if (toggleText) toggleText.textContent = 'Edit Profile';
+    } else {
+      // Switch to Edit Mode - Populate form with current values
+      let admin = null;
+      try {
+        if (typeof currentAdmin !== 'undefined' && currentAdmin) admin = currentAdmin;
+        else {
+          const raw = localStorage.getItem('eduvision_admin') || localStorage.getItem('eduvision_user');
+          if (raw) admin = JSON.parse(raw);
+        }
+      } catch(e){}
+
+      document.getElementById('editAdminFullName').value = (admin && admin.full_name) || document.getElementById('adminDetailFullName').textContent || 'Admin';
+      document.getElementById('editAdminEmail').value = (admin && admin.email) || document.getElementById('adminDetailEmail').textContent || 'admin@eduvision.com';
+      document.getElementById('editAdminPhone').value = (admin && admin.phone) || document.getElementById('adminDetailPhone').textContent || '+91 98765 43210';
+      document.getElementById('editAdminRole').value = (admin && (admin.designation || admin.role)) || document.getElementById('adminDetailRole').textContent || 'Administrator';
+      document.getElementById('editAdminBranch').value = (admin && admin.branch) || document.getElementById('adminDetailBranch').textContent || 'Main Campus HQ';
+
+      viewMode.style.display = 'none';
+      editForm.style.display = 'flex';
+      if (toggleText) toggleText.textContent = 'View Dossier';
+    }
+  };
+
+  window.submitAdminProfileEdit = async function(event) {
+    event.preventDefault();
+    const fullName = document.getElementById('editAdminFullName').value.trim();
+    const email = document.getElementById('editAdminEmail').value.trim();
+    const phone = document.getElementById('editAdminPhone').value.trim();
+    const role = document.getElementById('editAdminRole').value.trim() || 'Administrator';
+    const branch = document.getElementById('editAdminBranch').value.trim() || 'Main Campus HQ';
+    const statusEl = document.getElementById('adminProfileEditStatus');
+    const btnText = document.getElementById('adminProfileBtnText');
+
+    const showMsg = (msg, isErr = true) => {
+      if (!statusEl) return;
+      statusEl.style.display = 'block';
+      statusEl.style.background = isErr ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)';
+      statusEl.style.color = isErr ? '#f87171' : '#4ade80';
+      statusEl.style.border = isErr ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(34,197,94,0.3)';
+      statusEl.innerHTML = (isErr ? '<i class="fa-solid fa-circle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + msg;
+    };
+
+    if (!fullName || !email || !phone) {
+      showMsg("Please fill in Full Name, Email, and Phone number.");
+      return;
+    }
+
+    if (btnText) btnText.textContent = 'Saving...';
+
+    try {
+      let admin = {};
+      try {
+        const raw = localStorage.getItem('eduvision_admin');
+        if (raw) admin = JSON.parse(raw);
+      } catch(e){}
+
+      admin.full_name = fullName;
+      admin.name = fullName;
+      admin.email = email;
+      admin.phone = phone;
+      admin.designation = role;
+      admin.role = role;
+      admin.branch = branch;
+
+      localStorage.setItem('eduvision_admin', JSON.stringify(admin));
+
+      // Also update eduvision_user if logged in as admin
+      try {
+        let u = JSON.parse(localStorage.getItem('eduvision_user') || '{}');
+        if (u.role === 'admin' || u.role === 'super_admin' || !u.role) {
+          u.name = fullName;
+          u.email = email;
+          u.phone = phone;
+          localStorage.setItem('eduvision_user', JSON.stringify(u));
+        }
+      } catch(e){}
+
+      if (typeof currentAdmin !== 'undefined') currentAdmin = admin;
+
+      // Update page displays
+      const topName = document.getElementById('topAdminName');
+      if (topName) topName.textContent = fullName;
+      const heroName = document.getElementById('heroAdminName');
+      if (heroName) heroName.textContent = fullName;
+      const sideName = document.getElementById('sideAdminName');
+      if (sideName) sideName.textContent = fullName;
+
+      const parts = fullName.trim().split(/\s+/);
+      let initials = parts[0] ? parts[0].charAt(0).toUpperCase() : 'A';
+      if (parts.length > 1) initials += parts[parts.length - 1].charAt(0).toUpperCase();
+
+      const topAv = document.getElementById('topAdminAvatar');
+      if (topAv) topAv.textContent = initials;
+      const modalAv = document.getElementById('adminModalAvatar');
+      if (modalAv) modalAv.textContent = initials;
+
+      // Update modal text fields
+      const dName = document.getElementById('adminDetailFullName');
+      if (dName) dName.textContent = fullName;
+      const dEmail = document.getElementById('adminDetailEmail');
+      if (dEmail) dEmail.textContent = email;
+      const dPhone = document.getElementById('adminDetailPhone');
+      if (dPhone) dPhone.textContent = phone;
+      const dRole = document.getElementById('adminDetailRole');
+      if (dRole) dRole.textContent = role;
+      const dBranch = document.getElementById('adminDetailBranch');
+      if (dBranch) dBranch.textContent = branch;
+      const modalFullName = document.getElementById('adminModalFullName');
+      if (modalFullName) modalFullName.textContent = fullName;
+      const modalEmail = document.getElementById('adminModalEmail');
+      if (modalEmail) modalEmail.textContent = email;
+
+      showMsg("Admin profile updated successfully!", false);
+      setTimeout(() => {
+        if (statusEl) statusEl.style.display = 'none';
+        toggleAdminProfileEditMode(false);
+      }, 1500);
+    } catch(err) {
+      showMsg("Failed to save profile: " + err.message);
+    } finally {
+      if (btnText) btnText.textContent = 'Save Profile Changes';
+    }
+  };
+  
   window.openAdminProfileModal = function() {
     let admin = null;
     try {

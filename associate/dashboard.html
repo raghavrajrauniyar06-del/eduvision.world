@@ -1062,47 +1062,61 @@
       <!-- MODULE 9: ACCOUNT -->
       <section class="module-view" id="mod-account">
         <div class="glass-box" style="max-width:650px;">
-          <h3 style="margin-bottom:18px; font-family:var(--font-heading); font-size:1.3rem;">Partner Account Configurations</h3>
-          <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0; font-family:var(--font-heading); font-size:1.3rem;">Partner Account &amp; Profile Details</h3>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 0;">Manage your executive contact information, organization branding &amp; credentials.</p>
+            </div>
+          </div>
+
+          <form id="partnerProfileForm" onsubmit="handlePartnerUpdateProfile(event)" style="display:flex; flex-direction:column; gap:16px;">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
               <div class="form-group">
-                <label>Partner Code</label>
-                <input type="text" id="acc_code" readonly style="background:rgba(255,255,255,0.02); color:var(--gold-light);">
+                <label>Partner Code (System ID)</label>
+                <input type="text" id="acc_code" readonly style="background:rgba(255,255,255,0.02); color:var(--gold-light); cursor:not-allowed;">
               </div>
               <div class="form-group">
-                <label>Organization / Agency</label>
-                <input type="text" id="acc_org" readonly style="background:rgba(255,255,255,0.02);">
+                <label>Organization / Agency *</label>
+                <input type="text" id="acc_org" required placeholder="e.g. Apex Edu Solutions Pvt Ltd">
               </div>
             </div>
             <div class="form-group">
-              <label>Contact Manager</label>
-              <input type="text" id="acc_name" readonly style="background:rgba(255,255,255,0.02);">
+              <label>Contact Manager / Full Name *</label>
+              <input type="text" id="acc_name" required placeholder="e.g. Vikram Singh">
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
               <div class="form-group">
-                <label>Official Email</label>
-                <input type="text" id="acc_email" readonly style="background:rgba(255,255,255,0.02);">
+                <label>Official Email Address *</label>
+                <input type="email" id="acc_email" required placeholder="e.g. partner@apexedu.in">
               </div>
               <div class="form-group">
-                <label>Phone Number</label>
-                <input type="text" id="acc_phone" readonly style="background:rgba(255,255,255,0.02);">
+                <label>Direct Phone Number *</label>
+                <input type="text" id="acc_phone" required placeholder="e.g. +91 99887 66554">
               </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
               <div class="form-group">
                 <label>Partner Tier</label>
-                <input type="text" id="acc_tier" readonly style="background:rgba(255,255,255,0.02); color:var(--accent-purple);">
+                <input type="text" id="acc_tier" readonly style="background:rgba(255,255,255,0.02); color:var(--accent-purple); cursor:not-allowed;">
               </div>
               <div class="form-group">
                 <label>Commission Percentage</label>
-                <input type="text" id="acc_commission" readonly style="background:rgba(255,255,255,0.02); color:#34d399;">
+                <input type="text" id="acc_commission" readonly style="background:rgba(255,255,255,0.02); color:#34d399; cursor:not-allowed;">
               </div>
             </div>
             <div class="form-group">
-              <label>Location Profile</label>
-              <input type="text" id="acc_location" readonly style="background:rgba(255,255,255,0.02);">
+              <label>Location Profile / City</label>
+              <input type="text" id="acc_location" placeholder="e.g. Delhi NCR / Mumbai">
             </div>
-          </div>
+
+            <div id="partnerProfileStatus" style="display:none; padding:10px 14px; border-radius:10px; font-size:0.82rem;"></div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+              <button type="submit" id="btnUpdatePartnerProfile" class="btn-gold" style="padding:10px 22px; font-weight:700; border-radius:10px; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- Change Password Section (Partner Self-Service) -->
@@ -1387,6 +1401,95 @@
       }
     }
 
+    
+    // ── PARTNER PROFILE UPDATE HANDLER ────────────────────────────
+    async function handlePartnerUpdateProfile(event) {
+      event.preventDefault();
+      const org = document.getElementById('acc_org').value.trim();
+      const name = document.getElementById('acc_name').value.trim();
+      const email = document.getElementById('acc_email').value.trim();
+      const phone = document.getElementById('acc_phone').value.trim();
+      const location = document.getElementById('acc_location').value.trim();
+      const statusEl = document.getElementById('partnerProfileStatus');
+      const btn = document.getElementById('btnUpdatePartnerProfile');
+
+      const showMsg = (msg, isErr = true) => {
+        if (!statusEl) return;
+        statusEl.style.display = 'block';
+        statusEl.style.background = isErr ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)';
+        statusEl.style.color = isErr ? '#f87171' : '#4ade80';
+        statusEl.style.border = isErr ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(34,197,94,0.3)';
+        statusEl.innerHTML = (isErr ? '<i class="fa-solid fa-circle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + msg;
+      };
+
+      if (!name || !email || !phone || !org) {
+        showMsg("Please fill in all required fields (Name, Email, Phone, Organization).");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+      }
+
+      try {
+        // 1. Update current partner in allPartners array
+        const partnerIdx = allPartners.findIndex(p => p.email === currentUser.email || p.phone === currentUser.phone || p.partner_id === currentUser.id);
+        if (partnerIdx !== -1) {
+          allPartners[partnerIdx].organization_name = org;
+          allPartners[partnerIdx].contact_person = name;
+          allPartners[partnerIdx].email = email;
+          allPartners[partnerIdx].phone = phone;
+          allPartners[partnerIdx].location = location;
+          localStorage.setItem('eduvision_partners', JSON.stringify(allPartners));
+        }
+
+        // 2. Update currentUser session in localStorage
+        currentUser.name = name;
+        currentUser.email = email;
+        currentUser.phone = phone;
+        if (!currentUser.org && org) currentUser.org = org;
+        localStorage.setItem('eduvision_user', JSON.stringify(currentUser));
+
+        // 3. Update top UI elements
+        const sideNameEl = document.getElementById('sideNameDisplay');
+        if (sideNameEl) sideNameEl.textContent = name;
+        const welcomeEl = document.getElementById('welcomeUserDisplay');
+        if (welcomeEl) welcomeEl.textContent = name;
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) || 'AP';
+        const avEl = document.getElementById('avatarSq');
+        if (avEl) avEl.textContent = initials;
+
+        // 4. Update Supabase if available
+        const _sb = getSb();
+        if (_sb && typeof _sb.from === 'function' && partnerIdx !== -1) {
+          const pId = allPartners[partnerIdx].partner_id;
+          try {
+            await withTimeout(_sb.from('associate_partners').update({
+              company_name: org,
+              contact_person: name,
+              email: email,
+              phone: phone,
+              location: location,
+              updated_at: new Date().toISOString()
+            }).eq('partner_id', pId), 6000);
+          } catch(sbErr) {
+            console.warn("Supabase profile sync warning:", sbErr.message);
+          }
+        }
+
+        showMsg("Profile details successfully updated & synced!", false);
+        setTimeout(() => { if (statusEl) statusEl.style.display = 'none'; }, 4000);
+      } catch (err) {
+        showMsg("Error updating profile: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Profile Details';
+        }
+      }
+    }
+  
     async function handlePartnerChangePassword(event) {
       event.preventDefault();
       const currentPwd = document.getElementById('current_partner_pwd').value.trim();
