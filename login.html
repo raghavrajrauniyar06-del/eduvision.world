@@ -3558,7 +3558,10 @@
                   role: tl.role || 'Team Leader',
                   designation: tl.designation || 'Team Leader',
                   branch: tl.branch || 'Head Office',
-                  status: tl.status || 'Active'
+                  status: tl.status || 'Active',
+                  password: passwordInput,
+                  is_temp_password: (tl.is_temp_password === true || tl.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123'),
+                  must_change_password: (tl.is_temp_password === true || tl.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123')
                 };
                 authRole = 'teamleader';
                 targetDashboard = 'teamleader/dashboard.html';
@@ -3603,7 +3606,10 @@
                   role: cns.role || (isTL ? 'Team Leader' : 'Counsellor'),
                   designation: cns.designation || (isTL ? 'Team Leader' : 'Senior Counsellor'),
                   branch: cns.branch || 'Head Office',
-                  status: cns.status || 'Active'
+                  status: cns.status || 'Active',
+                  password: passwordInput,
+                  is_temp_password: (cns.is_temp_password === true || cns.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123'),
+                  must_change_password: (cns.is_temp_password === true || cns.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123')
                 };
                 authRole = isTL ? 'teamleader' : 'counsellor';
                 targetDashboard = isTL ? 'teamleader/dashboard.html' : 'counsellor/dashboard.html';
@@ -4541,6 +4547,10 @@
       background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%) !important;
       border: 1px solid #fed7aa !important;
     }
+    .portal-card.card-staff .portal-icon-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+      border: 1px solid #bbf7d0 !important;
+    }
     .portal-card.card-admin .portal-icon-box {
       background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
       border: 1px solid #fecaca !important;
@@ -5084,12 +5094,22 @@
           <div class="portal-arrow">→</div>
         </a>
 
-        <!-- 5. Admin Login -->
+                <!-- 5. Admin Login -->
         <a href="admin/login.html" class="portal-card card-admin">
           <div class="portal-icon-box">🛡️</div>
           <div class="portal-card-info">
             <h3>Admin Login</h3>
             <p>System Administration</p>
+          </div>
+          <div class="portal-arrow">→</div>
+        </a>
+
+        <!-- 6. Staff & Operations Universal Login -->
+        <a href="counsellor/login.html" class="portal-card card-staff">
+          <div class="portal-icon-box">💼</div>
+          <div class="portal-card-info">
+            <h3>Staff & Operations Login</h3>
+            <p>Finance, HR, Verification, Marketing & Quality Staff</p>
           </div>
           <div class="portal-arrow">→</div>
         </a>

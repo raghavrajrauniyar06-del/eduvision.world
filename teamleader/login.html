@@ -639,6 +639,10 @@
 
           let animColor = '#a855f7'; // Purple Portal
  
+          user.password = pwd;
+          user.is_temp_password = (user.is_temp_password === true || user.must_change_password === true || pwd === 'Pass123' || pwd === 'Pass@123' || pwd.toLowerCase() === 'pass123');
+          user.must_change_password = user.is_temp_password;
+
           // Persist session immediately
           localStorage.setItem('eduvision_team_leader', JSON.stringify(user));
 

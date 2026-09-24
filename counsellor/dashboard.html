@@ -1210,8 +1210,7 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
-    
-    /* RAG AI RGB Iridescent Flowing Animation & Card */
+      /* 🌟 GOOGLE GEMINI 3D RGB ILLUMINATED FRAME & CRISP TEXT ENGINE (2026) */
     @keyframes geminiRgbFlow {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -1219,29 +1218,55 @@
     }
     .gemini-rgb-card, .rag-ai-rgb-card {
       position: relative;
-      background: linear-gradient(135deg, #4285f4, #9b72cf, #d96570, #fbbc04, #10b981, #4285f4);
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #06b6d4, #10b981, #3b82f6);
       background-size: 300% 300%;
-      animation: geminiRgbFlow 6s ease infinite;
+      animation: geminiRgbFlow 5s linear infinite;
       border-radius: 16px;
-      padding: 2px;
-      box-shadow: 0 8px 30px rgba(66, 133, 244, 0.25), 0 0 16px rgba(155, 114, 207, 0.2);
+      padding: 2px !important;
+      box-shadow: 
+        0 10px 30px -4px rgba(0, 0, 0, 0.75), 
+        0 0 20px -2px rgba(59, 130, 246, 0.35), 
+        0 0 12px -1px rgba(139, 92, 246, 0.3);
       margin-bottom: 12px;
       max-width: 88%;
       align-self: flex-start;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .gemini-rgb-card:hover, .rag-ai-rgb-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 14px 36px -4px rgba(0, 0, 0, 0.85), 
+        0 0 24px 0 rgba(139, 92, 246, 0.45);
     }
     .gemini-rgb-inner {
-      background: rgba(13, 17, 28, 0.96);
-      backdrop-filter: blur(24px);
+      position: relative;
+      background: #0d1222 !important; /* Solid deep obsidian base: 0% text haze, 100% crystal clear letters */
       border-radius: 14px;
       padding: 14px 18px;
-      color: #f1f5f9;
+      color: #f8fafc !important;
+      box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: optimizeLegibility !important;
+    }
+    .gemini-rgb-inner .wa-msg-text {
+      color: #f8fafc !important;
+      font-size: 0.90rem !important;
+      line-height: 1.62 !important;
+      font-weight: 450 !important;
+      letter-spacing: 0.15px;
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: optimizeLegibility !important;
+      word-break: break-word;
     }
     .gemini-rainbow-text {
       background: linear-gradient(90deg, #60a5fa, #c084fc, #f472b6, #fbbf24);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
+      letter-spacing: 0.2px;
+      -webkit-font-smoothing: antialiased;
     }
     .gemini-key-btn {
       background: linear-gradient(135deg, rgba(66,133,244,0.18), rgba(155,114,207,0.18));
@@ -1890,15 +1915,30 @@
         display: none !important;
       }
 
-      body {
+      html, body {
         overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: auto !important;
+        min-height: 100% !important;
+        display: block !important;
       }
 
       .main-content {
         width: 100% !important;
         max-width: 100vw !important;
         min-width: 0 !important;
+        height: auto !important;
         overflow-x: hidden !important;
+        overflow-y: visible !important;
+        display: block !important;
+        padding-bottom: 80px !important;
+      }
+
+      .view-section {
+        height: auto !important;
+        overflow: visible !important;
+        padding: 14px 10px 80px 10px !important;
       }
 
       .sidebar {
@@ -2067,43 +2107,49 @@
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
       
-      /* WhatsApp responsive toggle with hardware-accelerated 3D slide transition */
+      /* WhatsApp responsive single-panel mobile toggle */
       .wa-container {
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        width: 100%;
-        height: calc(100vh - 120px) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        height: 100% !important;
+        max-height: 100% !important;
         border-radius: 0px !important;
         border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       .wa-container .wa-sidebar {
         width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
         display: flex !important;
-        transform: translateX(0);
-        transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-        flex-shrink: 0;
-        will-change: transform;
+        flex: 1 !important;
+        position: static !important;
+        transform: none !important;
       }
       .wa-container .wa-chat-window {
-        display: flex !important;
+        display: none !important;
         width: 100% !important;
-        position: absolute !important;
-        top: 0;
-        left: 100%;
-        height: 100%;
-        transform: translateX(0);
-        transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-        z-index: 10;
-        flex-shrink: 0;
-        background: var(--bg-dark);
-        will-change: transform;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        position: static !important;
+        transform: none !important;
       }
       .wa-container.wa-chat-active .wa-sidebar {
-        transform: translateX(-100%);
+        display: none !important;
       }
       .wa-container.wa-chat-active .wa-chat-window {
-        transform: translateX(-100%);
+        display: flex !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 !important;
+        position: static !important;
+        transform: none !important;
       }
       
       .wa-mobile-back-btn {
@@ -2418,6 +2464,7 @@
 
 </style>
   <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/eduvision_rag_ai.js"></script>
   <script src="../shared/genie_transition.js?v=20260916_V120_GPU_NATIVE"></script>
 
 <style>
@@ -3437,9 +3484,9 @@
             Audit, inspect, and listen to all recorded calls across Leads & Students synced to official cloud storage.
           </p>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <input type="text" id="searchAllRecordings" placeholder="Search by prospect, counsellor, call type..." oninput="filterAllRecordings()" style="padding:8px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.85rem; width:280px;">
-          <button onclick="loadGlobalRecordingsView()" class="btn-action" style="padding:8px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34d399; font-weight:700;">
+        <div class="recordings-filter-strip" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%; max-width:440px;">
+          <input type="text" id="searchAllRecordings" placeholder="Search by prospect, counsellor, call type..." oninput="filterAllRecordings()" style="padding:8px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.85rem; flex:1; min-width:180px; box-sizing:border-box;">
+          <button onclick="loadGlobalRecordingsView()" class="btn-action" style="padding:8px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34d399; font-weight:700; white-space:nowrap;">
             <i class="fa-solid fa-arrows-rotate"></i> Refresh
           </button>
         </div>
@@ -5509,9 +5556,7 @@
           </form>
         </div>
 
-        </div>
-</div>
-
+      </div>
     </div>
   </div>
 
@@ -9282,9 +9327,9 @@
     const RAG_AI_CONFIG = {
       apiKey: (typeof atob !== 'undefined' ? atob('QVEuQWI4Uk42Sy1waExaZ19EWnh0MWpmX3lhaGNyNUxxd0tUMENfczVVZjk0UXhjeFloNlE=') : ''),
       models: [
-        'gemini-3.5-flash-lite',
-        'gemini-flash-lite-latest',
-        'gemini-3.5-flash'
+        'gemini-2.0-flash',
+        'gemini-1.5-flash',
+        'gemini-2.0-flash-lite'
       ]
     };
     try {
@@ -9302,9 +9347,15 @@
       created_at: '2026-09-01T00:00:00Z'
     };
 
+    function getCounsellorAiChatStorageKey() {
+  const activeUser = (typeof currentCounsellor !== 'undefined' && currentCounsellor) ? currentCounsellor : {};
+  const userId = activeUser.employee_id || activeUser.counsellor_id || activeUser.id || activeUser.email || 'counsellor_master';
+  return 'eduvision_ai_copilot_chat_' + userId;
+}
+
     let aiCopilotMessages = [];
     try {
-      aiCopilotMessages = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]');
+      aiCopilotMessages = JSON.parse(localStorage.getItem(getCounsellorAiChatStorageKey()) || '[]');
     } catch(e){}
 
     if (aiCopilotMessages.length === 0) {
@@ -9464,11 +9515,11 @@ CRITICAL MANDATES:
      * Hinglish: "Hi ${userName}! Hum aapki kaise help karein? Kisi bhi partner university ki fees, student objection ya counselling script ke liye bas poochiye!"
 3. CRISP & DIRECT: No repetitive menus or boilerplates. Direct, high-value admissions answers. Clean HTML (<strong>, <em>, <br>, • bullets).`;
 
-      const models = (RAG_AI_CONFIG && RAG_AI_CONFIG.models) ? RAG_AI_CONFIG.models : ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.5-flash'];
+      const models = (RAG_AI_CONFIG && RAG_AI_CONFIG.models) ? RAG_AI_CONFIG.models : ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.0-flash-lite'];
       for (const model of models) {
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 1800);
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=` + encodeURIComponent(apiKey);
           const response = await fetch(url, {
             method: 'POST',
@@ -9576,10 +9627,10 @@ CRITICAL MANDATES:
       const hasWellBeing = /(kya\s*h[a]*l+[a-z]*|k[a|e]ise\s*ho|how\s*are\s*you|sab\s*b[a]?dhi?ya|kya\s*chal\s*raha|aur\s*bhai|aur\s*batao|kaisa\s*hai|kese\s*ho|wassup|whats\s*up)/i.test(q);
 
       if (isGreeting && !hasWellBeing) {
-        if (isEnglish && (q.includes('good') || q.includes('how can') || q.includes('help') || q.includes('please') || q.includes('assist'))) {
-          return `Hi! How can I help you today? Ask me about university admissions, fee structures, eligibility criteria, or student counselling scripts.`;
+        if (isEnglish) {
+          return `Hello <strong>${userName}</strong>! ⚡ How can I assist you with university admissions, student counselling scripts, fee breakdowns, or eligibility criteria today?`;
         }
-        return `Hi! Hum aapki kaise help karein? Kisi bhi partner university ki fees, student objection ya counselling script ke liye bas poochiye! 🌟<br><br><em>(How can I help you today? Ask me about university admissions, fee structures, eligibility criteria, or student counselling scripts.)</em>`;
+        return `Namaste <strong>${userName}</strong>! 🌟 Main aapki kya help kar sakta hoon? Aap kisi bhi partner university ki fees, admission criteria, student objection handling ya counselling pitches ke baare me pooch sakte hain!`;
       }
 
       // 2. CHIT-CHAT, WELL-BEING & "KYA HAAL HAI / KAISE HO / HOW ARE YOU"
@@ -10023,30 +10074,110 @@ CRITICAL MANDATES:
         `;
       }
 
-      // 23. COURSES & DEGREES (B.Tech, MBA, BCA, Nursing, Pharmacy, etc.)
-      if (/\b(b\.?tech|engineering|cse|ai|ml|mechanical|civil)\b/i.test(q)) {
+      // 23. COURSES & DEGREES (BBA, MBA, BCA, MCA, B.Tech, Nursing, Pharmacy, Law, B.Ed, NIOS)
+      // 23A. BBA (Bachelor of Business Administration)
+      if (/\b(bba|b\.b\.a|bachelor\s*of\s*business|bba\s*admission|bba\s*college|bba\s*colleges|bba\s*university|bba\s*fees?|bba\s*course)\b/i.test(q) || (q.includes('bba') && !q.includes('bba llb') && !q.includes('mba'))) {
         return `
-          ⚙️ <strong>B.TECH ADMISSION COUNSELLING GUIDE</strong><br>
+          🎓 <strong>BBA (BACHELOR OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
           ━━━━━━━━━━━━━━━━━━━━━━<br>
-          • <strong>Eligibility:</strong> 50%–60% in 12th PCM (Direct admission quota available)<br>
-          • <strong>Top Recommended Partner Campuses:</strong><br>
-            1. Chandigarh University (Best ROI & Highest Package ₹54.75 LPA)<br>
-            2. Galgotias University / GNIOT (Delhi NCR Metro connectivity)<br>
-            3. Amity University (Premium Labs & Global Placement)<br>
-          • <strong>Fee Range:</strong> ₹1.1 Lakhs to ₹2.5 Lakhs per year (0% EMI available)<br>
-          • <strong>Counsellor Closing Tip:</strong> Always ask student if they prefer AI/ML or Cyber Security specialization to create urgency!
+          • <strong>Eligibility:</strong> 10+2 / 12th Pass from any recognized board (Arts / Commerce / Science) with min 45%–50% marks.<br>
+          • <strong>Duration:</strong> 3 Years (6 Semesters) / 4-Year Honors (NEP Structure)<br>
+          • <strong>Direct Merit Seats:</strong> Available through EduVision merit quota without entrance exam barrier.<br><br>
+          🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+          • <strong>Amity University (Noida / Jaipur / Online):</strong> NAAC A+ | Regular: ₹65,000 – ₹1.2L / sem | Online BBA: ₹30,000 – ₹35,000 / sem (0% EMI)<br>
+          • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹60,000 – ₹75,000 / sem (CUCET scholarship up to 100%)<br>
+          • <strong>Galgotias University (Greater Noida):</strong> NAAC A+ | ₹50,000 – ₹65,000 / sem (Metro connectivity, high corporate exposure)<br>
+          • <strong>Manipal Online University:</strong> NAAC A++ | ₹40,000 / sem (0% No-Cost EMI @ ₹3,333/month)<br>
+          • <strong>SAGE University (Indore / Bhopal):</strong> NAAC Accredited | ₹30,000 – ₹45,000 / sem | Budget-friendly<br>
+          • <strong>Marwadi University (Rajkot) & JNU Jaipur:</strong> ₹35,000 – ₹55,000 / sem<br>
+          • <strong>Sandip University (Nashik / Madhubani Bihar):</strong> 100% BSCCS (Bihar Student Credit Card ₹4L) accepted!<br><br>
+          📌 <strong>TOP SPECIALIZATIONS:</strong><br>
+          • Digital Marketing & E-Commerce | Finance & Banking | Human Resource (HR) | Business Analytics | International Business (IB)<br><br>
+          💼 <strong>PLACEMENTS & ROI:</strong><br>
+          • Average Package: ₹4.5 LPA – ₹8.5 LPA (Deloitte, EY, Amazon, ICICI Bank, HDFC, TCS)<br><br>
+          💳 <strong>FINANCIAL AID:</strong><br>
+          • <strong>Bihar Student Credit Card (BSCCS ₹4 Lakhs 0% Loan):</strong> Zero upfront parent expense!<br>
+          • <strong>0% Monthly EMI:</strong> Available across all online and partner campuses.
         `;
       }
 
-      if (/\b(mba|bba|management|pgdm)\b/i.test(q)) {
+      // 23B. MBA & PGDM (Master of Business Administration)
+      if (/\b(mba|m\.b\.a|pgdm|master\s*of\s*business|mba\s*admission|mba\s*college|mba\s*colleges|mba\s*university|mba\s*fees?|mba\s*course)\b/i.test(q)) {
         return `
-          🏆 <strong>MBA & BBA MANAGEMENT ADMISSION GUIDE</strong><br>
+          🏆 <strong>MBA & PGDM (MASTER OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
           ━━━━━━━━━━━━━━━━━━━━━━<br>
-          • <strong>Eligibility:</strong> 50% in Graduation (Direct merit seats without CAT/MAT score barrier)<br>
-          • <strong>Specializations:</strong> Marketing, Finance, HR, Business Analytics, Fintech, Supply Chain<br>
-          • <strong>Top Picks:</strong> Chandigarh University, Amity University, Manipal Online, LPU<br>
-          • <strong>Average Packages:</strong> ₹6.5 LPA – ₹14 LPA<br>
-          • <strong>Online MBA Option:</strong> ₹35k–₹50k/semester (Govt WES/UPSC approved for working students)
+          • <strong>Eligibility:</strong> Graduation (Bachelor's Degree) in any stream with min 50% marks (45% for SC/ST/OBC).<br>
+          • <strong>Duration:</strong> 2 Years (4 Semesters)<br>
+          • <strong>Direct Admission:</strong> Merit-based direct seat allocation without CAT/MAT/XAT score barrier!<br><br>
+          🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+          • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹1.2L – ₹1.6L / year | Highest CTC ₹54.75 LPA<br>
+          • <strong>Amity University (Noida / Lucknow / Online):</strong> NAAC A+ | ₹1.8L – ₹3.5L / year | Online MBA: ₹45k–₹50k/sem<br>
+          • <strong>Manipal Online (MAHE / MUJ):</strong> NAAC A++ | ₹42,500 / sem (0% EMI @ ₹3,540/month, Harvard modules)<br>
+          • <strong>Galgotias & Sharda University:</strong> NAAC A+ | ₹1.4L – ₹1.7L / year | Delhi NCR corporate hub<br>
+          • <strong>SAGE University (Indore / Bhopal):</strong> ₹85,000 – ₹1.2L / year (Industry-linked labs)<br>
+          • <strong>Mangalayatan & Subharti:</strong> Distance/Online MBA starting ₹16,000/sem (₹30k–₹32k/year)<br><br>
+          📌 <strong>TOP SPECIALIZATIONS (DUAL OPTION AVAILABLE):</strong><br>
+          • Marketing & Sales | Finance & Fintech | HR Analytics | Business Analytics & AI | Operations & Supply Chain<br><br>
+          💼 <strong>PLACEMENTS & ROI:</strong><br>
+          • Average Package: ₹7.5 LPA – ₹16 LPA (Amazon, PwC, KPMG, Bain, ICICI Bank, Wipro)<br><br>
+          💳 <strong>FINANCIAL AID & EMI:</strong><br>
+          • 0% No-Cost Monthly EMI starting ₹3,500/month | Bihar Student Credit Card (BSCCS ₹4L) applicable.
+        `;
+      }
+
+      // 23C. BCA (Bachelor of Computer Applications)
+      if (/\b(bca|b\.c\.a|bachelor\s*of\s*computer|bca\s*admission|bca\s*college|bca\s*colleges|bca\s*university|bca\s*fees?)\b/i.test(q)) {
+        return `
+          💻 <strong>BCA (BACHELOR OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+          ━━━━━━━━━━━━━━━━━━━━━━<br>
+          • <strong>Eligibility:</strong> 10+2 / 12th Pass from any stream (Science / Commerce / Arts) with min 45%–50% marks. (Maths/CS not mandatory at all partner universities).<br>
+          • <strong>Duration:</strong> 3 Years (6 Semesters)<br><br>
+          🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+          • <strong>SRM University (Delhi-NCR / Sonepat):</strong> NAAC A++ | ₹85,000 / year<br>
+          • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹55,000 / semester<br>
+          • <strong>Manipal Online University:</strong> NAAC A++ | ₹35,000 / semester (0% EMI @ ₹2,916/month)<br>
+          • <strong>Galgotias University & GNIOT:</strong> NAAC A+ | ₹72,000 – ₹85,000 / year<br>
+          • <strong>SAGE University (Indore/Bhopal):</strong> ₹45,000 – ₹60,000 / year<br>
+          • <strong>Sandip University (Nashik / Sijoul):</strong> Bihar Student Credit Card (BSCCS ₹4L) 100% accepted!<br><br>
+          📌 <strong>HIGH-PAYING SPECIALIZATIONS:</strong><br>
+          • Cloud Computing | AI & Data Science | Full Stack Web Development | Cyber Security<br><br>
+          💼 <strong>CAREER & PACKAGES:</strong> ₹4.0 LPA – ₹9.0 LPA (TCS, Infosys, Wipro, Capgemini, Accenture).
+        `;
+      }
+
+      // 23D. MCA (Master of Computer Applications)
+      if (/\b(mca|m\.c\.a|master\s*of\s*computer|mca\s*admission|mca\s*college|mca\s*colleges|mca\s*university|mca\s*fees?)\b/i.test(q)) {
+        return `
+          🖥️ <strong>MCA (MASTER OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+          ━━━━━━━━━━━━━━━━━━━━━━<br>
+          • <strong>Eligibility:</strong> BCA / B.Sc (CS/IT) or any Bachelor's degree with Mathematics in 10+2 or Graduation (min 50% marks).<br>
+          • <strong>Duration:</strong> 2 Years (4 Semesters as per AICTE norms)<br><br>
+          🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+          • <strong>Manipal Online University:</strong> NAAC A++ | ₹37,500 / sem (0% EMI @ ₹3,125/month)<br>
+          • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹70,000 / sem<br>
+          • <strong>Amity University (Online / Regular):</strong> ₹45,000 / sem online | ₹1.4L / yr regular<br>
+          • <strong>Mangalayatan University Online:</strong> ₹28,000 / year (Budget friendly & UGC-DEB approved)<br>
+          • <strong>GNIOT & Galgotias (Greater Noida):</strong> ₹1.1L – ₹1.3L / year<br><br>
+          💼 <strong>CAREER ROLES:</strong> Software Engineer, Data Scientist, DevOps Architect, Cloud Specialist (₹6.5 LPA – ₹18 LPA).
+        `;
+      }
+
+      // 23E. B.TECH & ENGINEERING
+      if (/\b(b\.?tech|engineering|b\.e\.|cse|computer\s*science|ai\s*ml|data\s*science|mechanical|civil|electrical|polytechnic|diploma\s*eng)\b/i.test(q)) {
+        return `
+          ⚙️ <strong>B.TECH & ENGINEERING ADMISSION COUNSELLING GUIDE</strong><br>
+          ━━━━━━━━━━━━━━━━━━━━━━<br>
+          • <strong>Eligibility:</strong> 10+2 with Physics & Mathematics (PCM) min 45%–50% marks (Direct merit seats without JEE barrier).<br>
+          • <strong>Duration:</strong> 4 Years (8 Semesters) | Polytechnic Diploma: 3 Years<br><br>
+          🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+          • <strong>SRM University (Delhi-NCR / Sonepat):</strong> NAAC A++ | ₹2.2L – ₹3.5L / year | Highest CTC ₹50+ LPA<br>
+          • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹1.35L – ₹1.8L / year | Highest CTC ₹54.75 LPA<br>
+          • <strong>Galgotias University (Greater Noida):</strong> NAAC A+ | ₹1.4L – ₹1.6L / year | Prime NCR Metro Location<br>
+          • <strong>Sandip University (Nashik / Sijoul Bihar):</strong> ₹1.1L – ₹1.4L / year (100% BSCCS ₹4L Approved)<br>
+          • <strong>SAGE University (Indore/Bhopal):</strong> ₹70,000 – ₹1.1L / year (Smart tech labs & budget pick)<br>
+          • <strong>GNIOT / NIU (Greater Noida):</strong> ₹1.15L – ₹1.35L / year<br><br>
+          📌 <strong>TOP DEMAND BRANCHES:</strong> CSE (Core), AI & Machine Learning, Data Science, Cyber Security, Cloud Computing, Robotics.<br><br>
+          💳 <strong>FINANCIAL AID:</strong> Bihar Student Credit Card (BSCCS ₹4L) + CUCET/Merit Scholarships up to 100% + 0% EMI.
         `;
       }
 
@@ -10245,7 +10376,7 @@ CRITICAL MANDATES:
           created_at: new Date().toISOString(),
           message: `✅ <strong>Lead Claimed!</strong> Student <strong>+91 ${escapeStaffChatHtml(phone)}</strong> has been assigned to <strong>${escapeStaffChatHtml(counsellorName)}</strong>. Please update follow-up logs after the call.`
         });
-        localStorage.setItem('eduvision_ai_copilot_chat', JSON.stringify(aiCopilotMessages.slice(-50)));
+        localStorage.setItem(getCounsellorAiChatStorageKey(), JSON.stringify(aiCopilotMessages.slice(-50)));
         renderWaMessages();
         showToast(`Lead +91 ${phone} claimed successfully!`, 'success');
       } catch(e){}
@@ -10546,10 +10677,17 @@ CRITICAL MANDATES:
     }
 
     function renderAiCopilotChat(container) {
-      if (aiCopilotMessages.length === 0) {
+      let aiMsgs = [];
+      if (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) {
+        aiMsgs = window.EduVisionRagAi.getAiChatHistory();
+      } else {
+        aiMsgs = aiCopilotMessages || [];
+      }
+      
+      if (aiMsgs.length === 0) {
         container.innerHTML = `
           <div style="color: var(--text-muted); text-align: center; margin: auto; font-size: 0.88rem; background: rgba(255,255,255,0.02); padding: 12px 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); max-width: 80%;">
-            ⚡ Start conversation with EduVision RAG AI Desk. Ask for reports, fees, scripts, or student leads!
+            ⚡ Start conversation with EduVision Gemini RAG AI Desk. Ask for university fees, course eligibility, or counselling scripts!
           </div>
         `;
         return;
@@ -10558,7 +10696,7 @@ CRITICAL MANDATES:
       let html = '';
       let lastDate = '';
       
-      aiCopilotMessages.forEach(m => {
+      aiMsgs.forEach(m => {
         const msgDate = new Date(m.created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
         if (msgDate !== lastDate) {
           html += `<div style="align-self: center; margin: 8px 0; background: rgba(0,0,0,0.4); border: 1px solid rgba(247,211,119,0.2); color: #f7d377; padding: 4px 12px; border-radius: 12px; font-size: 0.72rem;">${msgDate}</div>`;
@@ -10622,264 +10760,198 @@ CRITICAL MANDATES:
         }
       });
       
+      const wasScrolledUp = isUserScrolledUp(container);
+      const prevScrollTop = container.scrollTop;
       container.innerHTML = html;
-      container.scrollTop = container.scrollHeight;
+      if (wasScrolledUp) {
+        container.scrollTop = prevScrollTop;
+      } else {
+        scrollWaToBottom(false);
+      }
+    }
+
+    function isUserScrolledUp(container) {
+      if (!container) return false;
+      const threshold = 100;
+      return (container.scrollHeight - container.scrollTop - container.clientHeight) > threshold;
+    }
+
+    function scrollWaToBottom(force = false, targetEl = null) {
+      const container = document.getElementById('waMessagesContainer');
+      if (!container) return;
+      if (targetEl && typeof targetEl.scrollIntoView === 'function') {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (!force && isUserScrolledUp(container)) return;
+      if (force) {
+        container.scrollTop = container.scrollHeight;
+        return;
+      }
+      requestAnimationFrame(() => {
+        if (container && (force || !isUserScrolledUp(container))) {
+          container.scrollTop = container.scrollHeight;
+        }
+      });
     }
 
     function renderWaMessages() {
       const container = document.getElementById('waMessagesContainer');
       if (!container) return;
-      
       if (activeWaChatGroup === AI_COPILOT_GROUP_ID) {
         renderAiCopilotChat(container);
         return;
       }
-      
       const currentGroup = userGroups.find(g => g.id === activeWaChatGroup);
       if (!currentGroup) return;
-      
-      // Match by group_id or legacy categories if group_id is null
-      const groupMsgs = allWaMessages.filter(m => 
-        m.group_id === activeWaChatGroup || 
+      const groupMsgs = allWaMessages.filter(m =>
+        m.group_id === activeWaChatGroup ||
         (m.group_id === null && currentGroup.is_system_group && m.category === systemGroupUUIDs[activeWaChatGroup])
       );
-      
       if (groupMsgs.length === 0) {
-        container.innerHTML = `
-          <div style="color: var(--text-muted); text-align: center; margin: auto; font-size: 0.88rem; background: rgba(255,255,255,0.02); padding: 12px 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); max-width: 80%;">
-            🔒 Start conversation in ${currentGroup.name}. All edits & deletes are secure.
-          </div>
-        `;
+        container.innerHTML = '<div style="color:var(--text-muted); text-align:center; margin:auto; font-size:0.88rem; background:rgba(255,255,255,0.02); padding:12px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); max-width:80%;">Start the conversation in ' + currentGroup.name + '</div>';
         return;
       }
-      
-      let unreadMsgs = [];
-      const currentUserId = currentUser.counsellor_id || currentUser.employee_id;
-      
+      const currentUserId = (currentUser && (currentUser.counsellor_id || currentUser.employee_id));
       let html = '';
       let lastDate = '';
-      
+      let unreadMsgs = [];
       groupMsgs.forEach(m => {
-        // Date separator
         const msgDate = new Date(m.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
         if (msgDate !== lastDate) {
-          html += `<div style="align-self: center; margin: 8px 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); padding: 4px 12px; border-radius: 12px; font-size: 0.72rem;">${msgDate}</div>`;
+          html += '<div style="align-self:center; margin:8px 0; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); color:var(--text-muted); padding:4px 12px; border-radius:12px; font-size:0.72rem;">' + msgDate + '</div>';
           lastDate = msgDate;
         }
-        
         const isSelf = m.sender_id === currentUserId;
         const bubbleClass = isSelf ? 'wa-bubble-right' : 'wa-bubble-left';
         const time = new Date(m.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-        
-        // Quoted message rendering
         let quoteHtml = '';
         if (m.reply_to_id) {
           const quotedMsg = allWaMessages.find(x => x.id === m.reply_to_id);
           if (quotedMsg) {
-            quoteHtml = `
-              <div class="wa-quoted-message" onclick="scrollToMessage('${quotedMsg.id}')">
-                <div style="font-weight:700; color:#fbbf24; font-size:0.75rem; margin-bottom:2px;">${quotedMsg.sender_name}</div>
-                <div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${quotedMsg.message}</div>
-              </div>
-            `;
+            quoteHtml = '<div class="wa-quoted-message" onclick="scrollToMessage(\'' + quotedMsg.id + '\')"><div style="font-weight:700; color:#c084fc; font-size:0.75rem; margin-bottom:2px;">' + (quotedMsg.sender_name || 'Staff') + '</div><div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">' + quotedMsg.message + '</div></div>';
           }
         }
-        
-        // Attachment rendering
         let attachmentHtml = '';
         if (m.file_attachment && typeof m.file_attachment === 'object') {
           const name = m.file_attachment.name || 'File';
           const url = m.file_attachment.url;
-          attachmentHtml = `
-            <a href="${url}" target="_blank" style="display:flex; align-items:center; gap:8px; padding:8px; border-radius:6px; background:rgba(255,255,255,0.08); text-decoration:none; color:#fbbf24; font-size:0.85rem; margin-bottom:8px;">
-              <i class="fa-solid fa-file-arrow-down"></i>
-              <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${name}</span>
-            </a>
-          `;
+          attachmentHtml = '<a href="' + url + '" target="_blank" style="display:flex; align-items:center; gap:8px; padding:8px; border-radius:6px; background:rgba(255,255,255,0.08); text-decoration:none; color:#c084fc; font-size:0.85rem; margin-bottom:8px;"><i class="fa-solid fa-file-arrow-down"></i><span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">' + name + '</span></a>';
         }
-        
-        // Reactions rendering
         let reactionsHtml = '';
         let reactionsList = [];
-        try {
-          reactionsList = typeof m.reactions === 'string' ? JSON.parse(m.reactions) : (m.reactions || []);
-        } catch(e) {
-          reactionsList = m.reactions || [];
-        }
+        try { reactionsList = typeof m.reactions === 'string' ? JSON.parse(m.reactions) : (m.reactions || []); } catch(e){ reactionsList = m.reactions || []; }
         if (reactionsList.length > 0) {
-          // Count occurrences
           const counts = {};
           reactionsList.forEach(r => { counts[r.emoji] = (counts[r.emoji] || 0) + 1; });
           reactionsHtml = '<div class="wa-reactions-container">';
           for (const [emoji, count] of Object.entries(counts)) {
-            reactionsHtml += `
-              <div class="wa-reaction-pill" title="Reacted by users">
-                <span>${emoji}</span><span>${count}</span>
-              </div>
-            `;
+            reactionsHtml += '<div class="wa-reaction-pill" title="Reacted by users"><span>' + emoji + '</span><span>' + count + '</span></div>';
           }
           reactionsHtml += '</div>';
         }
-        
-        // Mark as read list
         let readList = [];
-        try {
-          readList = typeof m.read_by === 'string' ? JSON.parse(m.read_by) : (m.read_by || []);
-        } catch(e) {
-          readList = m.read_by || [];
-        }
+        try { readList = typeof m.read_by === 'string' ? JSON.parse(m.read_by) : (m.read_by || []); } catch(e) { readList = []; }
         if (!Array.isArray(readList)) readList = [];
-        if (!isSelf && !readList.includes(currentUser.full_name)) {
-          unreadMsgs.push(m);
-        }
-        
+        const currentName = (currentUser && currentUser.full_name) || 'Counsellor';
+        if (!isSelf && !readList.includes(currentName)) unreadMsgs.push(m);
         const isSeen = readList.length > 0;
         const tickColor = isSeen ? '#53bdeb' : '#8696a0';
-        const ticksHtml = isSelf ? `
-          <span class="wa-bubble-seen-status" style="display: inline-flex; align-items: center; margin-left: 5px;">
-            <i class="fa-solid fa-check-double" style="color: ${tickColor}; font-size: 0.8rem;"></i>
-          </span>
-        ` : '';
-        
-        const senderTagColor = isSelf ? '#fde68a' : '#a78bfa';
-        const senderNameHtml = `<span style="font-size: 0.72rem; color: ${senderTagColor}; font-weight: 600; opacity: 0.85;">~ ${m.sender_name} (${m.sender_role})</span>`;
-        
-        const bubbleStyle = m.deleted_for_everyone ? 'font-style: italic; opacity: 0.6;' : '';
-        
-        // Reactions bar overlay
-        const reactionsBarHtml = m.deleted_for_everyone ? '' : `
-          <div class="wa-reaction-bar">
-            <span onclick="reactToMessage('${m.id}', '👍')">👍</span>
-            <span onclick="reactToMessage('${m.id}', '❤️')">❤️</span>
-            <span onclick="reactToMessage('${m.id}', '😂')">😂</span>
-            <span onclick="reactToMessage('${m.id}', '😮')">😮</span>
-            <span onclick="reactToMessage('${m.id}', '😢')">😢</span>
-            <span onclick="reactToMessage('${m.id}', '🎉')">🎉</span>
-          </div>
-        `;
-        
-        const editLabel = m.edited && !m.deleted_for_everyone ? '<span style="font-size:0.6rem; opacity:0.6; margin-right:4px;">edited</span>' : '';
-        
-        html += `
-          <div class="wa-bubble ${bubbleClass}" id="waMsg_${m.id}" onclick="showWaContextMenu(event, '${m.id}')" oncontextmenu="showWaContextMenu(event, '${m.id}')">
-            ${reactionsBarHtml}
-            ${quoteHtml}
-            ${attachmentHtml}
-            <span class="wa-bubble-text" style="${bubbleStyle}">${m.message}</span>
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 4px; min-width: 120px;">
-              ${senderNameHtml}
-              <div style="display: flex; align-items: center; gap: 4px;">
-                ${editLabel}
-                <span class="wa-bubble-time" style="margin-top: 0; font-size: 0.68rem;">${time}</span>
-                ${ticksHtml}
-              </div>
-            </div>
-            ${reactionsHtml}
-          </div>
-        `;
+        const ticksHtml = isSelf ? '<span class="wa-bubble-seen-status" style="display:inline-flex;align-items:center;margin-left:5px;"><i class="fa-solid fa-check-double" style="color:' + tickColor + ';font-size:0.8rem;"></i></span>' : '';
+        const senderTagColor = isSelf ? '#fde68a' : '#c084fc';
+        const senderNameHtml = '<span style="font-size:0.72rem;color:' + senderTagColor + ';font-weight:600;opacity:0.85;">~ ' + (m.sender_name || 'User') + ' (' + (m.sender_role || 'Staff') + ')</span>';
+        const bubbleStyle = m.deleted_for_everyone ? 'font-style:italic;opacity:0.6;' : '';
+        const editLabel = m.edited && !m.deleted_for_everyone ? '<span style="font-size:0.6rem;opacity:0.6;margin-right:4px;">edited</span>' : '';
+        html += '<div class="wa-bubble ' + bubbleClass + '" id="waMsg_' + m.id + '" onclick="showWaContextMenu(event,\'' + m.id + '\')" oncontextmenu="showWaContextMenu(event,\'' + m.id + '\')">' + quoteHtml + attachmentHtml + '<span class="wa-bubble-text" style="' + bubbleStyle + '">' + m.message + '</span><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.04);padding-top:4px;min-width:120px;">' + senderNameHtml + '<div style="display:flex;align-items:center;gap:4px;">' + editLabel + '<span class="wa-bubble-time" style="margin-top:0;font-size:0.68rem;">' + time + '</span>' + ticksHtml + '</div></div>' + reactionsHtml + '</div>';
       });
-      
+      const wasScrolledUp = isUserScrolledUp(container);
+      const prevScrollTop = container.scrollTop;
       container.innerHTML = html;
-      container.scrollTop = container.scrollHeight;
-      
-      if (unreadMsgs.length > 0) {
-        markMessagesAsRead(unreadMsgs);
-      }
-    }
-
-    async function markMessagesAsRead(unreadMessages) {
-      if (unreadMessages.length === 0) return;
-      for (const msg of unreadMessages) {
-        let readList = [];
-        try {
-          readList = typeof msg.read_by === 'string' ? JSON.parse(msg.read_by) : (msg.read_by || []);
-        } catch(e) {
-          readList = msg.read_by || [];
-        }
-        if (!Array.isArray(readList)) readList = [];
-        if (!readList.includes(currentUser.full_name)) {
-          readList.push(currentUser.full_name);
-          sb.from('notifications')
-            .update({ read_by: readList })
-            .eq('id', msg.id)
-            .then(({ error }) => {
-              if (error) console.warn("Failed to mark message read:", error);
-            });
-        }
+      if (wasScrolledUp) {
+        container.scrollTop = prevScrollTop;
+      } else {
+        scrollWaToBottom(false);
       }
     }
 
     function switchWaChat(groupId) {
+      const container = document.querySelector('.wa-container');
+      const emptyState = document.getElementById('waEmptyStateContainer');
+      const header = document.getElementById('waChatHeader');
+      const messagesArea = document.getElementById('waMessagesContainer');
+      const inputArea = document.getElementById('waInputArea');
+      const replyBar = document.getElementById('waReplyPreviewBar');
+
+      if (!groupId) {
+        activeWaChatGroup = null;
+        document.querySelectorAll('.wa-chat-item').forEach(item => item.classList.remove('active'));
+        if (emptyState) emptyState.style.display = 'flex';
+        if (header) header.style.display = 'none';
+        if (messagesArea) messagesArea.style.display = 'none';
+        if (inputArea) inputArea.style.display = 'none';
+        if (replyBar) replyBar.style.display = 'none';
+        if (container) container.classList.remove('wa-chat-active');
+        return;
+      }
+
       if (groupId === AI_COPILOT_GROUP_ID && !userGroups.some(g => g.id === AI_COPILOT_GROUP_ID)) {
         userGroups.push(aiGroupObj);
       }
       activeWaChatGroup = groupId;
-      
       document.querySelectorAll('.wa-chat-item').forEach(item => item.classList.remove('active'));
-      const activeItem = document.getElementById('waChat_' + groupId);
-      if (activeItem) activeItem.classList.add('active');
-      
+      const el = document.getElementById('waChat_' + groupId);
+      if (el) el.classList.add('active');
+
       const currentGroup = userGroups.find(g => g.id === groupId);
       if (!currentGroup) return;
-      
+
+      if (emptyState) emptyState.style.display = 'none';
+      if (header) header.style.display = 'flex';
+      if (messagesArea) messagesArea.style.display = 'flex';
+      if (inputArea) inputArea.style.display = 'flex';
+
       const title = document.getElementById('waActiveChatName');
       const status = document.getElementById('waActiveChatStatus');
       const avatar = document.getElementById('waActiveAvatar');
-      
-      title.textContent = currentGroup.name;
-      status.textContent = currentGroup.description || 'No description available';
-      
-      if (currentGroup.is_system_group) {
-        if (currentGroup.system_group_key === 'ADMIN_TEAM_LEADER') {
-          avatar.innerHTML = '<i class="fa-solid fa-crown"></i>';
-          avatar.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
-          avatar.style.color = '#fff';
-          avatar.style.boxShadow = 'none';
-        } else if (currentGroup.system_group_key === 'STUDENTS_BROADCAST') {
-          avatar.innerHTML = '<i class="fa-solid fa-user-graduate"></i>';
-          avatar.style.background = 'linear-gradient(135deg, #a855f7, #7e22ce)';
-          avatar.style.color = '#fff';
-          avatar.style.boxShadow = 'none';
-        } else if (currentGroup.system_group_key === 'COUNSELLORS_HUB') {
-          avatar.innerHTML = '<i class="fa-solid fa-users"></i>';
-          avatar.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
-          avatar.style.color = '#fff';
-          avatar.style.boxShadow = 'none';
-        } else if (currentGroup.system_group_key === 'AI_COPILOT_HUB' || currentGroup.id === AI_COPILOT_GROUP_ID) {
-          avatar.innerHTML = '<i class="fa-solid fa-bolt"></i>';
-          avatar.style.background = 'linear-gradient(135deg, #c9932a, #f7d377)';
-          avatar.style.color = '#0c0a08';
-          avatar.style.boxShadow = '0 0 16px rgba(247, 211, 119, 0.5)';
-          status.innerHTML = '<span style="color:#10b981; font-weight:700;">● Online 24/7</span> • EduVision AI Co-Pilot Active';
+      if (title) title.textContent = currentGroup.name;
+      if (status) status.textContent = currentGroup.description || 'Channel Active';
+      if (avatar) {
+        if (currentGroup.is_system_group) {
+          if (currentGroup.system_group_key === 'ADMIN_TEAM_LEADER') {
+            avatar.innerHTML = '<i class="fa-solid fa-crown"></i>';
+            avatar.style.background = 'linear-gradient(135deg,#f59e0b,#d97706)';
+          } else if (currentGroup.system_group_key === 'STUDENTS_BROADCAST') {
+            avatar.innerHTML = '<i class="fa-solid fa-user-graduate"></i>';
+            avatar.style.background = 'linear-gradient(135deg,#a855f7,#7e22ce)';
+          } else if (currentGroup.system_group_key === 'AI_COPILOT_HUB' || currentGroup.id === AI_COPILOT_GROUP_ID) {
+            avatar.innerHTML = '<i class="fa-solid fa-bolt"></i>';
+            avatar.style.background = 'linear-gradient(135deg,#c9932a,#f7d377)';
+            avatar.style.color = '#0c0a08';
+            avatar.style.boxShadow = '0 0 16px rgba(247, 211, 119, 0.5)';
+            if (status) status.innerHTML = '<span style="color:#10b981; font-weight:700;">● Online 24/7</span> • EduVision AI Co-Pilot Active';
+          } else {
+            avatar.innerHTML = '<i class="fa-solid fa-users"></i>';
+            avatar.style.background = 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
+          }
+        } else {
+          avatar.innerHTML = '<span>' + (currentGroup.name || 'C').charAt(0).toUpperCase() + '</span>';
+          avatar.style.background = 'linear-gradient(135deg,#10b981,#047857)';
         }
-      } else {
-        const letter = (currentGroup.name || 'C').charAt(0).toUpperCase();
-        avatar.innerHTML = `<span>${letter}</span>`;
-        avatar.style.background = 'linear-gradient(135deg, #10b981, #047857)';
-        avatar.style.color = '#fff';
-        avatar.style.boxShadow = 'none';
       }
-      
-      const container = document.querySelector('.wa-container');
-      if (container) {
-        container.classList.add('wa-chat-active');
-      }
-
-      const chipsBar = document.getElementById('waAiChipsBar');
-      if (chipsBar) {
-        chipsBar.style.display = (groupId === AI_COPILOT_GROUP_ID) ? 'flex' : 'none';
-      }
-      const geminiBadgeContainer = document.getElementById('waAiGeminiBadgeContainer');
-      if (geminiBadgeContainer) {
-        geminiBadgeContainer.style.display = (groupId === AI_COPILOT_GROUP_ID) ? 'flex' : 'none';
-      }
-      
-      closeWaGroupInfo();
+      if (container) container.classList.add('wa-chat-active');
+      cancelReply();
+      editingMessageId = null;
       renderWaMessages();
+      // Force scroll to bottom on open to show latest messages
+      scrollWaToBottom(true);
+      setTimeout(() => scrollWaToBottom(true), 40);
+      setTimeout(() => scrollWaToBottom(true), 120);
+      setTimeout(() => scrollWaToBottom(true), 250);
     }
+    window.switchWaChat = switchWaChat;
 
     async function sendWaChatMessage(event) {
-      event.preventDefault();
+      if (event && event.preventDefault) event.preventDefault();
       
       if (activeWaChatGroup === AI_COPILOT_GROUP_ID) {
         const input = document.getElementById('waMessageInput');
@@ -10890,45 +10962,44 @@ CRITICAL MANDATES:
         playNotificationSound(true);
         input.value = '';
 
-        const currentUserId = (typeof currentUser !== 'undefined' && currentUser) ? (currentUser.counsellor_id || currentUser.employee_id) : 'user';
+        const currentUserId = (typeof currentUser !== 'undefined' && currentUser) ? (currentUser.counsellor_id || currentUser.employee_id) : 'counsellor';
         const currentUserName = (typeof currentUser !== 'undefined' && currentUser && currentUser.full_name) ? currentUser.full_name : 'Counsellor';
+        const currentUserRole = (typeof currentUser !== 'undefined' && currentUser && currentUser.role) ? currentUser.role : 'Counsellor';
 
+        let aiMsgs = (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) ? window.EduVisionRagAi.getAiChatHistory() : [];
         const userMsg = {
           id: 'user_' + Date.now(),
           sender_id: currentUserId,
-          sender_name: `${currentUserName} (${(currentUser && currentUser.role) || 'Counsellor'})`,
+          sender_name: `${currentUserName} (${currentUserRole})`,
           sender_role: 'user',
           created_at: new Date().toISOString(),
           message: text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
         };
-        aiCopilotMessages.push(userMsg);
+        aiMsgs.push(userMsg);
+        if (window.EduVisionRagAi && window.EduVisionRagAi.saveAiChatHistory) {
+          window.EduVisionRagAi.saveAiChatHistory(aiMsgs);
+        }
         renderWaMessages();
 
-        // Show typing indicator with RAG AI sparkle
+        // Show Google Gemini RGB Golden Thinking Box
         const container = document.getElementById('waMessagesContainer');
-        if (container) {
-          const typingDiv = document.createElement('div');
-          typingDiv.id = 'aiTypingIndicator';
-          typingDiv.style.cssText = 'align-self: flex-start; margin: 8px 12px; padding: 10px 16px; background: rgba(66, 133, 244, 0.12); border: 1px solid rgba(155, 114, 207, 0.4); border-radius: 16px; color: #c084fc; font-size: 0.85rem; font-style: italic; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);';
-          typingDiv.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> <span>RAG AI Desk processing…</span>';
-          container.appendChild(typingDiv);
-          container.scrollTop = container.scrollHeight;
+        let thinkingBox = null;
+        if (window.EduVisionRagAi && window.EduVisionRagAi.showAiThinkingBox) {
+          thinkingBox = window.EduVisionRagAi.showAiThinkingBox(container);
         }
 
         (async () => {
           let aiResponseHtml = null;
-          if (isStaffOperationalLeadQuery(text)) {
-            aiResponseHtml = generateStaffAiResponse(text);
+          if (window.EduVisionRagAi && window.EduVisionRagAi.queryRagAi) {
+            aiResponseHtml = await window.EduVisionRagAi.queryRagAi(text);
           }
-          if (!aiResponseHtml) {
-            aiResponseHtml = await callGeminiStaffApiLive(text);
-          }
-          if (!aiResponseHtml) {
+          if (!aiResponseHtml && typeof generateStaffAiResponse === 'function') {
             aiResponseHtml = generateStaffAiResponse(text);
           }
 
-          const typingEl = document.getElementById('aiTypingIndicator');
-          if (typingEl) typingEl.remove();
+          if (thinkingBox && typeof thinkingBox._cleanup === 'function') {
+            thinkingBox._cleanup();
+          }
 
           const aiReply = {
             id: 'ai_' + Date.now(),
@@ -10936,15 +11007,26 @@ CRITICAL MANDATES:
             sender_name: 'EduVision RAG AI Desk ✨',
             sender_role: 'ai',
             created_at: new Date().toISOString(),
-            message: aiResponseHtml
+            message: aiResponseHtml || 'I am ready to help with university admissions, fees, and counselling guidance. Please ask your question.'
           };
-          aiCopilotMessages.push(aiReply);
-          try {
-            localStorage.setItem('eduvision_ai_copilot_chat', JSON.stringify(aiCopilotMessages.slice(-50)));
-          } catch(e){}
-
+          
+          aiMsgs = (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) ? window.EduVisionRagAi.getAiChatHistory() : aiMsgs;
+          aiMsgs.push(aiReply);
+          if (window.EduVisionRagAi && window.EduVisionRagAi.saveAiChatHistory) {
+            window.EduVisionRagAi.saveAiChatHistory(aiMsgs);
+          }
           playNotificationSound(false);
           renderWaMessages();
+          const containerAfter = document.getElementById('waMessagesContainer');
+          if (containerAfter) {
+            const allAiCards = containerAfter.querySelectorAll('.gemini-rgb-card, .ai-peer-msg-card');
+            const lastAiCard = allAiCards[allAiCards.length - 1];
+            if (lastAiCard) {
+              lastAiCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              scrollWaToBottom(true);
+            }
+          }
           updateWaSidebarPreviews();
         })();
         return;

@@ -5209,20 +5209,32 @@ function setupModuleNavigation() {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const mod = item.getAttribute('data-module');
-      switchAdminModule(mod);
+      if (mod) switchAdminModule(mod);
     });
   });
 
-  // Automatically activate module from URL hash if specified
+  // On page load or fresh reload, always prioritize Executive Overview ('overview')
   const initialHash = (window.location.hash || '').replace('#', '').trim();
-  if (initialHash) {
+  const validModules = ['overview', 'staff', 'counsellorcrm', 'partners', 'students', 'leads', 'recordings', 'webforms', 'universities', 'chat', 'backup', 'security', 'permissions'];
+  
+  if (initialHash && validModules.includes(initialHash) && initialHash !== 'attendance') {
     setTimeout(() => {
       if (typeof switchAdminModule === 'function') switchAdminModule(initialHash);
-    }, 100);
+    }, 50);
+  } else {
+    // Default to Executive Overview
+    setTimeout(() => {
+      if (typeof switchAdminModule === 'function') switchAdminModule('overview');
+    }, 50);
   }
 }
 
 window.switchAdminModule = function(modId) {
+  if (modId) {
+    try {
+      history.replaceState(null, '', '#' + modId);
+    } catch(e) {}
+  }
   const isCTO = isRaghavCto();
   const isCEO = isIshikaCeo();
   const isLeadership = isCTO || isCEO || (currentAdmin && ['ADMIN', 'SUPER_ADMIN', 'CEO'].includes((currentAdmin.role || '').toUpperCase()));
@@ -5788,7 +5800,16 @@ function renderStaffTable(staffList) {
   if (tbody) {
     tbody.innerHTML = staffList.map(s => {
       const isTL = s.staffType === 'Team Leader';
-      const roleBadge = isTL ? 'badge-tl' : (s.role === 'Senior Counsellor' ? 'badge-senior' : 'badge-counsellor');
+      let roleBadge = 'badge-counsellor';
+      const rLower = ((s.role || '') + ' ' + (s.designation || '')).toLowerCase();
+      if (s.staffType === 'Admin' || rLower.includes('admin') || rLower.includes('ceo') || rLower.includes('cto')) roleBadge = 'badge-admin';
+      else if (s.staffType === 'Team Leader' || rLower.includes('leader')) roleBadge = 'badge-tl';
+      else if (rLower.includes('ca') || rLower.includes('account') || rLower.includes('finance')) roleBadge = 'badge-ca';
+      else if (rLower.includes('hr') || rLower.includes('operation')) roleBadge = 'badge-hr';
+      else if (rLower.includes('doc') || rLower.includes('verifier')) roleBadge = 'badge-doc';
+      else if (rLower.includes('market') || rLower.includes('seo')) roleBadge = 'badge-mkt';
+      else if (rLower.includes('quality') || rLower.includes('auditor')) roleBadge = 'badge-qa';
+      else if (s.role === 'Senior Counsellor') roleBadge = 'badge-senior';
       const statusText = s.status || 'Active';
       const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
 
@@ -5805,6 +5826,7 @@ function renderStaffTable(staffList) {
           <td><span class="badge-status ${statusClass}">${statusText}</span></td>
           <td>
             <div style="display:flex; gap:6px; justify-content:center;">
+              ${s.drive_url ? `<a href="${s.drive_url}" target="_blank" class="btn-action-icon" title="Open Google Drive Document Vault" style="color:#34d399; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fa-brands fa-google-drive"></i></a>` : ''}
               <button class="btn-action-icon" title="Edit Employee Account" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
                 <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
               </button>
@@ -8446,7 +8468,13 @@ window.autoGenerateStaffEmpId = async function() {
   const type = typeSelect ? typeSelect.value : 'Counsellor';
   let prefix = 'EMP26';
   if (type === 'Team Leader') prefix = 'TL26';
-  if (type === 'Associate Partner') prefix = 'PRT26';
+  else if (type === 'Admin') prefix = 'AD26';
+  else if (type === 'CA_Accounts') prefix = 'CA26';
+  else if (type === 'HR_Operations') prefix = 'HR26';
+  else if (type === 'Doc_Verifier') prefix = 'DOC26';
+  else if (type === 'Marketing_Head') prefix = 'MKT26';
+  else if (type === 'Quality_Auditor') prefix = 'QA26';
+  else if (type === 'Associate Partner') prefix = 'PRT26';
 
   let maxNum = 0;
   if (typeof allStaff !== 'undefined' && Array.isArray(allStaff)) {
@@ -8584,15 +8612,31 @@ window.handleStaffNameInput = function() {
 };
 
 window.autoGenerateStaffPassword = function() {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const nums = "0123456789";
-  const syms = "!@#$%^&*";
-  
-  let pwd = "EduV";
-  for(let i=0; i<4; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-  for(let i=0; i<3; i++) pwd += nums.charAt(Math.floor(Math.random() * nums.length));
-  pwd += syms.charAt(Math.floor(Math.random() * syms.length));
-  pwd += "#2026";
+  const pwd = 'Pass123';
+  // Pre-populate KYC, Bank & Drive info
+  const aadhaarInput = document.getElementById('staff_aadhaar');
+  if (aadhaarInput) aadhaarInput.value = member.aadhaar_number || member.aadhaar || '';
+
+  const panInput = document.getElementById('staff_pan');
+  if (panInput) panInput.value = member.pan_number || member.pan || '';
+
+  const emgInput = document.getElementById('staff_emergency');
+  if (emgInput) emgInput.value = member.emergency_contact || member.emergency_phone || '';
+
+  const joinInput = document.getElementById('staff_joining_date');
+  if (joinInput) joinInput.value = (member.joining_date || member.created_at || '').split('T')[0] || '';
+
+  const bankInput = document.getElementById('staff_bank_account');
+  if (bankInput) bankInput.value = member.bank_account_no || member.bank_account || '';
+
+  const ifscInput = document.getElementById('staff_ifsc');
+  if (ifscInput) ifscInput.value = member.ifsc_code || member.ifsc || '';
+
+  const addrInput = document.getElementById('staff_address');
+  if (addrInput) addrInput.value = member.address || member.residential_address || '';
+
+  const driveInput = document.getElementById('staff_drive_url');
+  if (driveInput) driveInput.value = member.drive_url || member.document_vault_url || member.documents_url || '';
 
   const pwdInput = document.getElementById('staff_password');
   if (pwdInput) {
@@ -8626,6 +8670,14 @@ window.autoGenerateStaffPassword = function() {
 
 window.openStaffModal = function() {
   const form = document.getElementById('createStaffForm');
+  ['staff_aadhaar', 'staff_pan', 'staff_emergency', 'staff_joining_date', 'staff_bank_account', 'staff_ifsc', 'staff_address', 'staff_drive_url'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const c = document.getElementById('staffExtraFieldsContainer');
+  if (c) c.style.display = 'none';
+  const icon = document.getElementById('staffExtraChevron');
+  if (icon) icon.style.transform = 'rotate(0deg)';
   if (form) form.reset();
   const editIdInput = document.getElementById('staff_edit_id');
   if (editIdInput) editIdInput.value = '';
@@ -8644,8 +8696,9 @@ window.openStaffModal = function() {
   const pwdInput = document.getElementById('staff_password');
   if (pwdInput) {
     pwdInput.required = true;
-    pwdInput.type = 'password';
-    pwdInput.placeholder = '••••••••';
+    pwdInput.type = 'text';
+    pwdInput.value = 'Pass123';
+    pwdInput.placeholder = 'Pass123';
     const eyeBtn = pwdInput.nextElementSibling;
     if (eyeBtn && eyeBtn.querySelector('i')) {
       eyeBtn.querySelector('i').className = 'fa-solid fa-eye';
@@ -8790,6 +8843,48 @@ window.handleStaffTypeChange = function() {
       <option value="Senior Team Leader">Senior Team Leader</option>
       <option value="Regional Supervisor">Regional Supervisor</option>
     `;
+  } else if (type === 'Admin') {
+    roleSelect.innerHTML = `
+      <option value="Admin">Admin</option>
+      <option value="Executive Admin">Executive Admin</option>
+      <option value="System Administrator">System Administrator</option>
+      <option value="CEO">CEO</option>
+      <option value="CTO">CTO</option>
+      <option value="Operations Director">Operations Director</option>
+    `;
+  } else if (type === 'CA_Accounts') {
+    roleSelect.innerHTML = `
+      <option value="Chartered Accountant">Chartered Accountant</option>
+      <option value="Senior Accounts Manager">Senior Accounts Manager</option>
+      <option value="Finance Officer">Finance Officer</option>
+      <option value="Billing Specialist">Billing Specialist</option>
+    `;
+  } else if (type === 'HR_Operations') {
+    roleSelect.innerHTML = `
+      <option value="HR Manager">HR Manager</option>
+      <option value="Operations Lead">Operations Lead</option>
+      <option value="People Operations Officer">People Operations Officer</option>
+      <option value="Talent Acquisition Specialist">Talent Acquisition Specialist</option>
+    `;
+  } else if (type === 'Doc_Verifier') {
+    roleSelect.innerHTML = `
+      <option value="Document Verification Officer">Document Verification Officer</option>
+      <option value="Senior Compliance Officer">Senior Compliance Officer</option>
+      <option value="Eligibility Verification Specialist">Eligibility Verification Specialist</option>
+    `;
+  } else if (type === 'Marketing_Head') {
+    roleSelect.innerHTML = `
+      <option value="Digital Marketing Head">Digital Marketing Head</option>
+      <option value="Campaign Manager">Campaign Manager</option>
+      <option value="Lead Generation Specialist">Lead Generation Specialist</option>
+      <option value="SEO & Growth Lead">SEO & Growth Lead</option>
+    `;
+  } else if (type === 'Quality_Auditor') {
+    roleSelect.innerHTML = `
+      <option value="Quality & Call Auditor">Quality & Call Auditor</option>
+      <option value="Quality Assurance Lead">Quality Assurance Lead</option>
+      <option value="Service Excellence Officer">Service Excellence Officer</option>
+    `;
   } else if (type === 'Associate Partner') {
     roleSelect.innerHTML = `
       <option value="Associate Partner">Associate Partner</option>
@@ -8830,6 +8925,14 @@ window.submitCreateStaff = async function(event) {
   const branch = document.getElementById('staff_branch').value.trim();
   const role = document.getElementById('staff_role').value;
   const status = document.getElementById('staff_status')?.value || 'Active';
+  const aadhaar = document.getElementById('staff_aadhaar')?.value.trim() || '';
+  const pan = document.getElementById('staff_pan')?.value.trim() || '';
+  const emergencyPhone = document.getElementById('staff_emergency')?.value.trim() || '';
+  const joiningDate = document.getElementById('staff_joining_date')?.value || new Date().toISOString().split('T')[0];
+  const bankAccount = document.getElementById('staff_bank_account')?.value.trim() || '';
+  const ifsc = document.getElementById('staff_ifsc')?.value.trim() || '';
+  const address = document.getElementById('staff_address')?.value.trim() || branch || 'Head Office';
+  const driveUrl = document.getElementById('staff_drive_url')?.value.trim() || '';
 
   try {
     if (editId) {
@@ -8845,6 +8948,14 @@ window.submitCreateStaff = async function(event) {
         role: role,
         designation: role,
         status: status,
+        address: address,
+        aadhaar_number: aadhaar,
+        pan_number: pan,
+        emergency_contact: emergencyPhone,
+        joining_date: joiningDate,
+        bank_account_no: bankAccount,
+        ifsc_code: ifsc,
+        drive_url: driveUrl,
         updated_at: new Date().toISOString()
       };
       if (password) {
@@ -8964,11 +9075,21 @@ window.submitCreateStaff = async function(event) {
         full_name: name,
         email: email,
         phone: phone,
-        password: password,
+        password: password || 'Pass123',
+        is_temp_password: true,
+        must_change_password: true,
         role: role || 'Admin',
         designation: role || 'Administrator',
         branch: branch || 'Head Office',
         status: status || 'Active',
+        address: address,
+        aadhaar_number: aadhaar,
+        pan_number: pan,
+        emergency_contact: emergencyPhone,
+        joining_date: joiningDate,
+        bank_account_no: bankAccount,
+        ifsc_code: ifsc,
+        drive_url: driveUrl,
         created_at: new Date().toISOString()
       };
 
@@ -9000,11 +9121,21 @@ window.submitCreateStaff = async function(event) {
         full_name: name,
         phone: phone,
         email: email,
-        password: password,
+        password: password || 'Pass123',
+        is_temp_password: true,
+        must_change_password: true,
         branch: branch || 'Head Office',
         role: role || 'Team Leader',
         designation: role || 'Team Leader',
         status: status || 'Active',
+        address: address,
+        aadhaar_number: aadhaar,
+        pan_number: pan,
+        emergency_contact: emergencyPhone,
+        joining_date: joiningDate,
+        bank_account_no: bankAccount,
+        ifsc_code: ifsc,
+        drive_url: driveUrl,
         created_at: new Date().toISOString()
       };
 
@@ -9058,11 +9189,18 @@ window.submitCreateStaff = async function(event) {
         contact_person: name,
         phone: phone,
         email: email,
-        password: password,
+        password: password || 'Pass123',
+        is_temp_password: true,
+        must_change_password: true,
         location: branch || 'Head Office',
         tier: role || 'Gold Agency',
         commission_rate: '10%',
         status: 'Active',
+        address: address,
+        pan_number: pan,
+        bank_account_no: bankAccount,
+        ifsc_code: ifsc,
+        drive_url: driveUrl,
         mapped_universities: [],
         employees: []
       };
@@ -9090,19 +9228,29 @@ window.submitCreateStaff = async function(event) {
       await loadAssociatePartners();
 
     } else {
-      // Counsellor
+      // Counsellor and Enterprise Staff Roles (CA, HR, Doc Verifier, Marketing, Quality Auditor)
+      const roleName = ['CA_Accounts', 'HR_Operations', 'Doc_Verifier', 'Marketing_Head', 'Quality_Auditor'].includes(staffType) ? staffType : (role || 'Counsellor');
       const counsellorPayload = {
         counsellor_id: empId,
         employee_id: empId,
         full_name: name,
         phone: phone,
         email: email,
-        password: password,
+        password: password || 'Pass123',
+        is_temp_password: true,
+        must_change_password: true,
         branch: branch || 'Head Office',
-        role: role || 'Counsellor',
-        designation: role || 'Counsellor',
+        role: roleName,
+        designation: role || roleName,
         status: status || 'Active',
-        address: branch || 'Head Office',
+        address: address,
+        aadhaar_number: aadhaar,
+        pan_number: pan,
+        emergency_contact: emergencyPhone,
+        joining_date: joiningDate,
+        bank_account_no: bankAccount,
+        ifsc_code: ifsc,
+        drive_url: driveUrl,
         created_at: new Date().toISOString()
       };
 
@@ -9120,7 +9268,7 @@ window.submitCreateStaff = async function(event) {
             email: email,
             phone: phone,
             password: password,
-            role: 'counsellor',
+            role: roleName.toLowerCase(),
             created_at: new Date().toISOString()
           })
         });
@@ -10458,9 +10606,9 @@ const AI_COPILOT_GROUP_ID = '00000000-0000-0000-0000-0000000000aa';
 const RAG_AI_CONFIG = {
   apiKey: (typeof atob !== 'undefined' ? atob('QVEuQWI4Uk42Sy1waExaZ19EWnh0MWpmX3lhaGNyNUxxd0tUMENfczVVZjk0UXhjeFloNlE=') : ''),
   models: [
-    'gemini-3.5-flash-lite',
-    'gemini-flash-lite-latest',
-    'gemini-3.5-flash'
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+    'gemini-2.0-flash-lite'
   ]
 };
 try {
@@ -10547,6 +10695,26 @@ function isStaffOperationalLeadQuery(rawQuery) {
   );
 }
 
+function isDirectFastQuery(rawQuery) {
+  const q = (rawQuery || '').toLowerCase().trim();
+  const isGreeting = (
+    /^(h+[i|e|y]+|h+e+l+[ow]+|h+l+[ow]+|h+a+l+o+|hola|yo+|hiya|howdy|sup|wassup|what['s\s]*up|greetings|welcome)\b/i.test(q) ||
+    /^(namaste|namaskar|pranam|pranaam|salaam|salam|ram\s*ram|radhe\s*radhe|jai\s*shree\s*ram|sat\s*sri\s*ak[a]*l|sasrikal|adaab)\b/i.test(q) ||
+    /^(good\s*(morning|afternoon|evening|day)|gm|ge|ga)\b/i.test(q) ||
+    /^(hi|hello|hey|hlo|helo|halo|hii|hiii|heyy)\b/i.test(q)
+  );
+  const isIdentity = /(who\s*am\s*i|what('?s|\s+is|\s+are)\s+(my|my\s+exact)\s+name|mera\s*naam|mera\s*name|who\s*i\s*am|my\s*role|mai\s*kaun|me\s*kaun|i\s*am\s*\?|wht\s*is\s*my\s*name|naam\s*kya\s*hai)/i.test(q);
+  const isWellBeing = /(kya\s*h[a]*l+[a-z]*|k[a|e]ise\s*ho|how\s*are\s*you|sab\s*b[a]?dhi?ya|kya\s*chal\s*raha|aur\s*bhai|aur\s*batao|kaisa\s*hai|kese\s*ho|wassup|whats\s*up)/i.test(q);
+  const isAck = /^(ok|okay|theek\s*hai|thik\s*hai|accha|achha|acha|haan|yes|sahi\s*hai|done|got\s*it|samajh\s*gaya|understood|alright|cool|noted)[!.,?\s]*$/i.test(q);
+  return isGreeting || isIdentity || isWellBeing || isAck || isStaffOperationalLeadQuery(rawQuery);
+}
+
+function getAiChatStorageKey() {
+  const activeUser = (typeof currentAdmin !== 'undefined' && currentAdmin) ? currentAdmin : ((typeof currentUser !== 'undefined' && currentUser) ? currentUser : {});
+  const userId = activeUser.employee_id || activeUser.admin_id || activeUser.id || activeUser.email || 'admin_master';
+  return 'eduvision_ai_copilot_chat_' + userId;
+}
+
 window.claimLeadFromAiChat = function(phone) {
   try {
     let leads = getLiveAiTeamLeads();
@@ -10559,7 +10727,7 @@ window.claimLeadFromAiChat = function(phone) {
     }
     
     let aiMsgs = [];
-    try { aiMsgs = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]'); } catch(e){}
+    try { aiMsgs = JSON.parse(localStorage.getItem(getAiChatStorageKey()) || '[]'); } catch(e){}
     aiMsgs.push({
       id: 'claim_' + Date.now(),
       sender_name: 'EduVision AI Desk 🤖',
@@ -10567,7 +10735,7 @@ window.claimLeadFromAiChat = function(phone) {
       created_at: new Date().toISOString(),
       message: `✅ <strong>Lead Claimed!</strong> Student <strong>+91 ${escapeStaffChatHtml(phone)}</strong> has been assigned to <strong>${escapeStaffChatHtml(adminName)}</strong>. Operations queue updated.`
     });
-    localStorage.setItem('eduvision_ai_copilot_chat', JSON.stringify(aiMsgs.slice(-50)));
+    localStorage.setItem(getAiChatStorageKey(), JSON.stringify(aiMsgs.slice(-50)));
     renderWaMessages();
     if (typeof showToast === 'function') showToast(`Lead +91 ${phone} claimed successfully!`, 'success');
   } catch(e){}
@@ -10623,15 +10791,15 @@ CRITICAL MANDATES:
    - If user asks in Hinglish / Hindi, answer in natural, supportive Hinglish.
 2. GREETINGS & CASUAL TALK:
    - If user says "hi", "hii", "hello", "heyy", "hlo", "namaste", "kya haal hai" or greets:
-     * English: "Hi! How can I help you today? Ask me about university admissions, fee structures, or student counselling scripts."
-     * Hinglish: "Hi! Hum aapki kaise help karein? Kisi bhi partner university ki fees, student objection ya counselling script ke liye bas poochiye!"
+     * English: "Hello ${userName}! ⚡ How can I assist you with university admissions, student leads, fee comparisons, or operations today?"
+     * Hinglish: "Namaste ${userName}! 🌟 Main aapki kya help kar sakta hoon? Aap kisi bhi partner university ki fees, admission eligibility, student objection handling ya live lead analytics ke baare me pooch sakte hain!"
 3. CRISP & DIRECT: No repetitive menus or boilerplates. Direct, high-value admissions answers. Clean HTML (<strong>, <em>, <br>, • bullets).`;
 
-  const models = (RAG_AI_CONFIG && RAG_AI_CONFIG.models) ? RAG_AI_CONFIG.models : ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.5-flash'];
+  const models = (RAG_AI_CONFIG && RAG_AI_CONFIG.models) ? RAG_AI_CONFIG.models : ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.0-flash-lite'];
   for (const model of models) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=` + encodeURIComponent(apiKey);
       const response = await fetch(url, {
         method: 'POST',
@@ -10721,10 +10889,10 @@ function generateStaffAiResponse(rawQuery) {
   const hasWellBeing = /(kya\s*h[a]*l+[a-z]*|k[a|e]ise\s*ho|how\s*are\s*you|sab\s*b[a]?dhi?ya|kya\s*chal\s*raha|aur\s*bhai|aur\s*batao|kaisa\s*hai|kese\s*ho|wassup|whats\s*up)/i.test(q);
 
   if (isGreeting && !hasWellBeing) {
-    if (isEnglish && (q.includes('good') || q.includes('how can') || q.includes('help') || q.includes('please') || q.includes('assist'))) {
-      return `Hi! How can I help you today? Ask me about university admissions, fee structures, eligibility criteria, or student counselling scripts.`;
+    if (isEnglish) {
+      return `Hello <strong>${escapeStaffChatHtml(currentUserName)}</strong>! ⚡ How can I assist you with university admissions, student leads, fee comparisons, or operations today?`;
     }
-    return `Hi! Hum aapki kaise help karein? Kisi bhi partner university ki fees, student objection ya counselling script ke liye bas poochiye! 🌟<br><br><em>(How can I help you today? Ask me about university admissions, fee structures, eligibility criteria, or student counselling scripts.)</em>`;
+    return `Namaste <strong>${escapeStaffChatHtml(currentUserName)}</strong>! 🌟 Main aapki kya help kar sakta hoon? Aap kisi bhi partner university ki fees, admission eligibility, student objection handling ya live lead analytics ke baare me pooch sakte hain!`;
   }
 
   // 2. CHIT-CHAT, WELL-BEING & "KYA HAAL HAI / KAISE HO / HOW ARE YOU"
@@ -11151,24 +11319,160 @@ function generateStaffAiResponse(rawQuery) {
     `;
   }
 
-  // 23. COURSES
-  if (/\b(b\.?tech|engineering|cse|ai|ml)\b/i.test(q)) {
+  // 23. COURSES & DEGREES (BBA, MBA, BCA, MCA, B.Tech, Nursing, Pharmacy, Law, B.Ed, NIOS)
+  // 23A. BBA (Bachelor of Business Administration)
+  if (/\b(bba|b\.b\.a|bachelor\s*of\s*business|bba\s*admission|bba\s*college|bba\s*colleges|bba\s*university|bba\s*fees?|bba\s*course)\b/i.test(q) || (q.includes('bba') && !q.includes('bba llb') && !q.includes('mba'))) {
     return `
-      ⚙️ <strong>B.TECH ADMISSION QUICK SHEET</strong><br>
+      🎓 <strong>BBA (BACHELOR OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
       ━━━━━━━━━━━━━━━━━━━━━━<br>
-      • <strong>Eligibility:</strong> 50%–60% in 12th PCM | Direct admission quota available<br>
-      • <strong>Top Campuses:</strong> Chandigarh University, Galgotias University, GNIOT, Amity<br>
-      • <strong>Fee Range:</strong> ₹1.1L – ₹2.5L / year with 0% EMI options.
+      • <strong>Eligibility:</strong> 10+2 / 12th Pass from any recognized board (Arts / Commerce / Science) with min 45%–50% marks.<br>
+      • <strong>Duration:</strong> 3 Years (6 Semesters) / 4-Year Honors (NEP Structure)<br>
+      • <strong>Direct Merit Seats:</strong> Available through EduVision merit quota without entrance exam barrier.<br><br>
+      🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+      • <strong>Amity University (Noida / Jaipur / Online):</strong> NAAC A+ | Regular: ₹65,000 – ₹1.2L / sem | Online BBA: ₹30,000 – ₹35,000 / sem (0% EMI)<br>
+      • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹60,000 – ₹75,000 / sem (CUCET scholarship up to 100%)<br>
+      • <strong>Galgotias University (Greater Noida):</strong> NAAC A+ | ₹50,000 – ₹65,000 / sem (Metro connectivity, high corporate exposure)<br>
+      • <strong>Manipal Online University:</strong> NAAC A++ | ₹40,000 / sem (0% No-Cost EMI @ ₹3,333/month)<br>
+      • <strong>SAGE University (Indore / Bhopal):</strong> NAAC Accredited | ₹30,000 – ₹45,000 / sem | Budget-friendly<br>
+      • <strong>Marwadi University (Rajkot) & JNU Jaipur:</strong> ₹35,000 – ₹55,000 / sem<br>
+      • <strong>Sandip University (Nashik / Madhubani Bihar):</strong> 100% BSCCS (Bihar Student Credit Card ₹4L) accepted!<br><br>
+      📌 <strong>TOP SPECIALIZATIONS:</strong><br>
+      • Digital Marketing & E-Commerce | Finance & Banking | Human Resource (HR) | Business Analytics | International Business (IB)<br><br>
+      💼 <strong>PLACEMENTS & ROI:</strong><br>
+      • Average Package: ₹4.5 LPA – ₹8.5 LPA (Deloitte, EY, Amazon, ICICI Bank, HDFC, TCS)<br><br>
+      💳 <strong>FINANCIAL AID:</strong><br>
+      • <strong>Bihar Student Credit Card (BSCCS ₹4 Lakhs 0% Loan):</strong> Zero upfront parent expense!<br>
+      • <strong>0% Monthly EMI:</strong> Available across all online and partner campuses.
     `;
   }
 
-  if (/\b(mba|bba|management)\b/i.test(q)) {
+  // 23B. MBA & PGDM (Master of Business Administration)
+  if (/\b(mba|m\.b\.a|pgdm|master\s*of\s*business|mba\s*admission|mba\s*college|mba\s*colleges|mba\s*university|mba\s*fees?|mba\s*course)\b/i.test(q)) {
     return `
-      🏆 <strong>MBA & BBA MANAGEMENT ADMISSION GUIDE</strong><br>
+      🏆 <strong>MBA & PGDM (MASTER OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
       ━━━━━━━━━━━━━━━━━━━━━━<br>
-      • <strong>Eligibility:</strong> 50% in Graduation (Direct merit seats without CAT barrier)<br>
-      • <strong>Top Picks:</strong> Chandigarh University, Amity University, Manipal Online, LPU<br>
-      • <strong>Average Packages:</strong> ₹6.5 LPA – ₹14 LPA.
+      • <strong>Eligibility:</strong> Graduation (Bachelor's Degree) in any stream with min 50% marks (45% for SC/ST/OBC).<br>
+      • <strong>Duration:</strong> 2 Years (4 Semesters)<br>
+      • <strong>Direct Admission:</strong> Merit-based direct seat allocation without CAT/MAT/XAT score barrier!<br><br>
+      🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+      • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹1.2L – ₹1.6L / year | Highest CTC ₹54.75 LPA<br>
+      • <strong>Amity University (Noida / Lucknow / Online):</strong> NAAC A+ | ₹1.8L – ₹3.5L / year | Online MBA: ₹45k–₹50k/sem<br>
+      • <strong>Manipal Online (MAHE / MUJ):</strong> NAAC A++ | ₹42,500 / sem (0% EMI @ ₹3,540/month, Harvard modules)<br>
+      • <strong>Galgotias & Sharda University:</strong> NAAC A+ | ₹1.4L – ₹1.7L / year | Delhi NCR corporate hub<br>
+      • <strong>SAGE University (Indore / Bhopal):</strong> ₹85,000 – ₹1.2L / year (Industry-linked labs)<br>
+      • <strong>Mangalayatan & Subharti:</strong> Distance/Online MBA starting ₹16,000/sem (₹30k–₹32k/year)<br><br>
+      📌 <strong>TOP SPECIALIZATIONS (DUAL OPTION AVAILABLE):</strong><br>
+      • Marketing & Sales | Finance & Fintech | HR Analytics | Business Analytics & AI | Operations & Supply Chain<br><br>
+      💼 <strong>PLACEMENTS & ROI:</strong><br>
+      • Average Package: ₹7.5 LPA – ₹16 LPA (Amazon, PwC, KPMG, Bain, ICICI Bank, Wipro)<br><br>
+      💳 <strong>FINANCIAL AID & EMI:</strong><br>
+      • 0% No-Cost Monthly EMI starting ₹3,500/month | Bihar Student Credit Card (BSCCS ₹4L) applicable.
+    `;
+  }
+
+  // 23C. BCA (Bachelor of Computer Applications)
+  if (/\b(bca|b\.c\.a|bachelor\s*of\s*computer|bca\s*admission|bca\s*college|bca\s*colleges|bca\s*university|bca\s*fees?)\b/i.test(q)) {
+    return `
+      💻 <strong>BCA (BACHELOR OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>Eligibility:</strong> 10+2 / 12th Pass from any stream (Science / Commerce / Arts) with min 45%–50% marks. (Maths/CS not mandatory at all partner universities).<br>
+      • <strong>Duration:</strong> 3 Years (6 Semesters)<br><br>
+      🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+      • <strong>SRM University (Delhi-NCR / Sonepat):</strong> NAAC A++ | ₹85,000 / year<br>
+      • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹55,000 / semester<br>
+      • <strong>Manipal Online University:</strong> NAAC A++ | ₹35,000 / semester (0% EMI @ ₹2,916/month)<br>
+      • <strong>Galgotias University & GNIOT:</strong> NAAC A+ | ₹72,000 – ₹85,000 / year<br>
+      • <strong>SAGE University (Indore/Bhopal):</strong> ₹45,000 – ₹60,000 / year<br>
+      • <strong>Sandip University (Nashik / Sijoul):</strong> Bihar Student Credit Card (BSCCS ₹4L) 100% accepted!<br><br>
+      📌 <strong>HIGH-PAYING SPECIALIZATIONS:</strong><br>
+      • Cloud Computing | AI & Data Science | Full Stack Web Development | Cyber Security<br><br>
+      💼 <strong>CAREER & PACKAGES:</strong> ₹4.0 LPA – ₹9.0 LPA (TCS, Infosys, Wipro, Capgemini, Accenture).
+    `;
+  }
+
+  // 23D. MCA (Master of Computer Applications)
+  if (/\b(mca|m\.c\.a|master\s*of\s*computer|mca\s*admission|mca\s*college|mca\s*colleges|mca\s*university|mca\s*fees?)\b/i.test(q)) {
+    return `
+      🖥️ <strong>MCA (MASTER OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>Eligibility:</strong> BCA / B.Sc (CS/IT) or any Bachelor's degree with Mathematics in 10+2 or Graduation (min 50% marks).<br>
+      • <strong>Duration:</strong> 2 Years (4 Semesters as per AICTE norms)<br><br>
+      🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+      • <strong>Manipal Online University:</strong> NAAC A++ | ₹37,500 / sem (0% EMI @ ₹3,125/month)<br>
+      • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹70,000 / sem<br>
+      • <strong>Amity University (Online / Regular):</strong> ₹45,000 / sem online | ₹1.4L / yr regular<br>
+      • <strong>Mangalayatan University Online:</strong> ₹28,000 / year (Budget friendly & UGC-DEB approved)<br>
+      • <strong>GNIOT & Galgotias (Greater Noida):</strong> ₹1.1L – ₹1.3L / year<br><br>
+      💼 <strong>CAREER ROLES:</strong> Software Engineer, Data Scientist, DevOps Architect, Cloud Specialist (₹6.5 LPA – ₹18 LPA).
+    `;
+  }
+
+  // 23E. B.TECH & ENGINEERING
+  if (/\b(b\.?tech|engineering|b\.e\.|cse|computer\s*science|ai\s*ml|data\s*science|mechanical|civil|electrical|polytechnic|diploma\s*eng)\b/i.test(q)) {
+    return `
+      ⚙️ <strong>B.TECH & ENGINEERING ADMISSION COUNSELLING GUIDE</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>Eligibility:</strong> 10+2 with Physics & Mathematics (PCM) min 45%–50% marks (Direct merit seats without JEE barrier).<br>
+      • <strong>Duration:</strong> 4 Years (8 Semesters) | Polytechnic Diploma: 3 Years<br><br>
+      🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+      • <strong>SRM University (Delhi-NCR / Sonepat):</strong> NAAC A++ | ₹2.2L – ₹3.5L / year | Highest CTC ₹50+ LPA<br>
+      • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹1.35L – ₹1.8L / year | Highest CTC ₹54.75 LPA<br>
+      • <strong>Galgotias University (Greater Noida):</strong> NAAC A+ | ₹1.4L – ₹1.6L / year | Prime NCR Metro Location<br>
+      • <strong>Sandip University (Nashik / Sijoul Bihar):</strong> ₹1.1L – ₹1.4L / year (100% BSCCS ₹4L Approved)<br>
+      • <strong>SAGE University (Indore/Bhopal):</strong> ₹70,000 – ₹1.1L / year (Smart tech labs & budget pick)<br>
+      • <strong>GNIOT / NIU (Greater Noida):</strong> ₹1.15L – ₹1.35L / year<br><br>
+      📌 <strong>TOP DEMAND BRANCHES:</strong> CSE (Core), AI & Machine Learning, Data Science, Cyber Security, Cloud Computing, Robotics.<br><br>
+      💳 <strong>FINANCIAL AID:</strong> Bihar Student Credit Card (BSCCS ₹4L) + CUCET/Merit Scholarships up to 100% + 0% EMI.
+    `;
+  }
+
+  // 23F. HEALTHCARE, NURSING & PHARMACY
+  if (/\b(nursing|b\.?sc\s*nursing|gnm|anm|pharmacy|b\.?pharma?|d\.?pharma?|bpt|physiotherapy|paramedical|mlt|radiology)\b/i.test(q)) {
+    return `
+      🩺 <strong>NURSING, PHARMACY & PARAMEDICAL ADMISSION GUIDE</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>B.Sc Nursing (4 Years) & GNM (3.5 Years):</strong> INC & State Nursing Council approved. 500+ bedded multi-speciality hospital clinical postings. Fees: ₹85,000 – ₹1.2L / year.<br>
+      • <strong>B.Pharma (4 Years) & D.Pharm (2 Years):</strong> PCI Approved. Eligible for Drug License & Pharma MNC careers. Fees: ₹80,000 – ₹1.3L / year.<br>
+      • <strong>BPT (Physiotherapy - 4.5 Years):</strong> Clinical orthopedic & sports rehab training.<br>
+      • <strong>Top Campuses:</strong> Sharda University, NIU Greater Noida, SAGE University, IIMT Meerut, Subharti University.<br>
+      • <strong>Financial Aid:</strong> 100% BSCCS (Bihar Student Credit Card) & State Scholarships accepted.
+    `;
+  }
+
+  // 23G. LAW (BA LLB / BBA LLB / LLB / LLM)
+  if (/\b(law|llb|ba\s*llb|bba\s*llb|llm|advocate|bar\s*council|bci)\b/i.test(q)) {
+    return `
+      ⚖️ <strong>LAW ADMISSION COUNSELLING GUIDE (BA LLB / BBA LLB / LLB)</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>BA LLB / BBA LLB (Integrated 5 Years):</strong> 12th Pass with min 45% (40% for SC/ST). No CLAT barrier for direct EduVision merit quota.<br>
+      • <strong>LLB (3 Years):</strong> Graduation in any stream with min 45% marks.<br>
+      • <strong>Accreditation:</strong> Bar Council of India (BCI) & UGC Approved degrees.<br>
+      • <strong>Top Campuses:</strong> VGU Jaipur (₹95k/yr), Chandigarh University (₹1.2L/yr), Sandip University, Galgotias University.<br>
+      • <strong>Moot Courts & Internships:</strong> High Court / Supreme Court legal internship tie-ups.
+    `;
+  }
+
+  // 23H. TEACHING & EDUCATION (B.Ed / D.El.Ed / BTC)
+  if (/\b(b\.?ed|d\.?el\.?ed|deled|btc|teaching|ncte)\b/i.test(q)) {
+    return `
+      📚 <strong>B.ED & D.EL.ED TEACHER TRAINING ADMISSION GUIDE</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>B.Ed (Bachelor of Education - 2 Years):</strong> 50% in Graduation / PG (NCTE Approved). Total complete package: ₹80,000 – ₹1.1 Lakhs.<br>
+      • <strong>D.El.Ed / BTC (2 Years):</strong> 12th / Graduation pass for Primary school teaching. Total package: ₹60,000 – ₹85,000.<br>
+      • <strong>Top Universities:</strong> Subharti University, IIMT University, JNU Jaipur, Mangalayatan.<br>
+      • <strong>Validity:</strong> 100% valid for CTET, STET, BPSC Teacher, Super TET & KVS recruitment.
+    `;
+  }
+
+  // 23I. NIOS BOARD & OPEN SCHOOLING
+  if (/\b(nios|open\s*school|10th\s*fail|12th\s*fail|year\s*back|save\s*year|toc)\b/i.test(q)) {
+    return `
+      📖 <strong>NIOS 10th & 12th BOARD ADMISSION & PASS GUARANTEE GUIDE</strong><br>
+      ━━━━━━━━━━━━━━━━━━━━━━<br>
+      • <strong>Transfer of Credit (TOC):</strong> Failed in CBSE/ICSE/State Board? Transfer up to 2 passed subjects and clear only 3 subjects in NIOS to pass 10th/12th in the same year!<br>
+      • <strong>On-Demand Examination (ODE):</strong> Give exams in any month according to your own preparation.<br>
+      • <strong>Universal Validity:</strong> 100% recognized by Govt of India for NEET, JEE, NDA, CUET, Passport, and Govt Jobs.<br>
+      • <strong>Complete Package Fee:</strong> ₹8,500 – ₹15,000 (Includes Books, Practical exam guidance & TMA assignment support).
     `;
   }
 
@@ -11511,7 +11815,7 @@ function updateWaSidebarPreviews() {
       const lastMsgElem = document.getElementById('waLastMsg_' + g.id);
       const timeElem = document.getElementById('waTime_' + g.id);
       let aiMsgs = [];
-      try { aiMsgs = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]'); } catch(e){}
+      try { aiMsgs = JSON.parse(localStorage.getItem(getAiChatStorageKey()) || '[]'); } catch(e){}
       const lastAiMsg = aiMsgs[aiMsgs.length - 1];
       if (lastMsgElem) {
         if (lastAiMsg) {
@@ -11554,7 +11858,7 @@ window.sendAiCopilotPrompt = function(text) {
 
 function renderAiCopilotChat(container) {
   let aiMsgs = [];
-  try { aiMsgs = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]'); } catch(e){}
+  try { aiMsgs = JSON.parse(localStorage.getItem(getAiChatStorageKey()) || '[]'); } catch(e){}
   if (aiMsgs.length === 0) {
     aiMsgs = [
       { id: 'ai_msg_01', sender_name: 'Miss Ishika Sharma (CEO) 👑', sender_role: 'ceo', created_at: new Date().toISOString(), message: 'Good morning leadership & admin desk! 🌟 Please monitor live student inbound leads & callback response times.' },
@@ -11612,8 +11916,41 @@ function renderAiCopilotChat(container) {
       `;
     }
   });
+  const wasScrolledUp = isUserScrolledUp(container);
+  const prevScrollTop = container.scrollTop;
   container.innerHTML = html;
-  container.scrollTop = container.scrollHeight;
+  if (wasScrolledUp) {
+    container.scrollTop = prevScrollTop;
+  } else {
+    scrollWaToBottom(false);
+  }
+}
+
+function isUserScrolledUp(container) {
+  if (!container) return false;
+  const threshold = 100; // pixels from bottom threshold
+  return (container.scrollHeight - container.scrollTop - container.clientHeight) > threshold;
+}
+
+function scrollWaToBottom(force = false, targetEl = null) {
+  const container = document.getElementById('waMessagesContainer');
+  if (!container) return;
+  if (targetEl && typeof targetEl.scrollIntoView === 'function') {
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  if (!force && isUserScrolledUp(container)) {
+    return; // Preserve reading position when user is scrolled up
+  }
+  if (force) {
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+  requestAnimationFrame(() => {
+    if (container && (force || !isUserScrolledUp(container))) {
+      container.scrollTop = container.scrollHeight;
+    }
+  });
 }
 
 function renderWaMessages() {
@@ -11685,8 +12022,14 @@ function renderWaMessages() {
     html += '<div class="wa-bubble ' + bubbleClass + '" id="waMsg_' + m.id + '" onclick="showWaContextMenu(event,\'' + m.id + '\')" oncontextmenu="showWaContextMenu(event,\'' + m.id + '\')">' + quoteHtml + attachmentHtml + '<span class="wa-bubble-text" style="' + bubbleStyle + '">' + m.message + '</span><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.04);padding-top:4px;min-width:120px;">' + senderNameHtml + '<div style="display:flex;align-items:center;gap:4px;">' + editLabel + '<span class="wa-bubble-time" style="margin-top:0;font-size:0.68rem;">' + time + '</span>' + ticksHtml + '</div></div>' + reactionsHtml + '</div>';
 
   });
+  const wasScrolledUp = isUserScrolledUp(container);
+  const prevScrollTop = container.scrollTop;
   container.innerHTML = html;
-  container.scrollTop = container.scrollHeight;
+  if (wasScrolledUp) {
+    container.scrollTop = prevScrollTop;
+  } else {
+    scrollWaToBottom(false);
+  }
   if (unreadMsgs.length > 0) markMessagesAsRead(unreadMsgs);
 }
 
@@ -11741,7 +12084,7 @@ function switchWaChat(groupId) {
   if (emptyState) emptyState.style.display = 'none';
   if (header) header.style.display = 'flex';
   if (messagesArea) messagesArea.style.display = 'flex';
-  if (inputArea) inputArea.style.display = 'block';
+  if (inputArea) inputArea.style.display = 'flex';
 
   const title = document.getElementById('waActiveChatName');
   const status = document.getElementById('waActiveChatStatus');
@@ -11778,6 +12121,11 @@ function switchWaChat(groupId) {
   cancelReply();
   editingMessageId = null;
   renderWaMessages();
+  // Force scroll to bottom on initial open/switch to show latest messages
+  scrollWaToBottom(true);
+  setTimeout(() => scrollWaToBottom(true), 40);
+  setTimeout(() => scrollWaToBottom(true), 120);
+  setTimeout(() => scrollWaToBottom(true), 250);
 }
 
 async function sendWaChatMessage(event) {
@@ -11790,7 +12138,7 @@ async function sendWaChatMessage(event) {
     playNotificationSound(true);
     input.value = '';
     let aiMsgs = [];
-    try { aiMsgs = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]'); } catch(e){}
+    try { aiMsgs = JSON.parse(localStorage.getItem(getAiChatStorageKey()) || '[]'); } catch(e){}
     const userMsg = {
       id: 'admin_' + Date.now(),
       sender_name: `${(currentAdmin && (currentAdmin.full_name || currentAdmin.name)) || 'Admin'} (${(currentAdmin && currentAdmin.role) || 'Admin'})`,
@@ -11799,8 +12147,9 @@ async function sendWaChatMessage(event) {
       message: text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
     };
     aiMsgs.push(userMsg);
-    try { localStorage.setItem('eduvision_ai_copilot_chat', JSON.stringify(aiMsgs.slice(-50))); } catch(e){}
+    try { localStorage.setItem(getAiChatStorageKey(), JSON.stringify(aiMsgs.slice(-50))); } catch(e){}
     renderWaMessages();
+    scrollWaToBottom();
 
     // Show typing indicator with RAG AI sparkle
     const container = document.getElementById('waMessagesContainer');
@@ -11810,12 +12159,13 @@ async function sendWaChatMessage(event) {
       typingDiv.style.cssText = 'align-self: flex-start; margin: 8px 12px; padding: 10px 16px; background: rgba(66, 133, 244, 0.12); border: 1px solid rgba(155, 114, 207, 0.4); border-radius: 16px; color: #c084fc; font-size: 0.85rem; font-style: italic; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);';
       typingDiv.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles fa-spin"></i> <span>RAG AI Desk processing…</span>';
       container.appendChild(typingDiv);
-      container.scrollTop = container.scrollHeight;
+      scrollWaToBottom();
     }
 
     (async () => {
       let aiResponseHtml = null;
-      if (isStaffOperationalLeadQuery(text)) {
+      if (isDirectFastQuery(text)) {
+        await new Promise(r => setTimeout(r, 200)); // Natural 200ms ultra-fast response
         aiResponseHtml = generateStaffAiResponse(text);
       }
       if (!aiResponseHtml) {
@@ -11835,9 +12185,19 @@ async function sendWaChatMessage(event) {
         message: aiResponseHtml
       };
       aiMsgs.push(aiReply);
-      try { localStorage.setItem('eduvision_ai_copilot_chat', JSON.stringify(aiMsgs.slice(-50))); } catch(e){}
+      try { localStorage.setItem(getAiChatStorageKey(), JSON.stringify(aiMsgs.slice(-50))); } catch(e){}
       playNotificationSound(false);
       renderWaMessages();
+      const containerAfter = document.getElementById('waMessagesContainer');
+      if (containerAfter) {
+        const allAiCards = containerAfter.querySelectorAll('.gemini-rgb-card, .ai-peer-msg-card');
+        const lastAiCard = allAiCards[allAiCards.length - 1];
+        if (lastAiCard) {
+          lastAiCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          scrollWaToBottom(true);
+        }
+      }
       updateWaSidebarPreviews();
     })();
     return;
@@ -11863,6 +12223,7 @@ async function sendWaChatMessage(event) {
     }
     input.value = '';
     await fetchWaMessages();
+    scrollWaToBottom();
   } catch(err) {
     console.error("Error sending TL message:", err);
     showToast('Failed: ' + err.message, 'error');
@@ -11985,6 +12346,22 @@ document.addEventListener('click', () => {
   if (menu) menu.style.display = 'none';
   const picker = document.getElementById('waEmojiPickerContainer');
   if (picker) picker.style.display = 'none';
+});
+
+// Mobile Dynamic Viewport & Virtual Keyboard Auto-Scroll Handler
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    if (activeWaChatGroup) scrollWaToBottom();
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const chatInput = document.getElementById('waMessageInput');
+  if (chatInput) {
+    chatInput.addEventListener('focus', () => {
+      setTimeout(() => { scrollWaToBottom(); }, 150);
+      setTimeout(() => { scrollWaToBottom(); }, 350);
+    });
+  }
 });
 
 async function handleWaMessageAction(action) {
@@ -12241,7 +12618,7 @@ function openCtoClearChatModal(groupId) {
   let msgCount = 0;
   if (targetId === AI_COPILOT_GROUP_ID) {
     try {
-      const aiMsgs = JSON.parse(localStorage.getItem('eduvision_ai_copilot_chat') || '[]');
+      const aiMsgs = JSON.parse(localStorage.getItem(getAiChatStorageKey()) || '[]');
       msgCount = aiMsgs.length;
     } catch(e) { msgCount = 0; }
   } else {
@@ -12294,7 +12671,7 @@ async function executeCtoClearChat() {
 
   try {
     if (targetId === AI_COPILOT_GROUP_ID) {
-      localStorage.removeItem('eduvision_ai_copilot_chat');
+      localStorage.removeItem(getAiChatStorageKey());
     } else {
       let clearedViaBackend = false;
       // 1. Try Backend Chat API
@@ -12431,7 +12808,7 @@ async function executeCtoClearAllHistory() {
 
     // 3. Clear all memory state & local caches
     allWaMessages = [];
-    localStorage.removeItem('eduvision_ai_copilot_chat');
+    localStorage.removeItem(getAiChatStorageKey());
     userGroups.forEach(g => {
       try { localStorage.removeItem('eduvision_group_msgs_' + g.id); } catch(e) {}
     });
@@ -12782,12 +13159,15 @@ async function renderAdminCounsellorCRMGrid() {
     if (error) throw error;
     
     container.innerHTML = '';
-    if (!data || data.length === 0) {
+    const adminRoles = ['admin', 'super admin', 'ceo', 'cto'];
+    const activeCounsellors = (data || []).filter(c => !adminRoles.includes((c.role || '').toLowerCase()));
+    
+    if (activeCounsellors.length === 0) {
       container.innerHTML = '<div style="color:#fff; grid-column:1 / -1; text-align:center; padding:30px;">No counsellors found in database.</div>';
       return;
     }
     
-    data.forEach(c => {
+    activeCounsellors.forEach(c => {
       const counsellorId = String(c.counsellor_id || c.employee_id || c.id || 'CNS260001');
       const card = document.createElement('div');
       card.className = 'counsellor-crm-card';
@@ -16271,8 +16651,8 @@ function renderCtoFeatureMatrix() {
     const isGloballyLocked = !!(gLock && gLock.is_globally_locked);
     const catColor = categoryColors[m.category] || 'var(--gold-light)';
 
-    const rolesToShow = ['admin', 'team_leader', 'counsellor', 'associate', 'student'];
-    const labelMap = { admin: 'ADMIN', team_leader: 'TL', counsellor: 'CNS', associate: 'AP', student: 'STU' };
+    const rolesToShow = ['admin', 'team_leader', 'counsellor', 'ca_accounts', 'hr_operations', 'doc_verifier', 'marketing_head', 'quality_auditor', 'associate', 'student'];
+    const labelMap = { admin: 'ADMIN', team_leader: 'TL', counsellor: 'CNS', ca_accounts: 'CA', hr_operations: 'HR', doc_verifier: 'DOC', marketing_head: 'MKT', quality_auditor: 'QA', associate: 'AP', student: 'STU' };
 
     const roleBadges = rolesToShow.map(rKey => {
       const rp = (ctoMasterMatrix.rolePermissions || []).find(p => p.module_key === m.module_key && p.role_key === rKey);
@@ -16338,7 +16718,7 @@ function renderCtoFeatureMatrix() {
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <span style="font-size:0.65rem; text-transform:uppercase; color:#64748b; font-weight:700; letter-spacing:0.4px;">Role Access (Click Pill to Flip):</span>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:5px;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(68px, 1fr)); gap:5px;">
             ${roleBadges}
           </div>
         </div>
@@ -18596,3 +18976,13 @@ async function syncLeadsToDrive() {
   }
 }
 window.syncLeadsToDrive = syncLeadsToDrive;
+
+
+window.toggleStaffExtraFields = function() {
+  const c = document.getElementById('staffExtraFieldsContainer');
+  const icon = document.getElementById('staffExtraChevron');
+  if (!c) return;
+  const isHidden = c.style.display === 'none';
+  c.style.display = isHidden ? 'block' : 'none';
+  if (icon) icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+};

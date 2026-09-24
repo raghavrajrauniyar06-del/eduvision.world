@@ -204,7 +204,84 @@
       throw new Error(result?.error || 'Submission could not be completed. Please try again or call our counselling desk directly.');
     }
 
+    // 7. Instant Multi-Channel Lead Dispatch: Only to Counsellors & Team Leaders
+    try {
+      dispatchFormNotificationToCounsellorAndTL(finalPayload, result);
+    } catch(e) {
+      console.warn('Lead notification dispatch notice:', e);
+    }
+
     return result;
+  }
+
+  async function dispatchFormNotificationToCounsellorAndTL(payload, result) {
+    const tId = result?.submission_id || ('EDV-' + Math.floor(100000 + Math.random() * 900000));
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+    const leadRecord = {
+      id: tId,
+      name: payload.full_name || 'Website Inbound Lead',
+      phone: payload.phone,
+      interest: `${payload.course_name || 'General Admissions'}${payload.university_name ? ' — ' + payload.university_name : ''}`,
+      time: `${dateStr}, ${timeStr}`,
+      rawTime: Date.now(),
+      status: 'Pending Callback',
+      claimedBy: null,
+      source: payload.form_type || 'Website Lead Form'
+    };
+
+    // 1. Sync to local storage for instant dashboard leads pickup
+    try {
+      let staffLeads = JSON.parse(localStorage.getItem('eduvision_team_leads') || '[]');
+      staffLeads = staffLeads.filter(l => !(l.phone === payload.phone && (Date.now() - l.rawTime < 3600000)));
+      staffLeads.unshift(leadRecord);
+      localStorage.setItem('eduvision_team_leads', JSON.stringify(staffLeads.slice(0, 60)));
+      window.dispatchEvent(new CustomEvent('eduvision_new_lead', { detail: leadRecord }));
+    } catch(e){}
+
+    // 2. Chat / Notification Dispatch: ONLY to Counsellors Hub & Team Leaders Group
+    const alertText = `🚨 *NEW STUDENT FORM SUBMISSION / LEAD ALERT*\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `👤 *Student Name:* ${payload.full_name}\n` +
+      `📞 *Mobile:* +91 ${payload.phone}\n` +
+      `🎓 *Course:* ${payload.course_name || 'Not specified'}\n` +
+      `🏫 *University:* ${payload.university_name || 'Partner Campuses'}\n` +
+      `📍 *City/State:* ${payload.city || payload.state || 'Website'}\n` +
+      `📝 *Form Type:* ${payload.form_type}\n` +
+      `📋 *Ticket ID:* #${tId}\n` +
+      `⏰ *Time:* ${dateStr}, ${timeStr}\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ *Action Required:* Counsellor or Team Leader please call within 2 hours & claim ticket!`;
+
+    const groupsToNotify = [
+      { id: '00000000-0000-0000-0000-000000000003', target: 'COUNSELLORS_HUB' },
+      { id: '00000000-0000-0000-0000-000000000001', target: 'ADMIN_TEAM_LEADER' }
+    ];
+
+    for (const grp of groupsToNotify) {
+      try {
+        fetch(`${SUPABASE_PROJECT_URL}/rest/v1/notifications`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            title: `📥 New Form Lead: ${payload.full_name} (+91 ${payload.phone})`,
+            message: alertText,
+            sender_name: 'EduVision AI Bot 🤖',
+            sender_role: 'AI_ASSISTANT',
+            category: 'LEAD_DISPATCH',
+            group_id: grp.id,
+            priority: 'high'
+          })
+        }).catch(()=>{});
+      } catch(e){}
+    }
   }
 
   // ────────────────────────────────────────────────────────────────────────────

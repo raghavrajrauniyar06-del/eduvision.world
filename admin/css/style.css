@@ -213,7 +213,7 @@ h1, h2, h3, h4 { font-family: var(--font-heading); }
 .nav-item.logout-btn { margin-top: 12px; color: #ef4444; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); }
 .nav-item.logout-btn:hover { background: rgba(239, 68, 68, 0.15); color: #f87171; transform: translateX(3px); }
 
-.admin-main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+.admin-main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; min-width: 0; box-sizing: border-box; }
 .admin-topbar { padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.15); background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 5; }
 .topbar-title { font-size: 1.8rem; font-weight: 600; font-family: var(--font-heading); }
 .user-info-bar { display: flex; align-items: center; gap: 16px; }
@@ -311,8 +311,10 @@ tr:hover td { background: rgba(212,175,55,0.03); }
   }
   
   .admin-main {
-    width: 100vw !important;
-    min-width: 100vw !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
   }
   .admin-topbar {
     height: auto !important;

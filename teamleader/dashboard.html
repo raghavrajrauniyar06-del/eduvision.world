@@ -1,6 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    /* ── Bulletproof Early Mobile Navigation Handler ── */
+    window.toggleMobileSidebar = function(e) {
+      if (e) {
+        try { e.preventDefault(); } catch(_) {}
+        try { e.stopPropagation(); } catch(_) {}
+      }
+      const sidebar = document.querySelector('.sidebar') || document.querySelector('.tl-sidebar') || document.querySelector('aside');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+      if (!sidebar) return;
+
+      const isOpen = sidebar.classList.contains('open') || sidebar.classList.contains('mobile-open') || sidebar.getAttribute('data-state') === 'open';
+      if (isOpen) {
+        sidebar.classList.remove('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'closed');
+        if (overlay) {
+          overlay.classList.remove('active', 'open');
+        }
+      } else {
+        sidebar.classList.add('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'open');
+        if (overlay) {
+          overlay.classList.add('active', 'open');
+        }
+      }
+    };
+
+    window.closeMobileSidebar = function(e) {
+      if (e) {
+        try { e.preventDefault(); } catch(_) {}
+        try { e.stopPropagation(); } catch(_) {}
+      }
+      const sidebar = document.querySelector('.sidebar') || document.querySelector('.tl-sidebar') || document.querySelector('aside');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+      if (sidebar) {
+        sidebar.classList.remove('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'closed');
+      }
+      if (overlay) {
+        overlay.classList.remove('active', 'open');
+      }
+    };
+  </script>
+
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -733,20 +777,22 @@
       background: rgba(168,85,247,0.10) !important;
       border-left: 3px solid var(--tl-primary) !important;
     }
-    .wa-sidebar {
-      width: 320px;
-      min-width: 320px;
-      border-right: 1px solid var(--glass-border);
-      display: flex;
-      flex-direction: column;
-      background: rgba(10,15,30,0.3);
-    }
-    .wa-chat-window {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: rgba(0,0,0,0.12);
-      min-width: 0;
+    @media (min-width: 769px) {
+      .wa-sidebar {
+        width: 320px !important;
+        min-width: 320px !important;
+        border-right: 1px solid var(--glass-border) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: rgba(10,15,30,0.3) !important;
+      }
+      .wa-chat-window {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: rgba(0,0,0,0.12) !important;
+        min-width: 0 !important;
+      }
     }
     .wa-input-area {
       padding: 14px 20px;
@@ -855,6 +901,7 @@
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/eduvision_rag_ai.js"></script>
 
 <style>
 /* ── LIQUID FROSTED GLASS & SUBMIT BUTTON ANIMATIONS ── */
@@ -1253,7 +1300,7 @@
             </p>
           </div>
           <div style="display:flex; gap:10px; align-items:center;">
-            <input type="text" id="searchAllRecordings" placeholder="Search by prospect, counsellor, call type..." oninput="filterAllRecordings()" style="padding:9px 16px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.88rem; width:280px;">
+            <input type="text" id="searchAllRecordings" placeholder="Search by prospect, counsellor, call type..." oninput="filterAllRecordings()" style="padding:9px 16px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.88rem; flex:1; min-width:180px; box-sizing:border-box;">
             <button onclick="loadGlobalRecordingsView()" style="padding:9px 16px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34d399; font-weight:700; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-arrows-rotate"></i> Refresh Vault
             </button>
@@ -2661,11 +2708,7 @@
           </form>
         </div>
 
-        </div>
-</div>
-
       </div>
-
     </div>
   </div>
 
@@ -4337,11 +4380,9 @@
         Group description placeholder.
       </div>
       <div class="wa-member-section-title" id="waGroupInfoCount">Members (0)</div>
-      <div class="wa-member-list" id="waGroupMemberList">
-        <!-- Rendered dynamically -->
-      </div>
+      <div class="wa-member-list" id="waGroupMemberList"></div>
     </div>
-  <!-- Toast Container -->
+  </div>
   <div class="toast-container" id="toastContainer"></div>
 
 

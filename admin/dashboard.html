@@ -348,13 +348,36 @@ body, html {
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* ── Main Content ── */
+/* ── Main Content & Layout Structure ── */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-primary);
+  position: relative;
+  box-sizing: border-box;
+}
+
 .admin-body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+  background: var(--bg-primary) !important;
+}
+
+.admin-main {
   flex: 1;
   margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  max-width: calc(100% - var(--sidebar-width));
+  min-width: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 0 24px 32px 24px;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 .admin-topbar {
@@ -371,6 +394,9 @@ body, html {
   position: sticky;
   top: 0;
   z-index: 50;
+  margin: 0 -24px 24px -24px;
+  width: calc(100% + 48px);
+  box-sizing: border-box;
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 .topbar-left {
@@ -409,12 +435,6 @@ body, html {
   .security-status-indicator {
     display: none !important;
   }
-}
-
-.admin-main {
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
 }
 
 /* ── Module Views ── */
@@ -937,23 +957,24 @@ body, html {
     transform: translateX(0) !important;
   }
   .admin-body {
-    margin-left: 0;
-    width: 100%;
-    min-width: 0;
-    max-width: 100vw;
-    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
   .admin-topbar {
-    padding: 6px 12px;
-    height: 52px;
-    min-height: 52px;
-    gap: 8px;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin: 0 -12px 14px -12px !important;
+    width: calc(100% + 24px) !important;
+    padding: 6px 12px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    gap: 8px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
   .topbar-left {
     gap: 6px;
@@ -1006,11 +1027,14 @@ body, html {
     display: none !important;
   }
   .admin-main {
-    padding: 12px;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    padding: 0 12px 24px 12px !important;
+    box-sizing: border-box !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
   }
   .overview-hero-banner {
     padding: 16px !important;
@@ -1231,7 +1255,8 @@ body, html {
   border-bottom: 1px solid rgba(168,85,247,0.12);
   box-shadow: 0 2px 16px rgba(0,0,0,0.2);
 }
-/* RAG AI RGB Iridescent Flowing Animation & Card */
+
+/* 🌟 GOOGLE GEMINI 3D RGB ILLUMINATED FRAME & CRISP TEXT ENGINE (2026) */
 @keyframes geminiRgbFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -1239,29 +1264,55 @@ body, html {
 }
 .gemini-rgb-card, .rag-ai-rgb-card {
   position: relative;
-  background: linear-gradient(135deg, #4285f4, #9b72cf, #d96570, #fbbc04, #10b981, #4285f4);
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #06b6d4, #10b981, #3b82f6);
   background-size: 300% 300%;
-  animation: geminiRgbFlow 6s ease infinite;
+  animation: geminiRgbFlow 5s linear infinite;
   border-radius: 16px;
-  padding: 2px;
-  box-shadow: 0 8px 30px rgba(66, 133, 244, 0.25), 0 0 16px rgba(155, 114, 207, 0.2);
+  padding: 2px !important;
+  box-shadow: 
+    0 10px 30px -4px rgba(0, 0, 0, 0.75), 
+    0 0 20px -2px rgba(59, 130, 246, 0.35), 
+    0 0 12px -1px rgba(139, 92, 246, 0.3);
   margin-bottom: 12px;
   max-width: 88%;
   align-self: flex-start;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.gemini-rgb-card:hover, .rag-ai-rgb-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 14px 36px -4px rgba(0, 0, 0, 0.85), 
+    0 0 24px 0 rgba(139, 92, 246, 0.45);
 }
 .gemini-rgb-inner {
-  background: rgba(13, 17, 28, 0.96);
-  backdrop-filter: blur(24px);
+  position: relative;
+  background: #0d1222 !important; /* Solid deep obsidian base: 0% text haze, 100% crystal clear letters */
   border-radius: 14px;
   padding: 14px 18px;
-  color: #f1f5f9;
+  color: #f8fafc !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+.gemini-rgb-inner .wa-msg-text {
+  color: #f8fafc !important;
+  font-size: 0.90rem !important;
+  line-height: 1.62 !important;
+  font-weight: 450 !important;
+  letter-spacing: 0.15px;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  word-break: break-word;
 }
 .gemini-rainbow-text {
   background: linear-gradient(90deg, #60a5fa, #c084fc, #f472b6, #fbbf24);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
+  letter-spacing: 0.2px;
+  -webkit-font-smoothing: antialiased;
 }
 .gemini-key-btn {
   background: linear-gradient(135deg, rgba(66,133,244,0.18), rgba(155,114,207,0.18));
@@ -1539,8 +1590,23 @@ body:has(#mod-chat.active) .admin-main {
 }
 #mod-chat {
   height: calc(100vh - 110px) !important;
+  height: calc(100dvh - 110px) !important;
   overflow: hidden !important;
   padding: 0 !important;
+}
+@media (max-width: 768px) {
+  body:has(#mod-chat.active) .admin-main {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: calc(100dvh - 60px) !important;
+    max-height: calc(100dvh - 60px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  #mod-chat {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
 }
 #mod-chat .wa-container {
   height: 100% !important;
@@ -4224,6 +4290,38 @@ body:has(#mod-chat.active) .admin-main {
 
 <style id="edu-admin-mobile-fix">
 @media (max-width: 768px) {
+  html, body, .admin-body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100% !important;
+    display: block !important;
+  }
+  .admin-layout {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+  }
+  .admin-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    padding: 0 10px 80px 10px !important;
+    display: block !important;
+  }
+  .module-view {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 10px 4px 60px 4px !important;
+  }
   #mobileSidebarOverlay {
     position: fixed !important;
     inset: 0 !important;
@@ -4534,6 +4632,188 @@ body:has(#mod-chat.active) .admin-main {
   .btn-staff-action-promote:active {
     background: rgba(201, 147, 42, 0.45);
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UNIVERSAL LIQUID GLASS MOBILE CARDS & RESPONSIVE TOGGLES
+   ══════════════════════════════════════════════════════════════════════════ */
+.desktop-table-only {
+  display: block !important;
+}
+.mobile-cards-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-table-only {
+    display: none !important;
+  }
+  .mobile-cards-only {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+}
+
+.liquid-glass-card {
+  background: linear-gradient(135deg, rgba(17, 25, 46, 0.82) 0%, rgba(10, 15, 28, 0.92) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.liquid-glass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(247, 211, 119, 0.35) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(201, 147, 42, 0.15) !important;
+}
+
+.liquid-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.liquid-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.liquid-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.liquid-card-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liquid-card-sub {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liquid-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.liquid-card-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+  padding: 6px 10px;
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.liquid-card-pill i {
+  color: #f7d377;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.liquid-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.btn-liquid-action {
+  flex: 1;
+  min-width: 100px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-liquid-gold {
+  background: linear-gradient(135deg, #f7d377 0%, #c9932a 100%);
+  color: #070b12;
+  box-shadow: 0 4px 12px rgba(201, 147, 42, 0.25);
+}
+
+.btn-liquid-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(201, 147, 42, 0.4);
+}
+
+.btn-liquid-outline {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.btn-liquid-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(247, 211, 119, 0.4);
+  color: #f7d377;
+}
+
+.btn-liquid-danger {
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.btn-liquid-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
 }
 </style>
 
@@ -6123,6 +6403,11 @@ body:has(#mod-chat.active) .admin-main {
               <option value="Counsellor">Counsellor</option>
               <option value="Team Leader">Team Leader</option>
               <option value="Admin">Admin</option>
+              <option value="CA_Accounts">CA / Accounts & Finance</option>
+              <option value="HR_Operations">HR & Operations Manager</option>
+              <option value="Doc_Verifier">Document Verification Officer</option>
+              <option value="Marketing_Head">Digital Marketing Head</option>
+              <option value="Quality_Auditor">Quality & Call Auditor</option>
               <option value="Associate Partner">Associate Partner</option>
             </select>
           </div>
@@ -6196,6 +6481,63 @@ body:has(#mod-chat.active) .admin-main {
               <option value="Senior Counsellor">Senior Counsellor</option>
               <option value="Lead Admission Specialist">Lead Admission Specialist</option>
             </select>
+          </div>
+        </div>
+
+        <!-- Expandable Personal Details, KYC, Bank & Drive Section -->
+        <div style="border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.25); margin-bottom:14px; overflow:hidden;">
+          <button type="button" onclick="toggleStaffExtraFields()" style="width:100%; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:transparent; border:none; color:#cbd5e1; font-size:0.82rem; font-weight:700; cursor:pointer;">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-id-card" style="color:var(--accent-purple);"></i> Personal KYC, Bank & Drive Storage Details
+            </span>
+            <i class="fa-solid fa-chevron-down" id="staffExtraChevron" style="transition:transform 0.2s;"></i>
+          </button>
+          
+          <div id="staffExtraFieldsContainer" style="display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,0.08);">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">Aadhaar / National ID</label>
+                <input type="text" id="staff_aadhaar" placeholder="12-digit Aadhaar" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">PAN Number</label>
+                <input type="text" id="staff_pan" placeholder="ABCDE1234F" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none; text-transform:uppercase;">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">Emergency Contact Phone</label>
+                <input type="text" id="staff_emergency" placeholder="+91 9876543210" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">Date of Joining</label>
+                <input type="date" id="staff_joining_date" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">Bank Account No</label>
+                <input type="text" id="staff_bank_account" placeholder="Account Number" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">IFSC Code</label>
+                <input type="text" id="staff_ifsc" placeholder="SBIN0001234" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none; text-transform:uppercase;">
+              </div>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; display:block;">Residential Address</label>
+              <input type="text" id="staff_address" placeholder="Complete residential address" style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+            </div>
+
+            <div style="margin-bottom:6px;">
+              <label style="font-size:0.72rem; font-weight:700; color:#34d399; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-brands fa-google-drive"></i> Staff Google Drive / Document Vault URL
+              </label>
+              <input type="url" id="staff_drive_url" placeholder="https://drive.google.com/drive/folders/..." style="width:100%; padding:8px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(52,211,153,0.3); border-radius:8px; color:#fff; font-size:0.82rem; outline:none;">
+            </div>
           </div>
         </div>
 
@@ -8197,6 +8539,8 @@ body:has(#mod-chat.active) .admin-main {
         </button>
       </div>
     </div>
+  </div>
+
   <!-- CTO Exclusive Master Clear ALL Chat History Modal -->
   <div id="ctoClearAllHistoryModal" class="tl-modal-overlay" style="display:none; justify-content:center; align-items:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10006; backdrop-filter:blur(10px);">
     <div style="background:#090d16; border:1px solid rgba(239,68,68,0.5); border-radius:18px; width:460px; max-width:92vw; padding:26px; box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(239,68,68,0.25); position:relative;">
@@ -8357,8 +8701,6 @@ body:has(#mod-chat.active) .admin-main {
 <!-- ══════════════════════════════════════════════════════════════════════════════ -->
 <!-- PREMIUM ADMIN → COUNSELLOR CRM FULL-SCREEN WORKSPACE (macOS Slide-Up Rise) -->
 
-</div> <!-- close div -->
-</div> <!-- close div -->
 
 
 <!-- ══════════════════════════════════════════════════════════════════════════════ -->
@@ -9582,11 +9924,7 @@ body:has(#mod-chat.active) .admin-main {
           </form>
         </div>
 
-        </div>
-</div>
-
       </div>
-
     </div>
   </div>
 

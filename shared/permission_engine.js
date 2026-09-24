@@ -394,6 +394,7 @@
 
       this.isHydrated = true;
       this.decorateSidebar();
+      this.checkForcePasswordChange();
       return this.permissionsMap;
     }
 
@@ -423,17 +424,45 @@
     // Generate clean offline default matrix
     generateDefaultMatrix(role) {
       const map = {};
-      const normRole = (role || 'student').toLowerCase();
-      const isLeadership = ['cto', 'super_admin', 'super admin', 'admin', 'ceo'].includes(normRole);
+      const normRole = (role || 'student').toLowerCase().replace(/\s+/g, '_');
+      const isLeadership = ['cto', 'super_admin', 'admin', 'ceo'].includes(normRole);
+
+      const isCa = ['ca', 'ca_accounts', 'ca_/_accounts_head', 'accounts', 'finance'].includes(normRole);
+      const isHr = ['hr', 'hr_operations', 'hr_&_operations_manager', 'human_resources'].includes(normRole);
+      const isDocVerifier = ['doc_verifier', 'document_verification_officer', 'verifier'].includes(normRole);
+      const isMarketing = ['marketing_head', 'digital_marketing_head', 'marketing'].includes(normRole);
+      const isQuality = ['quality_auditor', 'quality_&_call_auditor', 'qa'].includes(normRole);
+      const isStaffSpecialist = isCa || isHr || isDocVerifier || isMarketing || isQuality;
 
       Object.keys(FALLBACK_MODULE_CATALOG).forEach(k => {
         const item = FALLBACK_MODULE_CATALOG[k];
         let accessible = true;
         if (item.category === 'system' && normRole !== 'cto') accessible = false;
-        if (item.category === 'admin' && !isLeadership) accessible = false;
-        if (item.category === 'teamleader' && !(isLeadership || ['team_leader', 'team leader'].includes(normRole))) accessible = false;
-        if (item.category === 'counsellor' && !(isLeadership || ['team_leader', 'team leader', 'senior_counsellor', 'senior counsellor', 'counsellor'].includes(normRole))) accessible = false;
-        if (item.category === 'associate' && !(isLeadership || ['associate', 'partner'].includes(normRole))) accessible = false;
+        if (item.category === 'admin' && !isLeadership) {
+          if (isHr && (k === 'admin_attendance' || k === 'admin_staff')) accessible = true;
+          else if (isMarketing && (k === 'admin_leads' || k === 'crm_web_forms')) accessible = true;
+          else accessible = false;
+        }
+        if (item.category === 'teamleader' && !(isLeadership || ['team_leader', 'team_lead'].includes(normRole))) {
+          if (isHr && k === 'team_attendance') accessible = true;
+          else accessible = false;
+        }
+        if (item.category === 'counsellor' && !(isLeadership || ['team_leader', 'senior_counsellor', 'counsellor'].includes(normRole) || isStaffSpecialist)) accessible = false;
+        if (item.category === 'associate' && !(isLeadership || ['associate', 'partner'].includes(normRole))) {
+          if (isCa && (k === 'associate_fees' || k === 'associate_account')) accessible = true;
+          else accessible = false;
+        }
+
+        // Custom role access locks
+        if (isCa && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'associate_fees', 'associate_account', 'student_submission'].includes(k)) {
+          accessible = false;
+        }
+        if (isDocVerifier && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'student_submission', 'student_applications', 'counsellor_students', 'counsellor_applications'].includes(k)) {
+          accessible = false;
+        }
+        if (isQuality && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'counsellor_call_recordings', 'counsellor_reports'].includes(k)) {
+          accessible = false;
+        }
 
         map[k] = {
           display_name: item.name,
@@ -751,6 +780,438 @@
           if (badge) badge.remove();
         }
       });
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // MANDATORY FORCE PASSWORD CHANGE ENGINE (FOR TEMP PASSWORDS LIKE Pass123)
+    // ════════════════════════════════════════════════════════════════════════
+    checkForcePasswordChange() {
+      // 1. Detect if active session has temporary password
+      let sessionUser = this.currentUser;
+      if (!sessionUser) {
+        try {
+          const raw = localStorage.getItem('eduvision_counsellor') ||
+                      localStorage.getItem('eduvision_team_leader') ||
+                      localStorage.getItem('eduvision_admin') ||
+                      localStorage.getItem('eduvision_associate') ||
+                      localStorage.getItem('eduvision_student') ||
+                      localStorage.getItem('eduvision_user');
+          if (raw) sessionUser = JSON.parse(raw);
+        } catch(e){}
+      }
+
+      if (!sessionUser) return;
+
+      const pwd = (sessionUser.password || '').trim();
+      const isTemp = sessionUser.is_temp_password === true ||
+                     sessionUser.must_change_password === true ||
+                     pwd === 'Pass123' ||
+                     pwd === 'Pass@123' ||
+                     pwd.toLowerCase() === 'pass123' ||
+                     pwd.toLowerCase() === 'pass@123';
+
+      if (!isTemp) return;
+
+      // 2. Prevent duplicate modals
+      if (document.getElementById('eduvision-force-pwd-modal')) return;
+
+      // 3. Inject Non-Bypassable Liquid Glass Force Password Change Modal
+      const modal = document.createElement('div');
+      modal.id = 'eduvision-force-pwd-modal';
+      modal.style.cssText = `
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9999999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(4, 7, 15, 0.92) !important;
+        backdrop-filter: blur(35px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(35px) saturate(200%) !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
+        animation: edvModalFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+      `;
+
+      // Lock background scrolling
+      document.body.style.overflow = 'hidden';
+
+      modal.innerHTML = `
+        <style>
+          @keyframes edvModalFadeIn {
+            from { opacity: 0; transform: scale(0.96) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+          }
+          .edv-pwd-input:focus {
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22) !important;
+          }
+        </style>
+        <div style="
+          width: 100%;
+          max-width: 480px;
+          background: linear-gradient(145deg, rgba(20, 26, 44, 0.96) 0%, rgba(10, 14, 26, 0.98) 100%);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 24px;
+          box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 50px rgba(245, 158, 11, 0.22);
+          overflow: hidden;
+          position: relative;
+        ">
+          <!-- macOS Liquid Glass Top Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444; display: inline-block; opacity: 0.85;"></span>
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #f59e0b; display: inline-block; opacity: 0.85;"></span>
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block; opacity: 0.85;"></span>
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-shield-halved"></i> Mandatory Password Setup
+            </div>
+          </div>
+
+          <!-- Body Form -->
+          <div style="padding: 26px 28px;">
+            <!-- Icon & Heading -->
+            <div style="text-align: center; margin-bottom: 20px;">
+              <div style="
+                width: 60px;
+                height: 60px;
+                border-radius: 18px;
+                background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+                border: 1px solid rgba(245, 158, 11, 0.4);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: #f59e0b;
+                font-size: 1.6rem;
+                margin-bottom: 12px;
+                box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+              ">
+                <i class="fa-solid fa-key"></i>
+              </div>
+              <h2 style="font-size: 1.35rem; font-weight: 800; color: #ffffff; margin: 0 0 6px 0; letter-spacing: -0.02em;">
+                Set Permanent Password
+              </h2>
+              <p style="font-size: 0.86rem; color: #94a3b8; margin: 0; line-height: 1.45;">
+                Your account is currently using temporary password <code style="background: rgba(245, 158, 11, 0.15); color: #fef08a; padding: 2px 6px; border-radius: 6px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);">Pass123</code>. Please create a permanent password to unlock your workspace.
+              </p>
+            </div>
+
+            <!-- Error Banner (Hidden by default) -->
+            <div id="edvForcePwdError" style="display: none; background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; font-size: 0.82rem; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-circle-exclamation"></i> <span id="edvForcePwdErrorText"></span>
+            </div>
+
+            <form id="edvForcePwdForm" onsubmit="window.EduPerms.handleForcePasswordSubmit(event)">
+              <!-- New Password Field -->
+              <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                  New Permanent Password
+                </label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="edv_new_password" class="edv-pwd-input" required placeholder="Minimum 6 characters" minlength="6" style="
+                    width: 100%;
+                    padding: 12px 42px 12px 14px;
+                    background: rgba(0, 0, 0, 0.55);
+                    border: 1px solid rgba(255, 255, 255, 0.16);
+                    border-radius: 12px;
+                    color: #ffffff;
+                    font-size: 0.9rem;
+                    outline: none;
+                    box-sizing: border-box;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                  " oninput="window.EduPerms.validateForcePasswordInputs()">
+                  <button type="button" onclick="window.EduPerms.togglePwdVisibility('edv_new_password', this)" style="
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: transparent;
+                    border: none;
+                    color: #94a3b8;
+                    cursor: pointer;
+                    font-size: 0.95rem;
+                    padding: 4px;
+                  ">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Confirm Password Field -->
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                  Confirm New Password
+                </label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="edv_confirm_password" class="edv-pwd-input" required placeholder="Re-enter new password" minlength="6" style="
+                    width: 100%;
+                    padding: 12px 42px 12px 14px;
+                    background: rgba(0, 0, 0, 0.55);
+                    border: 1px solid rgba(255, 255, 255, 0.16);
+                    border-radius: 12px;
+                    color: #ffffff;
+                    font-size: 0.9rem;
+                    outline: none;
+                    box-sizing: border-box;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                  " oninput="window.EduPerms.validateForcePasswordInputs()">
+                  <button type="button" onclick="window.EduPerms.togglePwdVisibility('edv_confirm_password', this)" style="
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: transparent;
+                    border: none;
+                    color: #94a3b8;
+                    cursor: pointer;
+                    font-size: 0.95rem;
+                    padding: 4px;
+                  ">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+                <div id="edvForcePwdMatchText" style="font-size: 0.75rem; margin-top: 5px; font-weight: 600; display: none;"></div>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" id="btnForcePwdSubmit" style="
+                width: 100%;
+                padding: 13px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                border: none;
+                color: #000000;
+                font-weight: 800;
+                font-size: 0.92rem;
+                cursor: pointer;
+                box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+                transition: transform 0.15s, box-shadow 0.15s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+              ">
+                <i class="fa-solid fa-lock-open"></i> Update Password & Unlock Dashboard
+              </button>
+
+              <!-- Logout Button -->
+              <div style="text-align: center; margin-top: 14px;">
+                <button type="button" onclick="window.EduPerms.handleForceLogout()" style="
+                  background: transparent;
+                  border: none;
+                  color: #94a3b8;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                  text-decoration: underline;
+                ">
+                  Log out and exit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+    }
+
+    togglePwdVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPwd = input.type === 'password';
+      input.type = isPwd ? 'text' : 'password';
+      const icon = btn.querySelector('i');
+      if (icon) {
+        icon.className = isPwd ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+      }
+    }
+
+    validateForcePasswordInputs() {
+      const p1 = document.getElementById('edv_new_password')?.value || '';
+      const p2 = document.getElementById('edv_confirm_password')?.value || '';
+      const matchText = document.getElementById('edvForcePwdMatchText');
+      if (!matchText) return;
+
+      if (!p2) {
+        matchText.style.display = 'none';
+        return;
+      }
+
+      matchText.style.display = 'block';
+      if (p1 === p2 && p1.length >= 6) {
+        matchText.style.color = '#10b981';
+        matchText.innerHTML = '<i class="fa-solid fa-check"></i> Passwords match';
+      } else if (p1 !== p2) {
+        matchText.style.color = '#ef4444';
+        matchText.innerHTML = '<i class="fa-solid fa-xmark"></i> Passwords do not match';
+      } else {
+        matchText.style.color = '#f59e0b';
+        matchText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Minimum 6 characters required';
+      }
+    }
+
+    handleForceLogout() {
+      ['eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader', 'eduvision_admin', 'eduvision_associate', 'eduvision_student'].forEach(k => {
+        localStorage.removeItem(k);
+        sessionStorage.removeItem(k);
+      });
+      window.location.href = '../login.html';
+    }
+
+    async handleForcePasswordSubmit(event) {
+      event.preventDefault();
+      const errBox = document.getElementById('edvForcePwdError');
+      const errText = document.getElementById('edvForcePwdErrorText');
+      const submitBtn = document.getElementById('btnForcePwdSubmit');
+
+      const showError = (msg) => {
+        if (errBox && errText) {
+          errText.textContent = msg;
+          errBox.style.display = 'flex';
+        } else {
+          alert(msg);
+        }
+      };
+
+      if (errBox) errBox.style.display = 'none';
+
+      const p1 = document.getElementById('edv_new_password')?.value.trim() || '';
+      const p2 = document.getElementById('edv_confirm_password')?.value.trim() || '';
+
+      if (p1.length < 6) {
+        showError('New password must be at least 6 characters long.');
+        return;
+      }
+
+      if (p1.toLowerCase() === 'pass123' || p1.toLowerCase() === 'pass@123') {
+        showError('You cannot reuse the default temporary password. Please enter a new password.');
+        return;
+      }
+
+      if (p1 !== p2) {
+        showError('Passwords do not match. Please re-check.');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Securing Account & Updating...';
+      }
+
+      let sessionUser = this.currentUser;
+      if (!sessionUser) {
+        try {
+          const raw = localStorage.getItem('eduvision_counsellor') ||
+                      localStorage.getItem('eduvision_team_leader') ||
+                      localStorage.getItem('eduvision_admin') ||
+                      localStorage.getItem('eduvision_associate') ||
+                      localStorage.getItem('eduvision_student') ||
+                      localStorage.getItem('eduvision_user');
+          if (raw) sessionUser = JSON.parse(raw);
+        } catch(e){}
+      }
+
+      const uid = (sessionUser && (sessionUser.counsellor_id || sessionUser.team_leader_id || sessionUser.admin_id || sessionUser.employee_id || sessionUser.partner_id || sessionUser.student_id || sessionUser.id)) || this.currentUserId;
+      const email = sessionUser?.email || '';
+      const role = (sessionUser?.role || this.currentRole || '').toLowerCase();
+
+      const updatePayload = {
+        password: p1,
+        is_temp_password: false,
+        must_change_password: false,
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const headers = {
+          'apikey': this.supabaseKey,
+          'Authorization': 'Bearer ' + this.supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        };
+
+        // 1. Update respective specific role table
+        if (role === 'admin' || role === 'super_admin' || role === 'super admin' || role === 'ceo' || role === 'cto') {
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/admin_users?or=(admin_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (email) await fetch(`${this.supabaseUrl}/rest/v1/admin_users?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+        } else if (role === 'teamleader' || role === 'team leader') {
+          if (uid) {
+            await fetch(`${this.supabaseUrl}/rest/v1/team_leaders?or=(team_leader_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+            await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          }
+          if (email) {
+            await fetch(`${this.supabaseUrl}/rest/v1/team_leaders?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+            await fetch(`${this.supabaseUrl}/rest/v1/counsellors?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          }
+        } else if (role === 'associate' || role === 'partner') {
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/associate_partners?or=(partner_id.eq.${encodeURIComponent(uid)},partner_code.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (email) await fetch(`${this.supabaseUrl}/rest/v1/associate_partners?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+        } else if (role === 'student') {
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/students?or=(student_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (email) await fetch(`${this.supabaseUrl}/rest/v1/students?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+        } else {
+          // Counsellors, CA, HR, Marketing, Quality, Verifier
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (email) await fetch(`${this.supabaseUrl}/rest/v1/counsellors?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+        }
+
+        // 2. Sync to central users table
+        if (email) {
+          await fetch(`${this.supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(email)}`, {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify({ password: p1, updated_at: new Date().toISOString() })
+          });
+        }
+      } catch (syncErr) {
+        console.warn('[EduPerms] Password update cloud warning:', syncErr);
+      }
+
+      // 3. Update localStorage sessions
+      ['eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader', 'eduvision_admin', 'eduvision_associate', 'eduvision_student'].forEach(k => {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          try {
+            const obj = JSON.parse(raw);
+            obj.password = p1;
+            obj.is_temp_password = false;
+            obj.must_change_password = false;
+            localStorage.setItem(k, JSON.stringify(obj));
+          } catch(e){}
+        }
+      });
+
+      if (this.currentUser) {
+        this.currentUser.password = p1;
+        this.currentUser.is_temp_password = false;
+        this.currentUser.must_change_password = false;
+      }
+
+      // 4. Success UI Feedback
+      if (submitBtn) {
+        submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        submitBtn.style.color = '#ffffff';
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Password Updated & Unlocked!';
+      }
+
+      setTimeout(() => {
+        const modal = document.getElementById('eduvision-force-pwd-modal');
+        if (modal) {
+          modal.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+          modal.style.opacity = '0';
+          modal.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            modal.remove();
+            document.body.style.overflow = '';
+          }, 350);
+        }
+        if (typeof showToast === 'function') {
+          showToast('Permanent password saved! Your workspace is unlocked.', 'success');
+        }
+      }, 900);
     }
   }
 

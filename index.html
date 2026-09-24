@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="shared/page_guard.js?v=20260919_V2"></script>
@@ -8989,107 +8989,7 @@ section, .container {
       </div>
     </div>
 
-    <script>
-      // ── DYNAMIC PARTNER UNIVERSITIES HYDRATOR (CENTRAL SUPABASE DATABASE) ──
-      (function() {
-        const SUPABASE_PROJECT_URL = 'https://ewxvqpyusveiynplzxed.supabase.co';
-        const SUPABASE_ANON_KEY    = 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC';
-
-        const pageSlugMap = {
-          'amity': 'universities/amity-university.html',
-          'chandigarh': 'universities/chandigarh-university.html',
-          'manipal': 'universities/manipal-university.html',
-          'jain': 'universities/jain-university.html',
-          'lpu': 'universities/lpu-university.html',
-          'upes': 'universities/upes-university.html',
-          'sharda': 'universities/sharda-university.html',
-          'gla': 'universities/gla-university.html',
-          'parul': 'universities/parul-university.html',
-          'dypatil': 'universities/dypatil-university.html',
-          'sandip': 'universities/sandip-university.html',
-          'srm': 'universities/srm-university.html',
-          'sage': 'universities/sage-university.html',
-          'marwadi': 'universities/marwadi-university.html',
-          'jaipur': 'universities/jaipur-national-university.html',
-          'vgu': 'universities/vgu-university.html',
-          'noida': 'universities/noida-international-university.html',
-          'tulas': 'universities/tulas-institute.html',
-          'gniot': 'universities/gniot-university.html',
-          'iimt': 'universities/iimt-university.html',
-          'mangalayatan': 'universities/mangalayatan-university.html',
-          'subharti': 'universities/subharti-university.html',
-          'silveroak': 'universities/silveroak-university.html',
-          'mangalmay': 'universities/mangalmay-university.html',
-          'usha': 'universities/usha-martin-university.html'
-        };
-
-        function resolveUniUrl(univ) {
-          const lowerName = ((univ.name || '') + ' ' + (univ.univ_code || '')).toLowerCase();
-          for (const key in pageSlugMap) {
-            if (lowerName.includes(key)) return pageSlugMap[key];
-          }
-          return null;
-        }
-
-        async function hydratePartnerUniversities() {
-          try {
-            const url = `${SUPABASE_PROJECT_URL}/rest/v1/partner_universities?status=eq.Active&show_on_website=eq.true&order=name.asc`;
-            const res = await fetch(url, {
-              headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-              }
-            });
-            if (!res.ok) return;
-            const dbUnis = await res.json();
-            if (!Array.isArray(dbUnis) || dbUnis.length === 0) return;
-
-            const grid = document.querySelector('.partners-grid');
-            if (!grid) return;
-
-            const moreCard = grid.querySelector('.partner-more');
-
-            const newCardsHtml = dbUnis.map((u, i) => {
-              const delayClass = 'd' + ((i % 5) + 1);
-              const targetUrl = resolveUniUrl(u);
-              const clickAction = targetUrl 
-                ? `window.location.href='${targetUrl}'` 
-                : `document.getElementById('counselling').scrollIntoView({behavior:'smooth'})`;
-
-              const brand = u.brand_text || (u.name ? u.name.split(' ')[0] : 'UNIV');
-              const logoContent = u.logo_url
-                ? `<img loading="lazy" decoding="async" src="${u.logo_url}" alt="${u.name}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';" style="max-height:48px; max-width:100%; object-fit:contain;">
-                   <span style="display:none; font-weight:800; font-size:1.1rem; color:var(--gold); align-items:center; justify-content:center;">${brand.substring(0,3)}</span>`
-                : `<span style="font-weight:800; font-size:1.1rem; color:var(--gold); display:flex; align-items:center; justify-content:center;">${brand.substring(0,3)}</span>`;
-
-              return `
-                <div class="partner-card in" onclick="${clickAction}" role="button" tabindex="0" style="opacity:1 !important; transform:none !important;">
-                  <div class="partner-logo-wrap">
-                    ${logoContent}
-                  </div>
-                  <div class="partner-name">${u.name}</div>
-                  <div class="partner-tags">
-                    <span class="partner-tag naac">${u.accreditation || 'NAAC Accredited'}</span>
-                    <span class="partner-tag ugc">${u.category || 'Online'}</span>
-                  </div>
-                  <div class="partner-pkg">🚀 Mode: <span>${u.category || 'Online'}</span></div>
-                </div>
-              `;
-            }).join('');
-
-            grid.innerHTML = newCardsHtml + (moreCard ? moreCard.outerHTML : '');
-          } catch(err) {
-            // Gracefully keep existing static cards on any network issue
-          }
-        }
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', hydratePartnerUniversities);
-        } else {
-          hydratePartnerUniversities();
-        }
-      })();
-    </script>
+    <!-- Static Curated University Partners Preserved -->
 
     <!-- DISTANCE MODE SECTION -->
     <div id="uniSecDistance" style="text-align: left; margin-top: 80px;">
@@ -9134,9 +9034,9 @@ section, .container {
         </div>
         
         <!-- 4. MTS -->
-        <div style="background: #fff; border: 2px solid var(--gold); border-radius: 12px; padding: 4px; display: flex; align-items: center; justify-content: center; height: 150px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.3s; overflow: hidden; position: relative;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openUniModal('mts')">
-          <img src="logos/mts-logo.png" style="max-width: 100%; max-height: 100%; object-fit: contain; flex-shrink: 0;" alt="MTS Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-          <div style="width: 50px; height: 50px; border-radius: 50%; background: #b91c1c; display: none; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 1.2rem; flex-shrink: 0;">MTS</div>
+        <div style="background: #fff; border: 2px solid var(--gold); border-radius: 12px; padding: 4px; display: flex; align-items: center; justify-content: center; height: 150px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.3s; overflow: hidden; position: relative;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openUniModal('subharti')">
+          <img src="logos/subharti-org-logo.png" style="max-width: 100%; max-height: 100%; object-fit: contain; flex-shrink: 0;" alt="Subharti Distance Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #b91c1c; display: none; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 1.2rem; flex-shrink: 0;">SVSU</div>
         </div>
       </div>
     </div>
@@ -9496,7 +9396,7 @@ section, .container {
       </div>
       <form class="cm-form" id="cmForm" onsubmit="handleCmForm(event)">
         <div class="cm-field"><label>Full Name</label><input type="text" name="full_name" placeholder="Your name" required/></div>
-        <div class="cm-field"><label>Mobile</label><input type="tel" name="mobile" placeholder="+91 XXXXX XXXXX" required pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/></div></div>
+        <div class="cm-field"><label>Mobile</label><input type="tel" name="mobile" placeholder="+91 XXXXX XXXXX" required pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/></div>
         <div class="cm-field"><label>Email</label><input type="email" name="email" placeholder="your@email.com"/></div>
         <div class="cm-field"><label>City</label><input type="text" name="city" placeholder="Your city"/></div>
         <div class="cm-field full"><label>Course Interested In</label><input type="text" name="course_interest" id="cmCourseInput" readonly/></div>
@@ -10928,9 +10828,18 @@ if(!isTouch){
       }).catch(err => console.warn('Supabase lead sync:', err));
     } catch(e){}
 
-    // 3. Dispatch to Supabase Notifications for ADMIN_TEAM_LEADER & COUNSELLORS_HUB
+    // 3. Dispatch to Supabase Notifications: ONLY for ADMIN_TEAM_LEADER & COUNSELLORS_HUB
     try {
-      const notifMessage = `🚨 New Call Request for +91 ${phone} (${name || 'Student'}). Course: ${interest || 'General'}. Ticket #${leadTicket}. Assigned to Team Leader & Counsellor Desk.`;
+      const notifMessage = 
+        `🚨 *NEW STUDENT CALL REQUEST — CHATBOT* 📞\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `👤 *Student Name:* ${name || 'Website Student'}\n` +
+        `📞 *Mobile:* +91 ${phone}\n` +
+        `🎓 *Interested Course:* ${interest || 'General Admissions & Counselling'}\n` +
+        `📋 *Ticket ID:* #${leadTicket}\n` +
+        `⏰ *Request Time:* ${timestamp}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `⚡ *Action Required:* Assigned Counsellor or Team Leader please initiate call within 2 hours!`;
       
       // Admin & Team Leaders System Group (ID: 00000000-0000-0000-0000-000000000001)
       fetch(`${SUPABASE_PROJECT_URL}/rest/v1/notifications`, {
@@ -10942,11 +10851,11 @@ if(!isTouch){
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
-          title: `📞 Call Request: +91 ${phone}`,
+          title: `📞 Call Request: ${name || 'Student'} (+91 ${phone})`,
           message: notifMessage,
           sender_name: 'EduVision AI Bot 🤖',
           sender_role: 'AI_ASSISTANT',
-          category: 'CALL_REQUEST',
+          category: 'LEAD_DISPATCH',
           group_id: '00000000-0000-0000-0000-000000000001',
           priority: 'high'
         })
@@ -10962,11 +10871,11 @@ if(!isTouch){
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
-          title: `📞 Call Request: +91 ${phone}`,
+          title: `📞 Call Request: ${name || 'Student'} (+91 ${phone})`,
           message: notifMessage,
           sender_name: 'EduVision AI Bot 🤖',
           sender_role: 'AI_ASSISTANT',
-          category: 'CALL_REQUEST',
+          category: 'LEAD_DISPATCH',
           group_id: '00000000-0000-0000-0000-000000000003',
           priority: 'high'
         })
@@ -11339,6 +11248,86 @@ if(!isTouch){
         • <strong>GNIOT / NIU:</strong> B.Tech ₹1.1L–₹1.3L/yr (Budget options with direct merit quota)<br>
         • <strong>Location Advantage:</strong> Metro connectivity, 1,000+ MNCs in Noida/Gurugram for internships<br>
         • <strong>Hostel:</strong> ₹80k – ₹1.2L/yr with laundry and North/South Indian food.
+      `;
+    }
+
+    // 3B. BBA (Bachelor of Business Administration)
+    if (/\b(bba|b\.b\.a|bachelor\s*of\s*business|bba\s*admission|bba\s*college|bba\s*colleges|bba\s*university|bba\s*fees?|bba\s*course)\b/i.test(q) || (q.includes('bba') && !q.includes('bba llb') && !q.includes('mba'))) {
+      return `
+        🎓 <strong>BBA (BACHELOR OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
+        ━━━━━━━━━━━━━━━━━━━━━━<br>
+        • <strong>Eligibility:</strong> 10+2 / 12th Pass from any stream (Arts / Commerce / Science) with min 45%–50% marks.<br>
+        • <strong>Duration:</strong> 3 Years (6 Semesters) / 4-Year Honors (NEP Structure)<br>
+        • <strong>Direct Merit Seats:</strong> Available through EduVision merit quota without entrance exam barrier.<br><br>
+        🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+        • <strong>Amity University (Noida / Jaipur / Online):</strong> NAAC A+ | Regular: ₹65,000 – ₹1.2L / sem | Online BBA: ₹30,000 – ₹35,000 / sem (0% EMI)<br>
+        • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹60,000 – ₹75,000 / sem (CUCET scholarship up to 100%)<br>
+        • <strong>Galgotias University (Greater Noida):</strong> NAAC A+ | ₹50,000 – ₹65,000 / sem (Metro connectivity, high corporate exposure)<br>
+        • <strong>Manipal Online University:</strong> NAAC A++ | ₹40,000 / sem (0% No-Cost EMI @ ₹3,333/month)<br>
+        • <strong>SAGE University (Indore / Bhopal):</strong> NAAC Accredited | ₹30,000 – ₹45,000 / sem | Budget-friendly<br>
+        • <strong>Sandip University (Nashik / Madhubani Bihar):</strong> 100% BSCCS (Bihar Student Credit Card ₹4L) accepted!<br><br>
+        📌 <strong>TOP SPECIALIZATIONS:</strong><br>
+        • Digital Marketing & E-Commerce | Finance & Banking | Human Resource (HR) | Business Analytics | International Business (IB)<br><br>
+        💼 <strong>PLACEMENTS & ROI:</strong><br>
+        • Average Package: ₹4.5 LPA – ₹8.5 LPA (Deloitte, EY, Amazon, ICICI Bank, HDFC, TCS)<br><br>
+        💳 <strong>FINANCIAL AID:</strong><br>
+        • <strong>Bihar Student Credit Card (BSCCS ₹4 Lakhs 0% Loan):</strong> Zero upfront parent expense!<br>
+        • <strong>0% Monthly EMI:</strong> Available across all online and partner campuses.
+      `;
+    }
+
+    // 3C. MBA & PGDM (Master of Business Administration)
+    if (/\b(mba|m\.b\.a|pgdm|master\s*of\s*business|mba\s*admission|mba\s*college|mba\s*colleges|mba\s*university|mba\s*fees?|mba\s*course)\b/i.test(q)) {
+      return `
+        🏆 <strong>MBA & PGDM (MASTER OF BUSINESS ADMINISTRATION) — ADMISSION QUICK SHEET</strong><br>
+        ━━━━━━━━━━━━━━━━━━━━━━<br>
+        • <strong>Eligibility:</strong> Graduation (Bachelor's Degree) in any stream with min 50% marks (45% for SC/ST/OBC).<br>
+        • <strong>Duration:</strong> 2 Years (4 Semesters)<br>
+        • <strong>Direct Admission:</strong> Merit-based direct seat allocation without CAT/MAT/XAT score barrier!<br><br>
+        🏛️ <strong>TOP PARTNER UNIVERSITIES & FEES:</strong><br>
+        • <strong>Chandigarh University (CU Mohali):</strong> NAAC A+ | ₹1.2L – ₹1.6L / year | Highest CTC ₹54.75 LPA<br>
+        • <strong>Amity University (Noida / Lucknow / Online):</strong> NAAC A+ | ₹1.8L – ₹3.5L / year | Online MBA: ₹45k–₹50k/sem<br>
+        • <strong>Manipal Online (MAHE / MUJ):</strong> NAAC A++ | ₹42,500 / sem (0% EMI @ ₹3,540/month, Harvard modules)<br>
+        • <strong>Galgotias & Sharda University:</strong> NAAC A+ | ₹1.4L – ₹1.7L / year | Delhi NCR corporate hub<br>
+        • <strong>SAGE University (Indore / Bhopal):</strong> ₹85,000 – ₹1.2L / year (Industry-linked labs)<br>
+        • <strong>Mangalayatan & Subharti:</strong> Distance/Online MBA starting ₹16,000/sem (₹30k–₹32k/year)<br><br>
+        📌 <strong>TOP SPECIALIZATIONS (DUAL OPTION AVAILABLE):</strong><br>
+        • Marketing & Sales | Finance & Fintech | HR Analytics | Business Analytics & AI | Operations & Supply Chain<br><br>
+        💼 <strong>PLACEMENTS & ROI:</strong><br>
+        • Average Package: ₹7.5 LPA – ₹16 LPA (Amazon, PwC, KPMG, Bain, ICICI Bank, Wipro)<br><br>
+        💳 <strong>FINANCIAL AID & EMI:</strong><br>
+        • 0% No-Cost Monthly EMI starting ₹3,500/month | Bihar Student Credit Card (BSCCS ₹4L) applicable.
+      `;
+    }
+
+    // 3D. BCA & MCA
+    if (/\b(bca|b\.c\.a|bachelor\s*of\s*computer|bca\s*admission|bca\s*college|bca\s*colleges|bca\s*university)\b/i.test(q)) {
+      return `
+        💻 <strong>BCA (BACHELOR OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+        ━━━━━━━━━━━━━━━━━━━━━━<br>
+        • <strong>Eligibility:</strong> 10+2 / 12th Pass from any stream (Science / Commerce / Arts) with min 45%–50% marks.<br>
+        • <strong>Top Campuses:</strong> SRM University (₹85k/yr), CU Mohali (₹55k/sem), Manipal Online (₹35k/sem), Galgotias (₹72k/yr), Sandip University (BSCCS ₹4L).<br>
+        • <strong>Specializations:</strong> Cloud Computing, AI & Data Science, Full Stack Web Dev, Cyber Security.
+      `;
+    }
+
+    if (/\b(mca|m\.c\.a|master\s*of\s*computer|mca\s*admission|mca\s*college|mca\s*colleges|mca\s*university)\b/i.test(q)) {
+      return `
+        🖥️ <strong>MCA (MASTER OF COMPUTER APPLICATIONS) — ADMISSION QUICK SHEET</strong><br>
+        ━━━━━━━━━━━━━━━━━━━━━━<br>
+        • <strong>Eligibility:</strong> BCA / B.Sc / Any Graduate with Maths (min 50% marks). Duration: 2 Years.<br>
+        • <strong>Top Campuses:</strong> Manipal Online (₹37,500/sem), Chandigarh University, Amity Online, Mangalayatan (₹28k/yr).
+      `;
+    }
+
+    // 3E. B.TECH & ENGINEERING
+    if (/\b(b\.?tech|engineering|b\.e\.|cse|computer\s*science|ai\s*ml|data\s*science|mechanical|civil|electrical)\b/i.test(q)) {
+      return `
+        ⚙️ <strong>B.TECH & ENGINEERING ADMISSION COUNSELLING GUIDE</strong><br>
+        ━━━━━━━━━━━━━━━━━━━━━━<br>
+        • <strong>Eligibility:</strong> 10+2 with Physics & Mathematics (PCM) min 45%–50% marks (Direct merit seats without JEE barrier).<br>
+        • <strong>Top Campuses:</strong> SRM University (₹2.2L-₹3.5L/yr), Chandigarh University (₹1.35L-₹1.8L/yr), Galgotias (₹1.4L-₹1.6L/yr), Sandip University (BSCCS ₹4L).<br>
+        • <strong>Specializations:</strong> CSE (AI/ML, Data Science, Cyber Security, Cloud Computing).
       `;
     }
 
@@ -11915,7 +11904,7 @@ End your response with 2-4 quick reply choices in brackets: [Option 1 | Option 2
 
     // PRIORITY 1: INSTANT PHONE NUMBER & CALLBACK DETECTION
     const phoneMatch = input.match(/(?:\+91[\s-]?)?([6-9]\d{9})\b/);
-    const isCallIntent = /\b(call|cal|callback|arrange\s*(?:a\s*)?ca[l]{1,2}|phone|contact|baat|connect|ring)\b/i.test(input);
+    const isCallIntent = /\b(call|cal|callback|arrange\s*(?:a\s*)?ca[l]{1,2}|phone|contact|baat|connect|ring|request\s*(?:a\s*)?call|call\s*request|call\s*karo|mujhe\s*call|call\s*me|talk\s*to\s*counsellor|counsellor\s*call)\b/i.test(input);
 
     if (phoneMatch) {
       const phone = phoneMatch[1] || phoneMatch[0].replace(/\D/g, '').slice(-10);

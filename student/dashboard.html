@@ -1,6 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    /* ── Bulletproof Early Mobile Navigation Handler ── */
+    window.toggleMobileSidebar = function(e) {
+      if (e) {
+        try { e.preventDefault(); } catch(_) {}
+        try { e.stopPropagation(); } catch(_) {}
+      }
+      const sidebar = document.querySelector('.sidebar') || document.querySelector('.tl-sidebar') || document.querySelector('aside');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+      if (!sidebar) return;
+
+      const isOpen = sidebar.classList.contains('open') || sidebar.classList.contains('mobile-open') || sidebar.getAttribute('data-state') === 'open';
+      if (isOpen) {
+        sidebar.classList.remove('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'closed');
+        if (overlay) {
+          overlay.classList.remove('active', 'open');
+        }
+      } else {
+        sidebar.classList.add('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'open');
+        if (overlay) {
+          overlay.classList.add('active', 'open');
+        }
+      }
+    };
+
+    window.closeMobileSidebar = function(e) {
+      if (e) {
+        try { e.preventDefault(); } catch(_) {}
+        try { e.stopPropagation(); } catch(_) {}
+      }
+      const sidebar = document.querySelector('.sidebar') || document.querySelector('.tl-sidebar') || document.querySelector('aside');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+      if (sidebar) {
+        sidebar.classList.remove('open', 'mobile-open');
+        sidebar.setAttribute('data-state', 'closed');
+      }
+      if (overlay) {
+        overlay.classList.remove('active', 'open');
+      }
+    };
+  </script>
+
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <link rel="preconnect" href="https://ewxvqpyusveiynplzxed.supabase.co" crossorigin>
   <link rel="dns-prefetch" href="https://ewxvqpyusveiynplzxed.supabase.co">
@@ -19,6 +63,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/eduvision_rag_ai.js"></script>
   <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
 
   <style>
@@ -2041,6 +2086,13 @@
             </div>
             
             <!-- Chat Input Area -->
+            <div class="wa-ai-chips-bar" id="studentAiChipsBar" style="display:flex; gap:8px; overflow-x:auto; padding:8px 16px; background:rgba(10,16,30,0.85); border-top:1px solid rgba(255,255,255,0.08); scrollbar-width:none;">
+              <button type="button" onclick="sendStudentAiPrompt('📞 Arrange a call with counsellor')" style="background:rgba(201,147,42,0.18); border:1px solid rgba(247,211,119,0.4); color:#f7d377; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; white-space:nowrap; cursor:pointer;">📞 Book Counsellor Call</button>
+              <button type="button" onclick="sendStudentAiPrompt('What are the B.Tech CSE fees for SRM vs Sandip vs CU?')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#e2e8f0; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; white-space:nowrap; cursor:pointer;">🎓 B.Tech CSE Fees</button>
+              <button type="button" onclick="sendStudentAiPrompt('Suggest best Online MBA with 0% EMI')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#e2e8f0; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; white-space:nowrap; cursor:pointer;">💼 Online MBA &amp; EMI</button>
+              <button type="button" onclick="sendStudentAiPrompt('Explain Bihar Student Credit Card (BSCCS ₹4 Lakhs 0% loan)')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#e2e8f0; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; white-space:nowrap; cursor:pointer;">💰 Bihar Credit Card ₹4L</button>
+              <button type="button" onclick="sendStudentAiPrompt('Eligibility for NIOS 10th &amp; 12th admission')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#e2e8f0; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; white-space:nowrap; cursor:pointer;">📚 NIOS Board Admission</button>
+            </div>
             <div class="wa-input-area">
               <div id="waEmojiPickerContainer" style="position:absolute; bottom:80px; left:20px; background:rgba(15,23,42,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:10px; width:250px; height:200px; overflow-y:auto; display:none; z-index:30; grid-template-columns:repeat(6,1fr); gap:8px; font-size:1.3rem;">
                 <span onclick="insertEmoji('😀')">😀</span><span onclick="insertEmoji('😂')">😂</span><span onclick="insertEmoji('😍')">😍</span>
@@ -3556,6 +3608,17 @@
           }
         }
 
+        const aiStudentGroup = {
+          id: '00000000-0000-0000-0000-0000000000aa',
+          name: '⚡ EduVision RAG AI Advisor',
+          description: '24/7 AI Admission Co-Pilot • Course details, university fees & 1-on-1 counsellor call booking',
+          is_system_group: true,
+          system_group_key: 'AI_COPILOT_HUB',
+          created_at: '2026-09-01T00:00:00Z'
+        };
+        if (!userG.some(g => g.id === aiStudentGroup.id)) {
+          userG.unshift(aiStudentGroup);
+        }
         userGroups = userG;
         userGroups.sort((a, b) => {
           if (a.is_system_group && !b.is_system_group) return -1;
@@ -3580,7 +3643,13 @@
         let avatarIcon = '<i class="fa-solid fa-users"></i>';
         let avatarClass = 'wa-avatar-counsellors';
         if (g.is_system_group) {
-          if (g.system_group_key === 'STUDENTS_BROADCAST') { avatarIcon = '<i class="fa-solid fa-user-graduate"></i>'; avatarClass = 'wa-avatar-students'; }
+          if (g.system_group_key === 'STUDENTS_BROADCAST') { 
+            avatarIcon = '<i class="fa-solid fa-user-graduate"></i>'; 
+            avatarClass = 'wa-avatar-students'; 
+          } else if (g.system_group_key === 'AI_COPILOT_HUB' || g.id === '00000000-0000-0000-0000-0000000000aa') {
+            avatarIcon = '<i class="fa-solid fa-bolt" style="color:#070b14;"></i>';
+            avatarClass = 'wa-avatar-ai';
+          }
         } else {
           avatarIcon = `<span>${(g.name || 'C').charAt(0).toUpperCase()}</span>`;
           avatarClass = 'wa-avatar-custom';
@@ -3638,6 +3707,62 @@
       const container = document.getElementById('waMessagesContainer');
       if (!container) return;
       const currentGroup = userGroups.find(g => g.id === activeWaChatGroup);
+
+      if (activeWaChatGroup === '00000000-0000-0000-0000-0000000000aa') {
+        let aiMsgs = [];
+        if (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) {
+          aiMsgs = window.EduVisionRagAi.getAiChatHistory();
+        }
+        if (aiMsgs.length === 0) {
+          container.innerHTML = `
+            <div style="color:var(--text-muted); text-align:center; margin:auto; font-size:0.88rem; background:rgba(255,255,255,0.02); padding:18px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); max-width:85%; line-height:1.6;">
+              <div style="font-size:2.2rem; margin-bottom:8px;">⚡</div>
+              <strong style="color:#f7d377; font-size:1.05rem;">Welcome to EduVision AI Advisor!</strong><br>
+              Ask me anything about 1,500+ courses, university fee comparisons, scholarships, or book a 1-on-1 call with our counsellors.
+            </div>
+          `;
+          return;
+        }
+        let html = '';
+        aiMsgs.forEach(m => {
+          const isUser = (m.sender_role === 'user');
+          const time = new Date(m.created_at || Date.now()).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+          if (m.sender_role === 'ai') {
+            html += `
+              <div class="gemini-rgb-card">
+                <div class="gemini-rgb-inner">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px;">
+                    <span class="gemini-rainbow-text" style="font-size:0.8rem; font-weight:800; display:inline-flex; align-items:center; gap:6px;">
+                      <i class="fa-solid fa-wand-magic-sparkles"></i> ⚡ EduVision RAG AI Advisor
+                    </span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span>
+                      <span style="color:#94a3b8; font-size:0.68rem;">${time}</span>
+                    </div>
+                  </div>
+                  <div class="wa-msg-text" style="font-size:0.88rem; line-height:1.55; word-break:break-word; color:#f1f5f9;">${m.message}</div>
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="wa-bubble wa-bubble-right" style="max-width:80%; align-self:flex-end;">
+                <span class="wa-bubble-text">${m.message}</span>
+                <div style="text-align:right; font-size:0.68rem; color:rgba(255,255,255,0.5); margin-top:4px;">${time}</div>
+              </div>
+            `;
+          }
+        });
+        const wasScrolledUp = (container.scrollHeight - container.scrollTop - container.clientHeight) > 100;
+        const prevScrollTop = container.scrollTop;
+        container.innerHTML = html;
+        if (wasScrolledUp) {
+          container.scrollTop = prevScrollTop;
+        } else {
+          container.scrollTop = container.scrollHeight;
+        }
+        return;
+      }
       if (!currentGroup) return;
       const groupMsgs = allWaMessages.filter(m =>
         m.group_id === activeWaChatGroup ||
@@ -3720,6 +3845,12 @@
       cancelReply();
       editingMessageId = null;
       renderWaMessages();
+      const msgArea = document.getElementById('waMessagesContainer');
+      if (msgArea) {
+        msgArea.scrollTop = msgArea.scrollHeight;
+        setTimeout(() => { msgArea.scrollTop = msgArea.scrollHeight; }, 40);
+        setTimeout(() => { msgArea.scrollTop = msgArea.scrollHeight; }, 150);
+      }
     }
 
     async function sendWaChatMessage(event) {
@@ -3727,6 +3858,66 @@
       const input = document.getElementById('waMessageInput');
       if (!input) return;
       const text = input.value.trim();
+
+      if (activeWaChatGroup === '00000000-0000-0000-0000-0000000000aa') {
+        if (!text) return;
+        playNotificationSound(true);
+        input.value = '';
+
+        let aiMsgs = (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) ? window.EduVisionRagAi.getAiChatHistory() : [];
+        const studentName = getStudentUserName();
+
+        const userMsg = {
+          id: 'stu_' + Date.now(),
+          sender_name: studentName,
+          sender_role: 'user',
+          created_at: new Date().toISOString(),
+          message: text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        };
+        aiMsgs.push(userMsg);
+        if (window.EduVisionRagAi && window.EduVisionRagAi.saveAiChatHistory) {
+          window.EduVisionRagAi.saveAiChatHistory(aiMsgs);
+        }
+        renderWaMessages();
+
+        // Show Google Gemini RGB Golden Thinking Box
+        const container = document.getElementById('waMessagesContainer');
+        let thinkingBox = null;
+        if (window.EduVisionRagAi && window.EduVisionRagAi.showAiThinkingBox) {
+          thinkingBox = window.EduVisionRagAi.showAiThinkingBox(container);
+        }
+
+        (async () => {
+          // Natural Google Gemini thinking delay
+          await new Promise(r => setTimeout(r, 1200));
+
+          let aiResponseHtml = null;
+          if (window.EduVisionRagAi && window.EduVisionRagAi.queryRagAi) {
+            aiResponseHtml = await window.EduVisionRagAi.queryRagAi(text);
+          }
+
+          if (thinkingBox && typeof thinkingBox._cleanup === 'function') {
+            thinkingBox._cleanup();
+          }
+
+          const aiReply = {
+            id: 'ai_' + Date.now(),
+            sender_name: 'EduVision RAG AI Advisor ✨',
+            sender_role: 'ai',
+            created_at: new Date().toISOString(),
+            message: aiResponseHtml || 'I am ready to help with university admissions, fees, and counsellor bookings.'
+          };
+
+          aiMsgs = (window.EduVisionRagAi && window.EduVisionRagAi.getAiChatHistory) ? window.EduVisionRagAi.getAiChatHistory() : aiMsgs;
+          aiMsgs.push(aiReply);
+          if (window.EduVisionRagAi && window.EduVisionRagAi.saveAiChatHistory) {
+            window.EduVisionRagAi.saveAiChatHistory(aiMsgs);
+          }
+          playNotificationSound(false);
+          renderWaMessages();
+        })();
+        return;
+      }
       if (!text && !selectedFileAttachment) return;
       const currentUserId = getStudentUserId();
       var sb = getSupabase();
@@ -4046,3 +4237,15 @@
 
 </body>
 </html>
+<script>
+window.sendStudentAiPrompt = function(text) {
+  if (activeWaChatGroup !== '00000000-0000-0000-0000-0000000000aa') {
+    switchWaChat('00000000-0000-0000-0000-0000000000aa');
+  }
+  const input = document.getElementById('waMessageInput');
+  if (input) {
+    input.value = text;
+    sendWaChatMessage(new Event('submit'));
+  }
+};
+</script>

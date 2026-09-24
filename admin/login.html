@@ -751,13 +751,17 @@
         }
 
         // Build admin session object
+        const isTempPwd = (user.is_temp_password === true || user.must_change_password === true || password === 'Pass123' || password === 'Pass@123' || password.toLowerCase() === 'pass123');
         const adminSession = {
           admin_id: user.admin_id || user.employee_id,
           employee_id: user.employee_id,
           full_name: user.full_name,
           role: user.role || 'Admin',
           designation: user.designation || user.role || 'Administrator',
-          branch: user.branch || 'Head Office'
+          branch: user.branch || 'Head Office',
+          password: password,
+          is_temp_password: isTempPwd,
+          must_change_password: isTempPwd
         };
 
         localStorage.setItem('eduvision_admin', JSON.stringify(adminSession));

@@ -472,12 +472,15 @@ async function renderCounsellorCRMGrid() {
     if (error) throw error;
     
     container.innerHTML = '';
-    if (!data || data.length === 0) {
+    const adminRoles = ['admin', 'super admin', 'ceo', 'cto'];
+    const activeCounsellors = (data || []).filter(c => !adminRoles.includes((c.role || '').toLowerCase()));
+    
+    if (activeCounsellors.length === 0) {
       container.innerHTML = '<div style="color:#fff; grid-column:1 / -1; text-align:center; padding:30px;">No counsellors found in database.</div>';
       return;
     }
     
-    data.forEach(c => {
+    activeCounsellors.forEach(c => {
       const counsellorId = String(c.counsellor_id || c.employee_id || c.id || 'CNS260001');
       const card = document.createElement('div');
       card.className = 'counsellor-crm-card';
@@ -3675,6 +3678,12 @@ function switchWaChat(groupId) {
   cancelReply();
   editingMessageId = null;
   renderWaMessages();
+  const msgArea = document.getElementById('waMessagesContainer');
+  if (msgArea) {
+    msgArea.scrollTop = msgArea.scrollHeight;
+    setTimeout(() => { msgArea.scrollTop = msgArea.scrollHeight; }, 40);
+    setTimeout(() => { msgArea.scrollTop = msgArea.scrollHeight; }, 150);
+  }
 }
 
 async function sendWaChatMessage(event) {

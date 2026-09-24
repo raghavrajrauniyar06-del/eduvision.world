@@ -641,6 +641,7 @@
 
             if (!dbErr && dbMatches && dbMatches.length > 0) {
               const match = dbMatches[0];
+              const isTempPwd = (match.is_temp_password === true || match.must_change_password === true || pwd === 'Pass123' || pwd === 'Pass@123' || pwd.toLowerCase() === 'pass123');
               user = {
                 counsellor_id: match.counsellor_id,
                 employee_id: match.employee_id,
@@ -650,7 +651,10 @@
                 designation: match.designation || match.role || 'Counsellor',
                 status: match.status || 'Active',
                 phone: match.phone || '',
-                email: match.email || ''
+                email: match.email || '',
+                password: pwd,
+                is_temp_password: isTempPwd,
+                must_change_password: isTempPwd
               };
             }
           }
