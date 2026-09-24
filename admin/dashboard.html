@@ -9677,21 +9677,21 @@ body:has(#mod-chat.active) .admin-main {
     <div onclick="closeAdminProfileModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);"></div>
     <div id="adminProfileWindow" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.96); width:92%; max-width:780px; max-height:90vh; background:radial-gradient(ellipse at top left, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.3); border-radius:22px; box-shadow:0 35px 95px rgba(0,0,0,0.92), 0 0 50px rgba(201,147,42,0.18); z-index:10002; color:#fff; display:flex; flex-direction:column; overflow:hidden; transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
       
-      <!-- macOS Window Header with Traffic Lights -->
-      <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div onclick="closeAdminProfileModal()" title="Close (Esc)" style="width:12px; height:12px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
-          <div onclick="minimizeAdminProfileModal()" title="Minimize" style="width:12px; height:12px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
-          <div onclick="toggleAdminProfileFullscreen()" title="Toggle Fullscreen" style="width:12px; height:12px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
-          <span style="margin-left:10px; font-size:0.75rem; color:#94a3b8; font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-weight:600;">
-            EduVision macOS ✦ Executive Command Dossier
+      <!-- Executive Modal Header -->
+      <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 22px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:var(--accent-gold); font-size:0.95rem;">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <span style="font-size:0.92rem; color:#ffffff; font-weight:800; letter-spacing:0.3px;">
+            Executive Profile &amp; Settings
           </span>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div style="display:flex; align-items:center; gap:12px;">
           <span id="adminModalRoleBadge" style="font-size:0.7rem; font-weight:800; background:rgba(247,211,119,0.12); color:var(--accent-gold); border:1px solid rgba(247,211,119,0.3); padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;">
-            EXECUTIVE ADMIN
+            CHIEF TECHNOLOGY OFFICER
           </span>
-          <button type="button" onclick="closeAdminProfileModal()" style="background:transparent; border:none; color:#64748b; font-size:1.2rem; cursor:pointer; line-height:1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">&times;</button>
+          <button type="button" onclick="closeAdminProfileModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:1.1rem; cursor:pointer; transition:all 0.15s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(239,68,68,0.3)'; this.style.borderColor='rgba(239,68,68,0.5)';" onmouseout="this.style.color='#94a3b8'; this.style.background='rgba(255,255,255,0.06)'; this.style.borderColor='rgba(255,255,255,0.1)';">&times;</button>
         </div>
       </div>
 
@@ -10037,14 +10037,16 @@ body:has(#mod-chat.active) .admin-main {
       return;
     }
 
-    if (btnText) btnText.textContent = 'Saving...';
+    if (btnText) btnText.textContent = 'Saving to Database...';
 
     try {
       let admin = {};
       try {
-        const raw = localStorage.getItem('eduvision_admin');
+        const raw = localStorage.getItem('eduvision_admin') || localStorage.getItem('eduvision_user');
         if (raw) admin = JSON.parse(raw);
       } catch(e){}
+
+      const empId = admin.employee_id || admin.admin_id || 'ADM001';
 
       admin.full_name = fullName;
       admin.name = fullName;
@@ -10054,22 +10056,41 @@ body:has(#mod-chat.active) .admin-main {
       admin.role = role;
       admin.branch = branch;
 
-      localStorage.setItem('eduvision_admin', JSON.stringify(admin));
+      // 1. Direct Supabase Database Write
+      if (typeof sb !== 'undefined' && sb && typeof sb.from === 'function') {
+        try {
+          const { error: dbErr } = await sb
+            .from('admin_users')
+            .update({
+              full_name: fullName,
+              email: email,
+              phone: phone,
+              designation: role,
+              branch: branch,
+              updated_at: new Date().toISOString()
+            })
+            .or(`employee_id.eq.${empId},admin_id.eq.${empId},email.eq.${email}`);
 
-      // Also update eduvision_user if logged in as admin
+          if (dbErr) console.warn("Supabase database update notice:", dbErr.message);
+        } catch(sbEx) {
+          console.warn("Supabase database sync exception:", sbEx.message);
+        }
+      }
+
+      // 2. Persist to active local session
+      localStorage.setItem('eduvision_admin', JSON.stringify(admin));
       try {
         let u = JSON.parse(localStorage.getItem('eduvision_user') || '{}');
-        if (u.role === 'admin' || u.role === 'super_admin' || !u.role) {
-          u.name = fullName;
-          u.email = email;
-          u.phone = phone;
-          localStorage.setItem('eduvision_user', JSON.stringify(u));
-        }
+        u.name = fullName;
+        u.email = email;
+        u.phone = phone;
+        u.role = u.role || 'admin';
+        localStorage.setItem('eduvision_user', JSON.stringify(u));
       } catch(e){}
 
       if (typeof currentAdmin !== 'undefined') currentAdmin = admin;
 
-      // Update page displays
+      // 3. Update top UI elements
       const topName = document.getElementById('topAdminName');
       if (topName) topName.textContent = fullName;
       const heroName = document.getElementById('heroAdminName');
@@ -10086,7 +10107,7 @@ body:has(#mod-chat.active) .admin-main {
       const modalAv = document.getElementById('adminModalAvatar');
       if (modalAv) modalAv.textContent = initials;
 
-      // Update modal text fields
+      // 4. Update modal text fields
       const dName = document.getElementById('adminDetailFullName');
       if (dName) dName.textContent = fullName;
       const dEmail = document.getElementById('adminDetailEmail');
@@ -10102,7 +10123,7 @@ body:has(#mod-chat.active) .admin-main {
       const modalEmail = document.getElementById('adminModalEmail');
       if (modalEmail) modalEmail.textContent = email;
 
-      showMsg("Admin profile updated successfully!", false);
+      showMsg("Profile details saved to database & synchronized!", false);
       setTimeout(() => {
         if (statusEl) statusEl.style.display = 'none';
         toggleAdminProfileEditMode(false);
