@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Executive Login - EduVision</title>
   
   <link rel="stylesheet" href="css/style.css" />
@@ -569,6 +569,14 @@
 
   .auth-footer a:hover { color: #ffffff !important; }
 
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .mobile-nav-toggle { width: 44px !important; height: 44px !important; }
+  .btn-modal-close, .btn-action-icon { min-width: 44px !important; min-height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
 </style>
 </head>
 <body class="admin-login-body">

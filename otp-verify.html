@@ -650,6 +650,12 @@
       filter: drop-shadow(0 0 10px rgba(247, 211, 119, 1)) !important;
       color: #ffffff !important;
     }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+}
+body { padding-top: env(safe-area-inset-top); }
   </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>

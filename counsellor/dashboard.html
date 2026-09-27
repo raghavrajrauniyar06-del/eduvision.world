@@ -6,7 +6,7 @@
   <link rel="dns-prefetch" href="https://ewxvqpyusveiynplzxed.supabase.co">
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>EduVision | Counsellor Operations & CRM Workspace</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -393,7 +393,8 @@
       border: 1px solid rgba(255, 255, 255, 0.11);
       border-top: 1.5px solid rgba(255, 255, 255, 0.32);
       border-radius: 20px;
-      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7),
                   0 0 0 1px rgba(255, 255, 255, 0.06),
                   inset 0 1.5px 0 rgba(255, 255, 255, 0.16);
@@ -2656,6 +2657,18 @@
   0% { transform: scale(0.92); }
   50% { transform: scale(1.08); }
   100% { transform: scale(1); }
+}
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .eye-btn { width: 44px !important; height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.modal-open { overflow: hidden !important; }
+
+@supports (height: 100dvh) {
+  .sidebar { height: 100dvh; }
 }
 </style>
 
@@ -5322,9 +5335,9 @@
       <!-- macOS Window Header with Traffic Lights -->
       <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <div onclick="closeEmployeeProfileModal()" title="Close (Esc)" style="width:12px; height:12px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
-          <div onclick="minimizeEmployeeProfileModal()" title="Minimize" style="width:12px; height:12px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
-          <div onclick="toggleEmployeeProfileFullscreen()" title="Toggle Fullscreen" style="width:12px; height:12px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
+          <div onclick="closeEmployeeProfileModal()" title="Close (Esc)" style="width:20px; height:20px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
+          <div onclick="minimizeEmployeeProfileModal()" title="Minimize" style="width:20px; height:20px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
+          <div onclick="toggleEmployeeProfileFullscreen()" title="Toggle Fullscreen" style="width:20px; height:20px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
           <span style="margin-left:10px; font-size:0.75rem; color:#94a3b8; font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-weight:600;">
             EduVision macOS • Staff Dossier
           </span>

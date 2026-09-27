@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>EduVision World App</title>
+  <meta name="description" content="EduVision World Mobile App — Launch, Onboarding, and Student Authentication">
+  <meta name="theme-color" content="#040814">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Supabase JS Client for Auth Integration -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Web App Manifest for Android Installation -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EduVision">
+
+  <!-- Dedicated App Stylesheet -->
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <!-- DESKTOP / LAPTOP DEVICE FRAME WRAPPER (Auto-Adapts to Real Phone Screens) -->
+  <div class="device-viewport-shell">
+
+    <!-- DEV TESTING TOOLBAR (Visible on laptop for easy review & testing) -->
+    <div class="dev-test-toolbar">
+      <span>📱 <strong>EduVision App Preview</strong></span>
+      <button onclick="devReplaySplash()" title="Watch the Earth connection animations in action">✨ Splash Animation</button>
+      <button onclick="devResetOnboarding()" title="Simulate first-time install & launch">🔄 Restart Launch</button>
+      <button onclick="devDirectToLogin()" title="Jump straight to Login screen">🔑 Login Screen</button>
+      <button onclick="devDirectToDashboard()" title="Jump straight to Dashboard">🏠 Dashboard</button>
+      <button onclick="devToggleFullWindow()" title="Toggle Fullscreen Window">⛶ Full Window</button>
+    </div>
+
+    <!-- THE MOBILE PHONE SCREEN CONTAINER -->
+    <div class="app-mobile-frame" id="mobileFrame">
+
+      <!-- Dynamic Island / Top Camera Notch -->
+      <div class="notch-pill"></div>
+
+      <!-- Android Mobile Status Bar (Clock, Wifi, Battery) -->
+      <div class="mobile-status-bar dark-mode-status" id="statusBar">
+        <span id="statusTime">9:41</span>
+        <div class="status-icons">
+          <i class="fa-solid fa-signal"></i>
+          <i class="fa-solid fa-wifi"></i>
+          <i class="fa-solid fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- APP SCREENS HOST -->
+      <div class="app-screen-host">
+
+        <!-- ═══════════════════════════════════════════════════════════
+             1. SPLASH SCREEN (Deep Space Navy, Globe & Logo Sequence)
+             ═══════════════════════════════════════════════════════════ -->
+        <!-- ═══════════════════════════════════════════════════════════
+             1. SPLASH SCREEN (Photorealistic Earth & Deep Cosmos)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen active-screen" id="screen-splash">
+          <!-- Authentic Satellite Earth Layer -->
+          <div class="splash-real-earth-bg"></div>
+
+          <!-- Natural Atmospheric Limb Glow (Ozone Scattering Layer) -->
+          <div class="splash-ozone-atmosphere-glow"></div>
+
+          <!-- Subtle Cosmic Depth & Stars -->
+          <div class="splash-space-twinkle"></div>
+
+          <!-- Natural Horizon Sunrise Glow (Soft Atmospheric Dawn, No Cartoon Rays) -->
+          <div class="splash-natural-dawn-glow"></div>
+
+          <!-- Subtle Indian Subcontinent City Light Micro-Scintillation -->
+          <div class="splash-city-lights-shimmer"></div>
+
+          <!-- Ultra-Delicate Fiber-Optic Global Connection Arcs (1px Precision) -->
+          <svg class="splash-connection-arcs-svg" viewBox="0 0 412 890" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gradDelicateCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.05"/>
+                <stop offset="35%" stop-color="#7dd3fc" stop-opacity="0.85"/>
+                <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#0284c7" stop-opacity="0.1"/>
+              </linearGradient>
+              <linearGradient id="gradDelicateGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.05"/>
+                <stop offset="40%" stop-color="#fde047" stop-opacity="0.85"/>
+                <stop offset="75%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#d97706" stop-opacity="0.1"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Line 1: Ultra-fine Orbital Arc (West across South Asia to East) -->
+            <path class="connection-arc arc-orbit-gold" d="M 8 460 C 95 375 285 375 404 472" stroke="url(#gradDelicateGold)" stroke-width="1.1"/>
+
+            <!-- Line 2: India to Sunrise Dawn Arc -->
+            <path class="connection-arc arc-india-sunrise" d="M 152 562 C 205 470 295 460 354 492" stroke="url(#gradDelicateCyan)" stroke-width="1.2"/>
+
+            <!-- Line 3: Southern Ocean across India North -->
+            <path class="connection-arc arc-india-north" d="M 122 638 C 138 555 180 505 228 478" stroke="url(#gradDelicateCyan)" stroke-width="1.1"/>
+
+            <!-- Line 4: India to Southeast Asia Maritime Arc -->
+            <path class="connection-arc arc-southeast-gold" d="M 156 572 C 228 525 288 545 372 578" stroke="url(#gradDelicateGold)" stroke-width="1.1"/>
+
+            <!-- Line 5: Outer Curvature Data Thread -->
+            <path class="connection-arc arc-outer-ring" d="M 32 520 C 130 420 310 430 388 530" stroke="url(#gradDelicateCyan)" stroke-width="1"/>
+
+            <!-- Precision Fiber Photons (Tiny Delicate Light Beads) -->
+            <circle class="arc-photon photon-1" r="2" fill="#ffffff"/>
+            <circle class="arc-photon photon-2" r="1.8" fill="#fef08a"/>
+            <circle class="arc-photon photon-3" r="1.8" fill="#7dd3fc"/>
+            <circle class="arc-photon photon-4" r="1.8" fill="#ffffff"/>
+          </svg>
+
+          <!-- Precision Metropolitan Data Nodes (Ultra-Fine 2.5px Pinpoints) -->
+          <div class="splash-network-pulse node-delhi">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring"></span>
+          </div>
+          <div class="splash-network-pulse node-mumbai">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring delay-1"></span>
+          </div>
+          <div class="splash-network-pulse node-bangalore">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring delay-2"></span>
+          </div>
+          <div class="splash-network-pulse node-southeast-asia">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring delay-1"></span>
+          </div>
+          <div class="splash-network-pulse node-sunrise">
+            <span class="pulse-core"></span>
+            <span class="pulse-ring"></span>
+          </div>
+
+          <!-- Functional Upper Capsule Progress Bar (Live 0% to 100% Loader) -->
+          <div class="splash-functional-loader" aria-label="Loading EduVision World">
+            <div class="splash-capsule-track">
+              <div class="splash-capsule-fill" id="splashCapsuleFill">
+                <span class="splash-capsule-glow-head"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════
+             2. ONBOARDING CAROUSEL (4 Slides, Floating Badges & Gestures)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen" id="screen-onboarding">
+          <!-- Top Bar: Brand Mini + Skip CTA -->
+          <div class="onboarding-top-bar">
+            <div class="onboarding-brand-mini">
+              <img src="../eduvision_app_icon.png" alt="EduVision">
+              <span>EduVision World</span>
+            </div>
+            <button class="btn-skip-onboarding" id="btnSkipOnboarding">Skip</button>
+          </div>
+
+          <!-- Slider Viewport (Swipe Enabled) -->
+          <div class="onboarding-slider-viewport" id="onboardingSlider">
+            <div class="onboarding-slides-track" id="slidesTrack">
+
+              <!-- SLIDE 1: Your Future Starts Here -->
+              <div class="onboarding-slide">
+                <div class="slide-visual-stage">
+                  <div class="slide-backdrop-glow"></div>
+                  <!-- Floating Feature Badges -->
+                  <div class="floating-badge badge-blue fb-top-left">
+                    <span class="badge-icon"><i class="fa-solid fa-building-columns"></i></span>
+                    <span>Top Universities</span>
+                  </div>
+                  <div class="floating-badge badge-purple fb-top-right">
+                    <span class="badge-icon"><i class="fa-solid fa-compass"></i></span>
+                    <span>Career Guidance</span>
+                  </div>
+                  <div class="floating-badge badge-emerald fb-bottom-left">
+                    <span class="badge-icon"><i class="fa-solid fa-headset"></i></span>
+                    <span>Expert Counselling</span>
+                  </div>
+                  <div class="floating-badge badge-amber fb-bottom-right">
+                    <span class="badge-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                    <span>Admission Support</span>
+                  </div>
+                  <!-- Centered 3D Student Illustration (SVG Vector) -->
+                  <div class="slide-main-illustration">
+                    <svg width="220" height="220" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="120" cy="120" r="100" fill="url(#gradStudentBg)"/>
+                      <!-- Student Figure -->
+                      <circle cx="120" cy="85" r="32" fill="#fed7aa"/>
+                      <path d="M120 53C102.3 53 88 67.3 88 85C88 88.5 88.6 91.8 89.6 95C93.5 83 105 74 120 74C135 74 146.5 83 150.4 95C151.4 91.8 152 88.5 152 85C152 67.3 137.7 53 120 53Z" fill="#1e293b"/>
+                      <!-- Graduation Cap Accent -->
+                      <path d="M120 40L160 55L120 70L80 55L120 40Z" fill="#1e3a8a"/>
+                      <path d="M120 40L160 55L120 70L80 55L120 40Z" stroke="#60a5fa" stroke-width="2"/>
+                      <path d="M152 60V82" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                      <circle cx="152" cy="85" r="3" fill="#f59e0b"/>
+                      <!-- Torso & Backpack -->
+                      <path d="M78 190C78 150 96 130 120 130C144 130 162 150 162 190H78Z" fill="#2563eb"/>
+                      <path d="M96 135L70 170V190H85L105 145" fill="#1d4ed8"/>
+                      <path d="M144 135L170 170V190H155L135 145" fill="#1d4ed8"/>
+                      <defs>
+                        <linearGradient id="gradStudentBg" x1="120" y1="20" x2="120" y2="220" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#EFF6FF"/>
+                          <stop offset="1" stop-color="#DBEAFE"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div class="slide-text-block">
+                  <h2 class="slide-title">Your Future Starts Here</h2>
+                  <p class="slide-desc">Discover the right courses, universities and opportunities tailored for your future career.</p>
+                </div>
+              </div>
+
+              <!-- SLIDE 2: Find What Fits You -->
+              <div class="onboarding-slide">
+                <div class="slide-visual-stage">
+                  <div class="slide-backdrop-glow"></div>
+                  <!-- Floating Degree Tags -->
+                  <div class="floating-badge badge-blue fb-top-left">
+                    <span class="badge-icon"><i class="fa-solid fa-laptop-code"></i></span>
+                    <span>B.Tech CSE</span>
+                  </div>
+                  <div class="floating-badge badge-purple fb-top-right">
+                    <span class="badge-icon"><i class="fa-solid fa-briefcase"></i></span>
+                    <span>MBA Global</span>
+                  </div>
+                  <div class="floating-badge badge-emerald fb-bottom-left">
+                    <span class="badge-icon"><i class="fa-solid fa-code"></i></span>
+                    <span>BCA & AI</span>
+                  </div>
+                  <div class="floating-badge badge-amber fb-bottom-right">
+                    <span class="badge-icon"><i class="fa-solid fa-stethoscope"></i></span>
+                    <span>Medical & Healthcare</span>
+                  </div>
+                  <!-- Degree Search Graphic -->
+                  <div class="slide-main-illustration">
+                    <svg width="220" height="220" viewBox="0 0 240 240" fill="none">
+                      <rect x="35" y="35" width="170" height="170" rx="35" fill="url(#gradCourseBox)" stroke="#dbeafe" stroke-width="2"/>
+                      <circle cx="120" cy="110" r="42" fill="#ffffff" filter="drop-shadow(0 8px 16px rgba(37,99,235,0.15))"/>
+                      <path d="M120 85L145 98L120 111L95 98L120 85Z" fill="#2563eb"/>
+                      <path d="M104 105V118C104 125 111 130 120 130C129 130 136 125 136 118V105" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round"/>
+                      <rect x="75" y="165" width="90" height="12" rx="6" fill="#93c5fd"/>
+                      <rect x="90" y="183" width="60" height="8" rx="4" fill="#cbd5e1"/>
+                      <defs>
+                        <linearGradient id="gradCourseBox" x1="120" y1="35" x2="120" y2="205" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#ffffff"/>
+                          <stop offset="1" stop-color="#eff6ff"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div class="slide-text-block">
+                  <h2 class="slide-title">Find What Fits You</h2>
+                  <p class="slide-desc">Explore 1500+ courses and verified universities that match your personal goals and passions.</p>
+                </div>
+              </div>
+
+              <!-- SLIDE 3: Get Expert Guidance -->
+              <div class="onboarding-slide">
+                <div class="slide-visual-stage">
+                  <div class="slide-backdrop-glow"></div>
+                  <!-- Floating Guidance Tags -->
+                  <div class="floating-badge badge-emerald fb-top-left">
+                    <span class="badge-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    <span>1-on-1 Mentorship</span>
+                  </div>
+                  <div class="floating-badge badge-blue fb-top-right">
+                    <span class="badge-icon"><i class="fa-solid fa-comment-dots"></i></span>
+                    <span>Direct Advice</span>
+                  </div>
+                  <div class="floating-badge badge-purple fb-bottom-left">
+                    <span class="badge-icon"><i class="fa-solid fa-star"></i></span>
+                    <span>Free Session</span>
+                  </div>
+                  <!-- Counsellor Consultation Graphic -->
+                  <div class="slide-main-illustration">
+                    <svg width="220" height="220" viewBox="0 0 240 240" fill="none">
+                      <circle cx="120" cy="120" r="95" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+                      <!-- Counsellor Avatar -->
+                      <circle cx="85" cy="110" r="26" fill="#fcd34d"/>
+                      <path d="M55 175C55 145 68 135 85 135C102 135 115 145 115 175H55Z" fill="#047857"/>
+                      <!-- Student Avatar -->
+                      <circle cx="155" cy="115" r="24" fill="#fed7aa"/>
+                      <path d="M125 175C125 148 138 140 155 140C172 140 185 148 185 175H125Z" fill="#1e40af"/>
+                      <!-- Chat bubble connecting both -->
+                      <rect x="90" y="60" width="60" height="32" rx="12" fill="#2563eb"/>
+                      <path d="M120 92L112 100V92H120Z" fill="#2563eb"/>
+                      <circle cx="106" cy="76" r="3" fill="#fff"/>
+                      <circle cx="120" cy="76" r="3" fill="#fff"/>
+                      <circle cx="134" cy="76" r="3" fill="#fff"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="slide-text-block">
+                  <h2 class="slide-title">Get Expert Guidance</h2>
+                  <p class="slide-desc">Connect with seasoned counsellors for dedicated, personalized admission guidance anytime.</p>
+                </div>
+              </div>
+
+              <!-- SLIDE 4: Everything in One Place -->
+              <div class="onboarding-slide">
+                <div class="slide-visual-stage">
+                  <div class="slide-backdrop-glow"></div>
+                  <!-- Floating Portal Hub Elements -->
+                  <div class="floating-badge badge-blue fb-top-left">
+                    <span class="badge-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                    <span>Applications</span>
+                  </div>
+                  <div class="floating-badge badge-emerald fb-top-right">
+                    <span class="badge-icon"><i class="fa-solid fa-lock"></i></span>
+                    <span>Safe Payments</span>
+                  </div>
+                  <div class="floating-badge badge-purple fb-bottom-left">
+                    <span class="badge-icon"><i class="fa-solid fa-folder-open"></i></span>
+                    <span>Document Vault</span>
+                  </div>
+                  <!-- Mini App Dashboard Mockup Illustration -->
+                  <div class="slide-main-illustration">
+                    <svg width="220" height="220" viewBox="0 0 240 240" fill="none">
+                      <!-- Mini Phone Screen -->
+                      <rect x="55" y="30" width="130" height="180" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" filter="drop-shadow(0 15px 25px rgba(0,0,0,0.1))"/>
+                      <!-- Top Header in Mini Phone -->
+                      <rect x="70" y="50" width="50" height="8" rx="4" fill="#1e3a8a"/>
+                      <circle cx="165" cy="54" r="6" fill="#3b82f6"/>
+                      <!-- Mini Cards -->
+                      <rect x="68" y="72" width="104" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe"/>
+                      <rect x="78" y="82" width="40" height="6" rx="3" fill="#2563eb"/>
+                      <rect x="78" y="94" width="84" height="6" rx="3" fill="#93c5fd"/>
+                      <!-- Second Mini Card -->
+                      <rect x="68" y="118" width="104" height="34" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+                      <rect x="78" y="128" width="55" height="6" rx="3" fill="#475569"/>
+                      <rect x="78" y="138" width="70" height="5" rx="2.5" fill="#cbd5e1"/>
+                      <!-- Mini Bottom Nav -->
+                      <rect x="68" y="165" width="104" height="28" rx="8" fill="#f1f5f9"/>
+                      <circle cx="85" cy="179" r="4" fill="#2563eb"/>
+                      <circle cx="108" cy="179" r="4" fill="#94a3b8"/>
+                      <circle cx="131" cy="179" r="4" fill="#94a3b8"/>
+                      <circle cx="154" cy="179" r="4" fill="#94a3b8"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="slide-text-block">
+                  <h2 class="slide-title">Everything in One Place</h2>
+                  <p class="slide-desc">Track your applications, documents, fees and admission journey directly from one app.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Navigation: Indicators & Next/Get Started CTA -->
+          <div class="onboarding-bottom-nav">
+            <div class="page-indicator-dots">
+              <span class="dot active" data-slide="0"></span>
+              <span class="dot" data-slide="1"></span>
+              <span class="dot" data-slide="2"></span>
+              <span class="dot" data-slide="3"></span>
+            </div>
+            <button class="btn-onboarding-cta" id="btnOnboardingCta">Next &rarr;</button>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════
+             3. STUDENT ENTRY SELECTION SCREEN
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen" id="screen-entry">
+          <!-- Back Nav Row -->
+          <div class="auth-nav-header">
+            <button class="btn-back-nav" id="btnBackFromEntry" aria-label="Go Back">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="auth-brand-logo">
+              <img src="../eduvision_app_icon.png" alt="EduVision">
+              <span>EduVision World</span>
+            </div>
+            <div style="width: 40px;"></div> <!-- Spacer for balance -->
+          </div>
+
+          <!-- Header Text -->
+          <div class="entry-header">
+            <div class="entry-brand-badge">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>Official Student Portal</span>
+            </div>
+            <h1 class="entry-title">Welcome to EduVision World</h1>
+            <p class="entry-subtitle">Let's start building your future.</p>
+          </div>
+
+          <!-- Entry Selection Options -->
+          <div class="entry-cards-group">
+            <!-- PRIMARY OPTION: STUDENT -->
+            <div class="student-choice-card" id="btnContinueStudent" data-role="student">
+              <span class="popular-ribbon">Recommended</span>
+              <div class="card-icon-title-row">
+                <div class="card-avatar-box">
+                  🎓
+                </div>
+                <div class="card-title-text">
+                  <h3>STUDENT</h3>
+                  <span>Admission & Career Pathway</span>
+                </div>
+              </div>
+              <p class="card-desc-text">
+                Explore courses, verified universities, track applications and manage your direct admission journey.
+              </p>
+              <button class="btn-card-action">
+                Continue as Student &rarr;
+              </button>
+            </div>
+
+            <!-- OTHER ROLES DIRECT APP ACCESS -->
+            <div class="entry-other-roles-section">
+              <div class="entry-roles-divider">
+                <span>or access specialized portal</span>
+              </div>
+              <div class="entry-roles-grid">
+                <button type="button" class="btn-entry-role-chip" data-role="counsellor">
+                  <span class="role-chip-icon">👨‍🏫</span>
+                  <span class="role-chip-name">Counsellor</span>
+                </button>
+                <button type="button" class="btn-entry-role-chip" data-role="associate">
+                  <span class="role-chip-icon">🤝</span>
+                  <span class="role-chip-name">Partner</span>
+                </button>
+                <button type="button" class="btn-entry-role-chip" data-role="teamleader">
+                  <span class="role-chip-icon">👑</span>
+                  <span class="role-chip-name">Team Leader</span>
+                </button>
+                <button type="button" class="btn-entry-role-chip" data-role="admin">
+                  <span class="role-chip-icon">🛡️</span>
+                  <span class="role-chip-name">Admin</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Security Assurance -->
+          <div style="text-align: center; font-size: 0.82rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px;">
+            <i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i>
+            <span>Verified 256-Bit SSL Universal Gateway</span>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════
+             4. UNIFIED ROLE-ADAPTIVE LOGIN SCREEN (Mobile-Native UI/UX)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen" id="screen-login">
+          <!-- Back Nav & Brand Logo -->
+          <div class="auth-nav-header">
+            <button class="btn-back-nav" id="btnBackFromLogin" aria-label="Go Back">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="auth-brand-logo">
+              <img src="../eduvision_app_icon.png" alt="EduVision">
+              <span>EduVision World</span>
+            </div>
+            <div style="width: 40px;"></div>
+          </div>
+
+          <!-- Horizontal 5-Role Segmented Capsule Selector -->
+          <div class="role-selector-container">
+            <div class="role-segmented-scroller" id="roleSegmentedScroller">
+              <button type="button" class="role-tab-btn active" data-role="student">
+                <span class="role-tab-icon">🎓</span>
+                <span class="role-tab-label">Student</span>
+              </button>
+              <button type="button" class="role-tab-btn" data-role="counsellor">
+                <span class="role-tab-icon">👨‍🏫</span>
+                <span class="role-tab-label">Counsellor</span>
+              </button>
+              <button type="button" class="role-tab-btn" data-role="associate">
+                <span class="role-tab-icon">🤝</span>
+                <span class="role-tab-label">Partner</span>
+              </button>
+              <button type="button" class="role-tab-btn" data-role="teamleader">
+                <span class="role-tab-icon">👑</span>
+                <span class="role-tab-label">Team Leader</span>
+              </button>
+              <button type="button" class="role-tab-btn" data-role="admin">
+                <span class="role-tab-icon">🛡️</span>
+                <span class="role-tab-label">Admin</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Role Header -->
+          <div class="auth-header-text" id="authHeaderBlock">
+            <div class="role-active-badge badge-student" id="roleActiveBadge">
+              <span class="badge-dot"></span>
+              <span id="roleBadgeText">Official Student Portal</span>
+            </div>
+            <h2 id="authHeadingText">Welcome Back 👋</h2>
+            <p id="authSubtitleText">Let's continue building your future.</p>
+          </div>
+
+          <!-- Quick 1-Tap Demo Testing Chip -->
+          <div class="quick-demo-strip" id="quickDemoStrip">
+            <button type="button" class="btn-quick-fill" id="btnQuickFill" title="Auto-fill verified demo test credentials">
+              <i class="fa-solid fa-bolt"></i>
+              <span id="quickFillLabel">Quick Demo: Raghav (Student)</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Role Login Form -->
+          <form class="auth-form" id="studentLoginForm" autocomplete="off">
+            <!-- Mobile Number, Email or Role ID -->
+            <div class="form-field-group">
+              <label for="loginIdentifier" id="loginIdentifierLabel">Email or Phone Number</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left" id="loginIdentifierIcon"><i class="fa-regular fa-user"></i></span>
+                <input type="text" id="loginIdentifier" class="app-text-input" placeholder="e.g. 9876543210 or student@gmail.com" required>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-field-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label for="loginPassword" id="loginPasswordLabel">Password</label>
+                <button type="button" class="btn-link-forgot" id="btnForgotPassword">Forgot?</button>
+              </div>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" id="loginPassword" class="app-text-input" placeholder="Enter password" required>
+                <button type="button" class="btn-input-toggle" onclick="togglePasswordInput('loginPassword', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me Toggle -->
+            <div class="auth-remember-row">
+              <label class="remember-checkbox-label">
+                <input type="checkbox" id="rememberMeCheck" checked>
+                <span class="custom-check-box"></span>
+                <span>Remember me on this app</span>
+              </label>
+            </div>
+
+            <!-- Primary Login Action CTA -->
+            <button type="submit" class="btn-auth-primary" id="btnLoginSubmit">
+              <span id="btnLoginSubmitText">Login as Student &rarr;</span>
+            </button>
+          </form>
+
+          <!-- Student-Only Social & Sign Up Options -->
+          <div id="studentOnlyAuthOptions">
+            <div class="auth-social-divider">
+              <span>or continue with</span>
+            </div>
+
+            <button type="button" class="btn-social-google" id="btnGoogleSignIn">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.3 14.8c-.3-.8-.4-1.8-.4-2.8s.1-2 .4-2.8L1.6 6.3C.6 8.3 0 10.6 0 13s.6 4.7 1.6 6.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.2-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
+              <span>Sign in with Google</span>
+            </button>
+
+            <!-- Switch to Registration -->
+            <div class="auth-bottom-switch">
+              Don't have an account?
+              <button type="button" class="btn-switch-action" id="btnSwitchToRegister">Create Account</button>
+            </div>
+          </div>
+
+          <!-- Staff/Admin SSL Gateway Security Notice -->
+          <div id="staffSecurityNotice" style="display: none; text-align:center; margin-top:22px; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; font-size:0.8rem; color:#64748b;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600; color:#0f172a; margin-bottom:2px;">
+              <i class="fa-solid fa-shield-halved" style="color:#059669;"></i>
+              <span>Authorized Enterprise Gateway</span>
+            </div>
+            <span>Restricted access for verified staff & partners with 256-Bit SSL protection.</span>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════
+             5. CREATE ACCOUNT SCREEN (Step 1 Initial Registration Entry)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen" id="screen-register">
+          <!-- Back Nav -->
+          <div class="auth-nav-header">
+            <button class="btn-back-nav" id="btnBackFromRegister" aria-label="Go Back">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="auth-brand-logo">
+              <img src="../eduvision_app_icon.png" alt="EduVision">
+              <span>EduVision World</span>
+            </div>
+            <div style="width: 40px;"></div>
+          </div>
+
+          <!-- Header Text -->
+          <div class="auth-header-text">
+            <h2>Create Your Account</h2>
+            <p>Let's get you started on your admission journey.</p>
+          </div>
+
+          <!-- Registration Form -->
+          <form class="auth-form" id="studentRegisterForm" autocomplete="off">
+            <!-- Full Name -->
+            <div class="form-field-group">
+              <label for="regName">Full Name</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-regular fa-user"></i></span>
+                <input type="text" id="regName" class="app-text-input" placeholder="e.g. Raghav Raj" required>
+              </div>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="form-field-group">
+              <label for="regMobile">Mobile Number</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-solid fa-phone"></i></span>
+                <input type="tel" id="regMobile" class="app-text-input" placeholder="10-digit mobile number" required>
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-field-group">
+              <label for="regEmail">Email Address</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-regular fa-envelope"></i></span>
+                <input type="email" id="regEmail" class="app-text-input" placeholder="e.g. student@gmail.com" required>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-field-group">
+              <label for="regPassword">Password</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" id="regPassword" class="app-text-input" placeholder="Minimum 6 characters" required>
+                <button type="button" class="btn-input-toggle" onclick="togglePasswordInput('regPassword', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-field-group">
+              <label for="regConfirmPassword">Confirm Password</label>
+              <div class="input-box-wrapper">
+                <span class="input-icon-left"><i class="fa-solid fa-shield-halved"></i></span>
+                <input type="password" id="regConfirmPassword" class="app-text-input" placeholder="Re-enter password" required>
+                <button type="button" class="btn-input-toggle" onclick="togglePasswordInput('regConfirmPassword', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Registration Button -->
+            <button type="submit" class="btn-auth-primary" id="btnRegisterSubmit">
+              Create Account &rarr;
+            </button>
+          </form>
+
+          <!-- Switch to Login -->
+          <div class="auth-bottom-switch">
+            Already have an account?
+            <button type="button" class="btn-switch-action" id="btnSwitchToLogin">Login</button>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════
+             6. UNIFIED ROLE MOBILE APP DASHBOARD (HOME & SUB-VIEWS)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="app-screen" id="screen-home-placeholder">
+
+          <!-- SCROLLABLE SUB-VIEWS CONTAINER -->
+          <div class="dash-scroll-host" id="dashScrollHost">
+
+            <!-- ── SUB-VIEW 1: HOME / DASHBOARD (SCREEN 4) ── -->
+            <div class="app-sub-view active-view" id="view-dash-home">
+              <!-- Top Greeting Header -->
+              <div class="dash-header">
+                <div class="dash-user-info" onclick="switchAppView('profile')">
+                  <div class="dash-avatar-wrapper">
+                    <img src="assets/raghav_avatar.jpg" alt="User Avatar" class="dash-avatar-img" onerror="this.src='../asian-man-coffee.jpg'">
+                  </div>
+                  <div class="dash-greeting-box">
+                    <span class="dash-greeting-sub">Good Morning,</span>
+                    <h3 class="dash-greeting-name"><span id="dashGreetingName">Raghav!</span> 👋</h3>
+                    <p class="dash-greeting-motto">Let's build your future today.</p>
+                  </div>
+                </div>
+                <button class="dash-btn-bell" onclick="switchAppView('notifications')" aria-label="Notifications">
+                  <i class="fa-regular fa-bell"></i>
+                  <span class="bell-unread-dot"></span>
+                </button>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="dash-search-container">
+                <div class="dash-search-input-box">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" placeholder="Search courses, universities..." id="dashSearchInput" onfocus="switchAppView('courses')">
+                </div>
+                <button class="dash-btn-filter" onclick="switchAppView('courses')" aria-label="Filter">
+                  <i class="fa-solid fa-sliders"></i>
+                </button>
+              </div>
+
+              <!-- Admission Open Hero Banner -->
+              <div class="dash-hero-banner">
+                <div class="dash-hero-text">
+                  <span class="dash-hero-pill-badge">Admission Open</span>
+                  <h2 class="dash-hero-title">2026-27</h2>
+                  <p class="dash-hero-sub">Top Universities | Expert Guidance</p>
+                  <button class="dash-hero-cta" onclick="switchAppView('courses')">
+                    <span>Apply Now</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+                <div class="dash-hero-graphic">
+                  <img src="assets/campus_banner.jpg" alt="Campus Building" class="dash-hero-campus-img" onerror="this.src='../SRM-campus.jpg'">
+                </div>
+              </div>
+
+              <!-- 8 Feature Action Icons Grid (2 rows x 4) -->
+              <div class="dash-features-grid">
+                <!-- 1. Courses -->
+                <div class="feature-item" onclick="switchAppView('courses')">
+                  <div class="feature-icon-box bg-rose">
+                    <i class="fa-solid fa-graduation-cap icon-rose"></i>
+                  </div>
+                  <span class="feature-label">Courses</span>
+                </div>
+
+                <!-- 2. Counseling -->
+                <div class="feature-item" onclick="switchAppView('counselling')">
+                  <div class="feature-icon-box bg-green">
+                    <i class="fa-solid fa-headset icon-green"></i>
+                  </div>
+                  <span class="feature-label">Counseling</span>
+                </div>
+
+                <!-- 3. Applications -->
+                <div class="feature-item" onclick="switchAppView('applications')">
+                  <div class="feature-icon-box bg-purple">
+                    <i class="fa-regular fa-file-lines icon-purple"></i>
+                  </div>
+                  <span class="feature-label">Applications</span>
+                </div>
+
+                <!-- 4. Documents -->
+                <div class="feature-item" onclick="openInAppSheet('student_docs')">
+                  <div class="feature-icon-box bg-sky">
+                    <i class="fa-regular fa-folder-closed icon-sky"></i>
+                  </div>
+                  <span class="feature-label">Documents</span>
+                </div>
+
+                <!-- 5. Payments -->
+                <div class="feature-item" onclick="switchAppView('payments')">
+                  <div class="feature-icon-box bg-lavender">
+                    <i class="fa-regular fa-credit-card icon-lavender"></i>
+                  </div>
+                  <span class="feature-label">Payments</span>
+                </div>
+
+                <!-- 6. Career Guidance -->
+                <div class="feature-item" onclick="openInAppSheet('career_guidance')">
+                  <div class="feature-icon-box bg-teal">
+                    <i class="fa-solid fa-compass icon-teal"></i>
+                  </div>
+                  <span class="feature-label">Career Guidance</span>
+                </div>
+
+                <!-- 7. Scholarships -->
+                <div class="feature-item" onclick="openInAppSheet('scholarships')">
+                  <div class="feature-icon-box bg-coral">
+                    <i class="fa-solid fa-award icon-coral"></i>
+                  </div>
+                  <span class="feature-label">Scholarships</span>
+                </div>
+
+                <!-- 8. Support -->
+                <div class="feature-item" onclick="openInAppSheet('support')">
+                  <div class="feature-icon-box bg-amber">
+                    <i class="fa-solid fa-circle-question icon-amber"></i>
+                  </div>
+                  <span class="feature-label">Support</span>
+                </div>
+              </div>
+
+              <!-- Continue Your Journey Section -->
+              <div class="dash-section-header">
+                <h4 class="dash-section-title">Continue Your Journey</h4>
+              </div>
+              <div class="dash-journey-card" onclick="switchAppView('applications')">
+                <div class="journey-card-thumb">
+                  <img src="assets/campus_thumb.jpg" alt="University Campus" onerror="this.src='../sandip-campus.jpg'">
+                </div>
+                <div class="journey-card-body">
+                  <div class="journey-card-top">
+                    <h5 class="journey-course-name">B.Tech (Computer Science)</h5>
+                    <button class="journey-more-btn" onclick="event.stopPropagation(); openInAppSheet('student_apps')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  </div>
+                  <div class="journey-status-tag">
+                    <span class="status-pulse-dot"></span>
+                    <span>Application in Progress</span>
+                  </div>
+                  <div class="journey-progress-wrap">
+                    <div class="journey-progress-bar-bg">
+                      <div class="journey-progress-bar-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="journey-progress-num">65%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dynamic Staff Dashboard Embed (for Counsellor, Partner, Team Leader, Admin) -->
+              <div id="staffPortalEmbed" style="display:none; margin-top: 16px;">
+                <div class="role-home-container" id="roleHomeContent"></div>
+              </div>
+
+            </div> <!-- /view-dash-home -->
+
+            <!-- ── SUB-VIEW 2: COURSES PAGE (SCREEN 5) ── -->
+            <div class="app-sub-view" id="view-dash-courses">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">Courses</h3>
+                <div style="width: 36px;"></div>
+              </div>
+
+              <div class="dash-search-container" style="margin: 4px 0 12px;">
+                <div class="dash-search-input-box">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" placeholder="Search courses..." id="courseSearchInput" oninput="filterCourseCards(this.value)">
+                </div>
+                <button class="dash-btn-filter" aria-label="Filter">
+                  <i class="fa-solid fa-sliders"></i>
+                </button>
+              </div>
+
+              <!-- Category Pills -->
+              <div class="category-pills-scroller">
+                <button class="cat-pill active" onclick="filterCourseCategory('all', this)">All</button>
+                <button class="cat-pill" onclick="filterCourseCategory('engineering', this)">Engineering</button>
+                <button class="cat-pill" onclick="filterCourseCategory('management', this)">Management</button>
+                <button class="cat-pill" onclick="filterCourseCategory('medical', this)">Medical</button>
+                <button class="cat-pill" onclick="filterCourseCategory('science', this)">Science</button>
+                <button class="cat-pill" onclick="filterCourseCategory('arts', this)">Arts</button>
+              </div>
+
+              <!-- Course Cards List -->
+              <div class="courses-list-container" id="coursesList">
+                <div class="course-nav-card" data-cat="engineering" onclick="openInAppSheet('course_detail_btech')">
+                  <div class="course-card-thumb">
+                    <img src="assets/campus_banner.jpg" alt="B.Tech" onerror="this.src='../SRM-campus.jpg'">
+                  </div>
+                  <div class="course-card-info">
+                    <h4>B.Tech</h4>
+                    <p class="course-stream">Engineering</p>
+                    <span class="course-meta">120+ Universities</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right course-card-arrow"></i>
+                </div>
+
+                <div class="course-nav-card" data-cat="management" onclick="openInAppSheet('course_detail_mba')">
+                  <div class="course-card-thumb">
+                    <img src="assets/raghav_avatar.jpg" alt="MBA" onerror="this.src='../asian-man-coffee.jpg'">
+                  </div>
+                  <div class="course-card-info">
+                    <h4>MBA</h4>
+                    <p class="course-stream">Management</p>
+                    <span class="course-meta">80+ Universities</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right course-card-arrow"></i>
+                </div>
+
+                <div class="course-nav-card" data-cat="engineering" onclick="openInAppSheet('course_detail_bca')">
+                  <div class="course-card-thumb">
+                    <img src="assets/campus_thumb.jpg" alt="BCA" onerror="this.src='../sandip-campus.jpg'">
+                  </div>
+                  <div class="course-card-info">
+                    <h4>BCA</h4>
+                    <p class="course-stream">Computer Applications</p>
+                    <span class="course-meta">90+ Universities</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right course-card-arrow"></i>
+                </div>
+
+                <div class="course-nav-card" data-cat="science" onclick="openInAppSheet('course_detail_bsc')">
+                  <div class="course-card-thumb" style="background:#e0f2fe; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-flask" style="color:#0284c7; font-size:1.4rem;"></i>
+                  </div>
+                  <div class="course-card-info">
+                    <h4>B.Sc</h4>
+                    <p class="course-stream">Science</p>
+                    <span class="course-meta">70+ Universities</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right course-card-arrow"></i>
+                </div>
+
+                <div class="course-nav-card" data-cat="arts" onclick="openInAppSheet('course_detail_ba')">
+                  <div class="course-card-thumb" style="background:#ffedd5; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-book-bookmark" style="color:#ea580c; font-size:1.4rem;"></i>
+                  </div>
+                  <div class="course-card-info">
+                    <h4>BA</h4>
+                    <p class="course-stream">Arts & Humanities</p>
+                    <span class="course-meta">60+ Universities</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right course-card-arrow"></i>
+                </div>
+              </div>
+            </div> <!-- /view-dash-courses -->
+
+            <!-- ── SUB-VIEW 3: APPLICATION TRACKING (SCREEN 6) ── -->
+            <div class="app-sub-view" id="view-dash-applications">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">My Applications</h3>
+                <div style="width: 36px;"></div>
+              </div>
+
+              <!-- Filter Pills -->
+              <div class="category-pills-scroller" style="margin-bottom:14px;">
+                <button class="cat-pill active" onclick="filterAppStatus('all', this)">All</button>
+                <button class="cat-pill" onclick="filterAppStatus('in_progress', this)">In Progress</button>
+                <button class="cat-pill" onclick="filterAppStatus('completed', this)">Completed</button>
+              </div>
+
+              <div class="applications-card-list">
+                <!-- App 1: B.Tech LPU -->
+                <div class="tracking-app-card" data-status="in_progress" onclick="openInAppSheet('student_apps')">
+                  <div class="tracking-card-header">
+                    <div class="tracking-thumb">
+                      <img src="assets/campus_banner.jpg" alt="LPU" onerror="this.src='../SRM-campus.jpg'">
+                    </div>
+                    <div class="tracking-main-info">
+                      <h4>B.Tech (CSE)</h4>
+                      <p class="tracking-uni-name">Lovely Professional University</p>
+                      <span class="tracking-status-text in-prog">In Progress</span>
+                    </div>
+                    <button class="journey-more-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  </div>
+                  <div class="journey-progress-wrap" style="margin-top: 10px;">
+                    <div class="journey-progress-bar-bg">
+                      <div class="journey-progress-bar-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="journey-progress-num">65%</span>
+                  </div>
+                  <div class="tracking-footer">
+                    <span>Last updated 2 days ago</span>
+                  </div>
+                </div>
+
+                <!-- App 2: MBA Amity -->
+                <div class="tracking-app-card" data-status="in_progress" onclick="openInAppSheet('student_apps')">
+                  <div class="tracking-card-header">
+                    <div class="tracking-thumb">
+                      <img src="assets/raghav_avatar.jpg" alt="Amity" onerror="this.src='../asian-man-coffee.jpg'">
+                    </div>
+                    <div class="tracking-main-info">
+                      <h4>MBA</h4>
+                      <p class="tracking-uni-name">Amity University</p>
+                      <span class="tracking-status-text under-review">Under Review</span>
+                    </div>
+                    <button class="journey-more-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  </div>
+                  <div class="journey-progress-wrap" style="margin-top: 10px;">
+                    <div class="journey-progress-bar-bg">
+                      <div class="journey-progress-bar-fill" style="width: 40%; background:#f59e0b;"></div>
+                    </div>
+                    <span class="journey-progress-num" style="color:#d97706;">40%</span>
+                  </div>
+                  <div class="tracking-footer">
+                    <span>Last updated 4 days ago</span>
+                  </div>
+                </div>
+
+                <!-- App 3: BCA Kristu Jayanti -->
+                <div class="tracking-app-card" data-status="completed" onclick="openInAppSheet('student_apps')">
+                  <div class="tracking-card-header">
+                    <div class="tracking-thumb">
+                      <img src="assets/campus_thumb.jpg" alt="Kristu Jayanti" onerror="this.src='../sandip-campus.jpg'">
+                    </div>
+                    <div class="tracking-main-info">
+                      <h4>BCA</h4>
+                      <p class="tracking-uni-name">Kristu Jayanti College</p>
+                      <span class="tracking-status-text completed">Completed</span>
+                    </div>
+                    <button class="journey-more-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  </div>
+                  <div class="journey-progress-wrap" style="margin-top: 10px;">
+                    <div class="journey-progress-bar-bg">
+                      <div class="journey-progress-bar-fill" style="width: 100%; background:#059669;"></div>
+                    </div>
+                    <span class="journey-progress-num" style="color:#059669;">100%</span>
+                  </div>
+                  <div class="tracking-footer">
+                    <span style="color:#059669; font-weight:700;">● Admission Confirmed</span>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- /view-dash-applications -->
+
+            <!-- ── SUB-VIEW 4: COUNSELLING / MESSAGES (SCREEN 7) ── -->
+            <div class="app-sub-view" id="view-dash-counselling">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">Expert Counselling</h3>
+                <div style="width: 36px;"></div>
+              </div>
+
+              <!-- Counselling Free Session Promo Banner -->
+              <div class="counsel-promo-card">
+                <div class="counsel-promo-text">
+                  <h4>Book a Free Counselling Session</h4>
+                  <p>Get personalised guidance from our expert counsellors.</p>
+                  <button class="btn-counsel-book" onclick="openInAppSheet('student_chat')">Book Now &rarr;</button>
+                </div>
+                <div class="counsel-promo-graphic">
+                  <i class="fa-solid fa-user-graduate" style="font-size:3rem; color:rgba(255,255,255,0.85);"></i>
+                </div>
+              </div>
+
+              <!-- Our Expert Counsellors Section -->
+              <div class="dash-section-header" style="margin-top: 16px;">
+                <h4 class="dash-section-title">Our Expert Counsellors</h4>
+              </div>
+
+              <div class="counsellors-list">
+                <!-- Counsellor 1: Ishika Ma'am -->
+                <div class="counsellor-profile-card">
+                  <div class="counsel-avatar-box">
+                    <img src="assets/raghav_avatar.jpg" alt="Ishika Ma'am" onerror="this.src='../asian-man-coffee.jpg'">
+                  </div>
+                  <div class="counsel-info-box">
+                    <h4>Ishika Ma'am</h4>
+                    <p>Career & Admission Expert</p>
+                    <span class="counsel-live-status available">● Available Now</span>
+                  </div>
+                  <div class="counsel-action-buttons">
+                    <button class="btn-counsel-call" onclick="openInAppSheet('student_chat')" title="Call Counsellor"><i class="fa-solid fa-phone"></i></button>
+                    <button class="btn-counsel-chat" onclick="openInAppSheet('student_chat')" title="Message Counsellor"><i class="fa-solid fa-comment"></i></button>
+                  </div>
+                </div>
+
+                <!-- Counsellor 2: Amit Sir -->
+                <div class="counsellor-profile-card">
+                  <div class="counsel-avatar-box">
+                    <img src="assets/raghav_avatar.jpg" alt="Amit Sir" onerror="this.src='../asian-man-coffee.jpg'">
+                  </div>
+                  <div class="counsel-info-box">
+                    <h4>Amit Sir</h4>
+                    <p>Engineering & Technical</p>
+                    <span class="counsel-live-status available">● Available Now</span>
+                  </div>
+                  <div class="counsel-action-buttons">
+                    <button class="btn-counsel-call" onclick="openInAppSheet('student_chat')" title="Call Counsellor"><i class="fa-solid fa-phone"></i></button>
+                    <button class="btn-counsel-chat" onclick="openInAppSheet('student_chat')" title="Message Counsellor"><i class="fa-solid fa-comment"></i></button>
+                  </div>
+                </div>
+
+                <!-- Counsellor 3: Neha Ma'am -->
+                <div class="counsellor-profile-card">
+                  <div class="counsel-avatar-box">
+                    <img src="assets/raghav_avatar.jpg" alt="Neha Ma'am" onerror="this.src='../asian-man-coffee.jpg'">
+                  </div>
+                  <div class="counsel-info-box">
+                    <h4>Neha Ma'am</h4>
+                    <p>Management & Abroad</p>
+                    <span class="counsel-live-status busy">● Busy — Next at 4:00 PM</span>
+                  </div>
+                  <div class="counsel-action-buttons">
+                    <button class="btn-counsel-call" onclick="openInAppSheet('student_chat')" title="Call Counsellor"><i class="fa-solid fa-phone"></i></button>
+                    <button class="btn-counsel-chat" onclick="openInAppSheet('student_chat')" title="Message Counsellor"><i class="fa-solid fa-comment"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- /view-dash-counselling -->
+
+            <!-- ── SUB-VIEW 5: PAYMENTS (SCREEN 8) ── -->
+            <div class="app-sub-view" id="view-dash-payments">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">Payments</h3>
+                <div style="width: 36px;"></div>
+              </div>
+
+              <!-- Secure Payments Banner -->
+              <div class="pay-secure-card">
+                <div class="pay-shield-icon">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="pay-secure-info">
+                  <h4>Secure Payments</h4>
+                  <p>Make payments safely with multiple options.</p>
+                </div>
+              </div>
+
+              <!-- Pending Payments -->
+              <div class="dash-section-header" style="margin-top: 18px;">
+                <h4 class="dash-section-title">Pending Payments</h4>
+              </div>
+              <div class="pay-item-card">
+                <div class="pay-item-icon bg-amber">
+                  <i class="fa-regular fa-credit-card icon-amber"></i>
+                </div>
+                <div class="pay-item-details">
+                  <h4>Application Fee</h4>
+                  <p>Lovely Professional University</p>
+                  <span class="pay-item-sub">Under Processing</span>
+                </div>
+                <div class="pay-item-cta-box">
+                  <span class="pay-amount-label">₹ 5,000</span>
+                  <button class="btn-pay-now-action" onclick="openInAppSheet('pay_now_sheet')">Pay Now</button>
+                </div>
+              </div>
+
+              <!-- Payment History -->
+              <div class="dash-section-header" style="margin-top: 18px;">
+                <h4 class="dash-section-title">Payment History</h4>
+              </div>
+              <div class="pay-item-card">
+                <div class="pay-item-icon bg-green">
+                  <i class="fa-solid fa-check icon-green"></i>
+                </div>
+                <div class="pay-item-details">
+                  <h4>Registration Fee</h4>
+                  <p>Amity University</p>
+                  <span class="pay-item-sub" style="color:#059669; font-weight:600;">Paid • 12 Sep 2026</span>
+                </div>
+                <div class="pay-item-cta-box">
+                  <span class="pay-amount-label">₹ 2,000</span>
+                  <span class="pay-paid-pill">Success</span>
+                </div>
+              </div>
+            </div> <!-- /view-dash-payments -->
+
+            <!-- ── SUB-VIEW 6: NOTIFICATIONS (SCREEN 9) ── -->
+            <div class="app-sub-view" id="view-dash-notifications">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">Notifications</h3>
+                <button class="btn-header-link" onclick="markAllNotificationsRead()">Mark all as read</button>
+              </div>
+
+              <!-- Category Pills -->
+              <div class="category-pills-scroller" style="margin-bottom:14px;">
+                <button class="cat-pill active" onclick="filterNotifCategory('all', this)">All</button>
+                <button class="cat-pill" onclick="filterNotifCategory('updates', this)">Updates</button>
+                <button class="cat-pill" onclick="filterNotifCategory('applications', this)">Applications</button>
+                <button class="cat-pill" onclick="filterNotifCategory('payments', this)">Payments</button>
+              </div>
+
+              <div class="notifications-list" id="notificationsList">
+                <div class="notif-item-card" data-cat="applications">
+                  <div class="notif-icon-circle bg-rose">
+                    <i class="fa-regular fa-file-lines icon-rose"></i>
+                  </div>
+                  <div class="notif-content">
+                    <h4>Application Status Updated</h4>
+                    <p>Your B.Tech application is now under review.</p>
+                    <span class="notif-time">2 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="notif-item-card" data-cat="updates">
+                  <div class="notif-icon-circle bg-amber">
+                    <i class="fa-solid fa-building-columns icon-amber"></i>
+                  </div>
+                  <div class="notif-content">
+                    <h4>New University Added</h4>
+                    <p>Check out new partner universities for MBA.</p>
+                    <span class="notif-time">5 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="notif-item-card" data-cat="updates">
+                  <div class="notif-icon-circle bg-sky">
+                    <i class="fa-solid fa-user-clock icon-sky"></i>
+                  </div>
+                  <div class="notif-content">
+                    <h4>Counselling Reminder</h4>
+                    <p>Your session with Ishika Ma'am is tomorrow at 11:00 AM.</p>
+                    <span class="notif-time">1 day ago</span>
+                  </div>
+                </div>
+
+                <div class="notif-item-card" data-cat="payments">
+                  <div class="notif-icon-circle bg-green">
+                    <i class="fa-solid fa-check icon-green"></i>
+                  </div>
+                  <div class="notif-content">
+                    <h4>Payment Successful</h4>
+                    <p>Your payment of ₹2,000 was successful.</p>
+                    <span class="notif-time">2 days ago</span>
+                  </div>
+                </div>
+
+                <div class="notif-item-card" data-cat="updates">
+                  <div class="notif-icon-circle bg-coral">
+                    <i class="fa-solid fa-award icon-coral"></i>
+                  </div>
+                  <div class="notif-content">
+                    <h4>New Scholarship Alert</h4>
+                    <p>Special scholarship for 2026 admissions!</p>
+                    <span class="notif-time">3 days ago</span>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- /view-dash-notifications -->
+
+            <!-- ── SUB-VIEW 7: MY PROFILE (SCREEN 10) ── -->
+            <div class="app-sub-view" id="view-dash-profile">
+              <div class="subpage-header">
+                <button class="btn-subpage-back" onclick="switchAppView('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 class="subpage-title">My Profile</h3>
+                <button class="btn-subpage-gear" onclick="openInAppSheet('settings')"><i class="fa-solid fa-gear"></i></button>
+              </div>
+
+              <!-- Profile Card -->
+              <div class="profile-summary-card">
+                <div class="profile-big-avatar">
+                  <img src="assets/raghav_avatar.jpg" alt="Profile Avatar" onerror="this.src='../asian-man-coffee.jpg'">
+                </div>
+                <div class="profile-summary-meta">
+                  <h3 id="profileFullName">Raghav Raj</h3>
+                  <p id="profileEmail">raghavraj@gmail.com</p>
+                  <button class="btn-edit-profile-link" onclick="openInAppSheet('edit_profile')">Edit Profile &gt;</button>
+                </div>
+              </div>
+
+              <!-- Profile Options Menu -->
+              <div class="profile-menu-container">
+                <div class="profile-menu-row" onclick="switchAppView('applications')">
+                  <div class="profile-menu-left">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <span>My Applications</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="openInAppSheet('student_docs')">
+                  <div class="profile-menu-left">
+                    <i class="fa-regular fa-folder-closed"></i>
+                    <span>Documents</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="switchAppView('payments')">
+                  <div class="profile-menu-left">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <span>Payments</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="switchAppView('counselling')">
+                  <div class="profile-menu-left">
+                    <i class="fa-solid fa-headset"></i>
+                    <span>Counselling Sessions</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="switchAppView('courses')">
+                  <div class="profile-menu-left">
+                    <i class="fa-regular fa-heart"></i>
+                    <span>Saved Courses</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="openInAppSheet('support')">
+                  <div class="profile-menu-left">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>Support & Help</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+
+                <div class="profile-menu-row" onclick="openInAppSheet('settings')">
+                  <div class="profile-menu-left">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-right menu-row-arrow"></i>
+                </div>
+              </div>
+
+              <!-- Sign Out Action -->
+              <div style="margin: 18px 0 10px;">
+                <button class="btn-auth-primary" onclick="devLogoutUser()" style="background:#fee2e2; color:#ef4444; border:1px solid #fecaca; box-shadow:none;">
+                  <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right:6px;"></i> Sign Out
+                </button>
+              </div>
+            </div> <!-- /view-dash-profile -->
+
+          </div> <!-- /dash-scroll-host -->
+
+          <!-- ═══════════════════════════════════════════════════════════
+               FIXED 5-TAB BOTTOM NAVIGATION BAR (MATCHING SCREEN 4)
+               ═══════════════════════════════════════════════════════════ -->
+          <nav class="app-bottom-navbar" id="appBottomNavbar">
+            <button class="bottom-nav-item active" data-tab="home" onclick="switchAppTab('home')">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="courses" onclick="switchAppTab('courses')">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Courses</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="applications" onclick="switchAppTab('applications')">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>Applications</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="counselling" onclick="switchAppTab('counselling')">
+              <i class="fa-regular fa-comment-dots"></i>
+              <span>Messages</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="profile" onclick="switchAppTab('profile')">
+              <i class="fa-regular fa-user"></i>
+              <span>Profile</span>
+            </button>
+          </nav>
+
+          <!-- In-App Interactive Modal Sheet (100% Inside Mobile App) -->
+          <div class="inapp-sheet-backdrop" id="inAppSheetBackdrop" onclick="closeInAppSheet()">
+            <div class="inapp-sheet-panel" onclick="event.stopPropagation()">
+              <div class="inapp-sheet-drag-handle"></div>
+              <div class="inapp-sheet-header">
+                <div class="inapp-sheet-icon" id="inAppSheetIcon">📋</div>
+                <div style="flex:1;">
+                  <h3 id="inAppSheetTitle" style="font-size:1.05rem; font-weight:800; color:var(--primary-navy); margin:0;">Application Details</h3>
+                  <p id="inAppSheetSubtitle" style="font-size:0.75rem; color:#64748b; margin:2px 0 0;">Mobile App In-App Feature</p>
+                </div>
+                <button class="btn-sheet-close" onclick="closeInAppSheet()" aria-label="Close">✕</button>
+              </div>
+              <div class="inapp-sheet-body" id="inAppSheetBody">
+                <!-- Injected in-app content -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- /app-screen-host -->
+
+    </div> <!-- /app-mobile-frame -->
+
+  </div> <!-- /device-viewport-shell -->
+
+  <!-- Toast Notification Popup -->
+  <div class="app-toast-alert" id="appToast">Notification</div>
+
+  <!-- App Router & Controller Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>

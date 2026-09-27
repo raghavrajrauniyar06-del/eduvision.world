@@ -1,0 +1,23 @@
+﻿{
+  "name": "EduVision World",
+  "short_name": "EduVision",
+  "start_url": "/app/index.html",
+  "display": "standalone",
+  "background_color": "#040814",
+  "theme_color": "#040814",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/eduvision_app_icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/eduvision_app_icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

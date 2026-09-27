@@ -3711,6 +3711,12 @@ nav.scrolled {
   filter: drop-shadow(0 1px 1px rgba(0,0,0,0.12)) drop-shadow(0 2px 10px rgba(168,108,5,0.3)) !important;
 }
 
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+}
+body { padding-top: env(safe-area-inset-top); }
 </style>
 <style>
 /* Eye-catching University Fee Cards */

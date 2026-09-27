@@ -3,7 +3,7 @@
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Team Leader Portal | EduVision</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -433,6 +433,14 @@
     display: flex !important;
     opacity: 1 !important;
   }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .eye-btn { width: 44px !important; height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.modal-open { overflow: hidden !important; }
   </style>
 </head>
 <body>

@@ -3,7 +3,7 @@
 <head>
   <script src="shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
@@ -2611,6 +2611,12 @@
       display: none !important;
     }
   }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+}
+body { padding-top: env(safe-area-inset-top); }
 </style>
 
   <!-- PWA & Web App Capabilities -->

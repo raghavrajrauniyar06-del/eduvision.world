@@ -47,7 +47,7 @@
 
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>EduVision | Team Leader Central Command Desk</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1093,6 +1093,18 @@
   50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .eye-btn { width: 44px !important; height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.modal-open { overflow: hidden !important; }
+
+@supports (height: 100dvh) {
+  .sidebar { height: 100dvh; }
+}
 </style>
 
 
@@ -1512,12 +1524,13 @@
 
       <!-- MODULE: FOLLOW-UPS -->
       <section id="module-followups" class="module-section hidden">
-        <div class="tl-table-container" style="position: relative; width:100%; overflow-x:hidden; box-sizing:border-box;">
+        <div class="tl-table-container" style="position: relative; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; box-sizing:border-box;">
           <style>
             #module-followups .tl-table-container {
               width: 100% !important;
               max-width: 100% !important;
-              overflow-x: hidden !important;
+              overflow-x: auto !important;
+              -webkit-overflow-scrolling: touch !important;
               box-sizing: border-box !important;
             }
             #followupsTable, #leadFollowupsTable {

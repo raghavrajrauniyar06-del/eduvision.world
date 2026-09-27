@@ -3,7 +3,7 @@
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>EduVision | Executive Admin Command Portal</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4815,6 +4815,15 @@ body:has(#mod-chat.active) .admin-main {
 .btn-liquid-danger:hover {
   background: rgba(239, 68, 68, 0.25);
 }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .mobile-nav-toggle { width: 44px !important; height: 44px !important; }
+  .btn-modal-close, .btn-action-icon { min-width: 44px !important; min-height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.modal-open { overflow: hidden !important; }
 </style>
 
   <!-- PWA & Web App Capabilities -->
@@ -9673,7 +9682,7 @@ body:has(#mod-chat.active) .admin-main {
   <!-- ═══════════════════════════════════════════════════════════════════════════
        macOS SONOMA / SEQUOIA EXECUTIVE PROFILE & SETTINGS MODAL (ADMIN / CEO / CTO)
        ═══════════════════════════════════════════════════════════════════════════ -->
-  <div id="adminProfileOverlay" style="display:none; position:fixed; inset:0; z-index:10001;">
+  <div id="adminProfileOverlay" style="display:none; position:fixed; inset:0; z-index:95000;">
     <div onclick="closeAdminProfileModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);"></div>
     <div id="adminProfileWindow" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.96); width:92%; max-width:780px; max-height:90vh; background:radial-gradient(ellipse at top left, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.3); border-radius:22px; box-shadow:0 35px 95px rgba(0,0,0,0.92), 0 0 50px rgba(201,147,42,0.18); z-index:10002; color:#fff; display:flex; flex-direction:column; overflow:hidden; transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
       

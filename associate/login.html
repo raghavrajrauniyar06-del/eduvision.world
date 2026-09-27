@@ -3,7 +3,7 @@
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
@@ -782,6 +782,16 @@
 
   .auth-footer a:hover { color: #ffffff !important; }
 
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+}
+@media (max-width: 480px) {
+  .cards-grid, [style*='grid-template-columns'] { grid-template-columns: 1fr !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.modal-open { overflow: hidden !important; }
 </style>
 </head>
 <body>

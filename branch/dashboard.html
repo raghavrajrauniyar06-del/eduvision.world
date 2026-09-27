@@ -3,7 +3,7 @@
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <title>EduVision | Branch Operations & Management Hub</title>
@@ -443,7 +443,7 @@
   
     /* MOBILE OPTIMIZATIONS (HIGH-FIDELITY ELASTIC BOUNCE & DEEP GLASS BLURS) */
     @media (max-width: 900px) {
-      .mobile-nav-toggle {
+      .mobile-nav-toggle { width: 44px; height: 44px;
         display: flex !important;
       }
       aside.sidebar, .sidebar {
@@ -562,6 +562,15 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+  .mobile-nav-toggle { width: 44px !important; height: 44px !important; }
+  .btn-modal-close, .btn-action-icon { min-width: 44px !important; min-height: 44px !important; }
+}
+body { padding-top: env(safe-area-inset-top); }
+body.sidebar-open { overflow: hidden !important; }
 </style>
 </head>
 <body>

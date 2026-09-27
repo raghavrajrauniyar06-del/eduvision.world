@@ -3,7 +3,7 @@
 <head>
   <script src="shared/page_guard.js?v=20260919_V2"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Latest Updates & Educational Announcements | EduVision</title>
   <meta name="description" content="Stay informed with real-time admission alerts, scholarship deadlines, UGC notices, Bihar Student Credit Card schemes, CUET updates, and entrance exam dates across India.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
@@ -55,6 +55,7 @@
 
     /* ═══ NAVBAR ═══ */
     nav#navbar {
+      padding-top: env(safe-area-inset-top);
       position: fixed;
       top: 0;
       left: 0;
@@ -1806,6 +1807,12 @@
       }
     }
 
+/* ═══ UNIVERSAL MOBILE VISUAL PATCH ═══ */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+  button, a, [onclick], [role="button"] { min-height: 44px; }
+}
+body { padding-top: env(safe-area-inset-top); }
 </style>
 
   <!-- PWA & Web App Capabilities -->
