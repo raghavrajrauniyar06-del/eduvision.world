@@ -13471,6 +13471,62 @@ async function openCounsellorDrawer(counsellor_id) {
       setSafe('c_drawerAvatar', p.full_name.substring(0,2).toUpperCase());
     }
 
+    // Bind KYC & Verification Data for Admin Inspection
+    const kycBox = document.getElementById('c_drawer_kyc_container');
+    if (kycBox) {
+      const staffKyc = {
+        full_name: p.full_name || p.name || 'Counsellor',
+        employee_id: p.employee_id || p.counsellor_id || '-',
+        role: p.role || p.designation || 'Counsellor',
+        aadhaar_number: p.aadhaar_number || 'Not provided',
+        pan_number: p.pan_number || 'Not provided',
+        id_proof_url: p.id_proof_url || '',
+        pan_url: p.pan_url || '',
+        bank_name: p.bank_name || 'N/A',
+        bank_account: p.bank_account || 'N/A',
+        bank_ifsc: p.bank_ifsc || 'N/A',
+        qualification: p.qualification || 'N/A',
+        verification_pct: p.verification_pct || (p.id_proof_url ? 80 : 40)
+      };
+
+      const is100 = staffKyc.verification_pct >= 100;
+      const statusBadge = is100 ? '🛡️ 100% Fully Verified' : '⏳ ' + staffKyc.verification_pct + '% Incomplete';
+      const badgeStyle = is100 ? 'background:rgba(16,185,129,0.2); color:#4ade80; border:1px solid #10b981;' : 'background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid #f59e0b;';
+
+      const idBtn = staffKyc.id_proof_url
+        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'Aadhaar Card - ' + staffKyc.full_name + '\', \'' + staffKyc.id_proof_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #10b981, #059669); color:#000; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Inspect ID Proof PDF</button>'
+        : '<span style="font-size:0.75rem; color:#f87171;"><i class="fa-solid fa-circle-exclamation"></i> Document Not Uploaded</span>';
+
+      const panBtn = staffKyc.pan_url
+        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'PAN Card - ' + staffKyc.full_name + '\', \'' + staffKyc.pan_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Inspect PAN PDF</button>'
+        : '<span style="font-size:0.75rem; color:#94a3b8;">PAN Not Uploaded</span>';
+
+      kycBox.innerHTML = '<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(247,211,119,0.3); border-radius:14px; padding:18px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">' +
+          '<h4 style="color:#fff; margin:0; font-size:1rem;"><i class="fa-solid fa-shield-halved" style="color:#10b981; margin-right:6px;"></i> Staff Verification &amp; ID Proofs</h4>' +
+          '<span style="font-size:0.75rem; padding:3px 10px; border-radius:99px; font-weight:700; ' + badgeStyle + '">' + statusBadge + '</span>' +
+        '</div>' +
+        '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:14px;">' +
+          '<div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px;">' +
+            '<div style="font-size:0.72rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">Government ID (Aadhaar)</div>' +
+            '<div style="font-size:0.9rem; color:#f7d377; font-family:\'JetBrains Mono\'; margin:4px 0 10px;">' + staffKyc.aadhaar_number + '</div>' +
+            idBtn +
+          '</div>' +
+          '<div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px;">' +
+            '<div style="font-size:0.72rem; color:#94a3b8; text-transform:uppercase; font-weight:700;">PAN Card (Optional)</div>' +
+            '<div style="font-size:0.9rem; color:#38bdf8; font-family:\'JetBrains Mono\'; margin:4px 0 10px;">' + staffKyc.pan_number + '</div>' +
+            panBtn +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:0.8rem; color:#cbd5e1; background:rgba(0,0,0,0.25); padding:12px; border-radius:10px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:8px;">' +
+          '<div><span style="color:#94a3b8;">Bank:</span> <strong>' + staffKyc.bank_name + '</strong></div>' +
+          '<div><span style="color:#94a3b8;">A/C:</span> <strong style="font-family:\'JetBrains Mono\';">' + staffKyc.bank_account + '</strong></div>' +
+          '<div><span style="color:#94a3b8;">IFSC:</span> <strong style="font-family:\'JetBrains Mono\';">' + staffKyc.bank_ifsc + '</strong></div>' +
+          '<div><span style="color:#94a3b8;">Qualification:</span> <strong>' + staffKyc.qualification + '</strong></div>' +
+        '</div>' +
+      '</div>';
+    }
+
     // 2. Performance Data Binding (Ultra Safe)
     setSafe('cp_total_students', perf.total_students || 0);
     setSafe('cp_total_applications', perf.total_applications || 0);

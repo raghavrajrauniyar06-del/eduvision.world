@@ -3920,6 +3920,7 @@ body:has(#mod-chat.active) .admin-main {
   <script src="../shared/permission_engine.js"></script>
   <script src="../shared/attendance_engine.js"></script>
   <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
+  <script src="../shared/employee_kyc_verification.js"></script>
 
   <!-- ═══ EXACT COUNSELLOR CRM DRAWER LIQUID GLASS MODAL ENGINE ═══ -->
   <style id="modal-crm-override">
@@ -8196,8 +8197,8 @@ body.modal-open { overflow: hidden !important; }
       <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-leads')">Assigned Leads</div>
       <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-applications')">Applications</div>
       <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-followups')">Follow-ups</div>
-      <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-timeline')">Activity Timeline</div>
       <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-recordings')"><i class="fa-solid fa-microphone-lines" style="color:#10b981; margin-right:4px;"></i> Call Recordings</div>
+      <div class="drawer-tab" onclick="switchCounsellorTab('c-tab-kyc')"><i class="fa-solid fa-shield-halved" style="color:#f7d377; margin-right:4px;"></i> KYC &amp; Verification</div>
     </div>
 
     <div class="drawer-body">
@@ -8422,6 +8423,13 @@ body.modal-open { overflow: hidden !important; }
         </div>
         <div id="c_recordings_container">
           <!-- JS Populated -->
+        </div>
+      </div>
+
+      <!-- KYC & Verification Tab (Executive Inspector) -->
+      <div id="c-tab-kyc" class="tab-content">
+        <div id="c_drawer_kyc_container" style="padding:16px;">
+          <!-- Dynamically populated by openCounsellorDrawer -->
         </div>
       </div>
       
@@ -9741,7 +9749,9 @@ body.modal-open { overflow: hidden !important; }
         <button type="button" class="admin-modal-tab" onclick="switchAdminModalTab('password')" id="adminTabBtn-password" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
           <i class="fa-solid fa-lock" style="margin-right:6px; color:#38bdf8;"></i> Password &amp; Security
         </button>
-        
+        <button type="button" class="admin-modal-tab" onclick="switchAdminModalTab('kyc')" id="adminTabBtn-kyc" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
+          <i class="fa-solid fa-shield-halved" style="margin-right:6px; color:#10b981;"></i> 100% Verification &amp; KYC
+        </button>
       </div>
 
       <!-- Tab Content Area -->
@@ -9978,6 +9988,9 @@ body.modal-open { overflow: hidden !important; }
           </form>
         </div>
 
+        <!-- TAB 4: 100% VERIFICATION & KYC -->
+        <div id="adminTabContent-kyc" class="admin-tab-pane" style="display:none;"></div>
+
       </div>
     </div>
   </div>
@@ -10199,6 +10212,12 @@ body.modal-open { overflow: hidden !important; }
 
     // Default tab
     switchAdminModalTab('personal');
+
+    // Render 100% Verification & KYC Tab
+    const kycPane = document.getElementById('adminTabContent-kyc');
+    if (kycPane && window.EduVisionKYC) {
+      kycPane.innerHTML = EduVisionKYC.renderKycTabContent('admin', empId);
+    }
 
     const ov = document.getElementById('adminProfileOverlay');
     if (ov) ov.style.display = 'block';

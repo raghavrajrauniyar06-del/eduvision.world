@@ -2466,6 +2466,7 @@
 </style>
   <script src="../shared/permission_engine.js"></script>
   <script src="../shared/eduvision_rag_ai.js"></script>
+  <script src="../shared/employee_kyc_verification.js"></script>
   <script src="../shared/genie_transition.js?v=20260916_V120_GPU_NATIVE"></script>
 
 <style>
@@ -5386,7 +5387,9 @@ body.modal-open { overflow: hidden !important; }
         <button type="button" class="emp-modal-tab" onclick="switchEmpModalTab('tab-emp-security')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
           <i class="fa-solid fa-key" style="color:#38bdf8;"></i> Password &amp; Security
         </button>
-        
+        <button type="button" class="emp-modal-tab" onclick="switchEmpModalTab('tab-emp-kyc')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
+          <i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> 100% Verification &amp; KYC
+        </button>
       </div>
 
       <!-- Tab Content Area -->
@@ -5498,6 +5501,9 @@ body.modal-open { overflow: hidden !important; }
               Must enter your current password. New password must meet all strong enterprise complexity criteria.
             </div>
           </div>
+        <!-- 4. 100% VERIFICATION & KYC TAB -->
+        <div id="tab-emp-kyc" class="emp-modal-view" style="display:none;"></div>
+
 
           <form id="empPasswordChangeForm" onsubmit="handleEmployeePasswordChangeSubmit(event)">
             
@@ -5568,6 +5574,9 @@ body.modal-open { overflow: hidden !important; }
             </div>
           </form>
         </div>
+
+        <!-- 4. 100% VERIFICATION & KYC TAB -->
+        <div id="tab-emp-kyc" class="emp-modal-view" style="display:none;"></div>
 
       </div>
     </div>
@@ -7109,6 +7118,13 @@ body.modal-open { overflow: hidden !important; }
       if (dPhone) dPhone.textContent = phone;
       if (dEmail) dEmail.textContent = email;
       if (dAddress) dAddress.textContent = address;
+
+      // Render 100% Verification & KYC Tab
+      const kycPane = document.getElementById('tab-emp-kyc');
+      if (kycPane && window.EduVisionKYC) {
+        kycPane.innerHTML = EduVisionKYC.renderKycTabContent('counsellor', empId);
+      }
+      switchEmpModalTab('tab-emp-personal');
 
       if (typeof window.closeMobileSidebar === 'function') {
         window.closeMobileSidebar();

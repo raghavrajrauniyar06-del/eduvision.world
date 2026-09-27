@@ -448,6 +448,7 @@ async function loadCounsellors() {
         <td><span class="status-badge ${statusClass}">${c.status}</span></td>
         <td>
           <button class="action-btn" onclick='editCounsellor(${JSON.stringify(c).replace(/'/g, "&apos;")})' title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button class="action-btn" onclick='EduVisionKYC.openStaffKYCInspector(${JSON.stringify(c).replace(/'/g, "&apos;")})' title="View KYC &amp; Verification Docs" style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#4ade80;"><i class="fa-solid fa-shield-halved"></i></button>
           <button class="action-btn" onclick="toggleCounsellorStatus('${c.counsellor_id}', '${c.status}')" title="${c.status === 'Active' ? 'Deactivate' : 'Activate'}">
             <i class="fa-solid ${c.status === 'Active' ? 'fa-ban' : 'fa-check'}"></i>
           </button>

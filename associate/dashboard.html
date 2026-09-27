@@ -20,6 +20,7 @@
   <!-- Supabase & Central Permission Engine -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/employee_kyc_verification.js"></script>
   <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
   
   <style>
@@ -1127,6 +1128,12 @@ body.modal-open { overflow: hidden !important; }
               </button>
             </div>
           </form>
+
+          <!-- PARTNER 100% VERIFICATION & KYC SECTION -->
+          <div id="partnerKycSection" style="margin-top:24px;">
+            <div id="partnerKycContainer"></div>
+          </div>
+
         </div>
 
         <!-- Change Password Section (Partner Self-Service) -->
@@ -1344,6 +1351,12 @@ body.modal-open { overflow: hidden !important; }
     // Sync Partner Account & Profile details
     // ═══════════════════════════════════════════════════════════════
     async function loadPartnerProfileAndSync() {
+    const kycBox = document.getElementById('partnerKycContainer');
+    if (kycBox && window.EduVisionKYC) {
+      const pId = localStorage.getItem('eduvision_partner_id') || 'PRT001';
+      kycBox.innerHTML = EduVisionKYC.renderKycTabContent('partner', pId);
+    }
+
       // Try to load partners from local cache
       try {
         const cached = localStorage.getItem('eduvision_partners');

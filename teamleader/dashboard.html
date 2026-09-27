@@ -902,6 +902,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../shared/permission_engine.js"></script>
   <script src="../shared/eduvision_rag_ai.js"></script>
+  <script src="../shared/employee_kyc_verification.js"></script>
 
 <style>
 /* ── LIQUID FROSTED GLASS & SUBMIT BUTTON ANIMATIONS ── */
@@ -2529,6 +2530,9 @@ body.modal-open { overflow: hidden !important; }
         <button type="button" class="tl-modal-tab" onclick="switchTlModalTab('password')" id="tlTabBtn-password" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
           <i class="fa-solid fa-lock" style="margin-right:6px; color:#38bdf8;"></i> Password &amp; Security
         </button>
+        <button type="button" class="tl-modal-tab" onclick="switchTlModalTab('kyc')" id="tlTabBtn-kyc" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
+          <i class="fa-solid fa-shield-halved" style="margin-right:6px; color:#10b981;"></i> 100% Verification &amp; KYC
+        </button>
         
       </div>
 
@@ -2720,6 +2724,9 @@ body.modal-open { overflow: hidden !important; }
             </div>
           </form>
         </div>
+        <!-- TAB 4: 100% VERIFICATION & KYC -->
+        <div id="tlTabContent-kyc" class="tl-tab-pane" style="display:none;"></div>
+
 
       </div>
     </div>
@@ -2781,6 +2788,12 @@ body.modal-open { overflow: hidden !important; }
 
     // Default tab
     switchTlModalTab('personal');
+
+    // Render 100% Verification & KYC Tab
+    const kycPane = document.getElementById('tlTabContent-kyc');
+    if (kycPane && window.EduVisionKYC) {
+      kycPane.innerHTML = EduVisionKYC.renderKycTabContent('team_leader', empId);
+    }
 
     const modal = document.getElementById('tlProfileModal');
     if (modal) modal.style.display = 'flex';
