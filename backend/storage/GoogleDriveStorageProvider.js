@@ -4,10 +4,20 @@ const stream = require('stream');
 class GoogleDriveStorageProvider {
   constructor(authClient) {
     this.name = 'google_drive';
-    this.authClient = authClient;
+    if (!authClient && process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_REFRESH_TOKEN) {
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        process.env.GOOGLE_REDIRECT_URI
+      );
+      oauth2Client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN.trim() });
+      this.authClient = oauth2Client;
+    } else {
+      this.authClient = authClient;
+    }
     this.drive = google.drive({ version: 'v3', auth: this.authClient });
 
-    // In-memory root folder ID cache (e.g. Eduvision Central Data, Leads, Year)
+    // In-memory root folder ID cache (e.g. EduVision, Staff, Leads, Year)
     this.folderCache = new Map();
   }
 
@@ -53,12 +63,12 @@ class GoogleDriveStorageProvider {
   }
 
   /**
-   * Get or create Master Hub Root Folder: "Eduvision Central Data"
+   * Get or create Master Hub Root Folder: "EduVision"
    */
   async getRootHubFolder() {
-    let rootId = await this.getOrCreateFolder('Eduvision Central Data');
+    let rootId = await this.getOrCreateFolder('EduVision');
     if (!rootId) {
-      rootId = await this.getOrCreateFolder('EduVision');
+      rootId = await this.getOrCreateFolder('Eduvision Central Data');
     }
     return rootId;
   }
@@ -480,13 +490,29 @@ class GoogleDriveStorageProvider {
     const staffFolderId = await this.getOrCreateFolder('Staff', rootFolderId);
 
     const headers = [
-      'Employee ID', 'Full Name', 'Email', 'Phone Number', 'Staff Type',
-      'Role / Designation', 'Branch / Campus', 'Account Status',
-      'KYC Document / Aadhar Ref', 'Residential Address', 'Created Date', 'Last Updated'
+      'Employee ID', 'Full Name', 'Email Address', 'Phone Number', 'Staff Type',
+      'Designation / Role', 'Branch / Campus', 'Account Status',
+      'KYC Document Status', 'Aadhaar Number', 'PAN Number',
+      'Aadhaar Document Link (Google Drive)', 'PAN Document Link (Google Drive)',
+      'Residential Address', 'Created Date', 'Last Updated'
     ];
 
     const rows = [headers.join(',')];
     (staffList || []).forEach(s => {
+      const hasIdDoc = !!(s.id_proof_url || s.drive_url);
+      const hasPanDoc = !!(s.pan_url);
+      const isVerified = (s.verification_status === '100% Verified' || s.verification_status === 'Verified');
+
+      let kycStatusText = 'Pending Upload (No Document on File)';
+      if (isVerified) {
+        kycStatusText = '100% Verified';
+      } else if (hasIdDoc) {
+        kycStatusText = 'Document Uploaded (Under Review)';
+      }
+
+      const idDocLink = s.id_proof_url || s.drive_url || 'Not Uploaded';
+      const panDocLink = s.pan_url || 'Not Uploaded';
+
       const row = [
         this.escapeCsvValue(s.employee_id || s.counsellor_id || s.team_leader_id || s.admin_id || s.partner_code || s.id || ''),
         this.escapeCsvValue(s.full_name || s.name || s.contact_person || ''),
@@ -496,7 +522,11 @@ class GoogleDriveStorageProvider {
         this.escapeCsvValue(s.role || s.designation || 'Staff'),
         this.escapeCsvValue(s.branch || s.location || 'Head Office'),
         this.escapeCsvValue(s.status || 'Active'),
-        this.escapeCsvValue(s.aadhar_no || s.aadhar_number || s.kyc_doc || s.id_proof || 'Verified (On File)'),
+        this.escapeCsvValue(kycStatusText),
+        this.escapeCsvValue(s.aadhaar_number || s.aadhar_no || 'Not Provided'),
+        this.escapeCsvValue(s.pan_number || 'Not Provided'),
+        this.escapeCsvValue(idDocLink),
+        this.escapeCsvValue(panDocLink),
         this.escapeCsvValue(s.address || ''),
         this.escapeCsvValue(s.created_at || new Date().toISOString()),
         this.escapeCsvValue(s.updated_at || new Date().toISOString())
@@ -505,7 +535,7 @@ class GoogleDriveStorageProvider {
     });
 
     const csvContent = rows.join('\r\n');
-    const fileName = 'EduVision_Staff_Directory_KYC.csv';
+    const fileName = 'EduVision Staff Directory (KYC & Aadhar)';
 
     return await this._saveCsvToDriveFolder(fileName, csvContent, staffFolderId, { totalStaff: (staffList || []).length });
   }
@@ -627,6 +657,7 @@ class GoogleDriveStorageProvider {
 
   /**
    * Lazily resolves or creates folder hierarchy for Staff & Employee KYC documents
+   * Directly inside EduVision > Staff > KYC-Documents > [EMP]_[Name]
    */
   async resolveStaffKycFolder(employeeId, employeeName) {
     try {
@@ -635,13 +666,14 @@ class GoogleDriveStorageProvider {
       const staffFolderName = `${safeId}_${safeName}`;
 
       const eduvisionRootId = await this.getRootHubFolder();
-      const staffKycRootId = await this.getOrCreateFolder('Staff-KYC-Dossiers', eduvisionRootId);
-      const staffFolderId = await this.getOrCreateFolder(staffFolderName, staffKycRootId);
+      const staffFolderId = await this.getOrCreateFolder('Staff', eduvisionRootId);
+      const kycDocsFolderId = await this.getOrCreateFolder('KYC-Documents', staffFolderId);
+      const employeeFolderId = await this.getOrCreateFolder(staffFolderName, kycDocsFolderId);
 
-      return { staffKycRootId, staffFolderId };
+      return { staffFolderId, kycDocsFolderId, employeeFolderId };
     } catch(err) {
       console.warn('[Drive] Staff KYC folder resolution fallback:', err.message);
-      return { staffKycRootId: null, staffFolderId: null };
+      return { staffFolderId: null, kycDocsFolderId: null, employeeFolderId: null };
     }
   }
 
@@ -649,17 +681,18 @@ class GoogleDriveStorageProvider {
    * Upload Staff KYC Document (Aadhaar, PAN, Passport, Bank Proof) directly to Google Drive
    */
   async uploadStaffKycDocument({ fileBuffer, fileName, mimeType, employeeId, employeeName, docType }) {
-    const { staffKycRootId, staffFolderId } = await this.resolveStaffKycFolder(employeeId, employeeName);
+    const { staffFolderId, kycDocsFolderId, employeeFolderId } = await this.resolveStaffKycFolder(employeeId, employeeName);
 
     const bufferStream = new stream.PassThrough();
     bufferStream.end(fileBuffer);
 
     const safeDocType = this.sanitizeName(docType || 'ID_Proof').toUpperCase();
     const cleanFileName = fileName || `${safeDocType}_${employeeId}.pdf`;
+    const targetFolderId = employeeFolderId || kycDocsFolderId || staffFolderId;
 
     const fileMetadata = {
       name: cleanFileName,
-      parents: staffFolderId ? [staffFolderId] : (staffKycRootId ? [staffKycRootId] : [])
+      parents: targetFolderId ? [targetFolderId] : []
     };
 
     const media = {
@@ -692,7 +725,7 @@ class GoogleDriveStorageProvider {
       docType: docType,
       employeeId: employeeId,
       employeeName: employeeName,
-      folderId: staffFolderId,
+      folderId: targetFolderId,
       webViewLink: res.data.webViewLink || driveDirectLink,
       webContentLink: res.data.webContentLink || driveDirectLink,
       driveFileUrl: driveDirectLink,
