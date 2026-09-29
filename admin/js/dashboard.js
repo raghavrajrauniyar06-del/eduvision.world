@@ -5994,7 +5994,7 @@ window.loadAssociatePartners = async function(skipSync = false) {
               target_admissions: dbp.target_admissions || '',
               gstin: dbp.gstin || '',
               pan: dbp.pan || '',
-              kyc_status: dbp.kyc_status || 'Verified',
+              kyc_status: dbp.kyc_status || 'Pending Verification',
               mou_code: dbp.mou_code || '',
               account_status: dbp.status || dbp.account_status || 'Active',
               bank_beneficiary: dbp.bank_beneficiary || dbp.company_name || '',
@@ -10061,7 +10061,7 @@ window.submitPartnerCreate = async function(event) {
 
   const gstin = getV('partner_gstin');
   const pan = getV('partner_pan');
-  const kycStatus = document.getElementById('partner_kyc_status')?.value || 'Verified';
+  const kycStatus = document.getElementById('partner_kyc_status')?.value || 'Pending Verification';
   const mouCode = getV('partner_mou_code');
   const accountStatus = document.getElementById('partner_account_status')?.value || 'Active';
 
@@ -10490,7 +10490,7 @@ window.openPartnerModal = function(partnerId = '') {
       // 5. Statutory KYC
       setVal('partner_gstin', partner.gstin);
       setVal('partner_pan', partner.pan);
-      setVal('partner_kyc_status', partner.kyc_status || 'Verified');
+      setVal('partner_kyc_status', partner.kyc_status || 'Pending Verification');
       setVal('partner_mou_code', partner.mou_code);
       setVal('partner_account_status', partner.status || partner.account_status || 'Active');
 
@@ -13480,25 +13480,30 @@ async function openCounsellorDrawer(counsellor_id) {
         role: p.role || p.designation || 'Counsellor',
         aadhaar_number: p.aadhaar_number || 'Not provided',
         pan_number: p.pan_number || 'Not provided',
-        id_proof_url: p.id_proof_url || '',
+        id_proof_url: p.id_proof_url || p.drive_url || '',
         pan_url: p.pan_url || '',
         bank_name: p.bank_name || 'N/A',
         bank_account: p.bank_account || 'N/A',
         bank_ifsc: p.bank_ifsc || 'N/A',
         qualification: p.qualification || 'N/A',
-        verification_pct: p.verification_pct || (p.id_proof_url ? 80 : 40)
+        verification_status: p.verification_status || (p.id_proof_url ? 'Under Review' : 'Not Submitted'),
+        verification_pct: p.verification_pct || (p.id_proof_url ? 65 : 0)
       };
 
-      const is100 = staffKyc.verification_pct >= 100;
-      const statusBadge = is100 ? '🛡️ 100% Fully Verified' : '⏳ ' + staffKyc.verification_pct + '% Incomplete';
-      const badgeStyle = is100 ? 'background:rgba(16,185,129,0.2); color:#4ade80; border:1px solid #10b981;' : 'background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid #f59e0b;';
+      const isVerified = (staffKyc.verification_status === '100% Verified' || staffKyc.verification_status === 'Verified');
+      const statusBadge = isVerified 
+        ? '🛡️ 100% Fully Verified' 
+        : (staffKyc.id_proof_url ? '⏳ Under Review (Pending Approval)' : '⚠️ Not Submitted (0%)');
+      const badgeStyle = isVerified 
+        ? 'background:rgba(16,185,129,0.2); color:#4ade80; border:1px solid #10b981;' 
+        : (staffKyc.id_proof_url ? 'background:rgba(56,189,248,0.2); color:#38bdf8; border:1px solid #38bdf8;' : 'background:rgba(239,68,68,0.2); color:#f87171; border:1px solid #ef4444;');
 
       const idBtn = staffKyc.id_proof_url
-        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'Aadhaar Card - ' + staffKyc.full_name + '\', \'' + staffKyc.id_proof_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #10b981, #059669); color:#000; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Inspect ID Proof PDF</button>'
+        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'Aadhaar Card - ' + staffKyc.full_name + '\', \'' + staffKyc.id_proof_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-brands fa-google-drive"></i> Inspect ID (Google Drive)</button>'
         : '<span style="font-size:0.75rem; color:#f87171;"><i class="fa-solid fa-circle-exclamation"></i> Document Not Uploaded</span>';
 
       const panBtn = staffKyc.pan_url
-        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'PAN Card - ' + staffKyc.full_name + '\', \'' + staffKyc.pan_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Inspect PAN PDF</button>'
+        ? '<button type="button" onclick="EduVisionKYC.showDocumentPreviewModal(\'PAN Card - ' + staffKyc.full_name + '\', \'' + staffKyc.pan_url + '\', \'' + staffKyc.employee_id + '\')" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; border:none; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-brands fa-google-drive"></i> Inspect PAN (Google Drive)</button>'
         : '<span style="font-size:0.75rem; color:#94a3b8;">PAN Not Uploaded</span>';
 
       kycBox.innerHTML = '<div style="background:rgba(255,255,255,0.02); border:1px solid rgba(247,211,119,0.3); border-radius:14px; padding:18px;">' +
@@ -13524,6 +13529,7 @@ async function openCounsellorDrawer(counsellor_id) {
           '<div><span style="color:#94a3b8;">IFSC:</span> <strong style="font-family:\'JetBrains Mono\';">' + staffKyc.bank_ifsc + '</strong></div>' +
           '<div><span style="color:#94a3b8;">Qualification:</span> <strong>' + staffKyc.qualification + '</strong></div>' +
         '</div>' +
+        (!isVerified && staffKyc.id_proof_url ? '<div style="margin-top:12px; text-align:right;"><button type="button" onclick="EduVisionKYC.approveStaffKYC(\'' + staffKyc.employee_id + '\', \'' + staffKyc.role + '\')" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer;"><i class="fa-solid fa-circle-check"></i> Grant 100% Clearance</button></div>' : '') +
       '</div>';
     }
 

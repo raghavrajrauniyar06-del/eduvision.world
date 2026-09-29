@@ -1525,6 +1525,102 @@ app.post('/api/students/documents/verify', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// OFFICIAL STAFF KYC GOOGLE DRIVE UPLOAD ENDPOINT
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/api/staff/kyc/upload', docUpload.single('kyc_document'), async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ success: false, error: 'No KYC document file provided.' });
+    }
+
+    const { employee_id, employee_name, doc_type, role, id_number } = req.body || {};
+    if (!employee_id) {
+      return res.status(400).json({ success: false, error: 'Employee ID is required for KYC document upload.' });
+    }
+
+    const safeDocType = (doc_type || 'ID_Proof').replace(/\s+/g, '_');
+    const safeEmpName = (employee_name || 'Staff').replace(/[^a-zA-Z0-9_\-]/g, '_');
+    const ext = path.extname(file.originalname) || (file.mimetype.includes('pdf') ? '.pdf' : '.png');
+    const driveFileName = `KYC_${safeDocType.toUpperCase()}_${employee_id}_${safeEmpName}${ext}`;
+
+    console.log(`[STAFF KYC] Uploading ${driveFileName} for ${employee_id} to Google Drive Vault...`);
+
+    let driveResult = null;
+    try {
+      driveResult = await driveProvider.uploadStaffKycDocument({
+        fileBuffer: file.buffer,
+        fileName: driveFileName,
+        mimeType: file.mimetype,
+        employeeId: employee_id,
+        employeeName: safeEmpName,
+        docType: safeDocType
+      });
+    } catch (driveErr) {
+      console.error('[STAFF KYC] Google Drive upload error:', driveErr);
+      return res.status(500).json({ success: false, error: 'Google Drive upload error: ' + driveErr.message });
+    }
+
+    // Role table mapping for direct database sync
+    const normalizedRole = (role || 'counsellor').toLowerCase();
+    let targetTable = 'counsellors';
+    let idCol = 'counsellor_id';
+
+    if (normalizedRole.includes('admin') || normalizedRole.includes('ceo') || normalizedRole.includes('cto')) {
+      targetTable = 'admin_users';
+      idCol = 'admin_id';
+    } else if (normalizedRole.includes('leader')) {
+      targetTable = 'team_leaders';
+      idCol = 'team_leader_id';
+    } else if (normalizedRole.includes('partner') || normalizedRole.includes('associate')) {
+      targetTable = 'associate_partners';
+      idCol = 'partner_id';
+    }
+
+    // Construct update payload for Supabase
+    const updatePayload = {
+      updated_at: new Date().toISOString(),
+      verification_status: 'Under Review' // Strictly under review until verified by Admin
+    };
+
+    if (safeDocType.toLowerCase().includes('id') || safeDocType.toLowerCase().includes('aadhaar')) {
+      updatePayload.id_proof_url = driveResult.webViewLink;
+      updatePayload.drive_url = driveResult.webViewLink;
+      if (id_number) updatePayload.aadhaar_number = id_number;
+    } else if (safeDocType.toLowerCase().includes('pan')) {
+      updatePayload.pan_url = driveResult.webViewLink;
+      if (id_number) updatePayload.pan_number = id_number;
+    }
+
+    try {
+      await sb
+        .from(targetTable)
+        .update(updatePayload)
+        .or(`${idCol}.eq.${employee_id},employee_id.eq.${employee_id},id.eq.${employee_id}`);
+      console.log(`[STAFF KYC] Updated ${targetTable} for ${employee_id} with Google Drive link`);
+    } catch (sbErr) {
+      console.warn('[STAFF KYC] Supabase sync notice:', sbErr.message);
+    }
+
+    res.json({
+      success: true,
+      message: 'KYC Document successfully uploaded to Google Drive!',
+      fileId: driveResult.fileId,
+      fileName: driveResult.fileName,
+      webViewLink: driveResult.webViewLink,
+      webContentLink: driveResult.webContentLink,
+      driveFileUrl: driveResult.driveFileUrl,
+      folderId: driveResult.folderId,
+      storageProvider: 'google_drive',
+      verification_status: 'Under Review'
+    });
+  } catch (err) {
+    console.error('[STAFF KYC] Handler error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STUDENT FEES & PAYMENTS MODULE (Google Drive Receipt Vault)
 // ─────────────────────────────────────────────────────────────────────────────
 const studentPaymentsStore = path.join(__dirname, 'data', 'student_payments.json');

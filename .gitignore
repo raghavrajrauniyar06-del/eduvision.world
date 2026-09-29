@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 
 # Environment Variables & Secrets
@@ -20,5 +20,7 @@ Thumbs.db
 .idea/
 
 # Backend temporary storage
-backend/storage/
+backend/storage/temp/
+backend/storage/downloads/
+!backend/storage/*.js
 backend/data/*.json
