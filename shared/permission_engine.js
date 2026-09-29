@@ -790,12 +790,20 @@
       let sessionUser = this.currentUser;
       if (!sessionUser) {
         try {
-          const raw = localStorage.getItem('eduvision_counsellor') ||
+          const raw = localStorage.getItem('eduvision_admin') ||
                       localStorage.getItem('eduvision_team_leader') ||
-                      localStorage.getItem('eduvision_admin') ||
+                      localStorage.getItem('eduvision_counsellor') ||
                       localStorage.getItem('eduvision_associate') ||
+                      localStorage.getItem('eduvision_partners') ||
                       localStorage.getItem('eduvision_student') ||
-                      localStorage.getItem('eduvision_user');
+                      localStorage.getItem('eduvision_user') ||
+                      sessionStorage.getItem('eduvision_admin') ||
+                      sessionStorage.getItem('eduvision_team_leader') ||
+                      sessionStorage.getItem('eduvision_counsellor') ||
+                      sessionStorage.getItem('eduvision_associate') ||
+                      sessionStorage.getItem('eduvision_partners') ||
+                      sessionStorage.getItem('eduvision_student') ||
+                      sessionStorage.getItem('eduvision_user');
           if (raw) sessionUser = JSON.parse(raw);
         } catch(e){}
       }
@@ -825,11 +833,13 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background: rgba(4, 7, 15, 0.92) !important;
+        background: rgba(4, 7, 15, 0.94) !important;
         backdrop-filter: blur(35px) saturate(200%) !important;
         -webkit-backdrop-filter: blur(35px) saturate(200%) !important;
-        padding: 20px !important;
+        padding: 20px 14px !important;
         box-sizing: border-box !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif !important;
         animation: edvModalFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both !important;
       `;
@@ -843,15 +853,86 @@
             from { opacity: 0; transform: scale(0.96) translateY(12px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
           }
+          .edv-pwd-wrap {
+            position: relative !important;
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .edv-pwd-input {
+            width: 100% !important;
+            height: 48px !important;
+            padding: 12px 48px 12px 14px !important;
+            background: rgba(0, 0, 0, 0.55) !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 12px !important;
+            color: #ffffff !important;
+            font-size: 16px !important; /* Prevents iOS auto-zoom bug */
+            outline: none !important;
+            box-sizing: border-box !important;
+            transition: border-color 0.2s, box-shadow 0.2s !important;
+            line-height: normal !important;
+          }
           .edv-pwd-input:focus {
             border-color: #f59e0b !important;
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22) !important;
+          }
+          .edv-pwd-eye-btn {
+            position: absolute !important;
+            right: 8px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            background: transparent !important;
+            border: none !important;
+            color: #94a3b8 !important;
+            cursor: pointer !important;
+            width: 36px !important;
+            height: 36px !important;
+            min-width: 36px !important;
+            max-width: 36px !important;
+            min-height: 36px !important;
+            max-height: 36px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            z-index: 25 !important;
+            line-height: 1 !important;
+            outline: none !important;
+            border-radius: 8px !important;
+            transition: color 0.2s ease, transform 0.15s ease, background 0.2s ease !important;
+            user-select: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+          .edv-pwd-eye-btn:hover {
+            color: #f8fafc !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            transform: translateY(-50%) scale(1.08) !important;
+          }
+          .edv-pwd-eye-btn:active {
+            transform: translateY(-50%) scale(0.95) !important;
+          }
+          .edv-pwd-eye-btn.active {
+            color: #f59e0b !important;
+          }
+          .edv-pwd-eye-btn i {
+            font-size: 1rem !important;
+            width: 18px !important;
+            text-align: center !important;
+            pointer-events: none !important;
+            display: inline-block !important;
+            line-height: 1 !important;
           }
         </style>
         <div style="
           width: 100%;
           max-width: 480px;
-          background: linear-gradient(145deg, rgba(20, 26, 44, 0.96) 0%, rgba(10, 14, 26, 0.98) 100%);
+          margin: auto;
+          background: linear-gradient(145deg, rgba(20, 26, 44, 0.98) 0%, rgba(10, 14, 26, 0.99) 100%);
           border: 1px solid rgba(255, 255, 255, 0.16);
           border-radius: 24px;
           box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 50px rgba(245, 158, 11, 0.22);
@@ -871,29 +952,29 @@
           </div>
 
           <!-- Body Form -->
-          <div style="padding: 26px 28px;">
+          <div style="padding: 24px 26px;">
             <!-- Icon & Heading -->
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 18px;">
               <div style="
-                width: 60px;
-                height: 60px;
-                border-radius: 18px;
+                width: 56px;
+                height: 56px;
+                border-radius: 16px;
                 background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
                 border: 1px solid rgba(245, 158, 11, 0.4);
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 color: #f59e0b;
-                font-size: 1.6rem;
-                margin-bottom: 12px;
+                font-size: 1.5rem;
+                margin-bottom: 10px;
                 box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
               ">
                 <i class="fa-solid fa-key"></i>
               </div>
-              <h2 style="font-size: 1.35rem; font-weight: 800; color: #ffffff; margin: 0 0 6px 0; letter-spacing: -0.02em;">
+              <h2 style="font-size: 1.3rem; font-weight: 800; color: #ffffff; margin: 0 0 6px 0; letter-spacing: -0.02em;">
                 Set Permanent Password
               </h2>
-              <p style="font-size: 0.86rem; color: #94a3b8; margin: 0; line-height: 1.45;">
+              <p style="font-size: 0.84rem; color: #94a3b8; margin: 0; line-height: 1.45;">
                 Your account is currently using temporary password <code style="background: rgba(245, 158, 11, 0.15); color: #fef08a; padding: 2px 6px; border-radius: 6px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);">Pass123</code>. Please create a permanent password to unlock your workspace.
               </p>
             </div>
@@ -909,70 +990,37 @@
                 <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
                   New Permanent Password
                 </label>
-                <div style="position: relative; width: 100%;">
-                  <input type="password" id="edv_new_password" class="edv-pwd-input" required placeholder="Minimum 6 characters" minlength="6" style="
-                    width: 100%;
-                    padding: 12px 42px 12px 14px;
-                    background: rgba(0, 0, 0, 0.55);
-                    border: 1px solid rgba(255, 255, 255, 0.16);
-                    border-radius: 12px;
-                    color: #ffffff;
-                    font-size: 0.9rem;
-                    outline: none;
-                    box-sizing: border-box;
-                    transition: border-color 0.2s, box-shadow 0.2s;
-                  " oninput="window.EduPerms.validateForcePasswordInputs()">
-                  <button type="button" onclick="window.EduPerms.togglePwdVisibility('edv_new_password', this)" style="
-                    position: absolute;
-                    right: 12px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: transparent;
-                    border: none;
-                    color: #94a3b8;
-                    cursor: pointer;
-                    font-size: 0.95rem;
-                    padding: 4px;
-                  ">
+                <div class="edv-pwd-wrap">
+                  <input type="password" id="edv_new_password" class="edv-pwd-input" required placeholder="Minimum 6 characters" minlength="6" oninput="window.EduPerms.validateForcePasswordInputs()">
+                  <button type="button" class="edv-pwd-eye-btn" onclick="window.EduPerms.togglePwdVisibility('edv_new_password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
                     <i class="fa-solid fa-eye"></i>
                   </button>
                 </div>
               </div>
 
+              <!-- Password Strength Bar -->
+              <div id="edvStrengthBox" style="margin-bottom: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600;">Password Strength:</span>
+                  <span id="edvStrengthLabel" style="font-size: 0.72rem; font-weight: 800; color: #ef4444;">Too Short</span>
+                </div>
+                <div style="height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;">
+                  <div id="edvStrengthBar" style="width: 0%; height: 100%; background: #ef4444; transition: all 0.25s ease;"></div>
+                </div>
+              </div>
+
               <!-- Confirm Password Field -->
-              <div style="margin-bottom: 20px;">
+              <div style="margin-bottom: 18px;">
                 <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
                   Confirm New Password
                 </label>
-                <div style="position: relative; width: 100%;">
-                  <input type="password" id="edv_confirm_password" class="edv-pwd-input" required placeholder="Re-enter new password" minlength="6" style="
-                    width: 100%;
-                    padding: 12px 42px 12px 14px;
-                    background: rgba(0, 0, 0, 0.55);
-                    border: 1px solid rgba(255, 255, 255, 0.16);
-                    border-radius: 12px;
-                    color: #ffffff;
-                    font-size: 0.9rem;
-                    outline: none;
-                    box-sizing: border-box;
-                    transition: border-color 0.2s, box-shadow 0.2s;
-                  " oninput="window.EduPerms.validateForcePasswordInputs()">
-                  <button type="button" onclick="window.EduPerms.togglePwdVisibility('edv_confirm_password', this)" style="
-                    position: absolute;
-                    right: 12px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: transparent;
-                    border: none;
-                    color: #94a3b8;
-                    cursor: pointer;
-                    font-size: 0.95rem;
-                    padding: 4px;
-                  ">
+                <div class="edv-pwd-wrap">
+                  <input type="password" id="edv_confirm_password" class="edv-pwd-input" required placeholder="Re-enter new password" minlength="6" oninput="window.EduPerms.validateForcePasswordInputs()">
+                  <button type="button" class="edv-pwd-eye-btn" onclick="window.EduPerms.togglePwdVisibility('edv_confirm_password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
                     <i class="fa-solid fa-eye"></i>
                   </button>
                 </div>
-                <div id="edvForcePwdMatchText" style="font-size: 0.75rem; margin-top: 5px; font-weight: 600; display: none;"></div>
+                <div id="edvForcePwdMatchText" style="font-size: 0.75rem; margin-top: 6px; font-weight: 600; display: none;"></div>
               </div>
 
               <!-- Submit Button -->
@@ -1027,12 +1075,53 @@
       if (icon) {
         icon.className = isPwd ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
       }
+      if (isPwd) {
+        btn.classList.add('active');
+        btn.style.color = '#f59e0b';
+        btn.title = 'Hide password';
+      } else {
+        btn.classList.remove('active');
+        btn.style.color = '#94a3b8';
+        btn.title = 'Show password';
+      }
     }
 
     validateForcePasswordInputs() {
       const p1 = document.getElementById('edv_new_password')?.value || '';
       const p2 = document.getElementById('edv_confirm_password')?.value || '';
       const matchText = document.getElementById('edvForcePwdMatchText');
+      const bar = document.getElementById('edvStrengthBar');
+      const label = document.getElementById('edvStrengthLabel');
+
+      // 1. Password Strength Calculation
+      if (bar && label) {
+        let score = 0;
+        if (p1.length >= 6) score += 25;
+        if (p1.length >= 8) score += 25;
+        if (/[A-Z]/.test(p1) && /[a-z]/.test(p1)) score += 25;
+        if (/[0-9]/.test(p1) || /[^A-Za-z0-9]/.test(p1)) score += 25;
+
+        bar.style.width = score + '%';
+        if (score <= 25) {
+          bar.style.background = '#ef4444';
+          label.style.color = '#ef4444';
+          label.textContent = p1.length < 6 ? 'Too Short (Min 6)' : 'Weak';
+        } else if (score <= 50) {
+          bar.style.background = '#f59e0b';
+          label.style.color = '#f59e0b';
+          label.textContent = 'Moderate';
+        } else if (score <= 75) {
+          bar.style.background = '#38bdf8';
+          label.style.color = '#38bdf8';
+          label.textContent = 'Strong';
+        } else {
+          bar.style.background = '#10b981';
+          label.style.color = '#10b981';
+          label.textContent = 'Very Strong';
+        }
+      }
+
+      // 2. Password Match Check
       if (!matchText) return;
 
       if (!p2) {
@@ -1043,7 +1132,7 @@
       matchText.style.display = 'block';
       if (p1 === p2 && p1.length >= 6) {
         matchText.style.color = '#10b981';
-        matchText.innerHTML = '<i class="fa-solid fa-check"></i> Passwords match';
+        matchText.innerHTML = '<i class="fa-solid fa-check"></i> Passwords match perfectly';
       } else if (p1 !== p2) {
         matchText.style.color = '#ef4444';
         matchText.innerHTML = '<i class="fa-solid fa-xmark"></i> Passwords do not match';
@@ -1054,11 +1143,24 @@
     }
 
     handleForceLogout() {
-      ['eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader', 'eduvision_admin', 'eduvision_associate', 'eduvision_student'].forEach(k => {
-        localStorage.removeItem(k);
-        sessionStorage.removeItem(k);
+      const keysToClear = [
+        'eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader',
+        'eduvision_admin', 'eduvision_associate', 'eduvision_partners',
+        'eduvision_student', 'eduvision_partner_id', 'eduvision_auth_token'
+      ];
+      keysToClear.forEach(k => {
+        try {
+          localStorage.removeItem(k);
+          sessionStorage.removeItem(k);
+        } catch(e){}
       });
-      window.location.href = '../login.html';
+      // Redirect to login page
+      const currentPath = window.location.pathname.toLowerCase();
+      if (currentPath.includes('/admin/') || currentPath.includes('/counsellor/') || currentPath.includes('/teamleader/') || currentPath.includes('/associate/') || currentPath.includes('/student/') || currentPath.includes('/branch/') || currentPath.includes('/super-admin/')) {
+        window.location.href = '../login.html';
+      } else {
+        window.location.href = 'login.html';
+      }
     }
 
     async handleForcePasswordSubmit(event) {
@@ -1086,8 +1188,8 @@
         return;
       }
 
-      if (p1.toLowerCase() === 'pass123' || p1.toLowerCase() === 'pass@123') {
-        showError('You cannot reuse the default temporary password. Please enter a new password.');
+      if (p1.toLowerCase() === 'pass123' || p1.toLowerCase() === 'pass@123' || p1.toLowerCase() === 'password' || p1.toLowerCase() === '123456') {
+        showError('You cannot reuse default or trivial passwords. Please choose a unique secure password.');
         return;
       }
 
@@ -1104,17 +1206,25 @@
       let sessionUser = this.currentUser;
       if (!sessionUser) {
         try {
-          const raw = localStorage.getItem('eduvision_counsellor') ||
+          const raw = localStorage.getItem('eduvision_admin') ||
                       localStorage.getItem('eduvision_team_leader') ||
-                      localStorage.getItem('eduvision_admin') ||
+                      localStorage.getItem('eduvision_counsellor') ||
                       localStorage.getItem('eduvision_associate') ||
+                      localStorage.getItem('eduvision_partners') ||
                       localStorage.getItem('eduvision_student') ||
-                      localStorage.getItem('eduvision_user');
+                      localStorage.getItem('eduvision_user') ||
+                      sessionStorage.getItem('eduvision_admin') ||
+                      sessionStorage.getItem('eduvision_team_leader') ||
+                      sessionStorage.getItem('eduvision_counsellor') ||
+                      sessionStorage.getItem('eduvision_associate') ||
+                      sessionStorage.getItem('eduvision_partners') ||
+                      sessionStorage.getItem('eduvision_student') ||
+                      sessionStorage.getItem('eduvision_user');
           if (raw) sessionUser = JSON.parse(raw);
         } catch(e){}
       }
 
-      const uid = (sessionUser && (sessionUser.counsellor_id || sessionUser.team_leader_id || sessionUser.admin_id || sessionUser.employee_id || sessionUser.partner_id || sessionUser.student_id || sessionUser.id)) || this.currentUserId;
+      const uid = (sessionUser && (sessionUser.counsellor_id || sessionUser.team_leader_id || sessionUser.admin_id || sessionUser.employee_id || sessionUser.partner_id || sessionUser.partner_code || sessionUser.student_id || sessionUser.id)) || this.currentUserId;
       const email = sessionUser?.email || '';
       const role = (sessionUser?.role || this.currentRole || '').toLowerCase();
 
@@ -1133,32 +1243,52 @@
           'Prefer': 'return=minimal'
         };
 
-        // 1. Update respective specific role table
+        // 1. Direct Supabase Client Update if available
+        let directSb = window.sb || (window.supabase && typeof window.supabase.createClient === 'function' 
+          ? window.supabase.createClient(this.supabaseUrl, this.supabaseKey) 
+          : null);
+
+        // 2. Update respective specific role table
         if (role === 'admin' || role === 'super_admin' || role === 'super admin' || role === 'ceo' || role === 'cto') {
-          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/admin_users?or=(admin_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (directSb) {
+            try { await directSb.from('admin_users').update(updatePayload).or(`admin_id.eq.${uid},employee_id.eq.${uid},email.eq.${email}`); } catch(e){}
+          }
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/admin_users?or=(admin_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           if (email) await fetch(`${this.supabaseUrl}/rest/v1/admin_users?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
-        } else if (role === 'teamleader' || role === 'team leader') {
+        } else if (role === 'teamleader' || role === 'team leader' || role === 'team_leader') {
+          if (directSb) {
+            try { await directSb.from('team_leaders').update(updatePayload).or(`team_leader_id.eq.${uid},employee_id.eq.${uid},email.eq.${email}`); } catch(e){}
+          }
           if (uid) {
-            await fetch(`${this.supabaseUrl}/rest/v1/team_leaders?or=(team_leader_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
-            await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+            await fetch(`${this.supabaseUrl}/rest/v1/team_leaders?or=(team_leader_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+            await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           }
           if (email) {
             await fetch(`${this.supabaseUrl}/rest/v1/team_leaders?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
             await fetch(`${this.supabaseUrl}/rest/v1/counsellors?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           }
         } else if (role === 'associate' || role === 'partner') {
-          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/associate_partners?or=(partner_id.eq.${encodeURIComponent(uid)},partner_code.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (directSb) {
+            try { await directSb.from('associate_partners').update(updatePayload).or(`partner_id.eq.${uid},partner_code.eq.${uid},email.eq.${email}`); } catch(e){}
+          }
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/associate_partners?or=(partner_id.eq.${encodeURIComponent(uid)},partner_code.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           if (email) await fetch(`${this.supabaseUrl}/rest/v1/associate_partners?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
         } else if (role === 'student') {
+          if (directSb) {
+            try { await directSb.from('students').update(updatePayload).or(`student_id.eq.${uid},email.eq.${email}`); } catch(e){}
+          }
           if (uid) await fetch(`${this.supabaseUrl}/rest/v1/students?or=(student_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           if (email) await fetch(`${this.supabaseUrl}/rest/v1/students?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
         } else {
           // Counsellors, CA, HR, Marketing, Quality, Verifier
-          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
+          if (directSb) {
+            try { await directSb.from('counsellors').update(updatePayload).or(`counsellor_id.eq.${uid},employee_id.eq.${uid},email.eq.${email}`); } catch(e){}
+          }
+          if (uid) await fetch(`${this.supabaseUrl}/rest/v1/counsellors?or=(counsellor_id.eq.${encodeURIComponent(uid)},employee_id.eq.${encodeURIComponent(uid)},id.eq.${encodeURIComponent(uid)})`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
           if (email) await fetch(`${this.supabaseUrl}/rest/v1/counsellors?email=eq.${encodeURIComponent(email)}`, { method: 'PATCH', headers, body: JSON.stringify(updatePayload) });
         }
 
-        // 2. Sync to central users table
+        // 3. Sync to central users table
         if (email) {
           await fetch(`${this.supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(email)}`, {
             method: 'PATCH',
@@ -1167,21 +1297,35 @@
           });
         }
       } catch (syncErr) {
-        console.warn('[EduPerms] Password update cloud warning:', syncErr);
+        console.warn('[EduPerms] Password update cloud notice:', syncErr);
       }
 
-      // 3. Update localStorage sessions
-      ['eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader', 'eduvision_admin', 'eduvision_associate', 'eduvision_student'].forEach(k => {
-        const raw = localStorage.getItem(k);
-        if (raw) {
-          try {
+      // 4. Update both localStorage AND sessionStorage
+      const sessionKeys = ['eduvision_user', 'eduvision_counsellor', 'eduvision_team_leader', 'eduvision_admin', 'eduvision_associate', 'eduvision_partners', 'eduvision_student'];
+      sessionKeys.forEach(k => {
+        // localStorage
+        try {
+          const raw = localStorage.getItem(k);
+          if (raw) {
             const obj = JSON.parse(raw);
             obj.password = p1;
             obj.is_temp_password = false;
             obj.must_change_password = false;
             localStorage.setItem(k, JSON.stringify(obj));
-          } catch(e){}
-        }
+          }
+        } catch(e){}
+
+        // sessionStorage
+        try {
+          const rawSess = sessionStorage.getItem(k);
+          if (rawSess) {
+            const objS = JSON.parse(rawSess);
+            objS.password = p1;
+            objS.is_temp_password = false;
+            objS.must_change_password = false;
+            sessionStorage.setItem(k, JSON.stringify(objS));
+          }
+        } catch(e){}
       });
 
       if (this.currentUser) {
@@ -1190,11 +1334,11 @@
         this.currentUser.must_change_password = false;
       }
 
-      // 4. Success UI Feedback
+      // 5. Success UI Feedback
       if (submitBtn) {
         submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
         submitBtn.style.color = '#ffffff';
-        submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Password Updated & Unlocked!';
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Permanent Password Saved &amp; Unlocked!';
       }
 
       setTimeout(() => {
@@ -1211,7 +1355,7 @@
         if (typeof showToast === 'function') {
           showToast('Permanent password saved! Your workspace is unlocked.', 'success');
         }
-      }, 900);
+      }, 800);
     }
   }
 
