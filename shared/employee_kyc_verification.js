@@ -948,7 +948,7 @@
       const idDocUrl = staffObj.id_proof_url || staffObj.drive_url || (staffObj.kyc && staffObj.kyc.id_doc_url) || '';
       const panDocUrl = staffObj.pan_url || (staffObj.kyc && staffObj.kyc.pan_doc_url) || '';
       const pct = staffObj.verification_pct || (staffObj.kyc && staffObj.kyc.verification_pct) || (idDocUrl ? 65 : 0);
-      const isVerified = (staffObj.verification_status === '100% Verified' || staffObj.verification_status === 'Verified' || pct >= 100);
+      const isVerified = (staffObj.verification_status === '100% Verified' || staffObj.verification_status === 'Verified');
 
       let modal = document.getElementById('eduVisionStaffKycModal');
       if (!modal) {

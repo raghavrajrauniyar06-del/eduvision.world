@@ -63,6 +63,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../shared/permission_engine.js"></script>
+  <script src="../shared/employee_kyc_verification.js"></script>
   <script src="../shared/eduvision_rag_ai.js"></script>
   <script src="../shared/dynamic_island.js?v=20260911_V21"></script>
 
@@ -2499,16 +2500,17 @@ body.modal-open { overflow: hidden !important; }
       }
 
       const dashSpec = document.getElementById('dash_specialization');
-      if (dashSpec) dashSpec.textContent = data.specialization ? `Specialization: ${data.specialization}` : 'Specialization: MBA';
+      if (dashSpec) dashSpec.textContent = data.specialization ? `Specialization: ${data.specialization}` : 'Specialization: General';
 
       const dashComp = document.getElementById('dash_profile_completion');
-      if (dashComp) dashComp.textContent = (data.profile_completion || 100) + '%';
+      const realComp = (data.profile_completion !== undefined && data.profile_completion !== null) ? data.profile_completion : 35;
+      if (dashComp) dashComp.textContent = realComp + '%';
 
       // 3. Quick Stats / Metrics
       const statApp = document.getElementById('stat_app_status');
       if (statApp) statApp.textContent = data.application_status || 'Submitted';
       const statAppSub = document.getElementById('stat_app_sub');
-      if (statAppSub) statAppSub.textContent = data.university ? `${data.university} (${data.course || 'BCA'})` : 'LPU (BCA)';
+      if (statAppSub) statAppSub.textContent = data.university ? `${data.university} (${data.course || 'BCA'})` : 'University Application';
 
       const statAdm = document.getElementById('stat_adm_progress');
       if (statAdm) statAdm.textContent = data.admission_status || 'In Progress';
@@ -2516,14 +2518,22 @@ body.modal-open { overflow: hidden !important; }
       if (statAdmSub) statAdmSub.textContent = 'Status: ' + (data.admission_status || 'Pending');
 
       const statDocs = document.getElementById('stat_pending_docs');
-      if (statDocs) statDocs.textContent = data.documents_status || 'Verified';
+      if (statDocs) statDocs.textContent = data.documents_status || 'Pending Verification';
       const statDocsSub = document.getElementById('stat_docs_sub');
-      if (statDocsSub) statDocsSub.textContent = data.pending_documents ? `${data.pending_documents} pending` : 'All documents verified';
+      if (statDocsSub) {
+        if (data.documents_status === 'Verified') {
+          statDocsSub.textContent = 'All documents verified';
+        } else if (data.pending_documents) {
+          statDocsSub.textContent = `${data.pending_documents} pending`;
+        } else {
+          statDocsSub.textContent = 'Sent to counsellor for review';
+        }
+      }
 
       const statLoan = document.getElementById('stat_loan');
-      if (statLoan) statLoan.textContent = data.payment_status || 'Paid';
+      if (statLoan) statLoan.textContent = data.payment_status || 'Pending';
       const statLoanSub = document.getElementById('stat_loan_sub');
-      if (statLoanSub) statLoanSub.textContent = 'Fee Payment: ' + (data.payment_status || 'Complete');
+      if (statLoanSub) statLoanSub.textContent = 'Fee Payment: ' + (data.payment_status || 'Pending');
 
       // 4. Full Profile Form Inputs (Profile Tab)
       const fields = {
@@ -2540,7 +2550,7 @@ body.modal-open { overflow: hidden !important; }
         'prof_course': data.course,
         'prof_specialization': data.specialization,
         'prof_admission_year': data.admission_year,
-        'prof_profile_completion': data.profile_completion || 100
+        'prof_profile_completion': realComp
       };
 
       for (const [id, val] of Object.entries(fields)) {
@@ -2564,12 +2574,12 @@ body.modal-open { overflow: hidden !important; }
       // 5. Render active application into applications container
       const appContainer = document.getElementById('applications_container');
       if (appContainer) {
-        const u = data.university || 'LPU';
-        const c = data.course || 'BCA';
-        const sp = data.specialization || 'MBA';
+        const u = data.university || 'Target University';
+        const c = data.course || 'Degree Program';
+        const sp = data.specialization || '';
         const st = data.application_status || 'Submitted';
-        const pay = data.payment_status || 'Paid';
-        const docs = data.documents_status || 'Verified';
+        const pay = data.payment_status || 'Pending';
+        const docs = data.documents_status || 'Pending Verification';
 
         appContainer.innerHTML = `
           <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(247,211,119,0.25); border-radius:16px; padding:22px; margin-bottom:16px; box-shadow:0 10px 30px rgba(0,0,0,0.4);">
@@ -2580,8 +2590,8 @@ body.modal-open { overflow: hidden !important; }
             <p style="margin:0 0 10px; color:#cbd5e1; font-size:0.95rem;">Enrolled Program: <strong style="color:#ffffff;">${c}</strong> ${sp ? '• Specialization: ' + sp : ''}</p>
             <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:0.84rem; color:#94a3b8; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
               <span>📋 Enrollment ID: <strong style="color:#f7d377;">${data.student_id || 'EDU260002'}</strong></span>
-              <span>💳 Admission Fees: <strong style="color:#4ade80;">${pay}</strong></span>
-              <span>📑 Academic Documents: <strong style="color:#4ade80;">${docs}</strong></span>
+              <span>💳 Admission Fees: <strong style="color:${pay === 'Paid' ? '#4ade80' : '#fbbf24'};">${pay}</strong></span>
+              <span>📑 Academic Documents: <strong style="color:${docs === 'Verified' ? '#4ade80' : '#fbbf24'};">${docs}</strong></span>
             </div>
           </div>
         `;
@@ -3234,6 +3244,15 @@ body.modal-open { overflow: hidden !important; }
       let studentId = profile.student_id || document.getElementById('prof_student_id')?.value || 'EDU260002';
       let studentName = profile.full_name || document.getElementById('prof_full_name')?.value || 'Student';
       const docType = window.activeStudentUploadDocType || 'Document';
+
+      // Real-Time Anti-Blur & Document Clarity Scanner
+      if (window.EduVisionKYC && typeof window.EduVisionKYC.analyzeDocumentClarity === 'function') {
+        showStudentVaultToast('🔍 Scanning document clarity & anti-blur filter...', 'info');
+        const clarity = await window.EduVisionKYC.analyzeDocumentClarity(file, docType.toLowerCase().includes('aadhar') ? 'id' : (docType.toLowerCase().includes('pan') ? 'pan' : 'general'), '');
+        if (!clarity.ok) {
+          return showStudentVaultToast(clarity.reason || 'Document is blurry or unreadable. Please upload a clear original PDF or high-resolution scan.', 'error');
+        }
+      }
 
       showStudentVaultToast(`Uploading ${file.name} to your Google Drive folder...`, 'info');
 

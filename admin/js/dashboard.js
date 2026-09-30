@@ -6356,8 +6356,8 @@ window.viewStudentDetails = function(userId) {
   if (document.getElementById('edit_dossier_course')) document.getElementById('edit_dossier_course').value = st.course || 'B.Tech';
   if (document.getElementById('edit_dossier_spec')) document.getElementById('edit_dossier_spec').value = st.specialization || '';
   if (document.getElementById('edit_dossier_status')) document.getElementById('edit_dossier_status').value = st.admission_status || 'Enrolled';
-  if (document.getElementById('edit_dossier_pay')) document.getElementById('edit_dossier_pay').value = st.payment_status || 'Verified';
-  if (document.getElementById('edit_dossier_doc')) document.getElementById('edit_dossier_doc').value = st.documents_status || st.pending_documents || 'Uploaded';
+  if (document.getElementById('edit_dossier_pay')) document.getElementById('edit_dossier_pay').value = st.payment_status || 'Pending';
+  if (document.getElementById('edit_dossier_doc')) document.getElementById('edit_dossier_doc').value = st.documents_status || st.pending_documents || 'Pending Verification';
 
   modal.style.display = 'flex';
   modal.classList.add('active', 'show');
