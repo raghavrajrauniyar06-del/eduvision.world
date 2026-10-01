@@ -1029,21 +1029,21 @@ body.sidebar-open { overflow: hidden !important; }
     <div onclick="closeSuperAdminProfileModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);"></div>
     <div id="superAdminProfileWindow" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.96); width:92%; max-width:780px; max-height:90vh; background:radial-gradient(ellipse at top left, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.3); border-radius:22px; box-shadow:0 35px 95px rgba(0,0,0,0.92), 0 0 50px rgba(201,147,42,0.18); z-index:10002; color:#fff; display:flex; flex-direction:column; overflow:hidden; transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
       
-      <!-- macOS Window Header with Traffic Lights -->
+      <!-- Window Header -->
       <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div onclick="closeSuperAdminProfileModal()" title="Close (Esc)" style="width:12px; height:12px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
-          <div onclick="minimizeSuperAdminProfileModal()" title="Minimize" style="width:12px; height:12px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
-          <div onclick="toggleSuperAdminProfileFullscreen()" title="Toggle Fullscreen" style="width:12px; height:12px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
-          <span style="margin-left:10px; font-size:0.75rem; color:#94a3b8; font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-weight:600;">
-            EduVision macOS ✦ Super Admin Supreme Dossier
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; color:var(--gold-light, #fbbf24); font-size:0.95rem;">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+          <span style="font-size:0.92rem; color:#ffffff; font-weight:800; letter-spacing:0.3px;">
+            Super Admin Supreme Dossier
           </span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <span id="saModalRoleBadge" style="font-size:0.7rem; font-weight:800; background:rgba(247,211,119,0.12); color:var(--gold-light, #fbbf24); border:1px solid rgba(247,211,119,0.3); padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;">
             SUPER ADMIN
           </span>
-          <button type="button" onclick="closeSuperAdminProfileModal()" style="background:transparent; border:none; color:#64748b; font-size:1.2rem; cursor:pointer; line-height:1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">&times;</button>
+          <button type="button" onclick="closeSuperAdminProfileModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; width:28px; height:28px; border-radius:8px; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(239,68,68,0.3)';" onmouseout="this.style.color='#cbd5e1'; this.style.background='rgba(255,255,255,0.06)';">&times;</button>
         </div>
       </div>
 

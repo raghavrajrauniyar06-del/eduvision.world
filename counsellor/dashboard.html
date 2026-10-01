@@ -5333,21 +5333,21 @@ body.modal-open { overflow: hidden !important; }
     <div onclick="closeEmployeeProfileModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);"></div>
     <div id="employeeProfileWindow" style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.96); width:92%; max-width:760px; max-height:90vh; background:radial-gradient(ellipse at top left, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.3); border-radius:22px; box-shadow:0 35px 95px rgba(0,0,0,0.92), 0 0 50px rgba(201,147,42,0.18); z-index:10002; color:#fff; display:flex; flex-direction:column; overflow:hidden; transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
       
-      <!-- macOS Window Header with Traffic Lights -->
+      <!-- Window Header -->
       <div style="background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; user-select:none;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div onclick="closeEmployeeProfileModal()" title="Close (Esc)" style="width:20px; height:20px; border-radius:50%; background:#ff5f56; border:1px solid #e0443e; cursor:pointer; display:flex; align-items:center; justify-content:center;"></div>
-          <div onclick="minimizeEmployeeProfileModal()" title="Minimize" style="width:20px; height:20px; border-radius:50%; background:#ffbd2e; border:1px solid #dea123; cursor:pointer;"></div>
-          <div onclick="toggleEmployeeProfileFullscreen()" title="Toggle Fullscreen" style="width:20px; height:20px; border-radius:50%; background:#27c93f; border:1px solid #1aab29; cursor:pointer;"></div>
-          <span style="margin-left:10px; font-size:0.75rem; color:#94a3b8; font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-weight:600;">
-            EduVision macOS • Staff Dossier
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; color:var(--gold-primary, #f7d377); font-size:0.95rem;">
+            <i class="fa-solid fa-id-card-clip"></i>
+          </div>
+          <span style="font-size:0.92rem; color:#ffffff; font-weight:800; letter-spacing:0.3px; font-family:var(--font-heading);">
+            Staff Dossier &amp; Profile
           </span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <span id="empModalRoleBadge" style="font-size:0.7rem; font-weight:800; background:rgba(247,211,119,0.12); color:var(--gold-light); border:1px solid rgba(247,211,119,0.3); padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px;">
-            SENIOR COUNSELLOR
+            COUNSELLOR
           </span>
-          <button type="button" onclick="closeEmployeeProfileModal()" style="background:transparent; border:none; color:#64748b; font-size:1.2rem; cursor:pointer; line-height:1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">&times;</button>
+          <button type="button" onclick="closeEmployeeProfileModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; width:28px; height:28px; border-radius:8px; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(239,68,68,0.3)';" onmouseout="this.style.color='#cbd5e1'; this.style.background='rgba(255,255,255,0.06)';">&times;</button>
         </div>
       </div>
 
@@ -5355,17 +5355,17 @@ body.modal-open { overflow: hidden !important; }
       <div style="padding:18px 24px; background:linear-gradient(180deg, rgba(201,147,42,0.08) 0%, transparent 100%); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
         <div style="display:flex; align-items:center; gap:16px;">
           <div id="empModalAvatar" style="width:58px; height:58px; border-radius:18px; background:linear-gradient(135deg, var(--gold-primary, #c9932a), #f59e0b); color:#000; font-weight:900; font-size:1.4rem; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(245,158,11,0.35); border:2px solid rgba(255,255,255,0.2);">
-            FS
+            --
           </div>
           <div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <h3 id="empModalFullName" style="margin:0; font-size:1.2rem; font-weight:800; color:#fff; font-family:var(--font-heading);">Farda Singh</h3>
-              <span style="font-size:0.68rem; color:#34d399; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); padding:2px 8px; border-radius:99px; font-weight:700;">
-                <i class="fa-solid fa-circle-check"></i> Verified Active
+              <h3 id="empModalFullName" style="margin:0; font-size:1.2rem; font-weight:800; color:#fff; font-family:var(--font-heading);">--</h3>
+              <span id="empModalStatusBadge" style="font-size:0.68rem; color:#f59e0b; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); padding:2px 8px; border-radius:99px; font-weight:700;">
+                <i class="fa-solid fa-clock"></i> KYC Pending
               </span>
             </div>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
-              <span id="empModalEmpId">EMP267616</span> • <span id="empModalCnsId">--</span> • <span id="empModalBranch">Head Office</span>
+              <span id="empModalEmpId">--</span> • <span id="empModalCnsId">--</span> • <span id="empModalBranch">--</span>
             </div>
           </div>
         </div>
@@ -5376,7 +5376,7 @@ body.modal-open { overflow: hidden !important; }
         </div>
       </div>
 
-      <!-- macOS Segmented Tabs -->
+      <!-- Segmented Tabs -->
       <div style="padding:10px 24px; background:rgba(0,0,0,0.2); border-bottom:1px solid rgba(255,255,255,0.06); display:flex; gap:8px; overflow-x:auto;">
         <button type="button" class="emp-modal-tab active" onclick="switchEmpModalTab('tab-emp-personal')" style="background:rgba(247,211,119,0.15); border:1px solid rgba(247,211,119,0.35); color:#f7d377; padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
           <i class="fa-solid fa-id-card"></i> Personal Details
@@ -5388,7 +5388,7 @@ body.modal-open { overflow: hidden !important; }
           <i class="fa-solid fa-key" style="color:#38bdf8;"></i> Password &amp; Security
         </button>
         <button type="button" class="emp-modal-tab" onclick="switchEmpModalTab('tab-emp-kyc')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
-          <i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> 100% Verification &amp; KYC
+          <i class="fa-solid fa-shield-halved" id="empModalKycTabIcon" style="color:#f59e0b;"></i> <span id="empModalKycTabLabel">KYC &amp; Verification</span>
         </button>
       </div>
 
@@ -5400,7 +5400,7 @@ body.modal-open { overflow: hidden !important; }
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:18px;">
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Employee Code</div>
-              <div id="emp_det_emp_id" style="font-family:var(--font-mono); font-size:0.95rem; font-weight:800; color:var(--gold-light); margin-top:3px;">EMP267616</div>
+              <div id="emp_det_emp_id" style="font-family:var(--font-mono); font-size:0.95rem; font-weight:800; color:var(--gold-light); margin-top:3px;">--</div>
             </div>
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Counsellor Desk ID</div>
@@ -5408,11 +5408,11 @@ body.modal-open { overflow: hidden !important; }
             </div>
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Official Phone</div>
-              <div id="emp_det_phone" style="font-size:0.95rem; font-weight:700; color:#fff; margin-top:3px;">+91 9580985581</div>
+              <div id="emp_det_phone" style="font-size:0.95rem; font-weight:700; color:#fff; margin-top:3px;">--</div>
             </div>
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Official Email</div>
-              <div id="emp_det_email" style="font-size:0.95rem; font-weight:700; color:#fff; margin-top:3px; word-break:break-all;">mayadevi91573@gmail.com</div>
+              <div id="emp_det_email" style="font-size:0.95rem; font-weight:700; color:#fff; margin-top:3px; word-break:break-all;">--</div>
             </div>
           </div>
 
@@ -7081,22 +7081,22 @@ body.modal-open { overflow: hidden !important; }
       const win = document.getElementById('employeeProfileWindow');
       if (!overlay || !win) return;
 
-      // Populate fresh current user details with fallback
+      // Populate fresh current user details
       let user = currentUser;
       if (!user || !user.full_name) {
         try {
-          user = JSON.parse(localStorage.getItem('eduvision_counsellor') || sessionStorage.getItem('eduvision_counsellor') || sessionStorage.getItem('eduvision_user') || '{}');
+          user = JSON.parse(localStorage.getItem('eduvision_counsellor') || localStorage.getItem('eduvision_staff') || sessionStorage.getItem('eduvision_counsellor') || sessionStorage.getItem('eduvision_user') || '{}');
         } catch(e){}
       }
 
-      const name = (user && user.full_name) ? user.full_name : 'Farda Singh';
-      const empId = (user && (user.employee_id || user.counsellor_id)) ? (user.employee_id || user.counsellor_id) : 'EMP267616';
-      const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : '');
-      const role = (user && (user.designation || user.role)) ? (user.designation || user.role) : 'Senior Counsellor';
+      const name = (user && (user.full_name || user.name)) ? (user.full_name || user.name) : 'Staff Member';
+      const empId = (user && (user.employee_id || user.counsellor_id)) ? (user.employee_id || user.counsellor_id) : '--';
+      const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : '--');
+      const role = (user && (user.designation || user.role)) ? (user.designation || user.role) : 'Counsellor';
       const branch = (user && user.branch) ? user.branch : 'Head Office';
-      const phone = (user && user.phone) ? user.phone : '+91 9580985581';
-      const email = (user && user.email) ? user.email : 'mayadevi91573@gmail.com';
-      const address = (user && user.address) ? user.address : 'Kaptanganj, Uttar Pradesh 274301';
+      const phone = (user && user.phone) ? user.phone : '--';
+      const email = (user && user.email) ? user.email : '--';
+      const address = (user && user.address) ? user.address : 'EduVision Corporate Office';
 
       const nameEl = document.getElementById('empModalFullName');
       const roleEl = document.getElementById('empModalRoleBadge');
@@ -7124,7 +7124,46 @@ body.modal-open { overflow: hidden !important; }
       if (dEmail) dEmail.textContent = email;
       if (dAddress) dAddress.textContent = address;
 
-      // Render 100% Verification & KYC Tab
+      // Calculate Real KYC Progress
+      const kycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('counsellor') : null);
+      const kycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(kycData) : { pct: 0, status: 'Not Submitted', is100: false };
+      
+      const statusBadge = document.getElementById('empModalStatusBadge');
+      if (statusBadge) {
+        if (kycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
+          statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
+          statusBadge.style.color = '#34d399';
+          statusBadge.style.background = 'rgba(16,185,129,0.15)';
+          statusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
+        } else if (kycProgress.pct > 0 || kycProgress.hasIdDoc) {
+          statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${kycProgress.pct}%)`;
+          statusBadge.style.color = '#38bdf8';
+          statusBadge.style.background = 'rgba(56,189,248,0.15)';
+          statusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
+        } else {
+          statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
+          statusBadge.style.color = '#f59e0b';
+          statusBadge.style.background = 'rgba(245,158,11,0.15)';
+          statusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
+        }
+      }
+
+      const kycTabLabel = document.getElementById('empModalKycTabLabel');
+      const kycTabIcon = document.getElementById('empModalKycTabIcon');
+      if (kycTabLabel) {
+        if (kycProgress.is100) {
+          kycTabLabel.textContent = 'KYC & Verification (100%)';
+          if (kycTabIcon) kycTabIcon.style.color = '#10b981';
+        } else if (kycProgress.pct > 0) {
+          kycTabLabel.textContent = `KYC & Verification (${kycProgress.pct}%)`;
+          if (kycTabIcon) kycTabIcon.style.color = '#38bdf8';
+        } else {
+          kycTabLabel.textContent = 'KYC & Verification (Pending)';
+          if (kycTabIcon) kycTabIcon.style.color = '#f59e0b';
+        }
+      }
+
+      // Render KYC Tab Content
       const kycPane = document.getElementById('tab-emp-kyc');
       if (kycPane && window.EduVisionKYC) {
         kycPane.innerHTML = EduVisionKYC.renderKycTabContent('counsellor', empId);

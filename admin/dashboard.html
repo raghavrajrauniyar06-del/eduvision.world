@@ -6384,17 +6384,14 @@ body.modal-open { overflow: hidden !important; }
   <div class="modal-overlay" id="staffCreateModal" style="display:none;">
     <div class="modal-card mac-liquid-glass-window" style="max-width:560px; padding:0; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,0.18); background:linear-gradient(145deg, rgba(22, 30, 52, 0.94) 0%, rgba(10, 14, 26, 0.97) 100%); backdrop-filter:blur(35px) saturate(200%); -webkit-backdrop-filter:blur(35px) saturate(200%); box-shadow:0 30px 80px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.3), 0 0 40px rgba(168,85,247,0.18);">
       
-      <!-- macOS Liquid Glass Window Header with Traffic Lights -->
+      <!-- Modal Window Header -->
       <div class="mac-window-header" style="display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:rgba(255,255,255,0.04); border-bottom:1px solid rgba(255,255,255,0.08); -webkit-user-select:none; user-select:none;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <!-- Traffic Lights -->
-          <div style="display:flex; align-items:center; gap:7px;">
-            <button type="button" onclick="closeStaffModal()" title="Close" style="width:12px; height:12px; border-radius:50%; background:#ff5f56; border:1px solid rgba(0,0,0,0.2); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:transform 0.15s ease;"></button>
-            <button type="button" onclick="closeStaffModal()" title="Minimize" style="width:12px; height:12px; border-radius:50%; background:#ffbd2e; border:1px solid rgba(0,0,0,0.2); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:transform 0.15s ease;"></button>
-            <button type="button" onclick="closeStaffModal()" title="Expand" style="width:12px; height:12px; border-radius:50%; background:#27c93f; border:1px solid rgba(0,0,0,0.2); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:transform 0.15s ease;"></button>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg, rgba(168,85,247,0.25), rgba(147,51,234,0.15)); border:1px solid rgba(168,85,247,0.4); display:flex; align-items:center; justify-content:center; color:#c084fc; font-size:0.95rem;">
+            <i class="fa-solid fa-user-plus"></i>
           </div>
-          <span id="staffModalTitle" style="font-size:0.95rem; font-weight:700; color:#fff; margin-left:12px; letter-spacing:0.3px; display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-user-plus" style="color:var(--accent-purple);"></i> Create Staff Account
+          <span id="staffModalTitle" style="font-size:0.95rem; font-weight:700; color:#fff; letter-spacing:0.3px;">
+            Create Staff Account
           </span>
         </div>
         <button type="button" class="btn-modal-close" onclick="closeStaffModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); width:28px; height:28px; border-radius:8px; color:#94a3b8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease;">&times;</button>
@@ -9751,7 +9748,7 @@ body.modal-open { overflow: hidden !important; }
           <i class="fa-solid fa-lock" style="margin-right:6px; color:#38bdf8;"></i> Password &amp; Security
         </button>
         <button type="button" class="admin-modal-tab" onclick="switchAdminModalTab('kyc')" id="adminTabBtn-kyc" style="flex:1; background:transparent; border:1px solid transparent; color:#94a3b8; font-size:0.78rem; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s ease;">
-          <i class="fa-solid fa-shield-halved" style="margin-right:6px; color:#10b981;"></i> 100% Verification &amp; KYC
+          <i class="fa-solid fa-shield-halved" id="adminModalKycTabIcon" style="margin-right:6px; color:#f59e0b;"></i> <span id="adminModalKycTabLabel">KYC &amp; Verification</span>
         </button>
       </div>
 
@@ -10214,7 +10211,26 @@ body.modal-open { overflow: hidden !important; }
     // Default tab
     switchAdminModalTab('personal');
 
-    // Render 100% Verification & KYC Tab
+    // Calculate Real KYC Progress
+    const adminKycData = (u && u.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('admin') : null);
+    const adminKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(adminKycData) : { pct: 0, status: 'Not Submitted', is100: false };
+
+    const adminKycTabLabel = document.getElementById('adminModalKycTabLabel');
+    const adminKycTabIcon = document.getElementById('adminModalKycTabIcon');
+    if (adminKycTabLabel) {
+      if (adminKycProgress.is100) {
+        adminKycTabLabel.textContent = 'KYC & Verification (100%)';
+        if (adminKycTabIcon) adminKycTabIcon.style.color = '#10b981';
+      } else if (adminKycProgress.pct > 0) {
+        adminKycTabLabel.textContent = `KYC & Verification (${adminKycProgress.pct}%)`;
+        if (adminKycTabIcon) adminKycTabIcon.style.color = '#38bdf8';
+      } else {
+        adminKycTabLabel.textContent = 'KYC & Verification (Pending)';
+        if (adminKycTabIcon) adminKycTabIcon.style.color = '#f59e0b';
+      }
+    }
+
+    // Render KYC Tab Content
     const kycPane = document.getElementById('adminTabContent-kyc');
     if (kycPane && window.EduVisionKYC) {
       kycPane.innerHTML = EduVisionKYC.renderKycTabContent('admin', empId);
