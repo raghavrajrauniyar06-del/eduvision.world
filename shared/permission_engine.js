@@ -290,12 +290,12 @@
           return;
         }
 
-        // 3. Check counsellor session
-        const rawCns = localStorage.getItem('eduvision_counsellor');
+        // 3. Check counsellor / staff session
+        const rawCns = localStorage.getItem('eduvision_counsellor') || localStorage.getItem('eduvision_staff');
         if (rawCns) {
           const cns = JSON.parse(rawCns);
           this.currentUserId = cns.counsellor_id || cns.employee_id || cns.id || '';
-          this.currentRole = (cns.role || 'counsellor').toLowerCase().replace(/\s+/g, '_');
+          this.currentRole = (cns.role || cns.designation || 'counsellor').toLowerCase().replace(/\s+/g, '_');
           this.currentUser = cns;
           return;
         }
@@ -442,12 +442,13 @@
       const normRole = (role || 'student').toLowerCase().replace(/\s+/g, '_');
       const isLeadership = ['cto', 'super_admin', 'admin', 'ceo'].includes(normRole);
 
-      const isCa = ['ca', 'ca_accounts', 'ca_/_accounts_head', 'accounts', 'finance'].includes(normRole);
-      const isHr = ['hr', 'hr_operations', 'hr_&_operations_manager', 'human_resources'].includes(normRole);
-      const isDocVerifier = ['doc_verifier', 'document_verification_officer', 'verifier'].includes(normRole);
-      const isMarketing = ['marketing_head', 'digital_marketing_head', 'marketing'].includes(normRole);
-      const isQuality = ['quality_auditor', 'quality_&_call_auditor', 'qa'].includes(normRole);
-      const isStaffSpecialist = isCa || isHr || isDocVerifier || isMarketing || isQuality;
+      const isCa = ['ca', 'ca_accounts', 'ca_/_accounts_head', 'accounts', 'finance', 'accountant'].includes(normRole);
+      const isHr = ['hr', 'hr_operations', 'hr_&_operations_manager', 'human_resources', 'hr_executive'].includes(normRole);
+      const isDocVerifier = ['doc_verifier', 'document_verification_officer', 'verifier', 'verification', 'document_verification'].includes(normRole);
+      const isMarketing = ['marketing_head', 'digital_marketing_head', 'marketing', 'telecaller', 'tele_caller', 'lead_generation'].includes(normRole);
+      const isQuality = ['quality_auditor', 'quality_&_call_auditor', 'qa', 'auditor'].includes(normRole);
+      const isOps = ['operations', 'operations_manager', 'ops', 'staff', 'general_staff'].includes(normRole);
+      const isStaffSpecialist = isCa || isHr || isDocVerifier || isMarketing || isQuality || isOps;
 
       Object.keys(FALLBACK_MODULE_CATALOG).forEach(k => {
         const item = FALLBACK_MODULE_CATALOG[k];
@@ -476,6 +477,12 @@
           accessible = false;
         }
         if (isQuality && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'counsellor_call_recordings', 'counsellor_reports'].includes(k)) {
+          accessible = false;
+        }
+        if (isMarketing && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'comm_broadcast', 'counsellor_leads', 'counsellor_followups', 'crm_web_forms', 'admin_leads'].includes(k)) {
+          accessible = false;
+        }
+        if (isOps && !['core_dashboard', 'core_profile', 'core_notifications', 'comm_chat', 'comm_broadcast', 'counsellor_leads', 'counsellor_followups', 'counsellor_attendance'].includes(k)) {
           accessible = false;
         }
 
