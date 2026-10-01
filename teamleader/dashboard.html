@@ -2797,12 +2797,12 @@ body.modal-open { overflow: hidden !important; }
     switchTlModalTab('personal');
 
     // Calculate Real KYC Progress
-    const tlKycData = (u && u.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('team_leader') : null);
+    const tlKycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('team_leader') : null);
     const tlKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(tlKycData) : { pct: 0, status: 'Not Submitted', is100: false };
     
     const tlStatusBadge = document.getElementById('tlModalStatusBadge');
     if (tlStatusBadge) {
-      if (tlKycProgress.is100 || (u && (u.verification_status === '100% Verified' || u.verification_status === 'Verified'))) {
+      if (tlKycProgress.is100 || (user && (user.verification_status === '100% Verified' || u.verification_status === 'Verified'))) {
         tlStatusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
         tlStatusBadge.style.color = '#34d399';
         tlStatusBadge.style.background = 'rgba(16,185,129,0.15)';

@@ -10212,7 +10212,7 @@ body.modal-open { overflow: hidden !important; }
     switchAdminModalTab('personal');
 
     // Calculate Real KYC Progress
-    const adminKycData = (u && u.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('admin') : null);
+    const adminKycData = (admin && admin.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('admin') : null);
     const adminKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(adminKycData) : { pct: 0, status: 'Not Submitted', is100: false };
 
     const adminKycTabLabel = document.getElementById('adminModalKycTabLabel');

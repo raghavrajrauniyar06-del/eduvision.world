@@ -5501,9 +5501,6 @@ body.modal-open { overflow: hidden !important; }
               Must enter your current password. New password must meet all strong enterprise complexity criteria.
             </div>
           </div>
-        <!-- 4. 100% VERIFICATION & KYC TAB -->
-        <div id="tab-emp-kyc" class="emp-modal-view" style="display:none;"></div>
-
 
           <form id="empPasswordChangeForm" onsubmit="handleEmployeePasswordChangeSubmit(event)">
             
@@ -5575,7 +5572,7 @@ body.modal-open { overflow: hidden !important; }
           </form>
         </div>
 
-        <!-- 4. 100% VERIFICATION & KYC TAB -->
+        <!-- 4. KYC & VERIFICATION TAB -->
         <div id="tab-emp-kyc" class="emp-modal-view" style="display:none;"></div>
 
       </div>
@@ -5652,6 +5649,10 @@ body.modal-open { overflow: hidden !important; }
     function switchView(viewId) {
       if (typeof window.closeMobileSidebar === 'function') {
         window.closeMobileSidebar();
+      }
+      if (viewId === 'profile' || viewId === 'settings') {
+        openEmployeeProfileModal(viewId === 'settings' ? 'tab-emp-security' : 'tab-emp-personal');
+        return;
       }
       const viewPermMap = {
         'dashboard': 'counsellor_dashboard',
@@ -7076,112 +7077,130 @@ body.modal-open { overflow: hidden !important; }
     // =========================================================================
     // 🍎 MACOS STAFF PROFILE & SETTINGS MODULE
     // =========================================================================
-    function openEmployeeProfileModal() {
+    function openEmployeeProfileModal(defaultTab) {
       const overlay = document.getElementById('employeeProfileOverlay');
       const win = document.getElementById('employeeProfileWindow');
-      if (!overlay || !win) return;
-
-      // Populate fresh current user details
-      let user = currentUser;
-      if (!user || !user.full_name) {
-        try {
-          user = JSON.parse(localStorage.getItem('eduvision_counsellor') || localStorage.getItem('eduvision_staff') || sessionStorage.getItem('eduvision_counsellor') || sessionStorage.getItem('eduvision_user') || '{}');
-        } catch(e){}
+      if (!overlay || !win) {
+        console.error('Profile modal DOM elements not found');
+        return;
       }
 
-      const name = (user && (user.full_name || user.name)) ? (user.full_name || user.name) : 'Staff Member';
-      const empId = (user && (user.employee_id || user.counsellor_id)) ? (user.employee_id || user.counsellor_id) : '--';
-      const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : '--');
-      const role = (user && (user.designation || user.role)) ? (user.designation || user.role) : 'Counsellor';
-      const branch = (user && user.branch) ? user.branch : 'Head Office';
-      const phone = (user && user.phone) ? user.phone : '--';
-      const email = (user && user.email) ? user.email : '--';
-      const address = (user && user.address) ? user.address : 'EduVision Corporate Office';
-
-      const nameEl = document.getElementById('empModalFullName');
-      const roleEl = document.getElementById('empModalRoleBadge');
-      const empIdEl = document.getElementById('empModalEmpId');
-      const cnsIdEl = document.getElementById('empModalCnsId');
-      const branchEl = document.getElementById('empModalBranch');
-      const avatarEl = document.getElementById('empModalAvatar');
-
-      if (nameEl) nameEl.textContent = name;
-      if (roleEl) roleEl.textContent = role.toUpperCase();
-      if (empIdEl) empIdEl.textContent = empId;
-      if (cnsIdEl) cnsIdEl.textContent = cnsId;
-      if (branchEl) branchEl.textContent = branch;
-      if (avatarEl) avatarEl.textContent = name.substring(0, 2).toUpperCase();
-
-      const dEmpId = document.getElementById('emp_det_emp_id');
-      const dCnsId = document.getElementById('emp_det_cns_id');
-      const dPhone = document.getElementById('emp_det_phone');
-      const dEmail = document.getElementById('emp_det_email');
-      const dAddress = document.getElementById('emp_det_address');
-
-      if (dEmpId) dEmpId.textContent = empId;
-      if (dCnsId) dCnsId.textContent = cnsId;
-      if (dPhone) dPhone.textContent = phone;
-      if (dEmail) dEmail.textContent = email;
-      if (dAddress) dAddress.textContent = address;
-
-      // Calculate Real KYC Progress
-      const kycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('counsellor') : null);
-      const kycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(kycData) : { pct: 0, status: 'Not Submitted', is100: false };
-      
-      const statusBadge = document.getElementById('empModalStatusBadge');
-      if (statusBadge) {
-        if (kycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
-          statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
-          statusBadge.style.color = '#34d399';
-          statusBadge.style.background = 'rgba(16,185,129,0.15)';
-          statusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
-        } else if (kycProgress.pct > 0 || kycProgress.hasIdDoc) {
-          statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${kycProgress.pct}%)`;
-          statusBadge.style.color = '#38bdf8';
-          statusBadge.style.background = 'rgba(56,189,248,0.15)';
-          statusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
-        } else {
-          statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
-          statusBadge.style.color = '#f59e0b';
-          statusBadge.style.background = 'rgba(245,158,11,0.15)';
-          statusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
-        }
-      }
-
-      const kycTabLabel = document.getElementById('empModalKycTabLabel');
-      const kycTabIcon = document.getElementById('empModalKycTabIcon');
-      if (kycTabLabel) {
-        if (kycProgress.is100) {
-          kycTabLabel.textContent = 'KYC & Verification (100%)';
-          if (kycTabIcon) kycTabIcon.style.color = '#10b981';
-        } else if (kycProgress.pct > 0) {
-          kycTabLabel.textContent = `KYC & Verification (${kycProgress.pct}%)`;
-          if (kycTabIcon) kycTabIcon.style.color = '#38bdf8';
-        } else {
-          kycTabLabel.textContent = 'KYC & Verification (Pending)';
-          if (kycTabIcon) kycTabIcon.style.color = '#f59e0b';
-        }
-      }
-
-      // Render KYC Tab Content
-      const kycPane = document.getElementById('tab-emp-kyc');
-      if (kycPane && window.EduVisionKYC) {
-        kycPane.innerHTML = EduVisionKYC.renderKycTabContent('counsellor', empId);
-      }
-      switchEmpModalTab('tab-emp-personal');
-
-      if (typeof window.closeMobileSidebar === 'function') {
-        window.closeMobileSidebar();
-      }
-
+      // Immediately display overlay and window
       overlay.style.display = 'block';
-      overlay.style.zIndex = '99999';
-      win.style.zIndex = '100000';
+      overlay.style.zIndex = '999999';
+      win.style.zIndex = '1000000';
       win.style.display = 'flex';
-      setTimeout(() => {
-        win.style.transform = 'translate(-50%, -50%) scale(1)';
-        win.style.opacity = '1';
-      }, 10);
+      win.style.opacity = '1';
+      win.style.transform = 'translate(-50%, -50%) scale(1)';
+
+      try {
+        if (typeof window.closeMobileSidebar === 'function') {
+          window.closeMobileSidebar();
+        }
+
+        // Populate fresh current user details
+        let user = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : null;
+        if (!user || !user.full_name) {
+          try {
+            user = JSON.parse(localStorage.getItem('eduvision_counsellor') || localStorage.getItem('eduvision_staff') || sessionStorage.getItem('eduvision_counsellor') || sessionStorage.getItem('eduvision_user') || '{}');
+          } catch(e){}
+        }
+
+        const name = (user && (user.full_name || user.name)) ? (user.full_name || user.name) : 'Staff Member';
+        const empId = (user && (user.employee_id || user.counsellor_id)) ? (user.employee_id || user.counsellor_id) : '--';
+        const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : '--');
+        const role = (user && (user.designation || user.role)) ? (user.designation || user.role) : 'Counsellor';
+        const branch = (user && user.branch) ? user.branch : 'Head Office';
+        const phone = (user && user.phone) ? user.phone : '--';
+        const email = (user && user.email) ? user.email : '--';
+        const address = (user && user.address) ? user.address : 'EduVision Corporate Office';
+
+        const nameEl = document.getElementById('empModalFullName');
+        const roleEl = document.getElementById('empModalRoleBadge');
+        const empIdEl = document.getElementById('empModalEmpId');
+        const cnsIdEl = document.getElementById('empModalCnsId');
+        const branchEl = document.getElementById('empModalBranch');
+        const avatarEl = document.getElementById('empModalAvatar');
+
+        if (nameEl) nameEl.textContent = name;
+        if (roleEl) roleEl.textContent = role.toUpperCase();
+        if (empIdEl) empIdEl.textContent = empId;
+        if (cnsIdEl) cnsIdEl.textContent = cnsId;
+        if (branchEl) branchEl.textContent = branch;
+        if (avatarEl) avatarEl.textContent = name.substring(0, 2).toUpperCase();
+
+        const dEmpId = document.getElementById('emp_det_emp_id');
+        const dCnsId = document.getElementById('emp_det_cns_id');
+        const dPhone = document.getElementById('emp_det_phone');
+        const dEmail = document.getElementById('emp_det_email');
+        const dAddress = document.getElementById('emp_det_address');
+
+        if (dEmpId) dEmpId.textContent = empId;
+        if (dCnsId) dCnsId.textContent = cnsId;
+        if (dPhone) dPhone.textContent = phone;
+        if (dEmail) dEmail.textContent = email;
+        if (dAddress) dAddress.textContent = address;
+
+        // Calculate Real KYC Progress
+        let kycProgress = { pct: 0, status: 'Not Submitted', is100: false };
+        try {
+          const kycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('counsellor') : null);
+          if (window.EduVisionKYC) {
+            kycProgress = EduVisionKYC.calculateProgress(kycData);
+          }
+        } catch(e) {
+          console.warn('KYC calculation warning:', e);
+        }
+        
+        const statusBadge = document.getElementById('empModalStatusBadge');
+        if (statusBadge) {
+          if (kycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
+            statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
+            statusBadge.style.color = '#34d399';
+            statusBadge.style.background = 'rgba(16,185,129,0.15)';
+            statusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
+          } else if (kycProgress.pct > 0 || kycProgress.hasIdDoc) {
+            statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${kycProgress.pct}%)`;
+            statusBadge.style.color = '#38bdf8';
+            statusBadge.style.background = 'rgba(56,189,248,0.15)';
+            statusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
+          } else {
+            statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
+            statusBadge.style.color = '#f59e0b';
+            statusBadge.style.background = 'rgba(245,158,11,0.15)';
+            statusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
+          }
+        }
+
+        const kycTabLabel = document.getElementById('empModalKycTabLabel');
+        const kycTabIcon = document.getElementById('empModalKycTabIcon');
+        if (kycTabLabel) {
+          if (kycProgress.is100) {
+            kycTabLabel.textContent = 'KYC & Verification (100%)';
+            if (kycTabIcon) kycTabIcon.style.color = '#10b981';
+          } else if (kycProgress.pct > 0) {
+            kycTabLabel.textContent = `KYC & Verification (${kycProgress.pct}%)`;
+            if (kycTabIcon) kycTabIcon.style.color = '#38bdf8';
+          } else {
+            kycTabLabel.textContent = 'KYC & Verification (Pending)';
+            if (kycTabIcon) kycTabIcon.style.color = '#f59e0b';
+          }
+        }
+
+        // Render KYC Tab Content
+        const kycPane = document.getElementById('tab-emp-kyc');
+        if (kycPane && window.EduVisionKYC) {
+          try {
+            kycPane.innerHTML = EduVisionKYC.renderKycTabContent('counsellor', empId);
+          } catch(e) {
+            console.warn('KYC render error:', e);
+          }
+        }
+
+        switchEmpModalTab(defaultTab || 'tab-emp-personal');
+      } catch(err) {
+        console.error('openEmployeeProfileModal error:', err);
+      }
     }
     window.openEmployeeProfileModal = openEmployeeProfileModal;
 
