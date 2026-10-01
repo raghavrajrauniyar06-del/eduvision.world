@@ -5365,7 +5365,7 @@ body.modal-open { overflow: hidden !important; }
               </span>
             </div>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
-              <span id="empModalEmpId">EMP267616</span> • <span id="empModalCnsId">CNS260001</span> • <span id="empModalBranch">Head Office</span>
+              <span id="empModalEmpId">EMP267616</span> • <span id="empModalCnsId">--</span> • <span id="empModalBranch">Head Office</span>
             </div>
           </div>
         </div>
@@ -5404,7 +5404,7 @@ body.modal-open { overflow: hidden !important; }
             </div>
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Counsellor Desk ID</div>
-              <div id="emp_det_cns_id" style="font-family:var(--font-mono); font-size:0.95rem; font-weight:800; color:#38bdf8; margin-top:3px;">CNS260001</div>
+              <div id="emp_det_cns_id" style="font-family:var(--font-mono); font-size:0.95rem; font-weight:800; color:#38bdf8; margin-top:3px;">--</div>
             </div>
             <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:12px 14px; border-radius:12px;">
               <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Official Phone</div>
@@ -5526,7 +5526,7 @@ body.modal-open { overflow: hidden !important; }
                 New Strong Password <span style="color:#ef4444;">*</span>
               </label>
               <div class="pwd-input-wrapper">
-                  <input type="password" id="emp_new_password" required oninput="handleEmpPasswordStrengthCheck()" placeholder="Enter new strong password" class="pwd-glass-input">
+                  <input type="password" id="emp_new_password" required oninput="handleEmployeePasswordStrengthCheck(this.value)" placeholder="Enter new strong password" class="pwd-glass-input">
                   <button type="button" onclick="togglePasswordInputVisibility('emp_new_password', this)" class="pwd-eye-btn" title="Toggle password visibility">
                     <i class="fa-solid fa-eye"></i>
                   </button>
@@ -5707,6 +5707,10 @@ body.modal-open { overflow: hidden !important; }
       const overlay = document.getElementById('mobileSidebarOverlay');
       if (sidebar && sidebar.classList.contains('open')) {
         sidebar.classList.remove('open');
+        sidebar.classList.remove('mobile-open');
+        if (overlay) {
+          overlay.classList.remove('active', 'open');
+        }
       }
       if (overlay && overlay.classList.contains('active')) {
         overlay.classList.remove('active');
@@ -6160,11 +6164,7 @@ body.modal-open { overflow: hidden !important; }
 
         tbody.innerHTML = data.map(s => {
           let counsellorDisplay = s.assigned_counsellor || 'Unassigned';
-          if (counsellorDisplay === 'EMP267616' || counsellorDisplay === 'CNS260001') {
-            counsellorDisplay = 'Farda Singh';
-          } else if (counsellorDisplay === 'CEO260001') {
-            counsellorDisplay = 'CEO Office';
-          }
+          // Display employee ID as-is if no name mapping available
 
           const admStatus = s.admission_status || 'Pending';
           let statusClass = 'status-cold';
@@ -6371,7 +6371,7 @@ body.modal-open { overflow: hidden !important; }
         specialization: getFieldVal('edit_specialization', currentStudent.specialization),
         admission_year: document.getElementById('edit_admission_year')?.value ? parseInt(document.getElementById('edit_admission_year').value) : (currentStudent.admission_year || null),
         admission_status: document.getElementById('edit_admission_status')?.value || currentStudent.admission_status || 'Pending',
-        assigned_counsellor: currentStudent.assigned_counsellor || 'CNS260001',
+        assigned_counsellor: currentStudent.assigned_counsellor || (currentUser && currentUser.counsellor_id) || '',
         application_status: document.getElementById('edit_application_status')?.value || currentStudent.application_status || 'Not Started',
         payment_status: document.getElementById('edit_payment_status')?.value || currentStudent.payment_status || 'Unpaid',
         documents_status: document.getElementById('edit_documents_status')?.value || currentStudent.documents_status || 'Not Uploaded',
@@ -6382,7 +6382,7 @@ body.modal-open { overflow: hidden !important; }
 
       showToast('Saving changes...', 'info');
 
-      const cnsId = (currentUser && currentUser.counsellor_id && currentUser.counsellor_id.startsWith('CNS')) ? currentUser.counsellor_id : 'CNS260001';
+      const cnsId = (currentUser && (currentUser.counsellor_id || currentUser.employee_id)) || '';
 
       // 1. Direct Supabase RPC update_student_crm (Working & Verified in Supabase)
       if (window.sb) {
@@ -6656,12 +6656,13 @@ body.modal-open { overflow: hidden !important; }
         const hasRejected = uploadedDocs.some(d => d.status === 'Rejected');
         const hasPending = uploadedDocs.some(d => d.status === 'Pending Verification' || d.status === 'Under Review');
         const hasVerified = uploadedDocs.some(d => d.status === 'Verified');
+        const allVerified = uploadedDocs.length >= 4 && uploadedDocs.every(d => d.status === 'Verified');
 
         if (hasRejected) {
           statusSelect.value = 'Rejected';
         } else if (hasPending) {
           statusSelect.value = 'Under Review';
-        } else if (hasVerified && uploadedDocs.length >= 4) {
+        } else if (allVerified) {
           statusSelect.value = 'Verified';
         } else if (uploadedDocs.length > 0) {
           statusSelect.value = 'Pending';
@@ -6681,7 +6682,7 @@ body.modal-open { overflow: hidden !important; }
       showToast(action === 'verify' ? 'Approving document...' : 'Rejecting document...', 'info');
 
       try {
-        const cnsId = (currentUser && currentUser.counsellor_id && currentUser.counsellor_id.startsWith('CNS')) ? currentUser.counsellor_id : 'CNS260001';
+        const cnsId = (currentUser && (currentUser.counsellor_id || currentUser.employee_id)) || '';
         const res = await fetch('http://localhost:5000/api/students/documents/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -6707,6 +6708,10 @@ body.modal-open { overflow: hidden !important; }
 
           if (window._allStudentsData && window._allStudentsData[studentId]) {
             window._allStudentsData[studentId].documents_status = data.overall_documents_status;
+            // Persist to Supabase so loadStudents doesn't overwrite
+            if (window.sb && data.overall_documents_status) {
+              window.sb.from('student_profiles').update({ documents_status: data.overall_documents_status }).eq('student_id', studentId).then(() => {});
+            }
           }
 
           loadStudents('my');
@@ -6756,10 +6761,10 @@ body.modal-open { overflow: hidden !important; }
           await loadStudentDocumentsVault(studentId, studentName);
           
           const statusSelect = document.getElementById('edit_documents_status');
-          if (statusSelect) statusSelect.value = data.new_documents_status || 'Verified';
+          if (statusSelect) statusSelect.value = data.new_documents_status || 'Under Review';
 
           if (window._allStudentsData && window._allStudentsData[studentId]) {
-            window._allStudentsData[studentId].documents_status = data.new_documents_status || 'Verified';
+            window._allStudentsData[studentId].documents_status = data.new_documents_status || 'Under Review';
           }
         } else {
           showToast('Upload error: ' + (data.error || 'Could not upload to Drive'), 'error');
@@ -6795,7 +6800,7 @@ body.modal-open { overflow: hidden !important; }
       }
 
       // Update financial snapshot
-      const totalFee = data.total_course_fee || 120000;
+      const totalFee = Number(data.total_course_fee) || 0;
       const totalPaid = data.total_paid || 0;
       const pendingAmt = data.pending_verification_amount || 0;
       const balanceDue = data.balance_due !== undefined ? data.balance_due : Math.max(0, totalFee - totalPaid);
@@ -7031,7 +7036,7 @@ body.modal-open { overflow: hidden !important; }
       showToast(action === 'verify' ? 'Approving payment...' : 'Rejecting payment...', 'info');
 
       try {
-        const cnsId = (currentUser && currentUser.counsellor_id && currentUser.counsellor_id.startsWith('CNS')) ? currentUser.counsellor_id : 'CNS260001';
+        const cnsId = (currentUser && (currentUser.counsellor_id || currentUser.employee_id)) || '';
         const res = await fetch('http://localhost:5000/api/students/payments/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -7086,7 +7091,7 @@ body.modal-open { overflow: hidden !important; }
 
       const name = (user && user.full_name) ? user.full_name : 'Farda Singh';
       const empId = (user && (user.employee_id || user.counsellor_id)) ? (user.employee_id || user.counsellor_id) : 'EMP267616';
-      const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : 'CNS260001');
+      const cnsId = (user && user.counsellor_id) ? user.counsellor_id : (user && user.employee_id ? user.employee_id : '');
       const role = (user && (user.designation || user.role)) ? (user.designation || user.role) : 'Senior Counsellor';
       const branch = (user && user.branch) ? user.branch : 'Head Office';
       const phone = (user && user.phone) ? user.phone : '+91 9580985581';
@@ -7228,7 +7233,7 @@ body.modal-open { overflow: hidden !important; }
       input.type = isPwd ? 'text' : 'password';
       const icon = btn.querySelector('i');
       if (icon) {
-        icon.className = isPwd ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        icon.className = isPwd ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
       }
     }
     window.togglePasswordInputVisibility = togglePasswordInputVisibility;
@@ -7331,7 +7336,8 @@ body.modal-open { overflow: hidden !important; }
         if (raw) userObj = JSON.parse(raw);
       } catch(e){}
 
-      const userId = (userObj && (userObj.counsellor_id || userObj.employee_id || userObj.student_id || userObj.user_id || userObj.email)) || 'CNS260001';
+      const userId = (userObj && (userObj.counsellor_id || userObj.employee_id || userObj.student_id || userObj.user_id || userObj.email)) || '';
+      if (!userId) { showToast('Session expired. Please re-login.', 'error'); return; }
 
       if (submitBtn) {
         submitBtn.disabled = true;

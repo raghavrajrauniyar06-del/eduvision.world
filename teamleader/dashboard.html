@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
   <script>
+(function() {
+  const tlSession = localStorage.getItem('eduvision_team_leader');
+  if (!tlSession) {
+    window.location.href = 'login.html';
+    return;
+  }
+})();
     /* ── Bulletproof Early Mobile Navigation Handler ── */
     window.toggleMobileSidebar = function(e) {
       if (e) {
@@ -1175,7 +1182,7 @@ body.modal-open { overflow: hidden !important; }
       <a class="nav-item" onclick="openTlProfileModal()" style="cursor:pointer;">
         <i class="fa-solid fa-gear" style="color:var(--primary, #c9932a);"></i> Profile &amp; Settings
       </a>
-      <a class="nav-item logout-btn" id="logoutBtn">
+      <a class="nav-item logout-btn" id="logoutBtn" onclick="logout()" style="cursor:pointer;">
         <i class="fa-solid fa-right-from-bracket"></i> Secure Logout
       </a>
     </nav>
@@ -2511,7 +2518,7 @@ body.modal-open { overflow: hidden !important; }
         <div style="display:flex; align-items:center; gap:10px;">
           <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:6px 14px; text-align:right;">
             <div style="font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">Staff ID</div>
-            <div id="tlModalEmpId" style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:800; color:var(--primary, #c9932a);">TL001</div>
+            <div id="tlModalEmpId" style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:800; color:var(--primary, #c9932a);">--</div>
           </div>
           <button onclick="copyTlEmpId()" style="background:rgba(247,211,119,0.15); border:1px solid rgba(247,211,119,0.35); color:var(--primary, #c9932a); padding:8px 12px; border-radius:10px; cursor:pointer; font-size:0.75rem; font-weight:700; transition:all 0.15s;" title="Copy Employee ID">
             <i class="fa-solid fa-copy"></i>
@@ -2745,11 +2752,11 @@ body.modal-open { overflow: hidden !important; }
     } catch(e){}
 
     const fullName = (user && user.full_name) || 'Team Leader';
-    const empId = (user && (user.employee_id || user.team_leader_id || user.counsellor_id)) || 'TL001';
-    const email = (user && user.email) || 'leader@eduvision.com';
-    const phone = (user && user.phone) || '+91 98765 43210';
+    const empId = (user && (user.employee_id || user.team_leader_id || user.counsellor_id)) || '--';
+    const email = (user && user.email) || '--';
+    const phone = (user && user.phone) || '--';
     const role = (user && user.role) || 'Team Leader';
-    const branch = (user && user.branch) || 'Head Office';
+    const branch = (user && user.branch) || '--';
 
     const parts = fullName.trim().split(/\s+/);
     let initials = parts[0] ? parts[0].charAt(0).toUpperCase() : 'T';
@@ -2974,7 +2981,8 @@ body.modal-open { overflow: hidden !important; }
       if (raw) userObj = JSON.parse(raw);
     } catch(err){}
 
-    const userId = (userObj && (userObj.employee_id || userObj.admin_id || userObj.team_leader_id || userObj.counsellor_id || userObj.student_id || userObj.email || userObj.id)) || 'demo_user';
+    const userId = (userObj && (userObj.employee_id || userObj.admin_id || userObj.team_leader_id || userObj.counsellor_id || userObj.student_id || userObj.email || userObj.id)) || '';
+    if (!userId) { showToast('Session invalid. Please re-login.', 'error'); return; }
 
     // Step 1: Trigger Liquid Loading Animation
     if (submitBtn) {

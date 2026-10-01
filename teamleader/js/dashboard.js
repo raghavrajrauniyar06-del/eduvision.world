@@ -1325,7 +1325,8 @@ async function openDrawer(student) {
     }
 
     function logout() {
-      localStorage.removeItem('eduvision_counsellor');
+      localStorage.removeItem('eduvision_team_leader');
+      localStorage.removeItem('eduvision_user');
       window.location.href = 'login.html';
     }
 
@@ -3481,7 +3482,7 @@ async function loadAlertsModule() {
 
 async function fetchUserGroups() {
   try {
-    const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || 'TL001';
+    const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || '';
     const roleLower = ((currentUser && currentUser.role) || '').trim().toLowerCase();
 
     const { data: memberships, error } = await sb
@@ -3800,7 +3801,7 @@ function showWaContextMenu(event, msgId) {
   currentWaContextMessageId = msgId;
   const msg = allWaMessages.find(m => m.id === msgId);
   if (!msg) return;
-  const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || 'TL001';
+  const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || '';
   const isOwner = msg.sender_id === currentUserId;
   const isDeleted = msg.deleted_for_everyone;
 
@@ -3840,7 +3841,7 @@ async function handleWaMessageAction(action) {
   if (menu) menu.style.display = 'none';
   const msg = allWaMessages.find(m => m.id === currentWaContextMessageId);
   if (!msg) return;
-  const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || 'TL001';
+  const currentUserId = (currentUser && (currentUser.employee_id || currentUser.counsellor_id)) || '';
   if (action === 'info') {
     const textEl = document.getElementById('waInfoText');
     const timeEl = document.getElementById('waInfoTime');
@@ -4048,7 +4049,7 @@ async function loadCreateGroupMemberList() {
   if (!container) return;
   container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:10px;">Loading staff...</div>';
   try {
-    const currentUserId = (currentUser.employee_id || currentUser.counsellor_id || 'TL001');
+    const currentUserId = (currentUser.employee_id || currentUser.counsellor_id || '');
     let tls = [];
     let counsellors = [];
     try {
@@ -4679,7 +4680,7 @@ window.openTlProfileModal = function() {
     alert("User session not found.");
     return;
   }
-  const empId = currentUser.employee_id || currentUser.team_leader_id || currentUser.id || 'TL001';
+  const empId = currentUser.employee_id || currentUser.team_leader_id || currentUser.id || '';
   const empEl = document.getElementById('tl_self_emp_id');
   if (empEl) empEl.value = empId;
   const roleEl = document.getElementById('tl_self_role');
@@ -4824,7 +4825,7 @@ window.renderTlPartnersTable = function(partners) {
         const org = p.company_name || p.organization_name || 'Partner Org';
         const contact = p.contact_person || '--';
         const phone = p.phone || '--';
-        const tier = p.tier || 'Gold Agency';
+        const tier = p.tier || 'Standard';
         const status = p.status || 'Active';
         const statusClass = status.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
         const pId = p.partner_id || p.id || code;
@@ -4861,7 +4862,7 @@ window.renderTlPartnersTable = function(partners) {
         const org = p.company_name || p.organization_name || 'Partner Org';
         const contact = p.contact_person || '--';
         const phone = p.phone || '--';
-        const tier = p.tier || 'Gold Agency';
+        const tier = p.tier || 'Standard';
         const status = p.status || 'Active';
         const statusClass = status.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
         const pId = p.partner_id || p.id || code;
@@ -4949,12 +4950,12 @@ window.openTlPartnerModal = function(partnerId = '') {
       setVal('tl_partner_contact', partner.contact_person);
       setVal('tl_partner_email', partner.email);
       setVal('tl_partner_phone', partner.phone);
-      setVal('tl_partner_tier', partner.tier || 'Gold Agency');
-      setVal('tl_partner_comm', partner.commission_rate || '10%');
-      setVal('tl_partner_location', partner.location || 'Head Office');
-      setVal('tl_partner_status', partner.status || 'Active');
+      setVal('tl_partner_tier', partner.tier || 'Standard');
+      setVal('tl_partner_comm', partner.commission_rate || '');
+      setVal('tl_partner_location', partner.location || '');
+      setVal('tl_partner_status', partner.status || 'Pending');
       setVal('tl_partner_username', partner.partner_code || partner.partner_id || '');
-      setVal('tl_partner_password', partner.password || 'ap@2026');
+      setVal('tl_partner_password', partner.password || '');
     }
   } else {
     if (title) title.innerHTML = '<i class="fa-solid fa-handshake" style="color:var(--primary, #c9932a);"></i> Add Associate Partner';
@@ -6523,7 +6524,7 @@ async function editTlPartner(partnerCode) {
     if (contactInp) contactInp.value = partner.contact_person || '';
     if (emailInp) emailInp.value = partner.email || '';
     if (phoneInp) phoneInp.value = partner.phone || '';
-    if (tierInp) tierInp.value = partner.tier || 'Gold Agency';
+    if (tierInp) tierInp.value = partner.tier || 'Standard';
     if (commInp) commInp.value = partner.commission_rate || '10%';
     if (locInp) locInp.value = partner.location || 'Head Office';
     if (statusInp) statusInp.value = partner.status || 'Active';
@@ -6542,7 +6543,7 @@ async function handleTlPartnerSubmit(e) {
     contact_person: document.getElementById('tl_partner_contact')?.value || '',
     email: document.getElementById('tl_partner_email')?.value || '',
     phone: document.getElementById('tl_partner_phone')?.value || '',
-    tier: document.getElementById('tl_partner_tier')?.value || 'Gold Agency',
+    tier: document.getElementById('tl_partner_tier')?.value || 'Standard',
     commission_rate: document.getElementById('tl_partner_comm')?.value || '10%',
     location: document.getElementById('tl_partner_location')?.value || 'Head Office',
     status: document.getElementById('tl_partner_status')?.value || 'Active'

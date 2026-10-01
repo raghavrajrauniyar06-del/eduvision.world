@@ -360,7 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* === MOBILE PHONES (max-width: 767px) — COMPACT HEADER PILL (ZERO TEXT OVERLAP) === */
     @media (max-width: 767px) {
       #di-island {
-        top: 13px !important;
+        top: 62px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         height: 24px !important;
@@ -592,6 +592,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const observer = new MutationObserver(function() {
     makeTablesResponsive();
   });
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
   // ── Dynamic Responsive Alignment & Gap Measurement ──
   function updateDynamicIslandPosition() {
     if (window.innerWidth <= 767) {

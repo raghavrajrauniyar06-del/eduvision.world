@@ -2188,7 +2188,7 @@ body.modal-open { overflow: hidden !important; }
               <div>
                 <div style="display:flex; align-items:center; gap:8px;">
                   <h3 id="set_student_name" style="margin:0; font-size:1.05rem; font-weight:800; color:#fff;">Student Account</h3>
-                  <span style="font-size:0.7rem; color:var(--gold-light); background:rgba(247,211,119,0.12); padding:2px 8px; border-radius:6px; font-family:var(--font-mono, monospace); font-weight:700;" id="set_student_id_badge">EDU260002</span>
+                  <span style="font-size:0.7rem; color:var(--gold-light); background:rgba(247,211,119,0.12); padding:2px 8px; border-radius:6px; font-family:var(--font-mono, monospace); font-weight:700;" id="set_student_id_badge">Pending</span>
                 </div>
                 <div style="font-size:0.78rem; color:var(--text-muted, #94a3b8); margin-top:2px;">
                   <span id="set_student_email">-</span> • <span id="set_student_phone">-</span>
@@ -2232,7 +2232,7 @@ body.modal-open { overflow: hidden !important; }
                   New Strong Password <span style="color:#ef4444;">*</span>
                 </label>
                 <div class="pwd-input-wrapper">
-                  <input type="password" id="stud_new_password" required oninput="handleStudPasswordStrengthCheck()" placeholder="Enter new strong password" class="pwd-glass-input">
+                  <input type="password" id="stud_new_password" required oninput="handleStudentPasswordStrengthCheck(this.value)" placeholder="Enter new strong password" class="pwd-glass-input">
                   <button type="button" onclick="toggleStudentPasswordVisibility('stud_new_password', this)" class="pwd-eye-btn" title="Toggle password visibility">
                     <i class="fa-solid fa-eye"></i>
                   </button>
@@ -2409,25 +2409,14 @@ body.modal-open { overflow: hidden !important; }
       setTimeout(hideSecurityGuard, 600);
 
       if (!raw) {
-        console.warn("No active student session detected, checking fallback credentials...");
-        // If testing directly or opened without session, generate a seamless session
-        const demoUser = {
-          id: 'usr_student_demo',
-          student_id: 'EDU260002',
-          name: 'Priya Sharma',
-          full_name: 'Priya Sharma',
-          email: 'student@eduvision.in',
-          phone: '+91 98765 43210',
-          role: 'student'
-        };
-        localStorage.setItem('eduvision_user', JSON.stringify(demoUser));
-        raw = JSON.stringify(demoUser);
+        window.location.replace('../login.html');
+        return;
       }
 
       try {
         var u = JSON.parse(raw);
         var uname = u.full_name || u.name || 'Student';
-        var studId = u.student_id || u.id || 'EDU260002';
+        var studId = u.student_id || u.id || 'Pending';
         
         var sideName = document.getElementById('sideNameDisplay');
         if (sideName) sideName.textContent = uname;
@@ -2486,36 +2475,36 @@ body.modal-open { overflow: hidden !important; }
       const nameEl = document.getElementById('sideNameDisplay');
       if (nameEl) nameEl.textContent = data.full_name || 'Student';
       const idEl = document.getElementById('sideStudentId');
-      if (idEl) idEl.textContent = 'ID: ' + (data.student_id || 'EDU260002');
+      if (idEl) idEl.textContent = 'ID: ' + (data.student_id || 'Pending');
 
       // 2. Dashboard Top Card / Highlights
       const dashId = document.getElementById('dash_student_id');
-      if (dashId) dashId.textContent = data.student_id || 'EDU260002';
+      if (dashId) dashId.textContent = data.student_id || 'Pending';
       
       const dashUnivCourse = document.getElementById('dash_university_course');
       if (dashUnivCourse) {
         const univ = data.university || '';
         const course = data.course || '';
-        dashUnivCourse.textContent = (univ && course) ? `${univ} • ${course}` : (univ || course || 'LPU • BCA');
+        dashUnivCourse.textContent = (univ && course) ? `${univ} • ${course}` : (univ || course || 'Not Assigned');
       }
 
       const dashSpec = document.getElementById('dash_specialization');
       if (dashSpec) dashSpec.textContent = data.specialization ? `Specialization: ${data.specialization}` : 'Specialization: General';
 
       const dashComp = document.getElementById('dash_profile_completion');
-      const realComp = (data.profile_completion !== undefined && data.profile_completion !== null) ? data.profile_completion : 35;
+      const realComp = (data.profile_completion !== undefined && data.profile_completion !== null) ? data.profile_completion : 0;
       if (dashComp) dashComp.textContent = realComp + '%';
 
       // 3. Quick Stats / Metrics
       const statApp = document.getElementById('stat_app_status');
-      if (statApp) statApp.textContent = data.application_status || 'Submitted';
+      if (statApp) statApp.textContent = data.application_status || 'Not Started';
       const statAppSub = document.getElementById('stat_app_sub');
-      if (statAppSub) statAppSub.textContent = data.university ? `${data.university} (${data.course || 'BCA'})` : 'University Application';
+      if (statAppSub) statAppSub.textContent = data.university ? `${data.university} (${data.course || ''})` : 'University Application';
 
       const statAdm = document.getElementById('stat_adm_progress');
-      if (statAdm) statAdm.textContent = data.admission_status || 'In Progress';
+      if (statAdm) statAdm.textContent = data.admission_status || 'Not Started';
       const statAdmSub = document.getElementById('stat_adm_sub');
-      if (statAdmSub) statAdmSub.textContent = 'Status: ' + (data.admission_status || 'Pending');
+      if (statAdmSub) statAdmSub.textContent = 'Status: ' + (data.admission_status || 'Not Started');
 
       const statDocs = document.getElementById('stat_pending_docs');
       if (statDocs) statDocs.textContent = data.documents_status || 'Pending Verification';
@@ -2566,7 +2555,7 @@ body.modal-open { overflow: hidden !important; }
       const setAvatar = document.getElementById('set_student_avatar');
 
       if (setName) setName.textContent = data.full_name || 'Student Account';
-      if (setIdBadge) setIdBadge.textContent = data.student_id || 'EDU260002';
+      if (setIdBadge) setIdBadge.textContent = data.student_id || 'Pending';
       if (setEmail) setEmail.textContent = data.email || 'Email Not Provided';
       if (setPhone) setPhone.textContent = data.phone || 'Phone Not Provided';
       if (setAvatar) setAvatar.textContent = (data.full_name || 'S').substring(0, 2).toUpperCase();
@@ -2577,7 +2566,7 @@ body.modal-open { overflow: hidden !important; }
         const u = data.university || 'Target University';
         const c = data.course || 'Degree Program';
         const sp = data.specialization || '';
-        const st = data.application_status || 'Submitted';
+        const st = data.application_status || 'Not Started';
         const pay = data.payment_status || 'Pending';
         const docs = data.documents_status || 'Pending Verification';
 
@@ -2589,7 +2578,7 @@ body.modal-open { overflow: hidden !important; }
             </div>
             <p style="margin:0 0 10px; color:#cbd5e1; font-size:0.95rem;">Enrolled Program: <strong style="color:#ffffff;">${c}</strong> ${sp ? '• Specialization: ' + sp : ''}</p>
             <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:0.84rem; color:#94a3b8; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
-              <span>📋 Enrollment ID: <strong style="color:#f7d377;">${data.student_id || 'EDU260002'}</strong></span>
+              <span>📋 Enrollment ID: <strong style="color:#f7d377;">${data.student_id || 'Pending'}</strong></span>
               <span>💳 Admission Fees: <strong style="color:${pay === 'Paid' ? '#4ade80' : '#fbbf24'};">${pay}</strong></span>
               <span>📑 Academic Documents: <strong style="color:${docs === 'Verified' ? '#4ade80' : '#fbbf24'};">${docs}</strong></span>
             </div>
@@ -2648,10 +2637,10 @@ body.modal-open { overflow: hidden !important; }
           if (data) profileData = data;
         }
 
-        // 4. If still not found, get ANY existing student record in student_profiles
+        // If no matching profile found, redirect to complete-profile
         if (!profileData) {
-          const { data } = await sb.from('student_profiles').select('*').limit(1).maybeSingle();
-          if (data) profileData = data;
+          window.location.replace('complete-profile.html');
+          return;
         }
 
         if (profileData) {
@@ -2739,7 +2728,7 @@ body.modal-open { overflow: hidden !important; }
       input.type = isPwd ? 'text' : 'password';
       const icon = btn.querySelector('i');
       if (icon) {
-        icon.className = isPwd ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        icon.className = isPwd ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
       }
     }
 
@@ -2813,8 +2802,8 @@ body.modal-open { overflow: hidden !important; }
       const currPwd = (document.getElementById('student_curr_password') || document.getElementById('stud_curr_password'))?.value?.trim();
       const newPwd = (document.getElementById('student_new_password') || document.getElementById('stud_new_password'))?.value?.trim();
       const confirmPwd = (document.getElementById('student_confirm_password') || document.getElementById('stud_confirm_password'))?.value?.trim();
-      const submitBtn = document.getElementById('btnSaveEmpPassword') || document.getElementById('studPwdSubmitBtn');
-      const btnText = document.getElementById('btnSaveEmpPasswordText') || document.getElementById('studPwdBtnText');
+      const submitBtn = document.getElementById('btnSubmitStudentPassword') || document.getElementById('studPwdSubmitBtn');
+      const btnText = submitBtn ? submitBtn.querySelector('span') : null;
 
       if (!currPwd || !newPwd || !confirmPwd) {
         alert('All password fields are required.');
@@ -2838,7 +2827,11 @@ body.modal-open { overflow: hidden !important; }
         if (raw) userObj = JSON.parse(raw);
       } catch(e){}
 
-      const userId = (userObj && (userObj.counsellor_id || userObj.employee_id || userObj.student_id || userObj.user_id || userObj.email)) || 'CNS260001';
+      const userId = (userObj && (userObj.counsellor_id || userObj.employee_id || userObj.student_id || userObj.user_id || userObj.email)) || '';
+      if (!userId) {
+        alert('User ID not found');
+        return;
+      }
 
       if (submitBtn) {
         submitBtn.classList.add('is-loading');
@@ -3059,7 +3052,9 @@ body.modal-open { overflow: hidden !important; }
         }
       }
       if (!studentId) {
-        studentId = 'EDU260002'; // Fallback default
+        studentId = ''; // Fallback default
+      }
+      if (!studentId) return;
       }
 
       container.innerHTML = `
@@ -3241,7 +3236,8 @@ body.modal-open { overflow: hidden !important; }
       }
 
       const profile = window.activeStudentProfileData || {};
-      let studentId = profile.student_id || document.getElementById('prof_student_id')?.value || 'EDU260002';
+      let studentId = profile.student_id || document.getElementById('prof_student_id')?.value || '';
+      if(!studentId) return showStudentVaultToast('Student ID required', 'error');
       let studentName = profile.full_name || document.getElementById('prof_full_name')?.value || 'Student';
       const docType = window.activeStudentUploadDocType || 'Document';
 
@@ -3324,7 +3320,8 @@ body.modal-open { overflow: hidden !important; }
           } catch(e) {}
         }
       }
-      if (!studentId) studentId = 'EDU260002';
+      if (!studentId) studentId = '';
+      if (!studentId) return;
 
       container.innerHTML = `
         <div style="text-align:center; padding:35px; color:var(--muted);">
@@ -3473,7 +3470,8 @@ body.modal-open { overflow: hidden !important; }
       }
 
       const profile = window.activeStudentProfileData || {};
-      let studentId = profile.student_id || document.getElementById('prof_student_id')?.value || 'EDU260002';
+      let studentId = profile.student_id || document.getElementById('prof_student_id')?.value || '';
+      if(!studentId) return showStudentVaultToast('Student ID required', 'error');
       let studentName = profile.full_name || document.getElementById('prof_full_name')?.value || 'Student';
 
       const feeType = document.getElementById('spm_fee_type')?.value || 'Admission Fee';
@@ -4231,17 +4229,7 @@ body.modal-open { overflow: hidden !important; }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- MOBILE SIDEBAR TOGGLE FUNCTION -->
-  <script>
-  function toggleMobileSidebar() {
-    const sidebar = document.querySelector('.sidebar') || document.querySelector('aside.sidebar');
-    const overlay = document.getElementById('mobileSidebarOverlay');
-    if (sidebar && overlay) {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-    }
-  }
-  </script>
+  <!-- MOBILE SIDEBAR TOGGLE FUNCTION (Removed duplicate) -->
 
 <!-- EDUVISION UNIVERSITIES LIVE SYNC FROM ADMIN MASTER -->
 <script>

@@ -407,11 +407,11 @@ body.modal-open { overflow: hidden !important; }
       // Calculate completion based on 10 metrics: 8 input fields + phone + email
       function updateProgress() {
         let filledCount = 0;
-        let totalCount = 10; 
+        let totalCount = trackedFields.length;
         
         // Count pre-existing auth data
-        if (user.phone) filledCount++;
-        if (user.email) filledCount++;
+        if (user.phone) { filledCount++; totalCount++; }
+        if (user.email) { filledCount++; totalCount++; }
         
         // Count form fields
         trackedFields.forEach(field => {
@@ -503,6 +503,10 @@ body.modal-open { overflow: hidden !important; }
           
           // Success Animation
           submitBtn.innerHTML = 'Success! Redirecting... 🎉';
+          user.student_id = nextId;
+          user.full_name = payload.full_name;
+          user.name = payload.full_name;
+          localStorage.setItem('eduvision_user', JSON.stringify(user));
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 800);

@@ -2005,7 +2005,6 @@
 
 
     /* SMOOTH ORB & SHOCKWAVE ANIMATION */
-    .dim-overlay {
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style id="apple-vision-liquid-glass-student">
@@ -3796,7 +3795,8 @@ body { padding-top: env(safe-area-inset-top); }
         // ─────────────────────────────────────────────────────────────────
         if (!authUser) {
           const cleanPhone = phoneInput.toLowerCase().trim();
-          const isDemo = ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone);
+          const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          const isDemo = isLocalDev && ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone);
           if (isDemo) {
             const demoName = cleanPhone.includes('@') ? cleanPhone.split('@')[0] : (cleanPhone === '8303632103' ? 'Raghav' : 'Student');
             authUser = {

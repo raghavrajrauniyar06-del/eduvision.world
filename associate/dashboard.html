@@ -35,6 +35,7 @@
       --gold-gradient: linear-gradient(135deg, #fff0c4 0%, #f7d377 40%, #c9932a 80%, #8a6015 100%);
       --text: #f1f5f9;
       --muted: #94a3b8;
+      --text-muted: #94a3b8;
       --border-gold: rgba(247, 211, 119, 0.2);
       --border-subtle: rgba(255, 255, 255, 0.06);
       --font-main: 'Plus Jakarta Sans', sans-serif;
@@ -67,7 +68,7 @@
     /* Global Full-Width Layout */
     .app-container {
       display: flex;
-      width: 100vw;
+      width: 100%;
       min-height: 100vh;
     }
 
@@ -237,7 +238,7 @@
       flex: 1;
       padding: 28px 36px;
       overflow-y: auto;
-      width: calc(100vw - 280px);
+      width: calc(100% - 280px);
     }
 
     /* Modules Display Control */
@@ -1353,7 +1354,7 @@ body.modal-open { overflow: hidden !important; }
     async function loadPartnerProfileAndSync() {
     const kycBox = document.getElementById('partnerKycContainer');
     if (kycBox && window.EduVisionKYC) {
-      const pId = localStorage.getItem('eduvision_partner_id') || 'PRT001';
+      const pId = (currentUser && (currentUser.partner_id || currentUser.id || currentUser.partner_code)) || localStorage.getItem('eduvision_partner_id') || '';
       kycBox.innerHTML = EduVisionKYC.renderKycTabContent('partner', pId);
     }
 
@@ -1377,7 +1378,7 @@ body.modal-open { overflow: hidden !important; }
               contact_person: dbp.contact_person || dbp.company_name || '--',
               email: dbp.email || '--',
               phone: dbp.phone || '--',
-              tier: dbp.tier || 'Gold Agency',
+              tier: dbp.tier || 'Standard',
               commission_rate: dbp.commission_rate || '10%',
               location: dbp.location || '--',
               password: dbp.password || ''
@@ -1400,14 +1401,14 @@ body.modal-open { overflow: hidden !important; }
         document.getElementById('acc_location').value = activePartner.location;
       } else {
         // Use user session values as defaults
-        document.getElementById('acc_code').value = currentUser.id || 'AP-USER';
-        document.getElementById('acc_org').value = 'EduVision Channel Partner';
+        document.getElementById('acc_code').value = currentUser.partner_code || currentUser.partner_id || currentUser.id || '';
+        document.getElementById('acc_org').value = currentUser.company || currentUser.company_name || currentUser.name || '';
         document.getElementById('acc_name').value = currentUser.name;
         document.getElementById('acc_email').value = currentUser.email || '--';
         document.getElementById('acc_phone').value = currentUser.phone || '--';
-        document.getElementById('acc_tier').value = 'Gold Agency';
-        document.getElementById('acc_commission').value = '10%';
-        document.getElementById('acc_location').value = 'Not Mapped';
+        document.getElementById('acc_tier').value = currentUser.tier || 'Standard Partner';
+        document.getElementById('acc_commission').value = currentUser.commission_rate || '';
+        document.getElementById('acc_location').value = currentUser.location || '';
       }
     }
 
@@ -1575,7 +1576,7 @@ body.modal-open { overflow: hidden !important; }
         const _sb = getSb();
         if (_sb && typeof _sb.from === 'function') {
           try {
-            await _sb.from('associate_partners').update({ password: newPwd }).eq('partner_id', targetPartnerId);
+            await _sb.from('associate_partners').update({ password: newPwd, is_temp_password: false, must_change_password: false, updated_at: new Date().toISOString() }).eq('partner_id', targetPartnerId);
           } catch(dbErr) {
             console.warn("Supabase password update error:", dbErr);
           }
@@ -2136,8 +2137,8 @@ body.modal-open { overflow: hidden !important; }
           rows.push({
             name: c.course_name,
             university: univName,
-            duration: c.duration || (c.course_name.includes('B.') || c.course_name.includes('BBA') || c.course_name.includes('BCA') ? '3-4 Years' : '2 Years'),
-            eligibility: c.eligibility || (c.course_name.includes('M.') || c.course_name.includes('MBA') || c.course_name.includes('MCA') ? 'Graduate with 50%' : '12th Pass with 45%'),
+            duration: c.duration || 'Refer to Brochure',
+            eligibility: c.eligibility || 'Refer to Brochure',
             fee: c.total_fee || c.semester_fee || (univ ? univ.fees : 'Contact for Fees')
           });
         });
@@ -2319,7 +2320,10 @@ body.modal-open { overflow: hidden !important; }
         'univ-list': 'associate_universities',
         'univ-fees': 'associate_fees',
         'leads': 'associate_leads',
-        'account': 'associate_account'
+        'account': 'associate_account',
+        'creatives': 'associate_creatives',
+        'training': 'associate_training',
+        'free-courses': 'associate_free_courses'
       };
       const permKey = modPermMap[modId];
       const targetModule = document.getElementById('mod-' + modId);

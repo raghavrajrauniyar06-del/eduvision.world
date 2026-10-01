@@ -60,7 +60,8 @@
       }
 
       const isVerified = (kycData.verification_status === '100% Verified' || kycData.verification_status === 'Verified');
-      const is100 = (score >= 100) || (isVerified && hasIdDoc);
+      const isFormComplete = score >= 100;
+      const is100 = isVerified && hasIdDoc;
 
       let status = 'Not Submitted';
       if (isVerified) {
@@ -179,7 +180,9 @@
           img.onload = function() {
             try {
               // Minimum resolution check for legal document legibility
-              if (img.width < 500 || img.height < 350) {
+              const maxDim = Math.max(img.width, img.height);
+              const minDim = Math.min(img.width, img.height);
+              if (maxDim < 600 || minDim < 300 || (img.width * img.height < 200000)) {
                 resolve({
                   ok: false,
                   score: 25,

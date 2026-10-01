@@ -573,16 +573,16 @@ body.modal-open { overflow: hidden !important; }
             `email.ilike.${rawInput}`
           ];
           if (last10) {
-            orParts.push(`phone.ilike.*${last10}*`);
-            orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+            orParts.push(`phone.ilike.%${last10}%`);
+            orParts.push(`phone.ilike.%${last10.slice(0, 5)}%${last10.slice(5)}%`);
           } else if (rawInput.length >= 3) {
-            orParts.push(`phone.ilike.*${rawInput}*`);
+            orParts.push(`phone.ilike.%${rawInput}%`);
           }
 
           // 1. Primary check in team_leaders table
           let { data, error } = await sb
             .from('team_leaders')
-            .select('team_leader_id, employee_id, full_name, role, branch, designation, status, phone, email')
+            .select('team_leader_id, employee_id, full_name, role, branch, designation, status, phone, email, is_temp_password, must_change_password, password')
             .or(orParts.join(','))
             .eq('password', pwd);
 
@@ -600,10 +600,10 @@ body.modal-open { overflow: hidden !important; }
               `email.ilike.${rawInput}`
             ];
             if (last10) {
-              cOrParts.push(`phone.ilike.*${last10}*`);
-              cOrParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+              cOrParts.push(`phone.ilike.%${last10}%`);
+              cOrParts.push(`phone.ilike.%${last10.slice(0, 5)}%${last10.slice(5)}%`);
             } else if (rawInput.length >= 3) {
-              cOrParts.push(`phone.ilike.*${rawInput}*`);
+              cOrParts.push(`phone.ilike.%${rawInput}%`);
             }
 
             const { data: cData, error: cErr } = await sb

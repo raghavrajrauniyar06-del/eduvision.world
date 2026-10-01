@@ -5810,7 +5810,7 @@ function renderStaffTable(staffList) {
       else if (rLower.includes('market') || rLower.includes('seo')) roleBadge = 'badge-mkt';
       else if (rLower.includes('quality') || rLower.includes('auditor')) roleBadge = 'badge-qa';
       else if (s.role === 'Senior Counsellor') roleBadge = 'badge-senior';
-      const statusText = s.status || 'Active';
+      const statusText = s.status || 'Pending';
       const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
 
       return `
@@ -5853,7 +5853,7 @@ function renderStaffTable(staffList) {
     mobileContainer.innerHTML = staffList.map((s, idx) => {
       const isTL = s.staffType === 'Team Leader';
       const roleBadge = isTL ? 'badge-tl' : (s.role === 'Senior Counsellor' ? 'badge-senior' : 'badge-counsellor');
-      const statusText = s.status || 'Active';
+      const statusText = s.status || 'Pending';
       const statusClass = statusText.toLowerCase() === 'active' ? 'status-active' : 'status-inactive';
       const name = s.full_name || 'Staff Member';
       const initials = name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'S';
@@ -5984,11 +5984,11 @@ window.loadAssociatePartners = async function(skipSync = false) {
               address: dbp.address || '',
               location: dbp.location || '--',
               pincode: dbp.pincode || '',
-              state: dbp.state || 'Delhi NCR',
-              zone: dbp.zone || 'North India',
-              status: dbp.status || 'Active',
-              tier: dbp.tier || 'Gold Agency',
-              commission_rate: dbp.commission_rate || '10%',
+              state: dbp.state || '',
+              zone: dbp.zone || '',
+              status: dbp.status || 'Pending',
+              tier: dbp.tier || 'Standard',
+              commission_rate: dbp.commission_rate || '',
               incentive_bonus: dbp.incentive_bonus || '',
               settlement_cycle: dbp.settlement_cycle || 'Monthly',
               target_admissions: dbp.target_admissions || '',
@@ -5996,13 +5996,13 @@ window.loadAssociatePartners = async function(skipSync = false) {
               pan: dbp.pan || '',
               kyc_status: dbp.kyc_status || 'Pending Verification',
               mou_code: dbp.mou_code || '',
-              account_status: dbp.status || dbp.account_status || 'Active',
+              account_status: dbp.status || dbp.account_status || 'Pending',
               bank_beneficiary: dbp.bank_beneficiary || dbp.company_name || '',
               bank_name: dbp.bank_name || '',
               bank_ifsc: dbp.bank_ifsc || '',
               bank_account: dbp.bank_account || '',
               bank_upi: dbp.bank_upi || '',
-              password: dbp.password || 'ap@2026',
+              password: dbp.password || '',
               mapped_universities: dbp.mapped_universities || [],
               employees: dbp.employees || []
             });
@@ -6039,7 +6039,7 @@ window.loadAssociatePartners = async function(skipSync = false) {
             partners[matchIdx].bank_ifsc = dbp.bank_ifsc || partners[matchIdx].bank_ifsc;
             partners[matchIdx].bank_account = dbp.bank_account || partners[matchIdx].bank_account;
             partners[matchIdx].bank_upi = dbp.bank_upi || partners[matchIdx].bank_upi;
-            partners[matchIdx].password = dbp.password || partners[matchIdx].password || 'ap@2026';
+            partners[matchIdx].password = dbp.password || partners[matchIdx].password || '';
           }
         });
 
@@ -6082,7 +6082,7 @@ function renderPartnerTable(partnerList) {
             <td>${p.email || '--'}</td>
             <td>${p.phone || '--'}</td>
             <td><span class="badge-status ${statusBadge}">${statusLabel}</span></td>
-            <td><span class="badge-role badge-admin">${p.tier || 'Gold Agency'}</span></td>
+            <td><span class="badge-role badge-admin">${p.tier || 'Standard'}</span></td>
             <td>
               <div style="display:flex; gap:6px;">
                 <button type="button" class="btn-action-icon" title="View Partner" onclick="viewPartnerDetails('${targetId}')">
@@ -6118,7 +6118,7 @@ function renderPartnerTable(partnerList) {
         const org = p.organization_name || p.full_name || 'B2B Partner';
         const contact = p.contact_person || p.full_name || '--';
         const initial = (org[0] || 'P').toUpperCase();
-        const tier = p.tier || 'Gold Agency';
+        const tier = p.tier || 'Standard';
 
         return `
           <div class="liquid-glass-card">
@@ -6213,9 +6213,9 @@ function renderStudentTable(studentList) {
               <div style="font-size:0.75rem; color:var(--text-muted);">${st.email || '--'}</div>
             </td>
             <td>${st.phone || '--'}</td>
-            <td><strong>${st.university || 'Sandip University'}</strong></td>
-            <td>${st.course || 'B.Tech'}</td>
-            <td><span class="badge-status ${statusBadge}">${st.admission_status || 'Enrolled'}</span></td>
+            <td><strong>${st.university || '--'}</strong></td>
+            <td>${st.course || '--'}</td>
+            <td><span class="badge-status ${statusBadge}">${st.admission_status || 'Pending'}</span></td>
             <td>
               <button class="btn-action-icon" title="View Application Dossier" onclick="viewStudentDetails('${st.user_id || st.student_id}')">
                 <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
@@ -6254,7 +6254,7 @@ function renderStudentTable(studentList) {
                   <div class="liquid-card-sub">${st.email || '--'}</div>
                 </div>
               </div>
-              <span class="badge-status ${statusBadge}" style="font-size:0.68rem; padding:2px 8px;">${st.admission_status || 'Enrolled'}</span>
+              <span class="badge-status ${statusBadge}" style="font-size:0.68rem; padding:2px 8px;">${st.admission_status || 'Pending'}</span>
             </div>
 
             <div class="liquid-card-grid">
@@ -6264,11 +6264,11 @@ function renderStudentTable(studentList) {
               </div>
               <div class="liquid-card-pill">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <span>${st.course || 'Degree Program'}</span>
+                <span>${st.course || '--'}</span>
               </div>
               <div class="liquid-card-pill" style="grid-column: span 2;">
                 <i class="fa-solid fa-building-columns"></i>
-                <span>${st.university || 'Sandip University'}</span>
+                <span>${st.university || '--'}</span>
               </div>
               <div class="liquid-card-pill" style="grid-column: span 2;">
                 <i class="fa-solid fa-phone"></i>
@@ -6342,7 +6342,7 @@ window.viewStudentDetails = function(userId) {
   const targetUserId = st.user_id || st.student_id || st.id || '';
   if (document.getElementById('edit_dossier_userId')) document.getElementById('edit_dossier_userId').value = targetUserId;
   if (document.getElementById('dossierName')) document.getElementById('dossierName').textContent = st.full_name || 'Candidate Application Dossier';
-  if (document.getElementById('dossierId')) document.getElementById('dossierId').textContent = 'Candidate ID: ' + (st.student_id || 'EDU260001');
+  if (document.getElementById('dossierId')) document.getElementById('dossierId').textContent = 'Candidate ID: ' + (st.student_id || '');
 
   if (document.getElementById('edit_dossier_name')) document.getElementById('edit_dossier_name').value = st.full_name || '';
   if (document.getElementById('edit_dossier_phone')) document.getElementById('edit_dossier_phone').value = st.phone || '';
@@ -6350,12 +6350,12 @@ window.viewStudentDetails = function(userId) {
   if (document.getElementById('edit_dossier_father')) document.getElementById('edit_dossier_father').value = st.father_name || '';
   if (document.getElementById('edit_dossier_mother')) document.getElementById('edit_dossier_mother').value = st.mother_name || '';
   if (document.getElementById('edit_dossier_dob')) document.getElementById('edit_dossier_dob').value = st.dob || '';
-  if (document.getElementById('edit_dossier_gender')) document.getElementById('edit_dossier_gender').value = st.gender || 'Male';
+  if (document.getElementById('edit_dossier_gender')) document.getElementById('edit_dossier_gender').value = st.gender || '';
   if (document.getElementById('edit_dossier_address')) document.getElementById('edit_dossier_address').value = st.address || '';
-  if (document.getElementById('edit_dossier_univ')) document.getElementById('edit_dossier_univ').value = st.university || 'Sandip University';
-  if (document.getElementById('edit_dossier_course')) document.getElementById('edit_dossier_course').value = st.course || 'B.Tech';
+  if (document.getElementById('edit_dossier_univ')) document.getElementById('edit_dossier_univ').value = st.university || '';
+  if (document.getElementById('edit_dossier_course')) document.getElementById('edit_dossier_course').value = st.course || '';
   if (document.getElementById('edit_dossier_spec')) document.getElementById('edit_dossier_spec').value = st.specialization || '';
-  if (document.getElementById('edit_dossier_status')) document.getElementById('edit_dossier_status').value = st.admission_status || 'Enrolled';
+  if (document.getElementById('edit_dossier_status')) document.getElementById('edit_dossier_status').value = st.admission_status || 'Pending';
   if (document.getElementById('edit_dossier_pay')) document.getElementById('edit_dossier_pay').value = st.payment_status || 'Pending';
   if (document.getElementById('edit_dossier_doc')) document.getElementById('edit_dossier_doc').value = st.documents_status || st.pending_documents || 'Pending Verification';
 
@@ -9193,7 +9193,7 @@ window.submitCreateStaff = async function(event) {
         is_temp_password: true,
         must_change_password: true,
         location: branch || 'Head Office',
-        tier: role || 'Gold Agency',
+        tier: role || 'Standard',
         commission_rate: '10%',
         status: 'Active',
         address: address,
@@ -9969,8 +9969,8 @@ window.viewPartnerDetails = function(partnerId) {
   setT('vp_contact_person', partner.contact_person || '--');
   setT('vp_email', partner.email || '--');
   setT('vp_phone', partner.phone || '--');
-  setT('vp_tier', partner.tier || 'Gold Agency');
-  setT('vp_tel_tier', partner.tier || 'Gold Agency');
+  setT('vp_tier', partner.tier || 'Standard');
+  setT('vp_tel_tier', partner.tier || 'Standard');
   setT('vp_commission', partner.commission_rate || '10%');
   setT('vp_stat_comm_rate', partner.commission_rate || '10%');
   const locDisplay = [partner.location, partner.state].filter(Boolean).join(', ') || partner.location || 'Head Office';
@@ -10053,7 +10053,7 @@ window.submitPartnerCreate = async function(event) {
   const state = document.getElementById('partner_state')?.value || 'Delhi NCR';
   const zone = document.getElementById('partner_zone')?.value || 'North India';
 
-  const tier = document.getElementById('partner_tier')?.value || 'Gold Agency';
+  const tier = document.getElementById('partner_tier')?.value || 'Standard';
   const commission = getV('partner_commission') || '10%';
   const incentiveBonus = getV('partner_incentive_bonus');
   const settlementCycle = document.getElementById('partner_settlement_cycle')?.value || 'Monthly';
@@ -10089,7 +10089,7 @@ window.submitPartnerCreate = async function(event) {
       // IMMUTABLE CREDENTIALS: Never overwrite or regenerate existing password on edit!
       const password = (existingPartner && existingPartner.password)
         ? existingPartner.password
-        : (inputPassword || 'ap@2026');
+        : (inputPassword || '');
       const username = (existingPartner && (existingPartner.partner_code || existingPartner.partner_id))
         ? (existingPartner.partner_code || existingPartner.partner_id)
         : (inputUsername || ('AP-' + Math.floor(1000 + Math.random() * 9000)));
@@ -10481,7 +10481,7 @@ window.openPartnerModal = function(partnerId = '') {
       setVal('partner_zone', partner.zone || 'North India');
 
       // 4. Commercials & Tiering
-      setVal('partner_tier', partner.tier || 'Gold Agency');
+      setVal('partner_tier', partner.tier || 'Standard');
       setVal('partner_commission', partner.commission_rate || '10%');
       setVal('partner_incentive_bonus', partner.incentive_bonus);
       setVal('partner_settlement_cycle', partner.settlement_cycle || 'Monthly');
@@ -10503,8 +10503,7 @@ window.openPartnerModal = function(partnerId = '') {
 
       // 7. Credentials
       setVal('partner_username', partner.partner_code || partner.partner_id || '');
-      setVal('partner_password', partner.password || 'ap@2026');
-      if (!partner.password) partner.password = 'ap@2026';
+      setVal('partner_password', partner.password || '');
     }
   } else {
     if (modalTitle) modalTitle.textContent = 'Add Associate Partner';
@@ -14767,7 +14766,7 @@ function renderWorkspaceAttendance() {
   const leave = currentWorkspaceAttendance.filter(a => a.status === 'Leave').length;
   const onField = currentWorkspaceAttendance.filter(a => a.status === 'On Field').length;
 
-  const pct = total > 0 ? Math.round(((pres + (half * 0.5) + onField) / total) * 100) : 100;
+  const pct = total > 0 ? Math.round(((pres + (half * 0.5) + onField) / total) * 100) : 0;
 
   if (document.getElementById('acc_att_pres_days')) document.getElementById('acc_att_pres_days').textContent = pres;
   if (document.getElementById('acc_att_abs_days')) document.getElementById('acc_att_abs_days').textContent = abs;
@@ -14915,9 +14914,9 @@ function renderWorkspaceAnalytics() {
   setEl('ana_kpi_fup_count', `${compFups} of ${totalFups} Sessions Done`);
   setEl('ana_kpi_warm_leads', warmL);
   setEl('ana_total_leads_badge', `${totalLeads} Total Inquiries`);
-  setEl('ana_kpi_velocity', compFups > 0 ? '18 mins' : '24 mins');
-  setEl('ana_kpi_att_score', attCount > 0 ? '98.5%' : '100%');
-  setEl('ana_kpi_att_status', 'Verified Attendance');
+  setEl('ana_kpi_velocity', compFups > 0 ? 'N/A' : 'N/A');
+  setEl('ana_kpi_att_score', attCount > 0 ? 'N/A' : 'N/A');
+  setEl('ana_kpi_att_status', 'Pending Data');
 
   // Performance Rating Badge
   const perfBadge = document.getElementById('acc_analytics_perf_rating');
@@ -14927,15 +14926,15 @@ function renderWorkspaceAnalytics() {
     } else if (compFups >= 1) {
       perfBadge.textContent = `⚡ Active Top Counselor · 94.2% Index`;
     } else {
-      perfBadge.textContent = `✨ Verified Counselor · 90% Readiness`;
+      perfBadge.textContent = `Pending Evaluation`;
     }
   }
 
   // 2. Audit Matrix
   setEl('audit_conv_eff', regL > 0 ? `High Conversion (${convRate}%)` : (totalLeads > 0 ? `Active Inflow (${totalLeads} Leads)` : `Optimal Intake Ready`));
-  setEl('audit_resp_time', compFups > 0 ? `18 Mins (Fast Cadence)` : `24 Mins (Standard)`);
-  setEl('audit_rating', `★★★★★ 4.9 / 5.0 (Student Survey)`);
-  setEl('audit_qa_score', `${Math.max(96, 92 + (compFups > 0 ? 5 : 0))}% Audit Compliant`);
+  setEl('audit_resp_time', compFups > 0 ? `N/A` : `N/A`);
+  setEl('audit_rating', `Pending Review`);
+  setEl('audit_qa_score', `Pending Audit`);
 
   // ═══════════════════════════════════════════════════════════════
   // CHART 1: DONUT LEAD PIPELINE CONVERSION
@@ -18675,7 +18674,7 @@ async function exportStaffDirectorySpreadsheet() {
         escapeCsvCell(s.role || s.designation || 'Staff'),
         escapeCsvCell(s.branch || s.location || 'Head Office'),
         escapeCsvCell(s.status || 'Active'),
-        escapeCsvCell(s.aadhar_no || s.aadhar_number || 'KYC Verified (On File)'),
+        escapeCsvCell(s.aadhar_no || s.aadhar_number || 'Not Submitted'),
         escapeCsvCell(s.address || ''),
         escapeCsvCell(s.created_at || new Date().toISOString())
       ].join(','));
@@ -18750,19 +18749,7 @@ async function exportAttendanceSpreadsheet() {
       ];
 
       const today = new Date().toISOString().split('T')[0];
-      attendanceData = roster.map(r => ({
-        date: today,
-        employee_id: r.employee_id,
-        full_name: r.full_name,
-        role: r.role,
-        branch: 'Head Office',
-        clock_in: '10:00 AM',
-        clock_out: '06:30 PM',
-        total_hours: '8h 30m',
-        status: 'Present',
-        location: 'Office Terminal',
-        remarks: 'Biometric / App Verified'
-      }));
+      attendanceData = [];
     }
 
     const headers = [
@@ -18791,7 +18778,7 @@ async function exportAttendanceSpreadsheet() {
         escapeCsvCell(a.clock_out || a.check_out_time || '06:30 PM'),
         escapeCsvCell(a.total_hours || a.work_hours || '8h 30m'),
         escapeCsvCell(a.status || 'Present'),
-        escapeCsvCell(a.location || a.ip_address || 'Verified'),
+        escapeCsvCell(a.location || a.ip_address || 'Not Recorded'),
         escapeCsvCell(a.remarks || a.notes || '')
       ].join(','));
     });

@@ -300,12 +300,27 @@
           return;
         }
 
+        // Check associate partner session
+        const rawAssoc = localStorage.getItem('eduvision_associate') || localStorage.getItem('eduvision_partners');
+        if (rawAssoc) {
+          try {
+            const assoc = JSON.parse(rawAssoc);
+            this.currentUserId = assoc.partner_id || assoc.partner_code || assoc.id || '';
+            this.currentRole = 'associate';
+            this.currentUser = assoc;
+            return;
+          } catch(e) {}
+        }
+
         // 4. Check general user session
         const rawUser = localStorage.getItem('eduvision_user');
         if (rawUser) {
           const user = JSON.parse(rawUser);
           this.currentUserId = user.id || user.student_id || user.phone || user.email || '';
           this.currentRole = (user.role || 'student').toLowerCase().replace(/\s+/g, '_');
+          if (user.role === 'partner' || user.role === 'associate') {
+            this.currentRole = 'associate';
+          }
           this.currentUser = user;
           return;
         }
@@ -829,7 +844,7 @@
       modal.style.cssText = `
         position: fixed !important;
         inset: 0 !important;
-        z-index: 9999999 !important;
+        z-index: 2147483647 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;

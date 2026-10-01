@@ -1159,7 +1159,7 @@ body.modal-open { overflow: hidden !important; }
             phone: partner.phone,
             role: 'partner',
             status: partner.status || 'Active',
-            tier: partner.tier || 'Gold Agency',
+            tier: partner.tier || 'Standard',
             commission_rate: partner.commission_rate || '10%',
             location: partner.location || '--',
             login_time: new Date().toISOString()
@@ -1239,9 +1239,9 @@ body.modal-open { overflow: hidden !important; }
           phone: phone,
           location: location,
           password: password,
-          status: 'Active',
-          tier: 'Gold Agency',
-          commission_rate: '10%',
+          status: 'Pending Verification',
+          tier: 'Standard Partner',
+          commission_rate: 'Pending',
           mapped_universities: [],
           employees: []
         };
@@ -1263,9 +1263,9 @@ body.modal-open { overflow: hidden !important; }
           email: email,
           phone: phone,
           role: 'partner',
-          status: 'Active',
-          tier: 'Gold Agency',
-          commission_rate: '10%',
+          status: 'Pending Verification',
+          tier: 'Standard Partner',
+          commission_rate: 'Pending',
           location: location,
           login_time: new Date().toISOString()
         };
@@ -1274,6 +1274,7 @@ body.modal-open { overflow: hidden !important; }
 
         triggerOrbSuccess('#ffffff', 'Welcome, ' + name + '!', function() {
           localStorage.setItem('eduvision_user', JSON.stringify(sessionUser));
+          localStorage.setItem('eduvision_partner_id', partnerId || partnerCode || '');
           window.location.href = '../welcome.html?redirect=associate/dashboard.html';
         });
 

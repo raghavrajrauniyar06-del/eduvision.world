@@ -635,10 +635,10 @@ body.modal-open { overflow: hidden !important; }
               `email.ilike.${rawInput}`
             ];
             if (last10) {
-              orParts.push(`phone.ilike.*${last10}*`);
-              orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+              orParts.push(`phone.ilike.%${last10}%`);
+              orParts.push(`phone.ilike.%${last10.slice(0, 5)}%${last10.slice(5)}%`);
             } else if (rawInput.length >= 3) {
-              orParts.push(`phone.ilike.*${rawInput}*`);
+              orParts.push(`phone.ilike.%${rawInput}%`);
             }
 
             const { data: dbMatches, error: dbErr } = await sb

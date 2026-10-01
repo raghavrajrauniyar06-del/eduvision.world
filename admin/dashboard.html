@@ -6675,6 +6675,7 @@ body.modal-open { overflow: hidden !important; }
               <option value="Uploaded">Uploaded</option>
               <option value="Verified">Verified</option>
               <option value="Pending">Pending</option>
+              <option value="Pending Verification">Pending Verification</option>
             </select>
           </div>
           <div style="grid-column:1/-1;">
@@ -7743,9 +7744,9 @@ body.modal-open { overflow: hidden !important; }
               <div class="form-group" style="margin:0;">
                 <label>KYC Status</label>
                 <select id="partner_kyc_status">
-                  <option value="Verified" selected>🟢 Verified &amp; Compliant</option>
+                  <option value="Verified">🟢 Verified &amp; Compliant</option>
                   <option value="Under Review">🟡 Under Review / Processing</option>
-                  <option value="Pending Documents">🔴 Pending Documents</option>
+                  <option value="Pending Documents" selected>🟡 Pending Documents</option>
                 </select>
               </div>
             </div>
@@ -7944,7 +7945,7 @@ body.modal-open { overflow: hidden !important; }
               </div>
               <div style="display:flex; justify-content:space-between;">
                 <span style="color:var(--text-muted);">Account Health:</span>
-                <strong style="color:#34d399;"><i class="fa-solid fa-circle-check"></i> Verified &amp; Compliant</strong>
+                <strong id="vp_account_health" style="color:#34d399;">--</strong>
               </div>
             </div>
           </div>
@@ -8096,7 +8097,7 @@ body.modal-open { overflow: hidden !important; }
             <div style="display:flex; flex-direction:column; gap:8px; font-size:0.82rem;">
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">GSTIN:</span> <strong id="vp_gstin" style="color:#fff;">--</strong></div>
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">PAN Number:</span> <strong id="vp_pan" style="color:#fff;">--</strong></div>
-              <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Channel Agreement:</span> <strong id="vp_mou_status" style="color:#34d399;"><i class="fa-solid fa-circle-check"></i> Executed &amp; Signed</strong></div>
+              <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Channel Agreement:</span> <strong id="vp_mou_status" style="color:#34d399;">--</strong></div>
             </div>
           </div>
           <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px;">
@@ -10023,11 +10024,11 @@ body.modal-open { overflow: hidden !important; }
         }
       } catch(e){}
 
-      document.getElementById('editAdminFullName').value = (admin && admin.full_name) || document.getElementById('adminDetailFullName').textContent || 'Admin';
-      document.getElementById('editAdminEmail').value = (admin && admin.email) || document.getElementById('adminDetailEmail').textContent || 'admin@eduvision.com';
-      document.getElementById('editAdminPhone').value = (admin && admin.phone) || document.getElementById('adminDetailPhone').textContent || '+91 98765 43210';
+      document.getElementById('editAdminFullName').value = (admin && admin.full_name) || document.getElementById('adminDetailFullName').textContent || '';
+      document.getElementById('editAdminEmail').value = (admin && admin.email) || document.getElementById('adminDetailEmail').textContent || '';
+      document.getElementById('editAdminPhone').value = (admin && admin.phone) || document.getElementById('adminDetailPhone').textContent || '';
       document.getElementById('editAdminRole').value = (admin && (admin.designation || admin.role)) || document.getElementById('adminDetailRole').textContent || 'Administrator';
-      document.getElementById('editAdminBranch').value = (admin && admin.branch) || document.getElementById('adminDetailBranch').textContent || 'Main Campus HQ';
+      document.getElementById('editAdminBranch').value = (admin && admin.branch) || document.getElementById('adminDetailBranch').textContent || '';
 
       viewMode.style.display = 'none';
       editForm.style.display = 'flex';
