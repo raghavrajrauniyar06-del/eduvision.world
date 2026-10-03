@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try { const { data, error } = await sb.rpc('rpc_verify_c_auth', { p_login_id: empId, p_password: pwd }); if (!error && data) user = data; } catch(rpcErr) { console.warn("RPC:", rpcErr); }
 
       if (!user) {
-        const rawInput = empId.trim(); const digits = rawInput.replace(/\D/g, ''); const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+        const rawInput = empId.trim().replace(/[,()*\\]/g, ''); const digits = rawInput.replace(/\D/g, ''); const last10 = digits.length >= 10 ? digits.slice(-10) : '';
         let orParts = [`employee_id.eq.${rawInput}`, `counsellor_id.eq.${rawInput}`, `email.ilike.${rawInput}`];
         if (last10) { orParts.push(`phone.ilike.%${last10}%`); orParts.push(`phone.ilike.%${last10.slice(0, 5)}%${last10.slice(5)}%`); }
         else if (rawInput.length >= 3) { orParts.push(`phone.ilike.%${rawInput}%`); }
