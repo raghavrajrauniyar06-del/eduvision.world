@@ -18,6 +18,7 @@
   'use strict';
 
   const EduVisionAttendance = {
+    SYSTEM_LAUNCH_DATE: '2026-10-05',
     CUTOFF_HOUR: 11, // 11:00 AM IST
     CUTOFF_MINUTE: 0,
     TIMEZONE: 'Asia/Kolkata',
@@ -1597,6 +1598,7 @@
       const now = this.getNowIST();
       let html = '';
       const daysCount = 28;
+      const todayStr = this.getTodayDateStr();
 
       for (let i = daysCount - 1; i >= 0; i--) {
         const d = new Date(now);
@@ -1608,28 +1610,38 @@
         const dayNum = d.getDate();
         const monthShort = d.toLocaleString('en-US', { month: 'short' });
 
+        const isBeforeLaunch = dStr < this.SYSTEM_LAUNCH_DATE;
         const record = historyRecords.find(r => r.attendance_date === dStr);
         let status = 'OFF';
+        let statusDisplay = 'OFF';
         let badgeColor = 'rgba(255,255,255,0.06)';
         let textColor = '#64748b';
         let borderCol = 'rgba(255,255,255,0.08)';
         let checkInBadge = '';
+        let titleText = '';
 
-        if (d.getDay() === 0 && !record) {
-          status = 'SUN';
+        if (isBeforeLaunch) {
+          // Pre-launch setup days (e.g. Oct 1-4 and earlier) are Under Development / System Setup
+          status = 'DEV';
+          statusDisplay = 'Under Dev';
+          badgeColor = 'rgba(148, 163, 184, 0.08)';
           textColor = '#94a3b8';
+          borderCol = 'rgba(148, 163, 184, 0.2)';
+          titleText = `${dStr}: System Setup / Under Development (Official Attendance starts 5 Oct 2026)`;
         } else if (record) {
           status = record.status;
+          statusDisplay = record.status;
           const isLate = record.status === 'Late' || (record.remarks && record.remarks.toLowerCase().includes('late'));
           const inTime = this.formatTime12h(record.check_in_time);
           const mode = record.attendance_mode || 'Office';
 
           if (inTime && inTime !== '-') {
-            checkInBadge = `<span style="font-size:0.65rem; color:#cbd5e1; font-weight:700; margin-top:2px;">🕒 ${inTime} (${mode})</span>`;
+            checkInBadge = `<span class="att-cell-time" style="font-size:0.65rem; color:#cbd5e1; font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">🕒 ${inTime}</span>`;
           }
 
           if (isLate) {
             status = 'Late';
+            statusDisplay = 'Late';
             badgeColor = 'rgba(245, 158, 11, 0.15)';
             textColor = '#fbbf24';
             borderCol = 'rgba(245, 158, 11, 0.35)';
@@ -1654,19 +1666,34 @@
             textColor = '#38bdf8';
             borderCol = 'rgba(56, 189, 248, 0.35)';
           }
-        } else if (d < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+          titleText = `${dStr}: ${status}${record && record.check_in_time ? ' (In: ' + this.formatTime12h(record.check_in_time) + ')' : ''}`;
+        } else if (d.getDay() === 0) {
+          status = 'SUN';
+          statusDisplay = 'SUN';
+          textColor = '#94a3b8';
+          badgeColor = 'rgba(255, 255, 255, 0.05)';
+          borderCol = 'rgba(255, 255, 255, 0.08)';
+          titleText = `${dStr}: Sunday (Weekly Off)`;
+        } else if (dStr < todayStr) {
           status = 'Absent';
+          statusDisplay = 'Absent';
           badgeColor = 'rgba(239, 68, 68, 0.12)';
           textColor = '#f87171';
           borderCol = 'rgba(239, 68, 68, 0.25)';
+          titleText = `${dStr}: Absent`;
+        } else {
+          status = 'OFF';
+          statusDisplay = 'OFF';
+          badgeColor = 'rgba(255, 255, 255, 0.06)';
+          textColor = '#64748b';
+          borderCol = 'rgba(255, 255, 255, 0.08)';
+          titleText = `${dStr}: Scheduled Shift`;
         }
 
-        const titleText = `${dStr}: ${status}${record && record.check_in_time ? ' (In: ' + this.formatTime12h(record.check_in_time) + ')' : ''}`;
-
         html += `
-          <div style="background:${badgeColor}; border:1px solid ${borderCol}; border-radius:10px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:60px; transition:transform 0.15s ease;" title="${titleText}">
-            <span style="font-size:0.73rem; color:#94a3b8; font-weight:600;">${dayNum} ${monthShort}</span>
-            <span style="font-size:0.72rem; font-weight:800; color:${textColor}; margin-top:2px; text-transform:uppercase;">${status}</span>
+          <div class="att-calendar-cell" style="background:${badgeColor}; border:1px solid ${borderCol}; border-radius:10px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:56px; transition:transform 0.15s ease; overflow:hidden;" title="${titleText}">
+            <span class="att-cell-date" style="font-size:0.73rem; color:#94a3b8; font-weight:600; white-space:nowrap;">${dayNum} ${monthShort}</span>
+            <span class="att-cell-status" style="font-size:0.70rem; font-weight:800; color:${textColor}; margin-top:2px; text-transform:uppercase; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:100%;">${statusDisplay}</span>
             ${checkInBadge}
           </div>
         `;

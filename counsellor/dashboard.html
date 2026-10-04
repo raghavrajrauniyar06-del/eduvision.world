@@ -2089,6 +2089,32 @@
         justify-content: center !important;
       }
       
+      /* Mobile Attendance Grid and Controls */
+      #attCalendarGrid {
+        grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+        gap: 5px !important;
+      }
+      .att-calendar-cell {
+        padding: 4px 2px !important;
+        min-height: 52px !important;
+      }
+      .att-calendar-cell .att-cell-date {
+        font-size: 0.65rem !important;
+      }
+      .att-calendar-cell .att-cell-status {
+        font-size: 0.58rem !important;
+        letter-spacing: -0.2px !important;
+      }
+      .att-calendar-cell .att-cell-time {
+        display: none !important;
+      }
+      .btn-att-mode {
+        padding: 6px 10px !important;
+        font-size: 0.76rem !important;
+        flex: 1 1 auto !important;
+        justify-content: center !important;
+      }
+      
       /* Elastic entrance for dashboard metrics on view activate */
       .view-section.active .metric-card {
         animation: slideUpMetric 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -2260,7 +2286,6 @@
       }
       #leadModalCard,
       #leadFupModal,
-      #employeeProfileWindow,
       .wa-group-content,
       .wa-info-content {
         width: 96vw !important;
@@ -2269,6 +2294,15 @@
         overflow-y: auto !important;
         border-radius: 18px !important;
         padding: 16px !important;
+        margin: auto !important;
+      }
+      #employeeProfileWindow {
+        width: 96vw !important;
+        max-width: 96vw !important;
+        max-height: 92vh !important;
+        overflow-y: hidden !important;
+        border-radius: 18px !important;
+        padding: 0 !important;
         margin: auto !important;
       }
       
@@ -2781,7 +2815,7 @@ body.modal-open { overflow: hidden !important; }
             <i class="fa-solid fa-fingerprint"></i> <span id="attPunchBtnText">Punch In</span>
           </button>
         </div>
-        <button type="button" onclick="openEmployeeProfileModal(); switchEmpModalTab('tab-emp-security');" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--gold-light); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s;" title="Account Settings &amp; Security" onmouseover="this.style.background='rgba(247,211,119,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+        <button type="button" onclick="openEmployeeProfileModal('tab-emp-security');" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--gold-light); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s;" title="Account Settings &amp; Security" onmouseover="this.style.background='rgba(247,211,119,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
           <i class="fa-solid fa-gear"></i>
         </button>
         <div class="counsellor-profile" onclick="openEmployeeProfileModal()" style="cursor:pointer; transition:transform 0.15s ease, background 0.2s ease; padding:4px 8px; border-radius:12px; display:flex; align-items:center; gap:10px;" title="Click to view Profile, Achievements &amp; Settings" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
@@ -3450,6 +3484,7 @@ body.modal-open { overflow: hidden !important; }
             <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border-radius:3px; background:#facc15;"></span> Half Day</span>
             <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border-radius:3px; background:#f87171;"></span> Absent</span>
             <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border-radius:3px; background:#c084fc;"></span> Leave</span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border-radius:3px; background:#94a3b8;"></span> Under Dev</span>
           </div>
         </div>
         <div id="attCalendarGrid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:10px;">
@@ -12277,13 +12312,15 @@ CRITICAL MANDATES:
 
         updateCounsellorAttendanceUI();
 
-        // Update KPIs
-        const totalDays = counsellorAttendanceHistory.length;
-        const presentDays = counsellorAttendanceHistory.filter(r => r.status === 'Present').length;
-        const lateDays = counsellorAttendanceHistory.filter(r => r.status === 'Late').length;
-        const halfDays = counsellorAttendanceHistory.filter(r => r.status === 'Half Day').length;
-        const leaveDays = counsellorAttendanceHistory.filter(r => r.status === 'Leave' || r.status === 'Absent').length;
-        const totalHours = counsellorAttendanceHistory.reduce((acc, r) => acc + (parseFloat(r.working_hours) || 0), 0).toFixed(1);
+        // Update KPIs (Strictly official tracking records from SYSTEM_LAUNCH_DATE onwards)
+        const launchDate = (EduVisionAttendance && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-05';
+        const officialRecords = counsellorAttendanceHistory.filter(r => r.attendance_date >= launchDate);
+        const totalDays = officialRecords.length;
+        const presentDays = officialRecords.filter(r => r.status === 'Present').length;
+        const lateDays = officialRecords.filter(r => r.status === 'Late').length;
+        const halfDays = officialRecords.filter(r => r.status === 'Half Day').length;
+        const leaveDays = officialRecords.filter(r => r.status === 'Leave' || r.status === 'Absent').length;
+        const totalHours = officialRecords.reduce((acc, r) => acc + (parseFloat(r.working_hours) || 0), 0).toFixed(1);
 
         document.getElementById('attMetricTotal').textContent = totalDays;
         document.getElementById('attMetricPresent').textContent = presentDays;
@@ -12295,15 +12332,15 @@ CRITICAL MANDATES:
         // Render Calendar Heatmap Grid
         EduVisionAttendance.renderCalendarGrid('attCalendarGrid', counsellorAttendanceHistory);
 
-        // Render History Table with Mode
+        // Render History Table with Mode (Official records starting from launch date)
         const tbody = document.getElementById('attHistoryTbody');
         if (tbody) {
-          if (counsellorAttendanceHistory.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="padding:24px; text-align:center; color:var(--text-muted);">No attendance records found yet. Use the Check In button to start recording!</td></tr>';
+          if (officialRecords.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--gold-light); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 5, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button to record your shift today!</span></td></tr>';
             return;
           }
 
-          tbody.innerHTML = counsellorAttendanceHistory.map(r => {
+          tbody.innerHTML = officialRecords.map(r => {
             let statusColor = '#4ade80';
             let bgCol = 'rgba(34, 197, 94, 0.15)';
             if (r.status === 'Late') { statusColor = '#fbbf24'; bgCol = 'rgba(245, 158, 11, 0.15)'; }

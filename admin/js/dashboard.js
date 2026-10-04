@@ -14170,11 +14170,12 @@ function renderWorkspaceOverview() {
   const convertedLeads = currentWorkspaceLeads.filter(l => l.status === 'Registered').length;
   if (document.getElementById('acc_ov_converted')) document.getElementById('acc_ov_converted').textContent = convertedLeads;
 
-  // 4. Monthly Attendance Summary (from official counsellor_attendance)
-  const presCount = currentWorkspaceAttendance.filter(a => a.status === 'Present').length;
-  const absCount = currentWorkspaceAttendance.filter(a => a.status === 'Absent').length;
-  const halfCount = currentWorkspaceAttendance.filter(a => a.status === 'Half Day').length;
-  const leaveCount = currentWorkspaceAttendance.filter(a => a.status === 'Leave').length;
+  // 4. Monthly Attendance Summary (from official counsellor_attendance - starts 2026-10-05)
+  const officialWorkspaceAtt = currentWorkspaceAttendance.filter(a => a.attendance_date >= '2026-10-05');
+  const presCount = officialWorkspaceAtt.filter(a => a.status === 'Present').length;
+  const absCount = officialWorkspaceAtt.filter(a => a.status === 'Absent').length;
+  const halfCount = officialWorkspaceAtt.filter(a => a.status === 'Half Day').length;
+  const leaveCount = officialWorkspaceAtt.filter(a => a.status === 'Leave').length;
 
   if (document.getElementById('acc_ov_sum_present')) document.getElementById('acc_ov_sum_present').textContent = presCount;
   if (document.getElementById('acc_ov_sum_absent')) document.getElementById('acc_ov_sum_absent').textContent = absCount;

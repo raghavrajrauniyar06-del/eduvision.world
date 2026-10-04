@@ -4596,11 +4596,13 @@ async function loadTlSelfAttendance() {
 
     updateTlAttendanceUI();
 
-    const totalDays = tlSelfAttendanceHistory.length;
-    const presDays = tlSelfAttendanceHistory.filter(r => r.status === 'Present').length;
-    const lateDays = tlSelfAttendanceHistory.filter(r => r.status === 'Late').length;
-    const leaveDays = tlSelfAttendanceHistory.filter(r => r.status === 'Leave' || r.status === 'Absent').length;
-    const totalHours = tlSelfAttendanceHistory.reduce((acc, r) => acc + (parseFloat(r.working_hours) || 0), 0).toFixed(1);
+    const launchDate = (typeof EduVisionAttendance !== 'undefined' && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-05';
+    const officialRecords = tlSelfAttendanceHistory.filter(r => r.attendance_date >= launchDate);
+    const totalDays = officialRecords.length;
+    const presDays = officialRecords.filter(r => r.status === 'Present').length;
+    const lateDays = officialRecords.filter(r => r.status === 'Late').length;
+    const leaveDays = officialRecords.filter(r => r.status === 'Leave' || r.status === 'Absent').length;
+    const totalHours = officialRecords.reduce((acc, r) => acc + (parseFloat(r.working_hours) || 0), 0).toFixed(1);
 
     document.getElementById('tlSelfTotalDays').textContent = totalDays;
     document.getElementById('tlSelfPresentDays').textContent = presDays;
@@ -4612,12 +4614,12 @@ async function loadTlSelfAttendance() {
 
     const tbody = document.getElementById('tlSelfHistoryTbody');
     if (tbody) {
-      if (tlSelfAttendanceHistory.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="padding:24px; text-align:center; color:#94a3b8;">No personal punch records found. Use the Check In button above to start recording!</td></tr>';
+      if (officialRecords.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:#94a3b8;"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--primary, #c9932a); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 5, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button above to record today\'s shift!</span></td></tr>';
         return;
       }
 
-      tbody.innerHTML = tlSelfAttendanceHistory.map(r => {
+      tbody.innerHTML = officialRecords.map(r => {
         let statusColor = '#4ade80';
         let bgCol = 'rgba(34, 197, 94, 0.15)';
         if (r.status === 'Late') { statusColor = '#fbbf24'; bgCol = 'rgba(245, 158, 11, 0.15)'; }
@@ -6649,6 +6651,50 @@ function openTlProfileModal() {
 
   // Default tab
   if (typeof switchTlModalTab === 'function') switchTlModalTab('personal');
+
+  // Calculate Real KYC Progress & Render KYC Tab
+  const tlKycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('team_leader') : null);
+  const tlKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(tlKycData) : { pct: 0, status: 'Not Submitted', is100: false };
+  
+  const tlStatusBadge = document.getElementById('tlModalStatusBadge');
+  if (tlStatusBadge) {
+    if (tlKycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
+      tlStatusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
+      tlStatusBadge.style.color = '#34d399';
+      tlStatusBadge.style.background = 'rgba(16,185,129,0.15)';
+      tlStatusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
+    } else if (tlKycProgress.pct > 0 || tlKycProgress.hasIdDoc) {
+      tlStatusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${tlKycProgress.pct}%)`;
+      tlStatusBadge.style.color = '#38bdf8';
+      tlStatusBadge.style.background = 'rgba(56,189,248,0.15)';
+      tlStatusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
+    } else {
+      tlStatusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
+      tlStatusBadge.style.color = '#f59e0b';
+      tlStatusBadge.style.background = 'rgba(245,158,11,0.15)';
+      tlStatusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
+    }
+  }
+
+  const tlKycTabLabel = document.getElementById('tlModalKycTabLabel');
+  const tlKycTabIcon = document.getElementById('tlModalKycTabIcon');
+  if (tlKycTabLabel) {
+    if (tlKycProgress.is100) {
+      tlKycTabLabel.textContent = 'KYC & Verification (100%)';
+      if (tlKycTabIcon) tlKycTabIcon.style.color = '#10b981';
+    } else if (tlKycProgress.pct > 0) {
+      tlKycTabLabel.textContent = `KYC & Verification (${tlKycProgress.pct}%)`;
+      if (tlKycTabIcon) tlKycTabIcon.style.color = '#38bdf8';
+    } else {
+      tlKycTabLabel.textContent = 'KYC & Verification (Pending)';
+      if (tlKycTabIcon) tlKycTabIcon.style.color = '#f59e0b';
+    }
+  }
+
+  const kycPane = document.getElementById('tlTabContent-kyc');
+  if (kycPane && window.EduVisionKYC) {
+    kycPane.innerHTML = EduVisionKYC.renderKycTabContent('team_leader', empId);
+  }
 
   // DISPLAY MODAL WITH FORCE VISIBILITY
   modal.style.display = 'flex';
