@@ -1587,34 +1587,153 @@ async function loadCounsellorWorkspaceData(counsellorId) {
       document.getElementById('pd_address').textContent = counsellor.address || counsellor.Address || 'Official EduVision Branch Center, Head Office Campus';
     }
 
-    // Populate KYC Dossier fields
+    // Populate KYC Dossier fields with visual previews and numbers
+    const staffName = counsellor.full_name || counsellor.counsellor_name || 'Staff Member';
+    const aadhaarNum = counsellor.aadhaar_number || (counsellor.kyc && counsellor.kyc.aadhaar_number) || '';
+    const panNum = counsellor.pan_number || (counsellor.kyc && counsellor.kyc.pan_number) || '';
+    const aadhaarDocUrl = counsellor.drive_url || counsellor.id_proof_url || (counsellor.kyc && (counsellor.kyc.drive_url || counsellor.kyc.id_doc_url)) || '';
+    const panDocUrl = counsellor.pan_url || (counsellor.kyc && (counsellor.kyc.pan_url || counsellor.kyc.pan_doc_url)) || '';
+    const bankAcc = counsellor.bank_account_no || counsellor.bank_account || '';
+    const bankIfsc = counsellor.ifsc_code || counsellor.bank_ifsc || '';
+    const emergencyNum = counsellor.emergency_contact || counsellor.phone || '';
+
     const kycBadgeWrap = document.getElementById('pd_kyc_badge_wrap');
     if (kycBadgeWrap && window.EduVisionKYC) {
       kycBadgeWrap.innerHTML = EduVisionKYC.getKycStatusBadge(counsellor);
     }
     if (document.getElementById('pd_aadhaar')) {
-      document.getElementById('pd_aadhaar').textContent = counsellor.aadhaar_number || 'Not Submitted';
+      document.getElementById('pd_aadhaar').textContent = aadhaarNum || 'Not Submitted';
     }
     if (document.getElementById('pd_pan')) {
-      document.getElementById('pd_pan').textContent = counsellor.pan_number || 'Not Submitted';
+      document.getElementById('pd_pan').textContent = panNum || 'Not Submitted';
     }
     if (document.getElementById('pd_bank')) {
-      const bAcc = counsellor.bank_account_no || counsellor.bank_account || '';
-      const bIfsc = counsellor.ifsc_code || counsellor.bank_ifsc || '';
-      document.getElementById('pd_bank').textContent = bAcc ? `${bAcc} (${bIfsc})` : 'Not Submitted';
+      document.getElementById('pd_bank').textContent = bankAcc ? `${bankAcc} (${bankIfsc || 'N/A'})` : 'Not Submitted';
     }
+    if (document.getElementById('pd_emergency')) {
+      document.getElementById('pd_emergency').textContent = emergencyNum || 'Not Provided';
+    }
+
+    // Pending Re-upload alert banner
+    const reuploadBanner = document.getElementById('pd_kyc_reupload_banner');
+    if (reuploadBanner && window.EduVisionKYC) {
+      const pendingReq = EduVisionKYC.getPendingReuploadRequest(empId) || EduVisionKYC.getPendingReuploadRequest(counsellor.counsellor_id);
+      if (pendingReq) {
+        reuploadBanner.style.display = 'block';
+        reuploadBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444; margin-right:6px;"></i> <strong>Re-upload Requested:</strong> "${pendingReq.reason}" <span style="font-size:0.72rem; opacity:0.8; margin-left:8px;">(${new Date(pendingReq.requestedAt).toLocaleDateString()})</span>`;
+      } else {
+        reuploadBanner.style.display = 'none';
+      }
+    }
+
+    // Aadhaar Preview Box & View Button
+    const aadhaarBox = document.getElementById('pd_aadhaar_preview_box');
+    const btnViewAadhaar = document.getElementById('btn_view_aadhaar');
+    if (aadhaarBox) {
+      if (aadhaarDocUrl) {
+        const thumbUrl = window.EduVisionKYC ? EduVisionKYC.getDriveThumbnail(aadhaarDocUrl) : null;
+        if (thumbUrl) {
+          aadhaarBox.innerHTML = `
+            <img src="${thumbUrl}" alt="Aadhaar Preview" style="width:100%; height:100%; object-fit:cover; cursor:pointer;" onclick="if(window.EduVisionKYC) EduVisionKYC.showDocumentPreviewModal('Aadhaar Card - ${staffName.replace(/'/g, "\\'")}', '${aadhaarDocUrl}', '${empId}')" />
+            <div style="position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,0.75); padding:3px 8px; border-radius:6px; font-size:0.68rem; color:#fff; display:flex; align-items:center; gap:4px;">
+              <i class="fa-solid fa-magnifying-glass-plus"></i> Click to Enlarge
+            </div>
+          `;
+        } else {
+          aadhaarBox.innerHTML = `
+            <div style="text-align:center; padding:10px;">
+              <i class="fa-solid fa-file-pdf" style="font-size:2rem; color:#ef4444; margin-bottom:6px;"></i>
+              <div style="font-size:0.76rem; color:#fff; font-weight:600;">Encrypted PDF Document</div>
+              <div style="font-size:0.68rem; color:#94a3b8;">Google Drive Vault</div>
+            </div>
+          `;
+        }
+        if (btnViewAadhaar) {
+          btnViewAadhaar.disabled = false;
+          btnViewAadhaar.style.background = 'rgba(16,185,129,0.15)';
+          btnViewAadhaar.style.borderColor = '#10b981';
+          btnViewAadhaar.style.color = '#34d399';
+          btnViewAadhaar.style.cursor = 'pointer';
+          btnViewAadhaar.onclick = () => {
+            if (window.EduVisionKYC) EduVisionKYC.showDocumentPreviewModal(`Aadhaar Card - ${staffName}`, aadhaarDocUrl, empId);
+          };
+        }
+      } else {
+        aadhaarBox.innerHTML = '<span style="color:#64748b; font-size:0.75rem;"><i class="fa-solid fa-image"></i> No Aadhaar Uploaded</span>';
+        if (btnViewAadhaar) {
+          btnViewAadhaar.disabled = true;
+          btnViewAadhaar.style.background = 'rgba(255,255,255,0.05)';
+          btnViewAadhaar.style.borderColor = 'rgba(255,255,255,0.1)';
+          btnViewAadhaar.style.color = '#94a3b8';
+          btnViewAadhaar.style.cursor = 'not-allowed';
+          btnViewAadhaar.onclick = null;
+        }
+      }
+    }
+
+    // PAN Preview Box & View Button
+    const panBox = document.getElementById('pd_pan_preview_box');
+    const btnViewPan = document.getElementById('btn_view_pan');
+    if (panBox) {
+      if (panDocUrl) {
+        const panThumbUrl = window.EduVisionKYC ? EduVisionKYC.getDriveThumbnail(panDocUrl) : null;
+        if (panThumbUrl) {
+          panBox.innerHTML = `
+            <img src="${panThumbUrl}" alt="PAN Preview" style="width:100%; height:100%; object-fit:cover; cursor:pointer;" onclick="if(window.EduVisionKYC) EduVisionKYC.showDocumentPreviewModal('PAN Card - ${staffName.replace(/'/g, "\\'")}', '${panDocUrl}', '${empId}')" />
+            <div style="position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,0.75); padding:3px 8px; border-radius:6px; font-size:0.68rem; color:#fff; display:flex; align-items:center; gap:4px;">
+              <i class="fa-solid fa-magnifying-glass-plus"></i> Click to Enlarge
+            </div>
+          `;
+        } else {
+          panBox.innerHTML = `
+            <div style="text-align:center; padding:10px;">
+              <i class="fa-solid fa-file-pdf" style="font-size:2rem; color:#38bdf8; margin-bottom:6px;"></i>
+              <div style="font-size:0.76rem; color:#fff; font-weight:600;">Encrypted PAN Document</div>
+              <div style="font-size:0.68rem; color:#94a3b8;">Google Drive Vault</div>
+            </div>
+          `;
+        }
+        if (btnViewPan) {
+          btnViewPan.disabled = false;
+          btnViewPan.style.background = 'rgba(56,189,248,0.15)';
+          btnViewPan.style.borderColor = '#38bdf8';
+          btnViewPan.style.color = '#38bdf8';
+          btnViewPan.style.cursor = 'pointer';
+          btnViewPan.onclick = () => {
+            if (window.EduVisionKYC) EduVisionKYC.showDocumentPreviewModal(`PAN Card - ${staffName}`, panDocUrl, empId);
+          };
+        }
+      } else {
+        panBox.innerHTML = '<span style="color:#64748b; font-size:0.75rem;"><i class="fa-solid fa-image"></i> No PAN Uploaded</span>';
+        if (btnViewPan) {
+          btnViewPan.disabled = true;
+          btnViewPan.style.background = 'rgba(255,255,255,0.05)';
+          btnViewPan.style.borderColor = 'rgba(255,255,255,0.1)';
+          btnViewPan.style.color = '#94a3b8';
+          btnViewPan.style.cursor = 'not-allowed';
+          btnViewPan.onclick = null;
+        }
+      }
+    }
+
     if (document.getElementById('pd_drive_action')) {
-      const driveUrl = counsellor.drive_url || counsellor.id_proof_url;
-      if (driveUrl) {
+      const activeDriveUrl = aadhaarDocUrl || panDocUrl;
+      if (activeDriveUrl) {
         document.getElementById('pd_drive_action').innerHTML = `
-          <a href="${driveUrl}" target="_blank" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-size:0.75rem; padding:5px 12px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-            <i class="fa-brands fa-google-drive"></i> Open Drive Vault
+          <a href="${activeDriveUrl}" target="_blank" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-size:0.75rem; padding:4px 12px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-brands fa-google-drive"></i> Open Cloud Vault
           </a>
         `;
       } else {
         document.getElementById('pd_drive_action').innerHTML = '<span style="color:#94a3b8; font-size:0.78rem;">No Document Vaulted</span>';
       }
     }
+
+    window.triggerKycReuploadFromWorkspace = function(docType) {
+      if (window.EduVisionKYC) {
+        EduVisionKYC.requestDocReupload(empId, staffName, docType);
+      }
+    };
 
     const cnsId = counsellor.counsellor_id || '';
 

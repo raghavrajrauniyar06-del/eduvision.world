@@ -615,7 +615,12 @@
       let iconSymbol = '<i class="fa-solid fa-id-card-clip" style="color:#94a3b8;"></i>';
       let statusDesc = 'Compulsory ID proof required. Upload UIDAI Aadhaar or Passport to submit verification.';
 
-      if (progress.is100) {
+      const reuploadReq = EduVisionKYC.getPendingReuploadRequest(staffId);
+      if (reuploadReq) {
+        statusBadgeStyle = 'background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.4);';
+        iconSymbol = '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>';
+        statusDesc = `⚠️ Leadership requested document re-upload: "${reuploadReq.reason}". Please re-upload below.`;
+      } else if (progress.is100) {
         statusBadgeStyle = 'background:rgba(16,185,129,0.18); color:#34d399; border:1px solid rgba(16,185,129,0.35);';
         iconSymbol = '<i class="fa-solid fa-shield-halved" style="color:#34d399;"></i>';
         statusDesc = 'All verification requirements fulfilled. Account authenticated by EduVision Leadership.';
@@ -631,8 +636,19 @@
 
       return `
         <div id="kycTabContainer_${roleKey}" style="display:flex; flex-direction:column; gap:16px;">
+          ${reuploadReq ? `
+            <div style="background:linear-gradient(135deg, rgba(239,68,68,0.2), rgba(185,28,28,0.25)); border:1.5px solid #ef4444; border-radius:14px; padding:14px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(239,68,68,0.25);">
+              <i class="fa-solid fa-circle-exclamation" style="font-size:1.6rem; color:#fca5a5;"></i>
+              <div>
+                <div style="font-size:0.88rem; font-weight:800; color:#fff;">Document Re-upload Requested by ${reuploadReq.requestedBy || 'Leadership'}</div>
+                <div style="font-size:0.78rem; color:#fecaca; margin-top:2px;">Reason: <em>"${reuploadReq.reason}"</em> (${new Date(reuploadReq.requestedAt).toLocaleDateString()})</div>
+                <div style="font-size:0.72rem; color:#94a3b8; margin-top:4px;">Please re-attach clear, authentic copies of your requested documents below and click Save.</div>
+              </div>
+            </div>
+          ` : ''}
+
           <!-- 100% VERIFICATION PROGRESS BANNER -->
-          <div style="background:linear-gradient(135deg, rgba(17,24,39,0.85), rgba(15,23,42,0.95)); border:1px solid ${progress.is100 ? 'rgba(16,185,129,0.4)' : (hasIdDoc ? 'rgba(56,189,248,0.35)' : 'rgba(255,255,255,0.1)')}; border-radius:16px; padding:18px 20px; box-shadow:0 8px 30px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
+          <div style="background:linear-gradient(135deg, rgba(17,24,39,0.85), rgba(15,23,42,0.95)); border:1px solid ${reuploadReq ? '#ef4444' : (progress.is100 ? 'rgba(16,185,129,0.4)' : (hasIdDoc ? 'rgba(56,189,248,0.35)' : 'rgba(255,255,255,0.1)'))}; border-radius:16px; padding:18px 20px; box-shadow:0 8px 30px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
               <div style="display:flex; align-items:center; gap:12px;">
                 <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
@@ -642,7 +658,7 @@
                   <div style="font-size:0.96rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     Staff KYC &amp; Regulatory Clearance
                     <span style="font-size:0.73rem; padding:3px 10px; border-radius:99px; font-weight:700; ${statusBadgeStyle}">
-                      ${progress.status}
+                      ${reuploadReq ? '⚠️ Re-upload Required' : progress.status}
                     </span>
                   </div>
                   <div style="font-size:0.76rem; color:#94a3b8; margin-top:3px;">
@@ -983,6 +999,9 @@
       }
 
       const res = await EduVisionKYC.saveKYCData(roleKey, staffId, currentKyc);
+
+      // Clear any pending re-upload flag since employee re-submitted
+      EduVisionKYC.clearReuploadRequest(staffId);
 
       if (btn) btn.disabled = false;
       if (msgEl) {
@@ -1330,6 +1349,124 @@
           alert('Notice during approval: ' + e.message);
         }
       }
+    },
+    /**
+     * Extract Google Drive File ID from various URL patterns
+     */
+    getDriveFileId: function(url) {
+      if (!url || typeof url !== 'string') return null;
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || 
+                    url.match(/id=([a-zA-Z0-9_-]+)/) ||
+                    url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      return match ? match[1] : null;
+    },
+
+    /**
+     * Generate visual image URL / thumbnail for Google Drive or direct image URLs
+     */
+    getDriveThumbnail: function(url) {
+      if (!url || typeof url !== 'string') return null;
+      const fileId = EduVisionKYC.getDriveFileId(url);
+      if (fileId) {
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
+      }
+      if (url.startsWith('data:image/') || url.match(/\.(jpeg|jpg|png|webp|svg)(\?.*)?$/i)) {
+        return url;
+      }
+      return null;
+    },
+
+    /**
+     * Request Document Re-upload with reason (Admin / Team Leader Action)
+     */
+    requestDocReupload: async function(staffId, staffName, docType) {
+      const typeLabel = docType === 'pan' ? 'PAN Card' : (docType === 'id' ? 'Aadhaar / ID Proof' : 'KYC Documents');
+      const defaultReason = 'Document scan is blurry / unreadable. Please upload a clear original copy.';
+      
+      const reason = prompt(
+        `🚨 REQUEST DOCUMENT RE-UPLOAD\n\nStaff: ${staffName || staffId} (${staffId})\nDocument: ${typeLabel}\n\nEnter reason or correction instruction for the employee:`,
+        defaultReason
+      );
+
+      if (reason === null) return; // User cancelled
+      const cleanReason = (reason.trim() || defaultReason);
+
+      const reqPayload = {
+        staffId: staffId,
+        staffName: staffName || staffId,
+        docType: docType || 'all',
+        reason: cleanReason,
+        requestedAt: new Date().toISOString(),
+        requestedBy: (function() {
+          try {
+            const u = JSON.parse(localStorage.getItem('eduvision_user') || localStorage.getItem('eduvision_admin') || localStorage.getItem('eduvision_team_leader') || '{}');
+            return u.name || u.full_name || u.role || 'Leadership';
+          } catch(e) { return 'Leadership'; }
+        })()
+      };
+
+      // 1. Store in localStorage keyed by staffId
+      try {
+        localStorage.setItem(`eduvision_kyc_reupload_req_${staffId}`, JSON.stringify(reqPayload));
+        // Also add to global notifications queue
+        const existingReqs = JSON.parse(localStorage.getItem('eduvision_kyc_reupload_list') || '[]');
+        const filtered = existingReqs.filter(r => r.staffId !== staffId);
+        filtered.push(reqPayload);
+        localStorage.setItem('eduvision_kyc_reupload_list', JSON.stringify(filtered));
+      } catch(e) {
+        console.warn('Re-upload localStorage save notice:', e);
+      }
+
+      // 2. Safe backend notification or update if possible
+      try {
+        const sbClient = window.sb || (window.supabase && typeof window.supabase.createClient === 'function' 
+          ? window.supabase.createClient('https://ewxvqpyusveiynplzxed.supabase.co', 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC') 
+          : null);
+        if (sbClient) {
+          // Reset verification_status to Re-upload Requested if possible
+          await sbClient
+            .from('counsellors')
+            .update({ verification_status: 'Re-upload Requested' })
+            .or(`employee_id.eq.${staffId},counsellor_id.eq.${staffId}`);
+        }
+      } catch(e) {
+        console.warn('Re-upload cloud sync notice:', e);
+      }
+
+      alert(`✅ Re-upload Request Sent!\n\nStaff: ${staffName || staffId}\nDocument: ${typeLabel}\nReason: "${cleanReason}"\n\nA high-priority re-upload alert banner will be displayed on their portal.`);
+
+      // Update badge if present in DOM
+      const reBadge = document.getElementById(`kyc_reupload_badge_${staffId}`) || document.getElementById('pd_kyc_reupload_banner');
+      if (reBadge) {
+        reBadge.style.display = 'block';
+        reBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Re-upload Requested: "${cleanReason}"`;
+      }
+    },
+
+    /**
+     * Check if a pending re-upload request exists for this staff member
+     */
+    getPendingReuploadRequest: function(staffId) {
+      if (!staffId) return null;
+      try {
+        const item = localStorage.getItem(`eduvision_kyc_reupload_req_${staffId}`);
+        return item ? JSON.parse(item) : null;
+      } catch(e) {
+        return null;
+      }
+    },
+
+    /**
+     * Clear re-upload request upon successful submission
+     */
+    clearReuploadRequest: function(staffId) {
+      if (!staffId) return;
+      try {
+        localStorage.removeItem(`eduvision_kyc_reupload_req_${staffId}`);
+        const existing = JSON.parse(localStorage.getItem('eduvision_kyc_reupload_list') || '[]');
+        const filtered = existing.filter(r => r.staffId !== staffId);
+        localStorage.setItem('eduvision_kyc_reupload_list', JSON.stringify(filtered));
+      } catch(e) {}
     }
   };
 

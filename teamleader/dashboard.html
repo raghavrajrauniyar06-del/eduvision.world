@@ -4356,30 +4356,100 @@ body.modal-open { overflow: hidden !important; }
           </div>
         </div>
 
-        <!-- Row 4: KYC & Regulatory Compliance Dossier -->
-        <div class="glass-box" style="padding:22px 24px; border-radius:18px; border:1px solid rgba(255,255,255,0.08);">
+        <!-- Row 4: Official Identity Documents & KYC Verification Dossier -->
+        <div class="glass-box" style="padding:22px 24px; border-radius:18px; border:1px solid rgba(255,255,255,0.08); background:rgba(15,23,42,0.65);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-            <h4 style="color:#10b981; font-size:0.88rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:0; display:flex; align-items:center; gap:8px;">
-              <i class="fa-solid fa-shield-halved"></i> KYC &amp; Regulatory Compliance
-            </h4>
-            <div id="pd_kyc_badge_wrap"></div>
+            <div>
+              <h4 style="color:#10b981; font-size:0.88rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:0; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-shield-halved"></i> Official Documents &amp; KYC Verification Dossier
+              </h4>
+              <p style="font-size:0.75rem; color:#94a3b8; margin:3px 0 0 0;">Verified identity records, encrypted cloud documents &amp; banking compliance</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div id="pd_kyc_badge_wrap"></div>
+              <button type="button" id="btnRequestReuploadMaster" onclick="triggerKycReuploadFromWorkspace()" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#fca5a5; font-size:0.75rem; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
+                <i class="fa-solid fa-rotate"></i> Request Document Re-upload
+              </button>
+            </div>
           </div>
-          <div class="crm-detail-row-grid">
-            <div class="crm-detail-item">
-              <span class="crm-detail-label"><i class="fa-solid fa-id-card" style="color:var(--gold-light);"></i> UIDAI Aadhaar No.</span>
-              <strong class="crm-detail-value" id="pd_aadhaar" style="font-family:var(--font-mono);">-</strong>
+
+          <!-- Pending Re-upload Alert Banner (if any) -->
+          <div id="pd_kyc_reupload_banner" style="display:none; margin-bottom:16px; padding:10px 14px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); border-radius:10px; font-size:0.78rem; color:#fca5a5; font-weight:600;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Re-upload Requested
+          </div>
+
+          <!-- Visual Document Cards Grid -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:16px; margin-bottom:16px;">
+            <!-- Aadhaar Card Box -->
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.8rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-id-card" style="color:var(--gold-light);"></i> UIDAI Aadhaar Card
+                </span>
+                <span style="font-size:0.65rem; background:rgba(201,147,42,0.2); color:#f7d377; border:1px solid rgba(201,147,42,0.35); padding:2px 6px; border-radius:4px; font-weight:800;">MANDATORY</span>
+              </div>
+              <div style="background:rgba(0,0,0,0.35); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.72rem; color:#94a3b8;">UID Number:</span>
+                <strong id="pd_aadhaar" style="font-size:0.88rem; color:#f7d377; font-family:var(--font-mono); letter-spacing:1px;">Not Submitted</strong>
+              </div>
+              <!-- Aadhaar Image Preview Box -->
+              <div id="pd_aadhaar_preview_box" style="position:relative; width:100%; height:160px; background:rgba(0,0,0,0.45); border:1px dashed rgba(255,255,255,0.15); border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                <span style="color:#64748b; font-size:0.75rem;"><i class="fa-solid fa-image"></i> No Aadhaar Uploaded</span>
+              </div>
+              <!-- Aadhaar Action Buttons -->
+              <div style="display:flex; gap:8px; margin-top:2px;" id="pd_aadhaar_actions">
+                <button type="button" id="btn_view_aadhaar" disabled style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; font-size:0.75rem; padding:7px; border-radius:8px; cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                  <i class="fa-solid fa-eye"></i> View Document
+                </button>
+                <button type="button" onclick="triggerKycReuploadFromWorkspace('id')" style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#fca5a5; font-size:0.75rem; padding:7px 12px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                  <i class="fa-solid fa-rotate"></i> Re-upload
+                </button>
+              </div>
             </div>
-            <div class="crm-detail-item">
-              <span class="crm-detail-label"><i class="fa-solid fa-file-invoice" style="color:#38bdf8;"></i> PAN Number</span>
-              <strong class="crm-detail-value" id="pd_pan" style="font-family:var(--font-mono);">-</strong>
+
+            <!-- PAN Card Box -->
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.8rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-file-invoice" style="color:#38bdf8;"></i> PAN Card Record
+                </span>
+                <span style="font-size:0.65rem; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); padding:2px 6px; border-radius:4px; font-weight:700;">FINANCIAL</span>
+              </div>
+              <div style="background:rgba(0,0,0,0.35); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.72rem; color:#94a3b8;">PAN Number:</span>
+                <strong id="pd_pan" style="font-size:0.88rem; color:#38bdf8; font-family:var(--font-mono); letter-spacing:1px;">Not Submitted</strong>
+              </div>
+              <!-- PAN Image Preview Box -->
+              <div id="pd_pan_preview_box" style="position:relative; width:100%; height:160px; background:rgba(0,0,0,0.45); border:1px dashed rgba(255,255,255,0.15); border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                <span style="color:#64748b; font-size:0.75rem;"><i class="fa-solid fa-image"></i> No PAN Uploaded</span>
+              </div>
+              <!-- PAN Action Buttons -->
+              <div style="display:flex; gap:8px; margin-top:2px;" id="pd_pan_actions">
+                <button type="button" id="btn_view_pan" disabled style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; font-size:0.75rem; padding:7px; border-radius:8px; cursor:not-allowed; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                  <i class="fa-solid fa-eye"></i> View Document
+                </button>
+                <button type="button" onclick="triggerKycReuploadFromWorkspace('pan')" style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#fca5a5; font-size:0.75rem; padding:7px 12px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                  <i class="fa-solid fa-rotate"></i> Re-upload
+                </button>
+              </div>
             </div>
-            <div class="crm-detail-item">
-              <span class="crm-detail-label"><i class="fa-solid fa-building-columns" style="color:#a78bfa;"></i> Bank Account &amp; IFSC</span>
-              <strong class="crm-detail-value" id="pd_bank">-</strong>
-            </div>
-            <div class="crm-detail-item">
-              <span class="crm-detail-label"><i class="fa-solid fa-folder-open" style="color:#34d399;"></i> Vaulted Documents</span>
-              <div id="pd_drive_action" style="margin-top:4px;">-</div>
+          </div>
+
+          <!-- Banking & Additional Record Strip -->
+          <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px 18px;">
+            <div class="crm-detail-row-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:14px;">
+              <div class="crm-detail-item">
+                <span class="crm-detail-label"><i class="fa-solid fa-building-columns" style="color:#a78bfa;"></i> Bank Account &amp; IFSC</span>
+                <strong class="crm-detail-value" id="pd_bank" style="font-size:0.85rem;">-</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span class="crm-detail-label"><i class="fa-solid fa-phone" style="color:#34d399;"></i> Emergency Contact</span>
+                <strong class="crm-detail-value" id="pd_emergency" style="font-size:0.85rem;">-</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span class="crm-detail-label"><i class="fa-brands fa-google-drive" style="color:#38bdf8;"></i> Drive Vault Direct Link</span>
+                <div id="pd_drive_action" style="margin-top:4px;">-</div>
+              </div>
             </div>
           </div>
         </div>
