@@ -5160,7 +5160,7 @@ function updateAdminProfileUI() {
   if (navPerms) navPerms.style.display = isRaghav ? 'flex' : 'none';
 }
 
-function isRaghavCto() {
+function isRaghavDirect() {
   if (!currentAdmin) return false;
   const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || currentAdmin.id || '').toUpperCase();
   const roleUpper = (currentAdmin.role || '').toUpperCase();
@@ -5176,6 +5176,24 @@ function isRaghavCto() {
          emailUpper.includes('RAGHAVRAJRAUNIYAR') || 
          nameUpper.includes('RAGHAV') ||
          Boolean(window.EduPerms && window.EduPerms.isCto);
+}
+window.isRaghavDirect = isRaghavDirect;
+
+function isRaghavCto() {
+  if (isRaghavDirect()) return true;
+  if (!currentAdmin) return false;
+  const empUpper = (currentAdmin.employee_id || currentAdmin.admin_id || currentAdmin.id || '').toUpperCase();
+  if (!empUpper) return false;
+  try {
+    const raw = localStorage.getItem('eduvision_cto_delegates');
+    if (raw) {
+      const delegates = JSON.parse(raw);
+      if (Array.isArray(delegates) && delegates.some(d => (d.empId || '').toUpperCase() === empUpper && d.status === 'Active')) {
+        return true;
+      }
+    }
+  } catch(e) {}
+  return false;
 }
 
 function isIshikaCeo() {
@@ -7080,21 +7098,35 @@ function saveMasterUniversitiesToStorage() {
 window.switchAdminMasterView = function(view) {
   const unisSection = document.getElementById('subViewUniversities');
   const coursesSection = document.getElementById('subViewCourses');
+  const updatesSection = document.getElementById('subViewUpdates');
   const tabUnisBtn = document.getElementById('tabBtnUnisMaster');
   const tabCoursesBtn = document.getElementById('tabBtnCoursesMaster');
+  const tabUpdatesBtn = document.getElementById('tabBtnUpdatesMaster');
+
+  // Reset tab button states
+  [tabUnisBtn, tabCoursesBtn, tabUpdatesBtn].forEach(b => {
+    if (b) { b.className = 'btn-outline'; b.style.color = '#94a3b8'; }
+  });
 
   if (view === 'courses') {
     if (unisSection) unisSection.style.display = 'none';
     if (coursesSection) coursesSection.style.display = 'block';
-    if (tabUnisBtn) { tabUnisBtn.className = 'btn-outline'; tabUnisBtn.style.color = '#94a3b8'; }
+    if (updatesSection) updatesSection.style.display = 'none';
     if (tabCoursesBtn) { tabCoursesBtn.className = 'btn-gold'; tabCoursesBtn.style.color = '#000'; }
     loadMasterCoursesFromStorage();
     renderCoursesGrid(allCourses);
+  } else if (view === 'updates') {
+    if (unisSection) unisSection.style.display = 'none';
+    if (coursesSection) coursesSection.style.display = 'none';
+    if (updatesSection) updatesSection.style.display = 'block';
+    if (tabUpdatesBtn) { tabUpdatesBtn.className = 'btn-gold'; tabUpdatesBtn.style.color = '#000'; }
+    loadMasterBulletinsFromStorage();
+    renderBulletinsGrid(allBulletins);
   } else {
     if (unisSection) unisSection.style.display = 'block';
     if (coursesSection) coursesSection.style.display = 'none';
+    if (updatesSection) updatesSection.style.display = 'none';
     if (tabUnisBtn) { tabUnisBtn.className = 'btn-gold'; tabUnisBtn.style.color = '#000'; }
-    if (tabCoursesBtn) { tabCoursesBtn.className = 'btn-outline'; tabCoursesBtn.style.color = '#94a3b8'; }
     filterUnivGrid();
   }
 };
@@ -7548,6 +7580,252 @@ window.deleteCourse = function(code) {
 
 // Auto-initialize courses on page load
 loadMasterCoursesFromStorage();
+
+// ── 6C. LATEST UPDATES & PUBLIC BULLETINS MASTER (ADMIN / CTO ENGINE) ─────────────
+let allBulletins = [];
+let currentBulletinCategory = 'ALL';
+
+function loadMasterBulletinsFromStorage() {
+  try {
+    const raw = localStorage.getItem('eduvision_master_bulletins');
+    if (raw) {
+      allBulletins = JSON.parse(raw);
+    } else {
+      // Seed initial high-value announcements from latest-updates.html catalog
+      allBulletins = [
+        {
+          id: 'BSCC2026',
+          category: 'Government Schemes',
+          status: 'urgent',
+          statusText: 'URGENT',
+          title: 'Bihar Student Credit Card Scheme (BSCCS) 2026 — 0% Interest Education Loan up to ₹4 Lakhs',
+          desc: 'Govt of Bihar under Aarthik Hal, Yuvaon Ko Bal provides 100% financial support for B.Tech, MBA, BCA, BBA, B.Sc Nursing, & Polytechnic with 0% interest for female/disabled students.',
+          date: 'August 01, 2026',
+          source: 'Govt of Bihar / MNSSBY Portal (7Nischay)',
+          fullContent: '<p>The <b>Bihar Student Credit Card Scheme (BSCCS)</b> provides financial assistance up to <b>₹4,00,000 (4 Lakhs)</b> for Bihar students passing 12th grade to pursue higher professional education across India.</p><h4>Key Benefits & Highlights:</h4><ul><li><b>Interest Rate:</b> 0% interest for Female, Transgender & PwD candidates; 1% simple interest for Male candidates.</li><li><b>Covered Expenses:</b> Tuition fees, hostel/mess charges, books, laptop allowance, and monthly living expenses.</li><li><b>Eligible Degrees:</b> B.Tech, MBA, MCA, BCA, BBA, B.Com, BA, B.Sc Nursing, Polytechnic, Pharmacy, & D.El.Ed.</li></ul>'
+        },
+        {
+          id: 'NSP2026',
+          category: 'Scholarships',
+          status: 'new',
+          statusText: 'NEW',
+          title: 'National Scholarship Portal (NSP 2.0) Central Sector Scheme Registrations Open 2026-27',
+          desc: 'Ministry of Education invites online applications for college & university scholarships. Scholarship grant up to ₹20,000/year for meritorious students via DBT.',
+          date: 'July 30, 2026',
+          source: 'Ministry of Education (scholarships.gov.in)',
+          fullContent: '<p>The <b>National Scholarship Portal (NSP 2.0)</b> has opened registrations for the Central Sector Scheme of Scholarships for College and University Students.</p><h4>Eligibility & Details:</h4><ul><li><b>Eligibility:</b> Students scoring above 80th percentile in Class 12 board exams with annual family income below ₹4.5 Lakhs.</li><li><b>Disbursement:</b> Direct Benefit Transfer (DBT) directly into bank accounts linked with Aadhaar.</li></ul>'
+        },
+        {
+          id: 'CUET2026',
+          category: 'Exams',
+          status: 'urgent',
+          statusText: 'URGENT',
+          title: 'CUET-UG 2026 Counseling Schedule & Central University Cut-Off Matrix Released',
+          desc: 'NTA releases official score normalization and centralized counseling merit lists for Central, State, and Top Private Universities.',
+          date: 'July 28, 2026',
+          source: 'National Testing Agency (nta.ac.in)',
+          fullContent: '<p>NTA has published the normalized percentile scores and universal scorecard access for CUET-UG 2026 candidates.</p>'
+        },
+        {
+          id: 'AMITY_ONLINE2026',
+          category: 'Admissions',
+          status: 'new',
+          statusText: 'NEW',
+          title: 'Amity University Online July/August 2026 Admission Cycle Live — MBA, MCA, BCA & BBA',
+          desc: 'QS World-Ranked Amity Online degree programs with global accreditations (WASC, QAA) and 0% EMI financing plans.',
+          date: 'August 02, 2026',
+          source: 'Amity University Online Directorate',
+          fullContent: '<p>Amity University Online offers global standard curriculum with live weekend masterclasses by international faculty.</p>'
+        }
+      ];
+      localStorage.setItem('eduvision_master_bulletins', JSON.stringify(allBulletins));
+    }
+  } catch(e) {
+    console.warn('Bulletin storage error:', e);
+  }
+}
+
+function saveMasterBulletinsToStorage() {
+  try {
+    localStorage.setItem('eduvision_master_bulletins', JSON.stringify(allBulletins));
+    window.dispatchEvent(new CustomEvent('eduvision-bulletins-updated', { detail: allBulletins }));
+  } catch(e) {}
+}
+
+window.renderBulletinsGrid = function(list) {
+  const container = document.getElementById('bulletinCardsGrid');
+  if (!container) return;
+
+  const countBadge = document.getElementById('countAllBulletins');
+  if (countBadge) countBadge.textContent = (allBulletins || []).length;
+
+  if (!list || list.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:#94a3b8;">
+        <i class="fa-solid fa-bullhorn" style="font-size:2.4rem; color:rgba(201,147,42,0.4); margin-bottom:12px; display:block;"></i>
+        <h4 style="color:#fff; margin:0 0 6px 0;">No Announcements Found</h4>
+        <p style="font-size:0.82rem; margin:0;">Click "+ Post New Announcement" to publish your first public bulletin.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const statusColorMap = {
+    urgent: { bg: 'rgba(239,68,68,0.18)', color: '#fca5a5', border: '#ef4444' },
+    new: { bg: 'rgba(16,185,129,0.18)', color: '#6ee7b7', border: '#10b981' },
+    important: { bg: 'rgba(245,158,11,0.18)', color: '#fde047', border: '#f59e0b' }
+  };
+
+  container.innerHTML = list.map(b => {
+    const stConf = statusColorMap[b.status] || statusColorMap.new;
+    return `
+      <div class="glass-box" style="padding:20px; border-radius:18px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; transition:transform 0.2s, border-color 0.2s;">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <span style="font-size:0.7rem; font-weight:800; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; padding:3px 8px; border-radius:6px; text-transform:uppercase;">
+              ${escapeHtml(b.category || 'General')}
+            </span>
+            <span style="font-size:0.68rem; font-weight:800; background:${stConf.bg}; color:${stConf.color}; border:1px solid ${stConf.border}; padding:2px 8px; border-radius:99px; text-transform:uppercase; letter-spacing:0.5px;">
+              ${escapeHtml(b.statusText || (b.status || 'NEW').toUpperCase())}
+            </span>
+          </div>
+
+          <h4 style="color:#fff; font-size:0.96rem; font-weight:800; line-height:1.4; margin:0 0 8px 0;">
+            ${escapeHtml(b.title)}
+          </h4>
+          <p style="color:#94a3b8; font-size:0.8rem; line-height:1.5; margin:0 0 14px 0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+            ${escapeHtml(b.desc)}
+          </p>
+        </div>
+
+        <div>
+          <div style="padding-top:10px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; color:#64748b; margin-bottom:12px;">
+            <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(b.date || 'Recent')}</span>
+            <span><i class="fa-solid fa-landmark"></i> ${escapeHtml(b.source || 'Official')}</span>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn-outline" onclick="editBulletin('${b.id}')" style="flex:1; padding:7px; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </button>
+            <button type="button" class="btn-outline" onclick="deleteBulletin('${b.id}')" style="padding:7px 12px; font-size:0.75rem; border-radius:8px; color:#f87171; border-color:rgba(239,68,68,0.3); display:inline-flex; align-items:center; justify-content:center;">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <a href="../latest-updates.html?id=${b.id}" target="_blank" class="btn-gold" style="padding:7px 12px; font-size:0.75rem; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:4px;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> View
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.switchBulletinCategory = function(cat) {
+  currentBulletinCategory = cat;
+  document.querySelectorAll('#subViewUpdates .btn-outline').forEach(b => b.classList.remove('active'));
+  const activeBtn = {
+    'ALL': document.getElementById('bTabAll'),
+    'Government Schemes': document.getElementById('bTabGov'),
+    'Scholarships': document.getElementById('bTabSch'),
+    'Admissions': document.getElementById('bTabAdm'),
+    'Exams': document.getElementById('bTabExm')
+  }[cat];
+  if (activeBtn) activeBtn.classList.add('active');
+  filterBulletinsGrid();
+};
+
+window.filterBulletinsGrid = function() {
+  const search = (document.getElementById('bulletinSearchInput')?.value || '').toLowerCase();
+  const filtered = allBulletins.filter(b => {
+    let matchesCat = true;
+    if (currentBulletinCategory !== 'ALL') {
+      matchesCat = (b.category === currentBulletinCategory);
+    }
+    const matchesSearch = !search || 
+      (b.title || '').toLowerCase().includes(search) || 
+      (b.desc || '').toLowerCase().includes(search) || 
+      (b.source || '').toLowerCase().includes(search);
+    return matchesCat && matchesSearch;
+  });
+  renderBulletinsGrid(filtered);
+};
+
+window.openAddBulletinModal = function() {
+  document.getElementById('bulletin_edit_id').value = '';
+  document.getElementById('bulletinModalTitle').textContent = 'Post New Announcement';
+  document.getElementById('bulletinSubmitBtnText').innerHTML = '<i class="fa-solid fa-check"></i> Publish Announcement Live';
+  document.getElementById('addBulletinForm').reset();
+  document.getElementById('bulletin_date').value = new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
+  document.getElementById('bulletinAddModal')?.classList.add('active');
+};
+
+window.editBulletin = function(id) {
+  const b = allBulletins.find(item => item.id === id);
+  if (!b) return;
+
+  document.getElementById('bulletin_edit_id').value = b.id;
+  document.getElementById('bulletinModalTitle').textContent = 'Edit Announcement';
+  document.getElementById('bulletinSubmitBtnText').innerHTML = '<i class="fa-solid fa-check"></i> Update Announcement Live';
+
+  document.getElementById('bulletin_title').value = b.title || '';
+  document.getElementById('bulletin_category').value = b.category || 'Government Schemes';
+  document.getElementById('bulletin_status').value = b.status || 'new';
+  document.getElementById('bulletin_date').value = b.date || '';
+  document.getElementById('bulletin_source').value = b.source || '';
+  document.getElementById('bulletin_desc').value = b.desc || '';
+  document.getElementById('bulletin_full').value = b.fullContent || '';
+
+  document.getElementById('bulletinAddModal')?.classList.add('active');
+};
+
+window.closeBulletinModal = function() {
+  document.getElementById('bulletinAddModal')?.classList.remove('active');
+};
+
+window.submitSaveBulletin = function(event) {
+  event.preventDefault();
+  const editId = document.getElementById('bulletin_edit_id').value;
+  const title = document.getElementById('bulletin_title').value.trim();
+  const category = document.getElementById('bulletin_category').value;
+  const status = document.getElementById('bulletin_status').value;
+  const statusText = status.toUpperCase();
+  const date = document.getElementById('bulletin_date').value.trim();
+  const source = document.getElementById('bulletin_source').value.trim();
+  const desc = document.getElementById('bulletin_desc').value.trim();
+  const fullContent = document.getElementById('bulletin_full').value.trim();
+
+  const id = editId || ('BULLETIN_' + Date.now().toString(36).toUpperCase());
+  const bulletinObj = { id, title, category, status, statusText, date, source, desc, fullContent };
+
+  if (editId) {
+    const idx = allBulletins.findIndex(b => b.id === editId);
+    if (idx !== -1) allBulletins[idx] = bulletinObj;
+    else allBulletins.unshift(bulletinObj);
+  } else {
+    allBulletins.unshift(bulletinObj);
+  }
+
+  saveMasterBulletinsToStorage();
+  closeBulletinModal();
+  showToast((editId ? 'Updated' : 'Published') + ' announcement "' + title + '" live to website!', 'success');
+  filterBulletinsGrid();
+};
+
+window.deleteBulletin = function(id) {
+  const b = allBulletins.find(item => item.id === id);
+  if (!b) return;
+
+  if (!confirm('Are you sure you want to delete announcement "' + b.title + '" from the public website?')) return;
+
+  allBulletins = allBulletins.filter(item => item.id !== id);
+  saveMasterBulletinsToStorage();
+  showToast('Announcement removed from website.', 'info');
+  filterBulletinsGrid();
+};
+
+// Auto-initialize bulletins on load
+loadMasterBulletinsFromStorage();
 
 // ── AUTHENTIC UNIVERSITY COURSE & NOTES RESOLVER ─────────────────────────────
 function getUniversityFullData(uniCode, uniName) {
@@ -18465,8 +18743,25 @@ window.resetCtoPageControls = resetCtoPageControls;
 function switchCtoSubTab(tabName) {
   const btnPages = document.getElementById('tabBtnCtoPages');
   const btnMatrix = document.getElementById('tabBtnCtoMatrix');
+  const btnDelegates = document.getElementById('tabBtnCtoDelegates');
   const viewPages = document.getElementById('ctoSubViewPages');
   const viewMatrix = document.getElementById('ctoSubViewMatrix');
+  const viewDelegates = document.getElementById('ctoSubViewDelegates');
+
+  // Reset tab button states
+  [btnPages, btnMatrix, btnDelegates].forEach(b => {
+    if (b) {
+      b.classList.remove('active');
+      b.style.background = 'rgba(255,255,255,0.05)';
+      b.style.border = '1px solid rgba(255,255,255,0.1)';
+      b.style.color = '#cbd5e1';
+    }
+  });
+
+  // Hide all subviews
+  [viewPages, viewMatrix, viewDelegates].forEach(v => {
+    if (v) v.style.display = 'none';
+  });
 
   if (tabName === 'matrix') {
     if (btnMatrix) {
@@ -18475,16 +18770,17 @@ function switchCtoSubTab(tabName) {
       btnMatrix.style.border = '1px solid rgba(247,211,119,0.45)';
       btnMatrix.style.color = '#f7d377';
     }
-    if (btnPages) {
-      btnPages.classList.remove('active');
-      btnPages.style.background = 'rgba(255,255,255,0.05)';
-      btnPages.style.border = '1px solid rgba(255,255,255,0.1)';
-      btnPages.style.color = '#cbd5e1';
-    }
-    if (viewPages) viewPages.style.display = 'none';
     if (viewMatrix) viewMatrix.style.display = 'block';
-
     if (typeof renderCtoFeatureMatrix === 'function') renderCtoFeatureMatrix();
+  } else if (tabName === 'delegates') {
+    if (btnDelegates) {
+      btnDelegates.classList.add('active');
+      btnDelegates.style.background = 'linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35))';
+      btnDelegates.style.border = '1px solid rgba(247,211,119,0.45)';
+      btnDelegates.style.color = '#f7d377';
+    }
+    if (viewDelegates) viewDelegates.style.display = 'block';
+    if (typeof renderCtoDelegatesList === 'function') renderCtoDelegatesList();
   } else {
     if (btnPages) {
       btnPages.classList.add('active');
@@ -18492,19 +18788,176 @@ function switchCtoSubTab(tabName) {
       btnPages.style.border = '1px solid rgba(247,211,119,0.45)';
       btnPages.style.color = '#f7d377';
     }
-    if (btnMatrix) {
-      btnMatrix.classList.remove('active');
-      btnMatrix.style.background = 'rgba(255,255,255,0.05)';
-      btnMatrix.style.border = '1px solid rgba(255,255,255,0.1)';
-      btnMatrix.style.color = '#cbd5e1';
-    }
     if (viewPages) viewPages.style.display = 'block';
-    if (viewMatrix) viewMatrix.style.display = 'none';
-
     if (typeof renderCtoPageCards === 'function') renderCtoPageCards();
   }
 }
 window.switchCtoSubTab = switchCtoSubTab;
+
+// ── CTO SPECIAL ACCESS DELEGATION ENGINE ─────────────────────────────────────
+let ctoDelegatesList = [];
+
+function loadCtoDelegates() {
+  try {
+    const raw = localStorage.getItem('eduvision_cto_delegates');
+    ctoDelegatesList = raw ? JSON.parse(raw) : [];
+  } catch(e) {
+    ctoDelegatesList = [];
+  }
+}
+
+function saveCtoDelegates() {
+  try {
+    localStorage.setItem('eduvision_cto_delegates', JSON.stringify(ctoDelegatesList));
+    // Also sync to global EduPerms if active
+    if (window.EduPerms) {
+      window.EduPerms.ctoDelegates = ctoDelegatesList;
+    }
+    window.dispatchEvent(new CustomEvent('eduvision-cto-delegates-updated', { detail: ctoDelegatesList }));
+  } catch(e) {}
+}
+
+window.isUserCtoAuthorized = function(empId) {
+  if (isRaghavCto()) return true;
+  const cleanId = String(empId || (currentAdmin && (currentAdmin.employee_id || currentAdmin.admin_id)) || '').trim().toUpperCase();
+  if (!cleanId) return false;
+  loadCtoDelegates();
+  return ctoDelegatesList.some(d => d.empId.toUpperCase() === cleanId && d.status === 'Active');
+};
+
+window.renderCtoDelegatesList = function() {
+  const tbody = document.getElementById('ctoDelegatesTableBody');
+  if (!tbody) return;
+
+  loadCtoDelegates();
+
+  if (ctoDelegatesList.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding:32px 18px; color:#94a3b8;">
+          <i class="fa-solid fa-user-lock" style="font-size:1.6rem; color:rgba(201,147,42,0.4); margin-bottom:8px; display:block;"></i>
+          No special operators delegated yet. Currently strictly restricted to CTO Raghav Raj Rauniyar.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = ctoDelegatesList.map((d, idx) => `
+    <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;">
+      <td style="padding:14px 18px; color:#fff; font-weight:700;">
+        <i class="fa-solid fa-user-check" style="color:#10b981; margin-right:6px;"></i> ${escapeHtml(d.name)}
+      </td>
+      <td style="padding:14px 18px; font-family:var(--font-mono); color:#f7d377;">
+        ${escapeHtml(d.empId)}
+      </td>
+      <td style="padding:14px 18px; color:#cbd5e1;">
+        ${escapeHtml(d.role || 'Staff')}
+      </td>
+      <td style="padding:14px 18px;">
+        <span style="background:rgba(56,189,248,0.18); color:#38bdf8; border:1px solid rgba(56,189,248,0.35); padding:3px 9px; border-radius:99px; font-size:0.72rem; font-weight:800;">
+          ${escapeHtml(d.level || 'Full Access')}
+        </span>
+      </td>
+      <td style="padding:14px 18px; color:#94a3b8; font-size:0.78rem;">
+        ${escapeHtml(d.grantedAt || 'Today')}
+      </td>
+      <td style="padding:14px 18px; text-align:right;">
+        <button type="button" onclick="revokeCtoDelegate('${d.empId}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#fca5a5; font-size:0.75rem; font-weight:700; padding:5px 12px; border-radius:6px; cursor:pointer;">
+          <i class="fa-solid fa-user-xmark"></i> Revoke
+        </button>
+      </td>
+    </tr>
+  `).join('');
+};
+
+window.openAddDelegateModal = function() {
+  const modal = document.getElementById('ctoAddDelegateModal');
+  if (!modal) return;
+
+  const datalist = document.getElementById('dlg_staff_datalist');
+  if (datalist && window.allStaffList) {
+    datalist.innerHTML = allStaffList.map(s => {
+      const code = s.employee_id || s.counsellor_id || s.id || '';
+      const name = s.full_name || s.name || s.counsellor_name || '';
+      return `<option value="${code}">${name} (${s.role || s.designation || 'Staff'})</option>`;
+    }).join('');
+  }
+
+  document.getElementById('addDelegateForm')?.reset();
+  modal.classList.add('active');
+};
+
+window.closeAddDelegateModal = function() {
+  document.getElementById('ctoAddDelegateModal')?.classList.remove('active');
+};
+
+window.handleDelegateStaffSelect = function(val) {
+  if (!val) return;
+  const clean = val.trim().toLowerCase();
+  const staff = (window.allStaffList || []).find(s => {
+    const code = (s.employee_id || s.counsellor_id || s.id || '').toLowerCase();
+    const name = (s.full_name || s.name || s.counsellor_name || '').toLowerCase();
+    return code === clean || name === clean || (code + ' ' + name).includes(clean);
+  });
+
+  if (staff) {
+    document.getElementById('dlg_emp_id').value = staff.employee_id || staff.counsellor_id || staff.id || '';
+    document.getElementById('dlg_full_name').value = staff.full_name || staff.name || staff.counsellor_name || '';
+  } else if (val.toUpperCase().startsWith('EMP') || val.toUpperCase().startsWith('TL') || val.toUpperCase().startsWith('ADM')) {
+    document.getElementById('dlg_emp_id').value = val.trim().toUpperCase();
+    document.getElementById('dlg_full_name').value = val.trim();
+  }
+};
+
+window.submitSaveDelegate = function(event) {
+  event.preventDefault();
+  const empId = document.getElementById('dlg_emp_id').value.trim();
+  const name = document.getElementById('dlg_full_name').value.trim();
+  const level = document.getElementById('dlg_level').value;
+  const note = document.getElementById('dlg_note').value.trim();
+
+  if (!empId || !name) {
+    alert('Please select or specify a valid staff employee ID and name.');
+    return;
+  }
+
+  loadCtoDelegates();
+  const existingIdx = ctoDelegatesList.findIndex(d => d.empId.toUpperCase() === empId.toUpperCase());
+  const delegateObj = {
+    empId: empId.toUpperCase(),
+    name: name,
+    level: level,
+    note: note,
+    status: 'Active',
+    grantedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+    grantedBy: (currentAdmin && currentAdmin.full_name) ? currentAdmin.full_name : 'Raghav Raj Rauniyar (CTO)'
+  };
+
+  if (existingIdx !== -1) {
+    ctoDelegatesList[existingIdx] = delegateObj;
+  } else {
+    ctoDelegatesList.unshift(delegateObj);
+  }
+
+  saveCtoDelegates();
+  closeAddDelegateModal();
+  showToast(`👑 CTO Control Permission successfully granted to ${name} (${empId})!`, 'success');
+  renderCtoDelegatesList();
+};
+
+window.revokeCtoDelegate = function(empId) {
+  loadCtoDelegates();
+  const target = ctoDelegatesList.find(d => d.empId.toUpperCase() === empId.toUpperCase());
+  if (!target) return;
+
+  if (!confirm(`Are you sure you want to revoke CTO Control permissions from ${target.name} (${target.empId})?`)) return;
+
+  ctoDelegatesList = ctoDelegatesList.filter(d => d.empId.toUpperCase() !== empId.toUpperCase());
+  saveCtoDelegates();
+  showToast(`CTO access revoked for ${target.name}.`, 'info');
+  renderCtoDelegatesList();
+};
 
 async function refreshCtoControlCenter() {
   try {

@@ -2540,6 +2540,26 @@ body { padding-top: env(safe-area-inset-top); }
     const searchCount = document.getElementById('searchCount');
 
     function renderCards() {
+      // Dynamic sync with Admin/CTO bulletins from localStorage
+      try {
+        const stored = localStorage.getItem('eduvision_master_bulletins');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const knownIds = new Set(UPDATES_DATA.map(x => x.id));
+            parsed.forEach(item => {
+              if (!knownIds.has(item.id)) {
+                UPDATES_DATA.unshift(item);
+                knownIds.add(item.id);
+              } else {
+                const i = UPDATES_DATA.findIndex(x => x.id === item.id);
+                if (i !== -1) UPDATES_DATA[i] = item;
+              }
+            });
+          }
+        }
+      } catch(e) {}
+
       const filtered = UPDATES_DATA.filter(item => {
         const matchesCat = (currentCategory === 'All') || (item.category === currentCategory);
         const q = searchQuery.toLowerCase();

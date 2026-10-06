@@ -5317,6 +5317,9 @@ body.modal-open { overflow: hidden !important; }
               <button type="button" id="tabBtnCoursesMaster" class="btn-outline" onclick="switchAdminMasterView('courses')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; cursor:pointer; color:#94a3b8;">
                 <i class="fa-solid fa-graduation-cap"></i> Course Catalog Master
               </button>
+              <button type="button" id="tabBtnUpdatesMaster" class="btn-outline" onclick="switchAdminMasterView('updates')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; cursor:pointer; color:#94a3b8;">
+                <i class="fa-solid fa-bullhorn"></i> Latest Updates &amp; Bulletins
+              </button>
             </div>
             <div>
               <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-bolt" style="color:var(--gold-light);"></i> Live Dynamic Pages &amp; Full A-Z Sync Active</span>
@@ -5403,6 +5406,52 @@ body.modal-open { overflow: hidden !important; }
             <!-- Grid of Master Course Cards -->
             <div id="courseCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px;">
               <!-- Rendered dynamically via renderCoursesGrid in dashboard.js -->
+            </div>
+          </div>
+
+          <!-- SUB-VIEW 3: LATEST UPDATES & ANNOUNCEMENTS MASTER -->
+          <div id="subViewUpdates" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:18px;">
+              <div>
+                <h3 style="font-family:var(--font-heading); font-size:1.2rem; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-bullhorn" style="color:var(--gold-light);"></i> Latest Updates &amp; Public Bulletins Control
+                </h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">
+                  Post real-time announcements, scholarship releases, admission alerts and loan guidelines directly to <a href="../latest-updates.html" target="_blank" style="color:var(--gold-light); text-decoration:underline;">latest-updates.html ↗</a>
+                </p>
+              </div>
+
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <input type="text" id="bulletinSearchInput" placeholder="Search bulletins & notices..." oninput="filterBulletinsGrid()" style="padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.82rem; width:260px;">
+                <button class="btn-gold" onclick="openAddBulletinModal()"><i class="fa-solid fa-plus"></i> Post New Announcement</button>
+                <a href="../latest-updates.html" target="_blank" class="btn-outline" style="padding:9px 14px; font-size:0.82rem; border-radius:8px; color:#fff; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Preview Live Page
+                </a>
+              </div>
+            </div>
+
+            <!-- Category Filter Tabs for Bulletins -->
+            <div style="display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap;">
+              <button class="btn-outline active" id="bTabAll" style="padding:6px 14px; font-size:0.78rem; border-radius:99px;" onclick="switchBulletinCategory('ALL')">
+                All Bulletins (<span id="countAllBulletins">0</span>)
+              </button>
+              <button class="btn-outline" id="bTabGov" style="padding:6px 14px; font-size:0.78rem; border-radius:99px;" onclick="switchBulletinCategory('Government Schemes')">
+                <i class="fa-solid fa-building-flag" style="color:#f59e0b;"></i> Govt Schemes
+              </button>
+              <button class="btn-outline" id="bTabSch" style="padding:6px 14px; font-size:0.78rem; border-radius:99px;" onclick="switchBulletinCategory('Scholarships')">
+                <i class="fa-solid fa-award" style="color:#10b981;"></i> Scholarships
+              </button>
+              <button class="btn-outline" id="bTabAdm" style="padding:6px 14px; font-size:0.78rem; border-radius:99px;" onclick="switchBulletinCategory('Admissions')">
+                <i class="fa-solid fa-graduation-cap" style="color:#38bdf8;"></i> Admissions
+              </button>
+              <button class="btn-outline" id="bTabExm" style="padding:6px 14px; font-size:0.78rem; border-radius:99px;" onclick="switchBulletinCategory('Exams')">
+                <i class="fa-solid fa-pen-nib" style="color:#c084fc;"></i> Entrance Exams
+              </button>
+            </div>
+
+            <!-- Grid of Live Bulletins Cards -->
+            <div id="bulletinCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px;">
+              <!-- Rendered dynamically via renderBulletinsGrid in dashboard.js -->
             </div>
           </div>
 
@@ -6115,6 +6164,9 @@ body.modal-open { overflow: hidden !important; }
             <button class="btn-tab" id="tabBtnCtoMatrix" onclick="switchCtoSubTab('matrix')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
               <i class="fa-solid fa-shield-halved"></i> 🛡️ Role Permission Matrix
             </button>
+            <button class="btn-tab" id="tabBtnCtoDelegates" onclick="switchCtoSubTab('delegates')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-user-shield"></i> 🔑 Access Delegation Manager
+            </button>
           </div>
 
           <!-- SUB-VIEW A: PUBLIC WEBPAGES & 404 KILL-SWITCHES -->
@@ -6172,6 +6224,42 @@ body.modal-open { overflow: hidden !important; }
 
             <!-- Feature Cards Dynamic Grid -->
             <div id="ctoFeatureCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px;"></div>
+          </div>
+
+          <!-- SUB-VIEW C: ACCESS DELEGATION MANAGER (GRANT CTO CONTROL TO ANYONE) -->
+          <div id="ctoSubViewDelegates" class="glass-box" style="padding:22px; margin-bottom:20px; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.15rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-key" style="color:var(--gold-light);"></i> CTO Control Delegation &amp; Special Operators
+                </h3>
+                <p style="font-size:0.8rem; color:#94a3b8; margin:3px 0 0;">
+                  CTO Raghav Raj Rauniyar can delegate access to the <strong>CTO Control Center</strong> to any Admin, Team Leader, or specific employee ID.
+                </p>
+              </div>
+              <button class="btn-gold" onclick="openAddDelegateModal()" style="padding:9px 18px; font-size:0.82rem; font-weight:700;">
+                <i class="fa-solid fa-user-plus"></i> Grant CTO Control Permission
+              </button>
+            </div>
+
+            <!-- Active Delegations Table -->
+            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:14px; overflow:hidden;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.84rem; text-align:left;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04); color:#94a3b8; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px;">
+                    <th style="padding:12px 18px;">Staff Member</th>
+                    <th style="padding:12px 18px;">Employee Code</th>
+                    <th style="padding:12px 18px;">Designation / Role</th>
+                    <th style="padding:12px 18px;">Delegation Level</th>
+                    <th style="padding:12px 18px;">Granted On</th>
+                    <th style="padding:12px 18px; text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ctoDelegatesTableBody">
+                  <!-- Rendered dynamically via renderCtoDelegatesList in dashboard.js -->
+                </tbody>
+              </table>
+            </div>
           </div>
 
         </div>
@@ -7376,6 +7464,143 @@ body.modal-open { overflow: hidden !important; }
               <i class="fa-solid fa-check"></i> Save &amp; Broadcast Updates
             </button>
           </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 10B: ADD / EDIT ANNOUNCEMENT & LATEST BULLETIN MODAL -->
+  <div class="modal-overlay" id="bulletinAddModal" onclick="if(event.target === this) closeBulletinModal()" style="display:none;">
+    <div class="modal-card modal-widescreen-liquid" style="max-width:760px; width:92%; padding:26px 30px; border-radius:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <span style="background:rgba(201,147,42,0.2); color:var(--gold-light); border:1px solid rgba(201,147,42,0.35); padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase;">
+            <i class="fa-solid fa-bullhorn"></i> Live Public Bulletin
+          </span>
+          <h3 id="bulletinModalTitle" style="font-family:var(--font-heading); font-size:1.3rem; font-weight:800; color:#fff; margin:6px 0 0 0;">
+            Post New Announcement
+          </h3>
+        </div>
+        <button class="btn-modal-close" onclick="closeBulletinModal()">&times;</button>
+      </div>
+
+      <form id="addBulletinForm" onsubmit="submitSaveBulletin(event)">
+        <input type="hidden" id="bulletin_edit_id">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; margin-bottom:16px;">
+          <div class="form-group" style="grid-column: span 2;">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Announcement Headline / Title *</label>
+            <input type="text" id="bulletin_title" required placeholder="e.g. Bihar Student Credit Card Scheme 2026 — 0% Interest Education Loan" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Category *</label>
+            <select id="bulletin_category" required style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+              <option value="Government Schemes">🏛️ Government Schemes &amp; Loans</option>
+              <option value="Scholarships">🎓 Scholarships &amp; Grants</option>
+              <option value="Admissions">📝 Admissions &amp; Degree Programs</option>
+              <option value="Exams">🎯 Entrance Exams (CUET / MAT / NEET)</option>
+              <option value="Important Notices">📢 Official UGC / State Notices</option>
+              <option value="Online Programs">💻 Online &amp; Distance Degree Updates</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Urgency / Badge Status</label>
+            <select id="bulletin_status" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+              <option value="urgent">🔴 URGENT (Red Pulse)</option>
+              <option value="new" selected>🟢 NEW (Emerald Badge)</option>
+              <option value="important">🟡 IMPORTANT (Gold Amber)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Effective Date *</label>
+            <input type="text" id="bulletin_date" required placeholder="e.g. October 10, 2026" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Official Authority / Source *</label>
+            <input type="text" id="bulletin_source" required placeholder="e.g. Govt of Bihar / MNSSBY Portal" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+          </div>
+
+          <div class="form-group" style="grid-column: span 2;">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Short Summary (Displays on card) *</label>
+            <textarea id="bulletin_desc" rows="2" required placeholder="Brief 1-2 sentence description..." style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.82rem; resize:vertical;"></textarea>
+          </div>
+
+          <div class="form-group" style="grid-column: span 2;">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Full Bulletin Details (HTML / Text displayed in modal popup)</label>
+            <textarea id="bulletin_full" rows="5" placeholder="Detailed bulletin content, key benefits, bullet points..." style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.82rem; font-family:monospace; resize:vertical;"></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+          <button type="button" class="btn-outline" onclick="closeBulletinModal()">Cancel</button>
+          <button type="submit" class="btn-gold" id="bulletinSubmitBtnText" style="padding:9px 24px; font-size:0.85rem; font-weight:700;">
+            <i class="fa-solid fa-check"></i> Publish Announcement Live
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 10C: GRANT CTO CONTROL DELEGATION MODAL -->
+  <div class="modal-overlay" id="ctoAddDelegateModal" onclick="if(event.target === this) closeAddDelegateModal()" style="display:none;">
+    <div class="modal-card modal-widescreen-liquid" style="max-width:620px; width:92%; padding:26px 30px; border-radius:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <span style="background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.3)); color:#fbbf24; border:1px solid rgba(245,158,11,0.45); padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase;">
+            <i class="fa-solid fa-crown"></i> CTO Raghav's Special Delegation
+          </span>
+          <h3 style="font-family:var(--font-heading); font-size:1.3rem; font-weight:800; color:#fff; margin:6px 0 0 0;">
+            Delegate CTO Control Access
+          </h3>
+        </div>
+        <button class="btn-modal-close" onclick="closeAddDelegateModal()">&times;</button>
+      </div>
+
+      <form id="addDelegateForm" onsubmit="submitSaveDelegate(event)">
+        <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:20px;">
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Select Staff Member or Enter Employee ID *</label>
+            <input type="text" id="dlg_staff_input" list="dlg_staff_datalist" required placeholder="Type name or code (e.g. EMP267616, Farda Singh)..." style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;" oninput="handleDelegateStaffSelect(this.value)">
+            <datalist id="dlg_staff_datalist">
+              <!-- Populated dynamically from staff directory -->
+            </datalist>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Employee Code</label>
+              <input type="text" id="dlg_emp_id" required placeholder="EMP..." style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#f7d377; font-family:var(--font-mono); font-size:0.85rem;" readonly>
+            </div>
+            <div class="form-group">
+              <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Full Name</label>
+              <input type="text" id="dlg_full_name" required placeholder="Staff Full Name" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff; font-size:0.85rem;" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Delegation Level &amp; Clearance *</label>
+            <select id="dlg_level" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+              <option value="Full Access">👑 Full CTO Control Center Access (All Kill-Switches &amp; Matrices)</option>
+              <option value="Permissions Only">🛡️ Permission Matrix &amp; Role Access Only</option>
+              <option value="Kill-Switches Only">⚡ 404 &amp; Webpage Kill-Switches Only</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label style="color:#cbd5e1; font-size:0.8rem; font-weight:600; margin-bottom:6px; display:block;">Authorization Note / Reason</label>
+            <input type="text" id="dlg_note" placeholder="e.g. Authorized special operator for portal governance" style="width:100%; padding:9px 14px; background:rgba(0,0,0,0.5); border:1px solid var(--border-subtle); border-radius:8px; color:#fff; font-size:0.85rem;">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+          <button type="button" class="btn-outline" onclick="closeAddDelegateModal()">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding:9px 24px; font-size:0.85rem; font-weight:700;">
+            <i class="fa-solid fa-key"></i> Grant CTO Authorization
+          </button>
         </div>
       </form>
     </div>
