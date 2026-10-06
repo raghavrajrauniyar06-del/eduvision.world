@@ -205,6 +205,35 @@ async function loadCounsellorWorkspaceData(counsellorId) {
       document.getElementById('pd_address').textContent = counsellor.address || counsellor.Address || 'Official EduVision Branch Center, Head Office Campus';
     }
 
+    // Populate KYC Dossier fields
+    const kycBadgeWrap = document.getElementById('pd_kyc_badge_wrap');
+    if (kycBadgeWrap && window.EduVisionKYC) {
+      kycBadgeWrap.innerHTML = EduVisionKYC.getKycStatusBadge(counsellor);
+    }
+    if (document.getElementById('pd_aadhaar')) {
+      document.getElementById('pd_aadhaar').textContent = counsellor.aadhaar_number || 'Not Submitted';
+    }
+    if (document.getElementById('pd_pan')) {
+      document.getElementById('pd_pan').textContent = counsellor.pan_number || 'Not Submitted';
+    }
+    if (document.getElementById('pd_bank')) {
+      const bAcc = counsellor.bank_account_no || counsellor.bank_account || '';
+      const bIfsc = counsellor.ifsc_code || counsellor.bank_ifsc || '';
+      document.getElementById('pd_bank').textContent = bAcc ? `${bAcc} (${bIfsc})` : 'Not Submitted';
+    }
+    if (document.getElementById('pd_drive_action')) {
+      const driveUrl = counsellor.drive_url || counsellor.id_proof_url;
+      if (driveUrl) {
+        document.getElementById('pd_drive_action').innerHTML = `
+          <a href="${driveUrl}" target="_blank" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-size:0.75rem; padding:5px 12px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-brands fa-google-drive"></i> Open Drive Vault
+          </a>
+        `;
+      } else {
+        document.getElementById('pd_drive_action').innerHTML = '<span style="color:#94a3b8; font-size:0.78rem;">No Document Vaulted</span>';
+      }
+    }
+
     const cnsId = counsellor.counsellor_id || '';
 
     // 2. Fetch Leads assigned to this counsellor from database (supporting both cnsId & empId)

@@ -7179,7 +7179,7 @@ body.modal-open { overflow: hidden !important; }
         // Calculate Real KYC Progress
         let kycProgress = { pct: 0, status: 'Not Submitted', is100: false };
         try {
-          const kycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('counsellor') : null);
+          const kycData = (window.EduVisionKYC ? EduVisionKYC.getKYCData('counsellor') : null) || (user && user.kyc) || user;
           if (window.EduVisionKYC) {
             kycProgress = EduVisionKYC.calculateProgress(kycData);
           }
@@ -7190,19 +7190,19 @@ body.modal-open { overflow: hidden !important; }
         const statusBadge = document.getElementById('empModalStatusBadge');
         if (statusBadge) {
           if (kycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
-            statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
+            statusBadge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> 100% Verified';
             statusBadge.style.color = '#34d399';
-            statusBadge.style.background = 'rgba(16,185,129,0.15)';
+            statusBadge.style.background = 'rgba(16,185,129,0.18)';
             statusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
           } else if (kycProgress.pct > 0 || kycProgress.hasIdDoc) {
-            statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${kycProgress.pct}%)`;
+            statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Review (${kycProgress.pct}%)`;
             statusBadge.style.color = '#38bdf8';
-            statusBadge.style.background = 'rgba(56,189,248,0.15)';
+            statusBadge.style.background = 'rgba(56,189,248,0.18)';
             statusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
           } else {
             statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
             statusBadge.style.color = '#f59e0b';
-            statusBadge.style.background = 'rgba(245,158,11,0.15)';
+            statusBadge.style.background = 'rgba(245,158,11,0.18)';
             statusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
           }
         }

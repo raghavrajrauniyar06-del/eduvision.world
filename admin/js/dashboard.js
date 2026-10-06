@@ -5791,7 +5791,7 @@ function renderStaffTable(staffList) {
   const mobileContainer = document.getElementById('staffMobileCards');
 
   if (staffList.length === 0) {
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</td></tr>';
     if (mobileContainer) mobileContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">No staff members found.</div>';
     return;
   }
@@ -5824,8 +5824,12 @@ function renderStaffTable(staffList) {
           <td>${s.branch || 'Head Office'}</td>
           <td><span class="badge-role ${roleBadge}">${s.designation || s.role}</span></td>
           <td><span class="badge-status ${statusClass}">${statusText}</span></td>
+          <td>${window.EduVisionKYC ? EduVisionKYC.getKycStatusBadge(s) : '<span class="badge-status status-inactive" style="font-size:0.72rem;">Pending</span>'}</td>
           <td>
             <div style="display:flex; gap:6px; justify-content:center;">
+              <button class="btn-action-icon" title="Inspect Staff KYC Dossier" onclick="EduVisionKYC.openStaffKYCInspector(allStaff.find(st => st.id === '${s.id}'))" style="color:#10b981;">
+                <i class="fa-solid fa-shield-halved"></i>
+              </button>
               ${s.drive_url ? `<a href="${s.drive_url}" target="_blank" class="btn-action-icon" title="Open Google Drive Document Vault" style="color:#34d399; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="fa-brands fa-google-drive"></i></a>` : ''}
               <button class="btn-action-icon" title="Edit Employee Account" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
                 <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
@@ -5873,6 +5877,7 @@ function renderStaffTable(staffList) {
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:3px;">
                 <span class="staff-card-empid-badge">${s.employee_id || 'EMP-00'}</span>
                 <span class="badge-role ${roleBadge}" style="font-size:0.68rem; padding:2px 7px;">${s.designation || s.role}</span>
+                ${window.EduVisionKYC ? EduVisionKYC.getKycStatusBadge(s) : ''}
               </div>
             </div>
           </div>
@@ -5893,6 +5898,10 @@ function renderStaffTable(staffList) {
           </div>
 
           <div class="staff-card-actions-row">
+            <button class="btn-staff-action-edit" onclick="EduVisionKYC.openStaffKYCInspector(allStaff.find(st => st.id === '${s.id}'))" style="border-color:rgba(16,185,129,0.3); color:#34d399;">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>KYC Dossier</span>
+            </button>
             <button class="btn-staff-action-edit" onclick="openEditStaffModal('${s.id}', '${s.staffType}')">
               <i class="fa-solid fa-pen-to-square" style="color:var(--gold-light);"></i>
               <span>Edit Account</span>

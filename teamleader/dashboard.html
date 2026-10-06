@@ -2797,25 +2797,25 @@ body.modal-open { overflow: hidden !important; }
     switchTlModalTab('personal');
 
     // Calculate Real KYC Progress
-    const tlKycData = (user && user.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('team_leader') : null);
+    const tlKycData = (window.EduVisionKYC ? EduVisionKYC.getKYCData('team_leader') : null) || (user && user.kyc) || user;
     const tlKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(tlKycData) : { pct: 0, status: 'Not Submitted', is100: false };
     
     const tlStatusBadge = document.getElementById('tlModalStatusBadge');
     if (tlStatusBadge) {
-      if (tlKycProgress.is100 || (user && (user.verification_status === '100% Verified' || u.verification_status === 'Verified'))) {
-        tlStatusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> 100% Verified';
+      if (tlKycProgress.is100 || (user && (user.verification_status === '100% Verified' || user.verification_status === 'Verified'))) {
+        tlStatusBadge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> 100% Verified';
         tlStatusBadge.style.color = '#34d399';
-        tlStatusBadge.style.background = 'rgba(16,185,129,0.15)';
+        tlStatusBadge.style.background = 'rgba(16,185,129,0.18)';
         tlStatusBadge.style.borderColor = 'rgba(16,185,129,0.35)';
       } else if (tlKycProgress.pct > 0 || tlKycProgress.hasIdDoc) {
-        tlStatusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Progress (${tlKycProgress.pct}%)`;
+        tlStatusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> KYC In Review (${tlKycProgress.pct}%)`;
         tlStatusBadge.style.color = '#38bdf8';
-        tlStatusBadge.style.background = 'rgba(56,189,248,0.15)';
+        tlStatusBadge.style.background = 'rgba(56,189,248,0.18)';
         tlStatusBadge.style.borderColor = 'rgba(56,189,248,0.35)';
       } else {
         tlStatusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> KYC Pending (0%)';
         tlStatusBadge.style.color = '#f59e0b';
-        tlStatusBadge.style.background = 'rgba(245,158,11,0.15)';
+        tlStatusBadge.style.background = 'rgba(245,158,11,0.18)';
         tlStatusBadge.style.borderColor = 'rgba(245,158,11,0.35)';
       }
     }
@@ -4352,6 +4352,34 @@ body.modal-open { overflow: hidden !important; }
             <div class="crm-detail-item" style="grid-column: 1 / -1;">
               <span class="crm-detail-label"><i class="fa-solid fa-map-pin" style="color:#2dd4bf;"></i> Official / Registered Address</span>
               <strong class="crm-detail-value" id="pd_address" style="font-size:1.05rem; font-weight:600;">-</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: KYC & Regulatory Compliance Dossier -->
+        <div class="glass-box" style="padding:22px 24px; border-radius:18px; border:1px solid rgba(255,255,255,0.08);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <h4 style="color:#10b981; font-size:0.88rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:0; display:flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-shield-halved"></i> KYC &amp; Regulatory Compliance
+            </h4>
+            <div id="pd_kyc_badge_wrap"></div>
+          </div>
+          <div class="crm-detail-row-grid">
+            <div class="crm-detail-item">
+              <span class="crm-detail-label"><i class="fa-solid fa-id-card" style="color:var(--gold-light);"></i> UIDAI Aadhaar No.</span>
+              <strong class="crm-detail-value" id="pd_aadhaar" style="font-family:var(--font-mono);">-</strong>
+            </div>
+            <div class="crm-detail-item">
+              <span class="crm-detail-label"><i class="fa-solid fa-file-invoice" style="color:#38bdf8;"></i> PAN Number</span>
+              <strong class="crm-detail-value" id="pd_pan" style="font-family:var(--font-mono);">-</strong>
+            </div>
+            <div class="crm-detail-item">
+              <span class="crm-detail-label"><i class="fa-solid fa-building-columns" style="color:#a78bfa;"></i> Bank Account &amp; IFSC</span>
+              <strong class="crm-detail-value" id="pd_bank">-</strong>
+            </div>
+            <div class="crm-detail-item">
+              <span class="crm-detail-label"><i class="fa-solid fa-folder-open" style="color:#34d399;"></i> Vaulted Documents</span>
+              <div id="pd_drive_action" style="margin-top:4px;">-</div>
             </div>
           </div>
         </div>

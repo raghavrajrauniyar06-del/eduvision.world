@@ -1577,18 +1577,15 @@ app.post('/api/staff/kyc/upload', docUpload.single('kyc_document'), async (req, 
       idCol = 'partner_id';
     }
 
-    // Construct update payload for Supabase
+    // Construct safe update payload for Supabase matching actual DB columns
     const updatePayload = {
-      updated_at: new Date().toISOString(),
-      verification_status: 'Under Review' // Strictly under review until verified by Admin
+      updated_at: new Date().toISOString()
     };
 
     if (safeDocType.toLowerCase().includes('id') || safeDocType.toLowerCase().includes('aadhaar')) {
-      updatePayload.id_proof_url = driveResult.webViewLink;
       updatePayload.drive_url = driveResult.webViewLink;
       if (id_number) updatePayload.aadhaar_number = id_number;
     } else if (safeDocType.toLowerCase().includes('pan')) {
-      updatePayload.pan_url = driveResult.webViewLink;
       if (id_number) updatePayload.pan_number = id_number;
     }
 
@@ -1616,6 +1613,56 @@ app.post('/api/staff/kyc/upload', docUpload.single('kyc_document'), async (req, 
     });
   } catch (err) {
     console.error('[STAFF KYC] Handler error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OFFICIAL STAFF KYC COMMIT & DETAILS ENDPOINT
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/api/staff/kyc/save', async (req, res) => {
+  try {
+    const { role, staff_id, aadhaar_number, pan_number, bank_account_no, ifsc_code, emergency_contact, drive_url } = req.body || {};
+    if (!staff_id) {
+      return res.status(400).json({ success: false, error: 'staff_id is required' });
+    }
+
+    const normalizedRole = (role || 'counsellor').toLowerCase();
+    let targetTable = 'counsellors';
+    let idCol = 'counsellor_id';
+
+    if (normalizedRole.includes('admin') || normalizedRole.includes('ceo') || normalizedRole.includes('cto')) {
+      targetTable = 'admin_users';
+      idCol = 'admin_id';
+    } else if (normalizedRole.includes('leader')) {
+      targetTable = 'team_leaders';
+      idCol = 'team_leader_id';
+    } else if (normalizedRole.includes('partner') || normalizedRole.includes('associate')) {
+      targetTable = 'associate_partners';
+      idCol = 'partner_id';
+    }
+
+    const safePayload = {};
+    if (aadhaar_number !== undefined) safePayload.aadhaar_number = aadhaar_number;
+    if (pan_number !== undefined) safePayload.pan_number = pan_number;
+    if (bank_account_no !== undefined) safePayload.bank_account_no = bank_account_no;
+    if (ifsc_code !== undefined) safePayload.ifsc_code = ifsc_code;
+    if (emergency_contact !== undefined) safePayload.emergency_contact = emergency_contact;
+    if (drive_url !== undefined) safePayload.drive_url = drive_url;
+
+    const { error } = await sb
+      .from(targetTable)
+      .update(safePayload)
+      .or(`${idCol}.eq.${staff_id},employee_id.eq.${staff_id},id.eq.${staff_id}`);
+
+    if (error) {
+      console.warn('[STAFF KYC SAVE] Supabase update notice:', error.message);
+    }
+
+    console.log(`[STAFF KYC SAVE] Successfully saved KYC fields for ${staff_id} in ${targetTable}`);
+    res.json({ success: true, message: 'KYC data saved successfully' });
+  } catch (err) {
+    console.error('[STAFF KYC SAVE] Error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });

@@ -5120,6 +5120,7 @@ body.modal-open { overflow: hidden !important; }
                   <th>Branch</th>
                   <th>Role & Designation</th>
                   <th>Status</th>
+                  <th>KYC Status</th>
                   <th style="text-align:center;">Actions</th>
                 </tr>
               </thead>
@@ -10212,7 +10213,7 @@ body.modal-open { overflow: hidden !important; }
     switchAdminModalTab('personal');
 
     // Calculate Real KYC Progress
-    const adminKycData = (admin && admin.kyc) || (window.EduVisionKYC ? EduVisionKYC.getKYCData('admin') : null);
+    const adminKycData = (window.EduVisionKYC ? EduVisionKYC.getKYCData('admin') : null) || (admin && admin.kyc) || admin;
     const adminKycProgress = window.EduVisionKYC ? EduVisionKYC.calculateProgress(adminKycData) : { pct: 0, status: 'Not Submitted', is100: false };
 
     const adminKycTabLabel = document.getElementById('adminModalKycTabLabel');

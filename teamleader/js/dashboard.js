@@ -522,6 +522,7 @@ async function renderCounsellorCRMGrid() {
       };
 
       const initials = (c.full_name || 'CO').substring(0, 2).toUpperCase();
+      const kycBadge = window.EduVisionKYC ? EduVisionKYC.getKycStatusBadge(c) : '';
       const statusColor = c.status === 'Active' ? '#10b981' : '#ef4444';
       const empId = c.employee_id || c.counsellor_id || '';
       const role = c.role || c.designation || 'Counsellor';
@@ -536,7 +537,10 @@ async function renderCounsellorCRMGrid() {
             </div>
             <div>
               <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">${c.full_name || 'Counsellor'}</h3>
-              <span style="font-size: 0.85rem; color: var(--gold-light, #f7d377);">${empId}</span>
+              <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                <span style="font-size: 0.85rem; color: var(--gold-light, #f7d377);">${empId}</span>
+                ${kycBadge}
+              </div>
             </div>
           </div>
           <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}20; color: ${statusColor}; border: 1px solid ${statusColor}40;">
@@ -557,9 +561,12 @@ async function renderCounsellorCRMGrid() {
           <span style="font-size: 0.8rem; color: var(--text-muted, #94a3b8);">Contact</span>
           <span style="font-size: 0.9rem; color: #fff;"><i class="fa-solid fa-phone" style="color:var(--text-muted, #94a3b8); margin-right:5px; font-size:0.8rem;"></i>${phone}</span>
         </div>
-        <div style="margin-top: 10px; text-align: center; position: relative; z-index: 10;">
-          <button type="button" class="view-full-crm-btn" data-counsellor-id="${counsellorId}">
+        <div style="margin-top: 10px; display:flex; gap:8px; position: relative; z-index: 10;">
+          <button type="button" class="view-full-crm-btn" data-counsellor-id="${counsellorId}" style="flex:1;">
             <span>View Full CRM</span> <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
+          </button>
+          <button type="button" onclick="event.stopPropagation(); if(window.EduVisionKYC) EduVisionKYC.openStaffKYCInspector(${JSON.stringify(c).replace(/"/g, '&quot;')})" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; border-radius:8px; padding:0 12px; font-size:0.8rem; font-weight:700; cursor:pointer;" title="Inspect Staff KYC Dossier">
+            <i class="fa-solid fa-shield-halved"></i> KYC
           </button>
         </div>
       `;
@@ -1578,6 +1585,35 @@ async function loadCounsellorWorkspaceData(counsellorId) {
     }
     if (document.getElementById('pd_address')) {
       document.getElementById('pd_address').textContent = counsellor.address || counsellor.Address || 'Official EduVision Branch Center, Head Office Campus';
+    }
+
+    // Populate KYC Dossier fields
+    const kycBadgeWrap = document.getElementById('pd_kyc_badge_wrap');
+    if (kycBadgeWrap && window.EduVisionKYC) {
+      kycBadgeWrap.innerHTML = EduVisionKYC.getKycStatusBadge(counsellor);
+    }
+    if (document.getElementById('pd_aadhaar')) {
+      document.getElementById('pd_aadhaar').textContent = counsellor.aadhaar_number || 'Not Submitted';
+    }
+    if (document.getElementById('pd_pan')) {
+      document.getElementById('pd_pan').textContent = counsellor.pan_number || 'Not Submitted';
+    }
+    if (document.getElementById('pd_bank')) {
+      const bAcc = counsellor.bank_account_no || counsellor.bank_account || '';
+      const bIfsc = counsellor.ifsc_code || counsellor.bank_ifsc || '';
+      document.getElementById('pd_bank').textContent = bAcc ? `${bAcc} (${bIfsc})` : 'Not Submitted';
+    }
+    if (document.getElementById('pd_drive_action')) {
+      const driveUrl = counsellor.drive_url || counsellor.id_proof_url;
+      if (driveUrl) {
+        document.getElementById('pd_drive_action').innerHTML = `
+          <a href="${driveUrl}" target="_blank" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-size:0.75rem; padding:5px 12px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-brands fa-google-drive"></i> Open Drive Vault
+          </a>
+        `;
+      } else {
+        document.getElementById('pd_drive_action').innerHTML = '<span style="color:#94a3b8; font-size:0.78rem;">No Document Vaulted</span>';
+      }
     }
 
     const cnsId = counsellor.counsellor_id || '';
