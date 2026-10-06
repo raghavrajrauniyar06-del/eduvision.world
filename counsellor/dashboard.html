@@ -5703,19 +5703,19 @@ body.modal-open { overflow: hidden !important; }
       const permKey = viewPermMap[viewId];
       const targetView = document.getElementById('view-' + viewId);
 
-      // Central Permission & Feature Lock Check
+      // Central Permission & Feature Lock Check: Silently hide if disabled
       if (window.EduPerms && permKey && !window.EduPerms.isModuleEnabled(permKey)) {
-        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         if (targetView) {
-          targetView.classList.add('active');
-          window.EduPerms.renderLockedState(targetView, permKey);
+          targetView.classList.remove('active');
+          targetView.style.display = 'none';
         }
-        document.querySelectorAll('.nav-link, .sub-link').forEach(el => el.classList.remove('active'));
         const clickedLink = document.querySelector(`a[onclick*="switchView('${viewId}')"]`);
         if (clickedLink) {
-          clickedLink.classList.add('active');
-          const parentSub = clickedLink.closest('.sub-menu');
-          if (parentSub) parentSub.classList.add('open');
+          clickedLink.style.display = 'none';
+          if (clickedLink.closest('li')) clickedLink.closest('li').style.display = 'none';
+        }
+        if (viewId !== 'dashboard' && typeof switchView === 'function') {
+          switchView('dashboard');
         }
         return;
       } else if (window.EduPerms && targetView) {

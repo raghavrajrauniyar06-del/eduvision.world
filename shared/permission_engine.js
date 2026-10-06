@@ -643,91 +643,27 @@
       };
     }
 
-    // Render Luxury Glass Locked State Card in Target Container
+    // Silently Hide Container when Feature is Disabled (No "CTO Locked" card or toast shown)
     renderLockedState(targetContainer, moduleKey) {
-      injectPermissionStyles();
-      const details = this.getLockDetails(moduleKey);
-      const modInfo = this.permissionsMap[moduleKey] || FALLBACK_MODULE_CATALOG[moduleKey] || { name: 'Module' };
-      const displayName = modInfo.display_name || modInfo.name || 'Requested Feature';
-
-      // Immediate Notification Alert
-      try {
-        if (typeof window.showToast === 'function') {
-          window.showToast('🚨 ACCESS RESTRICTED: FEATURE LOCKED BY CTO RAGHAV', 'error');
-        }
-      } catch(e) {}
-
-      const htmlCard = `
-        <div class="locked-card-liquid" style="max-width: 640px; width: 92%; margin: 30px auto; padding: 38px 28px; text-align: center; border-radius: 26px; border: 2px solid rgba(239, 68, 68, 0.6); background: radial-gradient(circle at 50% 0%, rgba(239,68,68,0.2) 0%, rgba(13,20,36,0.94) 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 35px rgba(239,68,68,0.25); animation: lockFadeSpring 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;">
-          
-          <div class="locked-icon-halo" style="width: 76px; height: 76px; border-radius: 50%; background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(185, 28, 28, 0.5) 100%); border: 2px solid rgba(239, 68, 68, 0.6); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px auto; box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);">
-            <i class="fa-solid fa-lock" style="color: #f87171; font-size: 2.2rem;"></i>
-          </div>
-
-          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(239, 68, 68, 0.18); border: 1px solid rgba(239, 68, 68, 0.4); padding: 5px 16px; border-radius: 99px; margin-bottom: 14px;">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444;"></span>
-            <span style="color: #fca5a5; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">
-              🔒 LOCKED BY ADMIN
-            </span>
-          </div>
-
-          <h2 style="font-family: var(--font-heading, 'Outfit', sans-serif); font-size: 1.65rem; font-weight: 900; color: #fff; margin: 0 0 6px 0; text-transform: uppercase; letter-spacing: 0.6px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-            FEATURE LOCKED BY CTO RAGHAV
-          </h2>
-
-          <h3 style="font-size: 1.15rem; font-weight: 800; color: #f7d377; margin: 0 0 12px 0;">
-            ${escapeHtml(displayName)}
-          </h3>
-
-          <p style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.55; max-width: 480px; margin: 0 auto 22px auto;">
-            This module has been restricted and locked by <strong>CTO Raghav</strong>. All operational interactions, data sync, and permissions for this feature are temporarily suspended.
-          </p>
-
-          <div class="locked-meta-box" style="background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px 20px; text-align: left; margin-bottom: 22px;">
-            <div class="locked-meta-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82rem;">
-              <span class="locked-meta-label" style="color: #94a3b8;"><i class="fa-solid fa-shield-halved" style="color: #60a5fa; margin-right: 6px;"></i> CTO Management</span>
-              <span class="locked-meta-value" style="color: #f7d377; font-weight: 800;">CTO Raghav</span>
-            </div>
-            <div class="locked-meta-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82rem;">
-              <span class="locked-meta-label" style="color: #94a3b8;"><i class="fa-solid fa-shield-halved" style="color: #ef4444; margin-right: 6px;"></i> Lock Type</span>
-              <span class="locked-meta-value" style="color: #f87171; font-weight: 800;">
-                Locked by Admin
-              </span>
-            </div>
-            <div class="locked-meta-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.82rem;">
-              <span class="locked-meta-label" style="color: #94a3b8;"><i class="fa-solid fa-clock" style="color: #34d399; margin-right: 6px;"></i> Lock Timestamp</span>
-              <span class="locked-meta-value" style="color: #94a3b8; font-size: 0.78rem;">${escapeHtml(details.lockedAt)}</span>
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: center; align-items: center;">
-            <button class="btn-outline" onclick="if(typeof switchAdminModule==='function'){switchAdminModule('overview');}else if(typeof switchView==='function'){switchView('dashboard');}else{window.history.back();}" style="padding: 10px 22px; font-size: 0.85rem; font-weight: 700; border-radius: 12px; color: #fff; border-color: rgba(255,255,255,0.25); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255,255,255,0.06);">
-              <i class="fa-solid fa-arrow-left"></i> Return to Dashboard
-            </button>
-          </div>
-        </div>
-      `;
-
       let el = (typeof targetContainer === 'string') ? document.querySelector(targetContainer) : targetContainer;
       if (!el) return;
 
-      // Non-destructive: Hide existing children, display locked container
-      let lockedWrapper = el.querySelector(':scope > .eduvision-feature-locked-container');
-      if (!lockedWrapper) {
-        lockedWrapper = document.createElement('div');
-        lockedWrapper.className = 'eduvision-feature-locked-container';
-        Array.from(el.children).forEach(child => {
-          if (!child.classList.contains('eduvision-feature-locked-container')) {
-            if (!child.hasAttribute('data-cto-prev-display')) {
-              child.setAttribute('data-cto-prev-display', child.style.display || '');
-            }
-            child.style.display = 'none';
-          }
-        });
-        el.appendChild(lockedWrapper);
-      }
-      lockedWrapper.innerHTML = htmlCard;
-      lockedWrapper.style.display = 'flex';
+      // Non-destructive: Hide container completely
+      el.style.display = 'none';
+      el.classList.remove('active', 'active-tab');
+
+      // Silently return to dashboard/overview without displaying any lock badge or card
+      try {
+        if (typeof switchAdminModule === 'function') {
+          switchAdminModule('overview');
+        } else if (typeof switchModule === 'function') {
+          switchModule('dashboard');
+        } else if (typeof switchView === 'function') {
+          switchView('dashboard');
+        } else if (typeof switchStudentTab === 'function') {
+          switchStudentTab('overview');
+        }
+      } catch(e) {}
     }
 
     // Restore Container if Unlocked
@@ -750,7 +686,7 @@
       });
     }
 
-    // Scan & Decorate Sidebar Links with Subtle Lock Badges
+    // Scan & Decorate Sidebar Links: Completely HIDE disabled features (No "Locked" badge, no button visible)
     decorateSidebar() {
       const role = (this.currentRole || 'student').toLowerCase();
       let rolePrefix = 'student_';
@@ -766,10 +702,13 @@
         'group_chat': 'comm_group_chat',
         'notifications': 'core_notifications',
         'profile': 'core_profile',
-        'dashboard': rolePrefix + 'dashboard'
+        'dashboard': rolePrefix + 'dashboard',
+        'counsellorcrm': 'admin_counsellorcrm',
+        'webforms': 'crm_web_forms',
+        'recordings': 'counsellor_call_recordings'
       };
 
-      const links = document.querySelectorAll('a[data-module], a[data-tab], a[data-view], .sidebar-menu li, .nav-item');
+      const links = document.querySelectorAll('a[data-module], a[data-tab], a[data-view], .sidebar-menu li, .nav-item, .nav-link, .sub-link');
       links.forEach(link => {
         let key = link.getAttribute('data-module') || link.getAttribute('data-tab') || link.getAttribute('data-view') || '';
         if (!key && link.id) {
@@ -777,7 +716,7 @@
         }
         if (!key) {
           const onclickAttr = link.getAttribute('onclick') || '';
-          const match = onclickAttr.match(/(?:switchView|switchModule|switchStudentTab)\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+          const match = onclickAttr.match(/(?:switchView|switchModule|switchStudentTab|switchAdminModule)\s*\(\s*['"]([^'"]+)['"]\s*\)/);
           if (match) key = match[1];
         }
         if (!key) return;
@@ -788,15 +727,30 @@
         }
 
         const perm = this.permissionsMap[resolvedKey];
-        if (perm && !this.isModuleEnabled(resolvedKey)) {
-          link.classList.add('nav-item-cto-locked');
-          if (!link.querySelector('.nav-locked-badge')) {
-            const badge = document.createElement('span');
-            badge.className = 'nav-locked-badge';
-            badge.innerHTML = '<i class="fa-solid fa-lock"></i> Locked';
-            link.appendChild(badge);
+        const isEnabled = perm ? this.isModuleEnabled(resolvedKey) : true;
+        const parentLi = (link.tagName === 'LI') ? link : (link.closest('li') || link.closest('.nav-item'));
+
+        if (perm && !isEnabled) {
+          // HIDE COMPLETELY: Neither lock badge nor button is visible to user
+          link.style.display = 'none';
+          link.classList.remove('nav-item-cto-locked');
+          link.setAttribute('data-cto-hidden', 'true');
+          if (parentLi) {
+            parentLi.style.display = 'none';
+            parentLi.setAttribute('data-cto-hidden', 'true');
           }
+          const badge = link.querySelector('.nav-locked-badge');
+          if (badge) badge.remove();
         } else {
+          // RESTORE VISIBILITY
+          if (link.getAttribute('data-cto-hidden') === 'true') {
+            link.style.display = '';
+            link.removeAttribute('data-cto-hidden');
+          }
+          if (parentLi && parentLi.getAttribute('data-cto-hidden') === 'true') {
+            parentLi.style.display = '';
+            parentLi.removeAttribute('data-cto-hidden');
+          }
           link.classList.remove('nav-item-cto-locked');
           const badge = link.querySelector('.nav-locked-badge');
           if (badge) badge.remove();

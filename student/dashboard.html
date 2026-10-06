@@ -2321,20 +2321,20 @@ body.modal-open { overflow: hidden !important; }
       const permKey = tabPermMap[tabId];
       const targetTab = document.getElementById('tab-' + tabId);
 
-      // Central Permission & Feature Lock Check
+      // Central Permission & Feature Lock Check: Silently hide if disabled
       if (window.EduPerms && permKey && !window.EduPerms.isModuleEnabled(permKey)) {
-        var tabs = document.querySelectorAll('.tab-section');
-        tabs.forEach(function(t) { t.classList.remove('active-tab'); });
-        var menuItems = document.querySelectorAll('.sidebar-menu li');
-        menuItems.forEach(function(m) { m.classList.remove('active'); });
-
         if (targetTab) {
-          targetTab.classList.add('active-tab');
-          window.EduPerms.renderLockedState(targetTab, permKey);
+          targetTab.classList.remove('active-tab');
+          targetTab.style.display = 'none';
         }
         var targetMenu = document.getElementById('menu-' + tabId);
-        if (targetMenu) targetMenu.classList.add('active');
-        document.querySelector('main.workspace').scrollTop = 0;
+        if (targetMenu) {
+          targetMenu.style.display = 'none';
+          targetMenu.classList.remove('active');
+        }
+        if (tabId !== 'overview' && typeof switchStudentTab === 'function') {
+          switchStudentTab('overview');
+        }
         return;
       } else if (window.EduPerms && targetTab) {
         window.EduPerms.unlockState(targetTab);

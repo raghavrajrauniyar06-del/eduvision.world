@@ -2328,16 +2328,19 @@ body.modal-open { overflow: hidden !important; }
       const permKey = modPermMap[modId];
       const targetModule = document.getElementById('mod-' + modId);
 
-      // Central Permission & Feature Lock Check
+      // Central Permission & Feature Lock Check: Silently hide if disabled
       if (window.EduPerms && permKey && !window.EduPerms.isModuleEnabled(permKey)) {
-        document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-        const activeNav = document.getElementById('nav-' + modId);
-        if (activeNav) activeNav.classList.add('active');
-
-        document.querySelectorAll('.module-view').forEach(view => view.classList.remove('active'));
         if (targetModule) {
-          targetModule.classList.add('active');
-          window.EduPerms.renderLockedState(targetModule, permKey);
+          targetModule.classList.remove('active');
+          targetModule.style.display = 'none';
+        }
+        const activeNav = document.getElementById('nav-' + modId);
+        if (activeNav) {
+          activeNav.style.display = 'none';
+          activeNav.classList.remove('active');
+        }
+        if (modId !== 'dashboard' && typeof switchView === 'function') {
+          switchView('dashboard');
         }
         const sidebar = document.getElementById('appSidebar');
         if (sidebar) sidebar.classList.remove('open');

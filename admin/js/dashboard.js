@@ -5302,22 +5302,19 @@ window.switchAdminModule = function(modId) {
     }
   }
 
-  // ── IF LOCKED: SHOW ALERT, RENDER "FEATURE LOCKED BY CTO RAGHAV", STOP EXECUTION! ──
+  // ── IF DISABLED / LOCKED: SILENTLY HIDE VIEW & RETURN TO OVERVIEW (NO CTO LOCKED SCREEN) ──
   if (isFeatureLocked) {
-    showToast('🚨 ACCESS RESTRICTED: FEATURE LOCKED BY CTO RAGHAV', 'error');
-
-    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-    const activeNav = document.querySelector('.nav-item[data-module="' + modId + '"]');
-    if (activeNav) activeNav.classList.add('active');
-
-    document.querySelectorAll('.module-view').forEach(view => {
-      view.classList.remove('active');
-      view.style.display = 'none';
-    });
     if (activeView) {
-      activeView.classList.add('active');
-      activeView.style.display = 'block';
-      window.EduPerms.renderLockedState(activeView, lockedFeatureKey);
+      activeView.classList.remove('active');
+      activeView.style.display = 'none';
+    }
+    const activeNav = document.querySelector('.nav-item[data-module="' + modId + '"]');
+    if (activeNav) {
+      activeNav.style.display = 'none';
+      activeNav.classList.remove('active');
+    }
+    if (modId !== 'overview' && typeof switchAdminModule === 'function') {
+      switchAdminModule('overview');
     }
     return; // STOP!
   } else if (window.EduPerms && activeView) {
@@ -17225,15 +17222,20 @@ function renderCtoFeatureMatrix() {
           </div>
         </div>
 
-        <!-- Footer Actions -->
-        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px;">
-          <button class="btn-outline" style="padding:6px 12px; font-size:0.74rem; border-radius:7px; color:${isGloballyLocked ? '#34d399' : '#f87171'}; border-color:${isGloballyLocked ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'}; font-weight:700; display:inline-flex; align-items:center; gap:6px;" onclick="handleFeatureMasterToggle('${m.module_key}', ${isGloballyLocked})">
-            <i class="fa-solid ${isGloballyLocked ? 'fa-toggle-on' : 'fa-power-off'}"></i>
-            ${isGloballyLocked ? 'Turn ON' : 'Turn OFF'}
-          </button>
+        <!-- Footer Actions (3-Tier Buttons: Person, Team, Everyone) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px; gap:8px; flex-wrap:wrap;">
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-outline" style="padding:5px 9px; font-size:0.72rem; border-radius:7px; color:#34d399; border-color:rgba(52,211,153,0.3); font-weight:700; display:inline-flex; align-items:center; gap:5px;" onclick="openFeaturePersonModal('${m.module_key}')" title="Configure individual person access">
+              <i class="fa-solid fa-user-gear"></i> Specific Person
+            </button>
+            <button type="button" class="btn-outline" style="padding:5px 9px; font-size:0.72rem; border-radius:7px; color:#38bdf8; border-color:rgba(56,189,248,0.3); font-weight:700; display:inline-flex; align-items:center; gap:5px;" onclick="openRolePermissionDrawer('${m.module_key}')" title="Configure team/role permissions">
+              <i class="fa-solid fa-users"></i> Specific Team
+            </button>
+          </div>
 
-          <button class="btn-gold" style="padding:6px 14px; font-size:0.74rem; border-radius:7px; font-weight:700; display:inline-flex; align-items:center; gap:6px;" onclick="openRolePermissionDrawer('${m.module_key}')">
-            <i class="fa-solid fa-sliders"></i> Permissions
+          <button type="button" class="btn-outline" style="padding:5px 11px; font-size:0.72rem; border-radius:7px; color:${isGloballyLocked ? '#34d399' : '#f87171'}; border-color:${isGloballyLocked ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'}; font-weight:700; display:inline-flex; align-items:center; gap:5px;" onclick="handleFeatureMasterToggle('${m.module_key}', ${isGloballyLocked})" title="Toggle feature visibility for Everyone">
+            <i class="fa-solid ${isGloballyLocked ? 'fa-toggle-on' : 'fa-power-off'}"></i>
+            ${isGloballyLocked ? 'Show All' : 'Hide All'}
           </button>
         </div>
 
@@ -18209,18 +18211,502 @@ function handleQuickDrawerRoleToggle(roleKey, isChecked) {
   handleRoleMasterToggle(roleKey, isChecked);
 }
 
+// ── 3-TIER CONTROL SCOPE ENGINE (EVERYONE / TEAM / SPECIFIC PERSON) ──────────
+let ctoCurrentScope = 'all';
+let ctoCurrentTeam = 'counsellor';
+let ctoCurrentPersonId = null;
+let quickPersonModalFeatureKey = null;
+
+function getCtoAllEntitiesList() {
+  const list = [];
+  const staff = (Array.isArray(window.allStaff) && window.allStaff.length > 0) ? window.allStaff : DEFAULT_FALLBACK_STAFF;
+  staff.forEach(s => {
+    const id = (s.employee_id || s.counsellor_id || s.team_leader_id || s.id || '').trim();
+    const name = s.full_name || s.name || s.counsellor_name || 'Staff Member';
+    const role = s.role || s.staffType || s.designation || 'Staff';
+    if (id && !list.some(x => x.id.toUpperCase() === id.toUpperCase())) {
+      list.push({ id, name, role, type: 'Staff', branch: s.branch || 'Head Office' });
+    }
+  });
+
+  if (Array.isArray(window.allPartners)) {
+    window.allPartners.forEach(p => {
+      const id = (p.partner_id || p.id || '').trim();
+      const name = p.organization_name || p.full_name || 'Partner';
+      if (id && !list.some(x => x.id.toUpperCase() === id.toUpperCase())) {
+        list.push({ id, name, role: 'Associate Partner', type: 'Partner', branch: p.location || 'Partner Hub' });
+      }
+    });
+  }
+
+  if (Array.isArray(window.allStudents)) {
+    window.allStudents.forEach(st => {
+      const id = (st.student_id || st.id || '').trim();
+      const name = st.full_name || st.name || 'Student';
+      if (id && !list.some(x => x.id.toUpperCase() === id.toUpperCase())) {
+        list.push({ id, name, role: 'Student', type: 'Student', branch: st.city || 'Portal' });
+      }
+    });
+  }
+  return list;
+}
+
+window.switchCtoTargetScope = function(scope) {
+  ctoCurrentScope = scope || 'all';
+
+  const btnAll = document.getElementById('btnScopeAll');
+  const btnTeam = document.getElementById('btnScopeTeam');
+  const btnPerson = document.getElementById('btnScopePerson');
+
+  const secAll = document.getElementById('ctoScopeAllContainer');
+  const secTeam = document.getElementById('ctoScopeTeamContainer');
+  const secPerson = document.getElementById('ctoScopePersonContainer');
+
+  [btnAll, btnTeam, btnPerson].forEach(b => {
+    if (b) {
+      b.classList.remove('active');
+      b.style.background = 'rgba(255,255,255,0.05)';
+      b.style.border = '1px solid rgba(255,255,255,0.1)';
+      b.style.color = '#cbd5e1';
+    }
+  });
+
+  if (scope === 'team') {
+    if (btnTeam) {
+      btnTeam.classList.add('active');
+      btnTeam.style.background = 'linear-gradient(135deg, rgba(56,189,248,0.25), rgba(14,165,233,0.35))';
+      btnTeam.style.border = '1px solid rgba(56,189,248,0.5)';
+      btnTeam.style.color = '#38bdf8';
+    }
+    if (secAll) secAll.style.display = 'none';
+    if (secTeam) secTeam.style.display = 'block';
+    if (secPerson) secPerson.style.display = 'none';
+    renderCtoTeamScopeGrid();
+  } else if (scope === 'person') {
+    if (btnPerson) {
+      btnPerson.classList.add('active');
+      btnPerson.style.background = 'linear-gradient(135deg, rgba(52,211,153,0.25), rgba(16,185,129,0.35))';
+      btnPerson.style.border = '1px solid rgba(52,211,153,0.5)';
+      btnPerson.style.color = '#34d399';
+    }
+    if (secAll) secAll.style.display = 'none';
+    if (secTeam) secTeam.style.display = 'none';
+    if (secPerson) secPerson.style.display = 'block';
+    populateCtoPersonStaffDatalist();
+    if (ctoCurrentPersonId) {
+      loadSelectedPersonMatrix(ctoCurrentPersonId);
+    }
+  } else {
+    if (btnAll) {
+      btnAll.classList.add('active');
+      btnAll.style.background = 'linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35))';
+      btnAll.style.border = '1px solid rgba(247,211,119,0.45)';
+      btnAll.style.color = '#f7d377';
+    }
+    if (secAll) secAll.style.display = 'block';
+    if (secTeam) secTeam.style.display = 'none';
+    if (secPerson) secPerson.style.display = 'none';
+    renderCtoFeatureMatrix();
+  }
+};
+
+window.selectCtoTargetTeam = function(roleKey, btnEl) {
+  ctoCurrentTeam = roleKey || 'counsellor';
+  document.querySelectorAll('#ctoTeamScopePills button').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'rgba(255,255,255,0.05)';
+    b.style.border = '1px solid rgba(255,255,255,0.1)';
+    b.style.color = '#cbd5e1';
+  });
+  if (btnEl) {
+    btnEl.classList.add('active');
+    btnEl.style.background = 'linear-gradient(135deg, rgba(56,189,248,0.25), rgba(14,165,233,0.35))';
+    btnEl.style.border = '1px solid rgba(56,189,248,0.5)';
+    btnEl.style.color = '#38bdf8';
+  }
+  renderCtoTeamScopeGrid();
+};
+
+window.renderCtoTeamScopeGrid = function() {
+  const grid = document.getElementById('ctoTeamModulesGrid');
+  if (!grid) return;
+
+  const roleKey = ctoCurrentTeam || 'counsellor';
+  const roleNames = {
+    counsellor: 'Counsellors & Admissions Team',
+    team_leader: 'Team Leaders',
+    associate: 'Associate Partners',
+    student: 'Students',
+    admin: 'Admins & Management'
+  };
+
+  const modules = ctoMasterMatrix.modules || [];
+  grid.innerHTML = modules.map(m => {
+    const rp = (ctoMasterMatrix.rolePermissions || []).find(p => p.module_key === m.module_key && p.role_key === roleKey);
+    const isEnabled = rp ? (rp.is_enabled !== false && !rp.is_locked) : true;
+
+    return `
+      <div class="glass-box" style="padding:16px 18px; border-radius:14px; border:1px solid ${isEnabled ? 'rgba(255,255,255,0.1)' : 'rgba(239,68,68,0.35)'}; background:${isEnabled ? 'rgba(13,20,36,0.6)' : 'rgba(239,68,68,0.08)'};">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <div style="width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1rem;">
+              <i class="${m.icon_class || 'fa-solid fa-cube'}"></i>
+            </div>
+            <div style="min-width:0;">
+              <h4 style="font-family:var(--font-heading); font-size:0.92rem; font-weight:800; color:#fff; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${escapeHtml(m.display_name)}
+              </h4>
+              <span style="font-size:0.68rem; color:#94a3b8; text-transform:uppercase;">${escapeHtml(m.category)}</span>
+            </div>
+          </div>
+          <span style="font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px; background:${isEnabled ? 'rgba(52,211,153,0.15)' : 'rgba(239,68,68,0.15)'}; color:${isEnabled ? '#34d399' : '#fca5a5'}; border:1px solid ${isEnabled ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'};">
+            ${isEnabled ? '👁️ VISIBLE' : '🙈 HIDDEN (OFF)'}
+          </span>
+        </div>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.4; margin-bottom:12px; min-height:28px;">
+          ${escapeHtml(m.description || 'Feature access')}
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
+          <span style="font-size:0.7rem; color:#cbd5e1;">Team: <strong>${roleNames[roleKey] || roleKey}</strong></span>
+          <div style="display:flex; gap:6px;">
+            ${isEnabled ? `
+              <button type="button" class="btn-outline" onclick="toggleTeamModuleAccess('${roleKey}', '${m.module_key}', false)" style="padding:4px 10px; font-size:0.72rem; color:#fca5a5; border-color:rgba(239,68,68,0.35); font-weight:700;">
+                <i class="fa-solid fa-eye-slash"></i> Hide for Team
+              </button>
+            ` : `
+              <button type="button" class="btn-outline" onclick="toggleTeamModuleAccess('${roleKey}', '${m.module_key}', true)" style="padding:4px 10px; font-size:0.72rem; color:#34d399; border-color:rgba(52,211,153,0.35); font-weight:700;">
+                <i class="fa-solid fa-eye"></i> Show for Team
+              </button>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.toggleTeamModuleAccess = function(roleKey, moduleKey, enable) {
+  if (!ctoMasterMatrix.rolePermissions) ctoMasterMatrix.rolePermissions = [];
+  let rp = ctoMasterMatrix.rolePermissions.find(p => p.module_key === moduleKey && p.role_key === roleKey);
+  if (!rp) {
+    rp = { module_key: moduleKey, role_key: roleKey };
+    ctoMasterMatrix.rolePermissions.push(rp);
+  }
+  rp.is_enabled = enable;
+  rp.is_locked = !enable;
+  rp.locked_by = (currentAdmin && (currentAdmin.employee_id || currentAdmin.admin_id)) || 'CTO001';
+  rp.locked_by_name = 'CTO Raghav';
+  rp.lock_reason = enable ? 'Active' : 'Hidden by CTO Raghav';
+
+  saveCtoMasterMatrixToLocal();
+  syncMasterMatrixToEduPerms();
+  renderCtoTeamScopeGrid();
+
+  const mod = (ctoMasterMatrix.modules || []).find(m => m.module_key === moduleKey);
+  showToast(`${enable ? '👁️ Shown' : '🙈 Hidden'}: "${mod ? mod.display_name : moduleKey}" for ${roleKey.toUpperCase()}`, enable ? 'success' : 'info');
+};
+
+function populateCtoPersonStaffDatalist() {
+  const datalist = document.getElementById('ctoPersonStaffDatalist');
+  if (!datalist) return;
+  const entities = getCtoAllEntitiesList();
+  datalist.innerHTML = entities.map(e => `<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)} (${escapeHtml(e.role)})</option>`).join('');
+}
+
+window.handleCtoPersonSearchInput = function(val) {
+  if (!val) return;
+  const clean = val.trim().toLowerCase();
+  const entities = getCtoAllEntitiesList();
+  const found = entities.find(e => e.id.toLowerCase() === clean || e.name.toLowerCase() === clean || (e.id + ' ' + e.name).toLowerCase().includes(clean));
+  if (found) {
+    loadSelectedPersonMatrix(found.id);
+  }
+};
+
+window.loadSelectedPersonMatrix = function(empId) {
+  const targetId = empId || document.getElementById('ctoPersonSearchInput')?.value.trim();
+  if (!targetId) {
+    alert('Please enter or select a valid staff member or employee ID.');
+    return;
+  }
+
+  const entities = getCtoAllEntitiesList();
+  const found = entities.find(e => e.id.toUpperCase() === targetId.toUpperCase()) || {
+    id: targetId.toUpperCase(),
+    name: targetId,
+    role: 'Staff Member',
+    branch: 'Operations'
+  };
+
+  ctoCurrentPersonId = found.id;
+
+  const banner = document.getElementById('ctoSelectedPersonBanner');
+  const nameEl = document.getElementById('ctoSelectedPersonName');
+  const metaEl = document.getElementById('ctoSelectedPersonMeta');
+
+  if (banner) banner.style.display = 'flex';
+  if (nameEl) nameEl.textContent = found.name;
+  if (metaEl) metaEl.textContent = `${found.id} · ${found.role} (${found.branch || 'Corporate'})`;
+
+  renderCtoPersonGrid();
+};
+
+window.renderCtoPersonGrid = function() {
+  const grid = document.getElementById('ctoPersonModulesGrid');
+  if (!grid || !ctoCurrentPersonId) return;
+
+  const targetId = ctoCurrentPersonId.toUpperCase();
+  const modules = ctoMasterMatrix.modules || [];
+  const overrides = ctoMasterMatrix.userOverrides || {};
+
+  grid.innerHTML = modules.map(m => {
+    const modOvs = overrides[m.module_key] || {};
+    const ov = modOvs[targetId];
+    const hasOverride = (ov !== undefined && ov !== null);
+    const isOverrideActive = hasOverride && (ov.is_enabled === true && !ov.is_locked);
+    const isOverrideHidden = hasOverride && (ov.is_locked === true || ov.is_enabled === false);
+
+    let statusText = '🟢 Default Role Visible';
+    let statusColor = '#34d399';
+    let statusBg = 'rgba(52,211,153,0.12)';
+    let cardBorder = 'rgba(255,255,255,0.08)';
+
+    if (isOverrideHidden) {
+      statusText = '🙈 HIDDEN (OFF FOR THIS PERSON)';
+      statusColor = '#fca5a5';
+      statusBg = 'rgba(239,68,68,0.18)';
+      cardBorder = 'rgba(239,68,68,0.35)';
+    } else if (isOverrideActive) {
+      statusText = '👁️ FORCE ACTIVE (OVERRIDE)';
+      statusColor = '#38bdf8';
+      statusBg = 'rgba(56,189,248,0.18)';
+      cardBorder = 'rgba(56,189,248,0.35)';
+    }
+
+    return `
+      <div class="glass-box" style="padding:16px 18px; border-radius:14px; border:1px solid ${cardBorder}; background:${isOverrideHidden ? 'rgba(239,68,68,0.06)' : 'rgba(13,20,36,0.6)'};">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <div style="width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; color:#34d399; font-size:1rem;">
+              <i class="${m.icon_class || 'fa-solid fa-cube'}"></i>
+            </div>
+            <div style="min-width:0;">
+              <h4 style="font-family:var(--font-heading); font-size:0.92rem; font-weight:800; color:#fff; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${escapeHtml(m.display_name)}
+              </h4>
+              <span style="font-size:0.68rem; color:#94a3b8; text-transform:uppercase;">${escapeHtml(m.category)}</span>
+            </div>
+          </div>
+          <span style="font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:6px; background:${statusBg}; color:${statusColor}; border:1px solid ${statusColor};">
+            ${statusText}
+          </span>
+        </div>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.4; margin-bottom:12px; min-height:28px;">
+          ${escapeHtml(m.description || 'Feature governance')}
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; gap:6px; flex-wrap:wrap;">
+          <div>
+            ${hasOverride ? `
+              <button type="button" class="btn-outline" onclick="resetPersonModuleAccess('${targetId}', '${m.module_key}')" style="padding:4px 8px; font-size:0.7rem; border-radius:6px; color:#cbd5e1;" title="Reset back to Role default">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+              </button>
+            ` : `<span style="font-size:0.7rem; color:#64748b;">No override set</span>`}
+          </div>
+
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-outline" onclick="togglePersonModuleAccess('${targetId}', '${m.module_key}', false)" style="padding:4px 10px; font-size:0.72rem; color:#fca5a5; border-color:rgba(239,68,68,0.35); font-weight:700; ${isOverrideHidden ? 'background:rgba(239,68,68,0.2);' : ''}">
+              <i class="fa-solid fa-eye-slash"></i> Hide Feature
+            </button>
+            <button type="button" class="btn-outline" onclick="togglePersonModuleAccess('${targetId}', '${m.module_key}', true)" style="padding:4px 10px; font-size:0.72rem; color:#34d399; border-color:rgba(52,211,153,0.35); font-weight:700; ${isOverrideActive ? 'background:rgba(52,211,153,0.2);' : ''}">
+              <i class="fa-solid fa-eye"></i> Show Feature
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.togglePersonModuleAccess = function(empId, moduleKey, enable) {
+  const cleanId = String(empId).trim().toUpperCase();
+  if (!cleanId) return;
+
+  if (!ctoMasterMatrix.userOverrides) ctoMasterMatrix.userOverrides = {};
+  if (!ctoMasterMatrix.userOverrides[moduleKey]) ctoMasterMatrix.userOverrides[moduleKey] = {};
+
+  const entities = getCtoAllEntitiesList();
+  const staff = entities.find(e => e.id.toUpperCase() === cleanId);
+  const staffName = staff ? staff.name : cleanId;
+
+  ctoMasterMatrix.userOverrides[moduleKey][cleanId] = {
+    user_id: cleanId,
+    staff_name: staffName,
+    is_enabled: enable,
+    is_locked: !enable,
+    lock_reason: enable ? 'Active Override' : 'Hidden by CTO Raghav',
+    locked_by: (currentAdmin && (currentAdmin.employee_id || currentAdmin.admin_id)) || 'CTO001',
+    locked_by_name: 'CTO Raghav',
+    locked_at: new Date().toISOString()
+  };
+
+  saveCtoMasterMatrixToLocal();
+  syncMasterMatrixToEduPerms();
+  renderCtoPersonGrid();
+  if (quickPersonModalFeatureKey === moduleKey) {
+    renderQuickPersonList(moduleKey);
+  }
+
+  const mod = (ctoMasterMatrix.modules || []).find(m => m.module_key === moduleKey);
+  showToast(`${enable ? '👁️ Shown' : '🙈 Hidden'}: "${mod ? mod.display_name : moduleKey}" for ${staffName} (${cleanId})`, enable ? 'success' : 'info');
+};
+
+window.resetPersonModuleAccess = function(empId, moduleKey) {
+  const cleanId = String(empId).trim().toUpperCase();
+  if (!cleanId) return;
+
+  if (ctoMasterMatrix.userOverrides && ctoMasterMatrix.userOverrides[moduleKey]) {
+    delete ctoMasterMatrix.userOverrides[moduleKey][cleanId];
+  }
+
+  saveCtoMasterMatrixToLocal();
+  syncMasterMatrixToEduPerms();
+  renderCtoPersonGrid();
+  if (quickPersonModalFeatureKey === moduleKey) {
+    renderQuickPersonList(moduleKey);
+  }
+  showToast(`Reset feature to role default for ${cleanId}`, 'info');
+};
+
+window.bulkTogglePersonFeatures = function(enable) {
+  if (!ctoCurrentPersonId) return;
+  const cleanId = ctoCurrentPersonId.toUpperCase();
+  const modules = ctoMasterMatrix.modules || [];
+  modules.forEach(m => {
+    togglePersonModuleAccess(cleanId, m.module_key, enable);
+  });
+  showToast(`${enable ? '👁️ All Features Shown' : '🙈 All Features Hidden'} for ${cleanId}!`, enable ? 'success' : 'info');
+};
+
+window.resetAllPersonFeatures = function() {
+  if (!ctoCurrentPersonId) return;
+  const cleanId = ctoCurrentPersonId.toUpperCase();
+  if (ctoMasterMatrix.userOverrides) {
+    Object.keys(ctoMasterMatrix.userOverrides).forEach(modKey => {
+      delete ctoMasterMatrix.userOverrides[modKey][cleanId];
+    });
+  }
+  saveCtoMasterMatrixToLocal();
+  syncMasterMatrixToEduPerms();
+  renderCtoPersonGrid();
+  showToast(`All feature overrides cleared for ${cleanId}. Reset to role default!`, 'success');
+};
+
+// ── QUICK PERSON FEATURE MODAL (MODAL 14B) ──────────────────────────────────
+let quickPersonSearchFilter = '';
+
+window.openFeaturePersonModal = function(moduleKey) {
+  quickPersonModalFeatureKey = moduleKey;
+  const modal = document.getElementById('featurePersonQuickModal');
+  if (!modal) return;
+
+  const mod = (ctoMasterMatrix.modules || []).find(m => m.module_key === moduleKey) || { display_name: moduleKey, category: 'MODULE' };
+  document.getElementById('quickPersonFeatureKey').value = moduleKey;
+  document.getElementById('quickPersonFeatureTitle').textContent = `Visibility: ${mod.display_name}`;
+  document.getElementById('quickPersonFeatureCategory').textContent = (mod.category || 'MODULE').toUpperCase();
+  document.getElementById('quickPersonSearchInput').value = '';
+  quickPersonSearchFilter = '';
+
+  renderQuickPersonList(moduleKey);
+  modal.style.display = 'flex';
+};
+
+window.closeFeaturePersonModal = function() {
+  const modal = document.getElementById('featurePersonQuickModal');
+  if (modal) modal.style.display = 'none';
+  quickPersonModalFeatureKey = null;
+};
+
+window.filterQuickPersonList = function(query) {
+  quickPersonSearchFilter = (query || '').toLowerCase().trim();
+  if (quickPersonModalFeatureKey) {
+    renderQuickPersonList(quickPersonModalFeatureKey);
+  }
+};
+
+window.renderQuickPersonList = function(moduleKey) {
+  const container = document.getElementById('quickPersonListContainer');
+  if (!container) return;
+
+  let entities = getCtoAllEntitiesList();
+  if (quickPersonSearchFilter) {
+    const q = quickPersonSearchFilter;
+    entities = entities.filter(e => e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.role.toLowerCase().includes(q));
+  }
+
+  const overrides = (ctoMasterMatrix.userOverrides && ctoMasterMatrix.userOverrides[moduleKey]) || {};
+
+  if (entities.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.8rem;">No staff found matching filter.</div>';
+    return;
+  }
+
+  container.innerHTML = entities.map(e => {
+    const cleanId = e.id.toUpperCase();
+    const ov = overrides[cleanId];
+    const isOverrideSet = (ov !== undefined && ov !== null);
+    const isHidden = isOverrideSet && (ov.is_locked === true || ov.is_enabled === false);
+    const isActive = isOverrideSet && (ov.is_enabled === true && !ov.is_locked);
+
+    let statusPill = `<span style="font-size:0.68rem; color:#94a3b8; background:rgba(255,255,255,0.06); padding:2px 7px; border-radius:5px;">Role Default (Active)</span>`;
+    if (isHidden) {
+      statusPill = `<span style="font-size:0.68rem; color:#fca5a5; background:rgba(239,68,68,0.18); border:1px solid rgba(239,68,68,0.35); padding:2px 7px; border-radius:5px; font-weight:700;"><i class="fa-solid fa-eye-slash"></i> Hidden</span>`;
+    } else if (isActive) {
+      statusPill = `<span style="font-size:0.68rem; color:#34d399; background:rgba(52,211,153,0.18); border:1px solid rgba(52,211,153,0.35); padding:2px 7px; border-radius:5px; font-weight:700;"><i class="fa-solid fa-eye"></i> Active</span>`;
+    }
+
+    return `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; background:rgba(255,255,255,0.025); border:1px solid ${isHidden ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.07)'}; border-radius:10px; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <div style="width:32px; height:32px; border-radius:8px; background:${isHidden ? 'rgba(239,68,68,0.15)' : 'rgba(52,211,153,0.15)'}; color:${isHidden ? '#f87171' : '#34d399'}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
+            <i class="fa-solid ${isHidden ? 'fa-user-slash' : 'fa-user'}"></i>
+          </div>
+          <div style="min-width:0;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <strong style="color:#fff; font-size:0.82rem;">${escapeHtml(e.name)}</strong>
+              <span style="font-family:var(--font-mono); font-size:0.65rem; color:#cbd5e1; background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:4px;">${escapeHtml(e.id)}</span>
+              ${statusPill}
+            </div>
+            <div style="font-size:0.68rem; color:#94a3b8; margin-top:2px;">
+              ${escapeHtml(e.role)} ${e.branch ? '· ' + escapeHtml(e.branch) : ''}
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+          ${isOverrideSet ? `
+            <button type="button" class="btn-outline" onclick="resetPersonModuleAccess('${cleanId}', '${moduleKey}')" style="padding:4px 8px; font-size:0.68rem; border-radius:6px; color:#cbd5e1;" title="Reset back to Role default">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          ` : ''}
+
+          <button type="button" class="btn-outline" onclick="togglePersonModuleAccess('${cleanId}', '${moduleKey}', false)" style="padding:4px 10px; font-size:0.7rem; border-radius:6px; color:#fca5a5; border-color:rgba(239,68,68,0.35); font-weight:700; ${isHidden ? 'background:rgba(239,68,68,0.25); border-color:#ef4444;' : ''}">
+            <i class="fa-solid fa-eye-slash"></i> Hide
+          </button>
+          <button type="button" class="btn-outline" onclick="togglePersonModuleAccess('${cleanId}', '${moduleKey}', true)" style="padding:4px 10px; font-size:0.7rem; border-radius:6px; color:#34d399; border-color:rgba(52,211,153,0.35); font-weight:700; ${isActive ? 'background:rgba(52,211,153,0.25); border-color:#10b981;' : ''}">
+            <i class="fa-solid fa-eye"></i> Show
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
 function updateDrawerRoleTabBadges() {}
 function saveCurrentRoleFormToDraft() {}
-function populateDrawerRoleForm() {}
-function handleDrawerRoleStatusChange() {}
-function handleDrawerRoleLockChange() {}
-function filterDrawerMemberList() {}
-function renderDrawerEmployeeOverrides() {}
-function addDrawerEmployeeOverride() {}
-function toggleDrawerEmployeeOverride() {}
-function removeDrawerEmployeeOverride() {}
-function filterDrawerStaffDropdown() {}
-function populateDrawerStaffDropdown() {}
 
 async function saveDrawerRolePermission() {
   const ctoId = (currentAdmin && (currentAdmin.employee_id || currentAdmin.admin_id)) || 'CTO001';

@@ -152,27 +152,20 @@ function switchModule(moduleName) {
   const permKey = modPermMap[moduleName];
   const targetModule = document.getElementById('module-' + moduleName);
 
-  // Central Permission & Feature Lock Check
+  // Central Permission & Feature Lock Check: Silently hide if disabled
   if (window.EduPerms && permKey && !window.EduPerms.isModuleEnabled(permKey)) {
-    document.querySelectorAll('.module-section').forEach(sec => sec.classList.add('hidden'));
     if (targetModule) {
-      targetModule.classList.remove('hidden');
-      window.EduPerms.renderLockedState(targetModule, permKey);
+      targetModule.classList.add('hidden');
+      targetModule.style.display = 'none';
     }
-    const titles = {
-      'dashboard': 'Overview',
-      'counsellors': 'Team Counsellors',
-      'students': 'Student Database',
-      'applications': 'Applications',
-      'followups': 'Follow-ups',
-      'counsellorcrm': 'Counsellor CRM',
-      'leads': 'Leads CRM',
-      'webforms': 'Web Enquiries',
-      'alerts': 'Alerts & Activity',
-      'attendance': 'Attendance & Team Roster'
-    };
-    const titleEl = document.getElementById('moduleTitle');
-    if (titleEl) titleEl.textContent = (titles[moduleName] || 'Module') + ' (Locked)';
+    const navItem = document.querySelector(`.nav-item[data-module="${moduleName}"]`);
+    if (navItem) {
+      navItem.style.display = 'none';
+      navItem.classList.remove('active');
+    }
+    if (moduleName !== 'dashboard' && typeof switchModule === 'function') {
+      switchModule('dashboard');
+    }
     return;
   } else if (window.EduPerms && targetModule) {
     window.EduPerms.unlockState(targetModule);
