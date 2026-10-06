@@ -12313,7 +12313,7 @@ CRITICAL MANDATES:
         updateCounsellorAttendanceUI();
 
         // Update KPIs (Strictly official tracking records from SYSTEM_LAUNCH_DATE onwards)
-        const launchDate = (EduVisionAttendance && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-05';
+        const launchDate = (EduVisionAttendance && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-10';
         const officialRecords = counsellorAttendanceHistory.filter(r => r.attendance_date >= launchDate);
         const totalDays = officialRecords.length;
         const presentDays = officialRecords.filter(r => r.status === 'Present').length;
@@ -12336,7 +12336,7 @@ CRITICAL MANDATES:
         const tbody = document.getElementById('attHistoryTbody');
         if (tbody) {
           if (officialRecords.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--gold-light); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 5, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button to record your shift today!</span></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--gold-light); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 10, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button to record your shift today!</span></td></tr>';
             return;
           }
 

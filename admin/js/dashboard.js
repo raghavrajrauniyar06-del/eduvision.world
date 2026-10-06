@@ -14170,8 +14170,8 @@ function renderWorkspaceOverview() {
   const convertedLeads = currentWorkspaceLeads.filter(l => l.status === 'Registered').length;
   if (document.getElementById('acc_ov_converted')) document.getElementById('acc_ov_converted').textContent = convertedLeads;
 
-  // 4. Monthly Attendance Summary (from official counsellor_attendance - starts 2026-10-05)
-  const officialWorkspaceAtt = currentWorkspaceAttendance.filter(a => a.attendance_date >= '2026-10-05');
+  // 4. Monthly Attendance Summary (from official counsellor_attendance - starts 2026-10-10)
+  const officialWorkspaceAtt = currentWorkspaceAttendance.filter(a => a.attendance_date >= '2026-10-10');
   const presCount = officialWorkspaceAtt.filter(a => a.status === 'Present').length;
   const absCount = officialWorkspaceAtt.filter(a => a.status === 'Absent').length;
   const halfCount = officialWorkspaceAtt.filter(a => a.status === 'Half Day').length;

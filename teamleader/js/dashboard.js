@@ -4596,7 +4596,7 @@ async function loadTlSelfAttendance() {
 
     updateTlAttendanceUI();
 
-    const launchDate = (typeof EduVisionAttendance !== 'undefined' && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-05';
+    const launchDate = (typeof EduVisionAttendance !== 'undefined' && EduVisionAttendance.SYSTEM_LAUNCH_DATE) || '2026-10-10';
     const officialRecords = tlSelfAttendanceHistory.filter(r => r.attendance_date >= launchDate);
     const totalDays = officialRecords.length;
     const presDays = officialRecords.filter(r => r.status === 'Present').length;
@@ -4615,7 +4615,7 @@ async function loadTlSelfAttendance() {
     const tbody = document.getElementById('tlSelfHistoryTbody');
     if (tbody) {
       if (officialRecords.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:#94a3b8;"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--primary, #c9932a); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 5, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button above to record today\'s shift!</span></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="padding:28px 16px; text-align:center; color:#94a3b8;"><i class="fa-solid fa-calendar-check" style="font-size:1.6rem; color:var(--primary, #c9932a); margin-bottom:8px; display:block;"></i>Official attendance tracking active starting Oct 10, 2026.<br><span style="font-size:0.8rem; color:#94a3b8;">Use the Check In button above to record today\'s shift!</span></td></tr>';
         return;
       }
 

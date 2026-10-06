@@ -18,7 +18,7 @@
   'use strict';
 
   const EduVisionAttendance = {
-    SYSTEM_LAUNCH_DATE: '2026-10-05',
+    SYSTEM_LAUNCH_DATE: '2026-10-10',
     CUTOFF_HOUR: 11, // 11:00 AM IST
     CUTOFF_MINUTE: 0,
     TIMEZONE: 'Asia/Kolkata',
@@ -1627,7 +1627,7 @@
           badgeColor = 'rgba(148, 163, 184, 0.08)';
           textColor = '#94a3b8';
           borderCol = 'rgba(148, 163, 184, 0.2)';
-          titleText = `${dStr}: System Setup / Under Development (Official Attendance starts 5 Oct 2026)`;
+          titleText = `${dStr}: System Setup / Under Development (Official Attendance starts 10 Oct 2026)`;
         } else if (record) {
           status = record.status;
           statusDisplay = record.status;
