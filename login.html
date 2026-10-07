@@ -3611,6 +3611,12 @@ body { padding-top: env(safe-area-inset-top); }
 
             if (cnsData && cnsData.length > 0) {
               const cns = cnsData[0];
+              const cnsStatus = (cns.status || '').toLowerCase();
+              if (cnsStatus.includes('fired') || cnsStatus.includes('term')) {
+                alert('⛔ Access Denied: This staff account has been permanently deactivated / terminated by Administration.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                return;
+              }
               if (cns.password === passwordInput) {
                 const isTL = ((cns.role || '') + ' ' + (cns.designation || '')).toLowerCase().includes('leader');
                 authUser = {
