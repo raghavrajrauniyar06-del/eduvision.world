@@ -631,6 +631,49 @@ body { padding-top: env(safe-area-inset-top); }
     // Initialize Supabase
     const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
+    // Enterprise Auth Rate Limiter & Brute-Force Shield for Admin Portal
+    const EduVisionAuthGuard = {
+      MAX_ATTEMPTS: 5,
+      LOCKOUT_MS: 15 * 60 * 1000, // 15 minutes
+      STORAGE_KEY: 'eduvision_admin_auth_guard',
+      getState() {
+        try {
+          const raw = localStorage.getItem(this.STORAGE_KEY);
+          return raw ? JSON.parse(raw) : { count: 0, lockUntil: 0, lastAttempt: 0 };
+        } catch(e) {
+          return { count: 0, lockUntil: 0, lastAttempt: 0 };
+        }
+      },
+      check() {
+        const state = this.getState();
+        const now = Date.now();
+        if (state.lockUntil && now < state.lockUntil) {
+          const remainingMinutes = Math.ceil((state.lockUntil - now) / 60000);
+          return { allowed: false, message: 'Admin access temporarily protected due to multiple failed login attempts. Please try again in ' + remainingMinutes + ' minute(s).' };
+        }
+        return { allowed: true };
+      },
+      recordFailure() {
+        const state = this.getState();
+        const now = Date.now();
+        state.count = (state.count || 0) + 1;
+        state.lastAttempt = now;
+        if (state.count >= this.MAX_ATTEMPTS) {
+          state.lockUntil = now + this.LOCKOUT_MS;
+        }
+        try {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
+        } catch(e) {}
+        return state;
+      },
+      recordSuccess() {
+        try {
+          localStorage.removeItem(this.STORAGE_KEY);
+        } catch(e) {}
+      }
+    };
+
+
     document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -665,7 +708,7 @@ body { padding-top: env(safe-area-inset-top); }
 
         let { data, error } = await sb
           .from('admin_users')
-          .select('*')
+          .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
           .or(adminOrParts.join(','))
           .eq('password', password);
 
@@ -690,7 +733,7 @@ body { padding-top: env(safe-area-inset-top); }
 
           const { data: cData, error: cErr } = await sb
             .from('counsellors')
-            .select('*')
+            .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
             .or(cOrParts.join(','))
             .eq('password', password);
 
@@ -727,7 +770,7 @@ body { padding-top: env(safe-area-inset-top); }
 
           const { data: tData, error: tErr } = await sb
             .from('team_leaders')
-            .select('*')
+            .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
             .or(tOrParts.join(','))
             .eq('password', password);
 
@@ -767,11 +810,11 @@ body { padding-top: env(safe-area-inset-top); }
           role: user.role || 'Admin',
           designation: user.designation || user.role || 'Administrator',
           branch: user.branch || 'Head Office',
-          password: password,
           is_temp_password: isTempPwd,
           must_change_password: isTempPwd
         };
 
+        EduVisionAuthGuard.recordSuccess();
         localStorage.setItem('eduvision_admin', JSON.stringify(adminSession));
           
         btn.style.background = '#10b981';

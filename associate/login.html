@@ -1097,7 +1097,7 @@ body.modal-open { overflow: hidden !important; }
           // Query associate_partners table in Supabase
           const { data, error } = await sb
             .from('associate_partners')
-            .select('*')
+            .select('partner_id, partner_code, contact_person, company_name, email, phone, role, status, tier, commission_rate, location')
             .or(orParts.join(','))
             .eq('password', pwd);
 

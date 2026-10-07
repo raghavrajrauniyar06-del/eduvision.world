@@ -243,10 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let orParts = [`employee_id.eq.${rawInput}`, `counsellor_id.eq.${rawInput}`, `email.ilike.${rawInput}`];
         if (last10) { orParts.push(`phone.ilike.%${last10}%`); orParts.push(`phone.ilike.%${last10.slice(0, 5)}%${last10.slice(5)}%`); }
         else if (rawInput.length >= 3) { orParts.push(`phone.ilike.%${rawInput}%`); }
-        const { data: m, error: dbErr } = await sb.from('counsellors').select('*').or(orParts.join(',')).eq('password', pwd);
+        const { data: m, error: dbErr } = await sb.from('counsellors').select('counsellor_id, employee_id, full_name, role, branch, designation, status, phone, email, is_temp_password, must_change_password').or(orParts.join(',')).eq('password', pwd);
         if (!dbErr && m && m.length > 0) {
           const r = m[0]; const isTmp = (r.is_temp_password === true || r.must_change_password === true || pwd === 'Pass123' || pwd === 'Pass@123');
-          user = { counsellor_id: r.counsellor_id, employee_id: r.employee_id, full_name: r.full_name, role: r.role || 'Staff', branch: r.branch || '', designation: r.designation || r.role || 'Staff', status: r.status || 'Active', phone: r.phone || '', email: r.email || '', password: pwd, is_temp_password: isTmp, must_change_password: isTmp };
+          user = { counsellor_id: r.counsellor_id, employee_id: r.employee_id, full_name: r.full_name, role: r.role || 'Staff', branch: r.branch || '', designation: r.designation || r.role || 'Staff', status: r.status || 'Active', phone: r.phone || '', email: r.email || '', is_temp_password: isTmp, must_change_password: isTmp };
         }
       }
 
@@ -278,7 +278,7 @@ async function handleSendForgot() {
   if (s) { s.textContent = 'Verifying staff records...'; s.style.color = '#fbbf24'; }
   try {
     const isEmail = val.includes('@'); const col = isEmail ? 'email' : 'phone';
-    const { data, error } = await sb.from('counsellors').select('*').ilike(col, val);
+    const { data, error } = await sb.from('counsellors').select('counsellor_id, employee_id, full_name, email, phone').ilike(col, val);
     if (!data || data.length === 0) throw new Error('No staff account found.');
     const rec = data[0]; const targetEmail = (rec.email || '').trim().toLowerCase();
     if (!targetEmail.includes('@')) throw new Error('No email registered for OTP delivery.');

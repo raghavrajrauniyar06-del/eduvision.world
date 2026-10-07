@@ -5,6 +5,37 @@
 
 (function() {
   'use strict';
+  // ── ENTERPRISE CREDENTIAL STORAGE SANITIZER (Zero Plain-Text Leakage) ──
+  (function sanitizeStoredCredentials() {
+    try {
+      const sessionKeys = [
+        'eduvision_admin',
+        'eduvision_counsellor',
+        'eduvision_team_leader',
+        'eduvision_staff',
+        'eduvision_user',
+        'eduvision_partner',
+        'eduvision_student'
+      ];
+      [localStorage, sessionStorage].forEach(function(storage) {
+        if (!storage) return;
+        sessionKeys.forEach(function(k) {
+          try {
+            const raw = storage.getItem(k);
+            if (raw && (raw.includes('"password"') || raw.includes('"pwd"'))) {
+              const parsed = JSON.parse(raw);
+              if (parsed && typeof parsed === 'object') {
+                delete parsed.password;
+                delete parsed.pwd;
+                storage.setItem(k, JSON.stringify(parsed));
+              }
+            }
+          } catch(e) {}
+        });
+      });
+    } catch(err) {}
+  })();
+
 
   const STORAGE_KEY = 'eduvision_page_controls';
   const BROADCAST_CHANNEL_NAME = 'eduvision_page_controls_sync';

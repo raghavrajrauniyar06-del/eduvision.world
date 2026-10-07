@@ -582,7 +582,7 @@ body.modal-open { overflow: hidden !important; }
           // 1. Primary check in team_leaders table
           let { data, error } = await sb
             .from('team_leaders')
-            .select('team_leader_id, employee_id, full_name, role, branch, designation, status, phone, email, is_temp_password, must_change_password, password')
+            .select('team_leader_id, employee_id, full_name, role, branch, designation, status, phone, email, is_temp_password, must_change_password')
             .or(orParts.join(','))
             .eq('password', pwd);
 
@@ -608,7 +608,7 @@ body.modal-open { overflow: hidden !important; }
 
             const { data: cData, error: cErr } = await sb
               .from('counsellors')
-              .select('*')
+              .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
               .or(cOrParts.join(','))
               .eq('password', pwd);
 
@@ -647,11 +647,11 @@ body.modal-open { overflow: hidden !important; }
 
           let animColor = '#a855f7'; // Purple Portal
  
-          user.password = pwd;
-          user.is_temp_password = (user.is_temp_password === true || user.must_change_password === true || pwd === 'Pass123' || pwd === 'Pass@123' || pwd.toLowerCase() === 'pass123');
+                    user.is_temp_password = (user.is_temp_password === true || user.must_change_password === true || pwd === 'Pass123' || pwd === 'Pass@123' || pwd.toLowerCase() === 'pass123');
           user.must_change_password = user.is_temp_password;
 
           // Persist session immediately
+          EduVisionAuthGuard.recordSuccess();
           localStorage.setItem('eduvision_team_leader', JSON.stringify(user));
 
           triggerOrbSuccess(animColor, 'Authenticating ' + user.role + '...', function() {

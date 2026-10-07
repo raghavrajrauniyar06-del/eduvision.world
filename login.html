@@ -3447,8 +3447,70 @@ body { padding-top: env(safe-area-inset-top); }
       return _supabase;
     }
 
+    // ═════════════════════════════════════════════════════════════════
+    // ENTERPRISE BRUTE-FORCE AUTH GUARD & RATE LIMITER
+    // ═════════════════════════════════════════════════════════════════
+    const EduVisionAuthGuard = {
+      STORAGE_KEY: 'eduvision_login_security_lock',
+      MAX_ATTEMPTS: 5,
+      LOCKOUT_DURATION_MS: 15 * 60 * 1000, // 15 mins
+
+      getRecord() {
+        try {
+          const raw = localStorage.getItem(this.STORAGE_KEY);
+          return raw ? JSON.parse(raw) : { failedCount: 0, lockedUntil: 0 };
+        } catch (e) {
+          return { failedCount: 0, lockedUntil: 0 };
+        }
+      },
+
+      saveRecord(data) {
+        try {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {}
+      },
+
+      checkLockout() {
+        const record = this.getRecord();
+        const now = Date.now();
+        if (record.lockedUntil && record.lockedUntil > now) {
+          const remainingSec = Math.ceil((record.lockedUntil - now) / 1000);
+          const remainingMin = Math.ceil(remainingSec / 60);
+          return { isLocked: true, remainingSec, remainingMin };
+        }
+        if (record.lockedUntil && record.lockedUntil <= now) {
+          this.reset();
+        }
+        return { isLocked: false, remainingSec: 0, remainingMin: 0 };
+      },
+
+      recordFailed() {
+        const record = this.getRecord();
+        record.failedCount = (record.failedCount || 0) + 1;
+        if (record.failedCount >= this.MAX_ATTEMPTS) {
+          record.lockedUntil = Date.now() + this.LOCKOUT_DURATION_MS;
+        }
+        this.saveRecord(record);
+        return record;
+      },
+
+      async applyBackoffDelay() {
+        const record = this.getRecord();
+        if (record.failedCount >= 2) {
+          const delay = Math.min(record.failedCount * 1000, 3500);
+          await new Promise(res => setTimeout(res, delay));
+        }
+      },
+
+      reset() {
+        try {
+          localStorage.removeItem(this.STORAGE_KEY);
+        } catch (e) {}
+      }
+    };
+
     async function handleLoginSubmit(e) {
-      e.preventDefault();
+      if (e && e.preventDefault) e.preventDefault();
 
       // --- ADVANCED SECURITY: HONEYPOT CHECK ---
       const honeypot = document.getElementById('bot_check');
@@ -3457,22 +3519,21 @@ body { padding-top: env(safe-area-inset-top); }
         return;
       }
 
-      // --- ADVANCED SECURITY: BRUTE FORCE LOCKOUT ---
-      const lockoutTime = localStorage.getItem('login_lockout_until');
-      if (lockoutTime && new Date().getTime() < parseInt(lockoutTime)) {
-        const remaining = Math.ceil((parseInt(lockoutTime) - new Date().getTime()) / 1000);
-        alert(`Security System: Too many failed attempts. Try again in ${remaining} seconds.`);
+      // --- ADVANCED SECURITY: BRUTE FORCE LOCKOUT CHECK ---
+      const lockout = EduVisionAuthGuard.checkLockout();
+      if (lockout.isLocked) {
+        alert('🚨 SECURITY LOCKOUT: Too many failed login attempts detected. Please wait ' + lockout.remainingMin + ' minute(s) before trying again.');
         return;
       }
+      await EduVisionAuthGuard.applyBackoffDelay();
 
-      const phoneEl = document.getElementById('email');
+      const phoneEl = document.getElementById('email') || document.getElementById('phone');
       const passwordEl = document.getElementById('password');
 
       const phoneInput = phoneEl ? phoneEl.value.trim() : '';
       const passwordInput = passwordEl ? passwordEl.value.trim() : '';
 
       console.log("================ UNIVERSAL LOGIN ATTEMPT ================");
-      console.log("Identifier:", phoneInput);
 
       if (!phoneInput) {
         alert('Please enter your Mobile Number, Email, or Employee ID.');
@@ -3486,7 +3547,7 @@ body { padding-top: env(safe-area-inset-top); }
         return;
       }
 
-      const submitBtn = document.querySelector('#loginForm .btn-login-submit');
+      const submitBtn = document.querySelector('#loginForm .btn-login-submit') || document.getElementById('loginSubmitBtn');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Login 🔑';
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -3515,34 +3576,28 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: admData } = await client
               .from('admin_users')
-              .select('*')
-              .or(adminFilter);
+              .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status')
+              .or(adminFilter)
+              .eq('password', passwordInput);
 
             if (admData && admData.length > 0) {
               const adm = admData[0];
-              if (adm.password === passwordInput) {
-                authUser = {
-                  id: adm.admin_id,
-                  admin_id: adm.admin_id,
-                  employee_id: adm.employee_id || 'ADM001',
-                  full_name: adm.full_name,
-                  email: adm.email,
-                  phone: adm.phone,
-                  role: adm.role || 'Admin',
-                  designation: adm.designation || 'Administrator',
-                  branch: adm.branch || 'Head Office',
-                  status: adm.status || 'Active'
-                };
-                authRole = (adm.role || 'admin').toLowerCase();
-                targetDashboard = 'admin/dashboard.html';
-                
-                localStorage.setItem('eduvision_admin', JSON.stringify(authUser));
-                sessionStorage.setItem('eduvision_admin', JSON.stringify(authUser));
-              } else {
-                alert('Incorrect password for Administrator account.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                return;
-              }
+              authUser = {
+                id: adm.admin_id,
+                admin_id: adm.admin_id,
+                employee_id: adm.employee_id || 'ADM001',
+                full_name: adm.full_name,
+                email: adm.email,
+                phone: adm.phone,
+                role: adm.role || 'Admin',
+                designation: adm.designation || 'Administrator',
+                branch: adm.branch || 'Head Office',
+                status: adm.status || 'Active'
+              };
+              authRole = (adm.role || 'admin').toLowerCase();
+              targetDashboard = 'admin/dashboard.html';
+              localStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+              sessionStorage.setItem('eduvision_admin', JSON.stringify(authUser));
             }
           } catch (admErr) {
             console.warn("admin_users check error:", admErr);
@@ -3559,37 +3614,32 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: tlData } = await client
               .from('team_leaders')
-              .select('*')
-              .or(tlFilter);
+              .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
+              .or(tlFilter)
+              .eq('password', passwordInput);
 
             if (tlData && tlData.length > 0) {
               const tl = tlData[0];
-              if (tl.password === passwordInput) {
-                authUser = {
-                  id: tl.team_leader_id || tl.employee_id,
-                  team_leader_id: tl.team_leader_id || tl.employee_id,
-                  employee_id: tl.employee_id || tl.team_leader_id,
-                  full_name: tl.full_name,
-                  email: tl.email,
-                  phone: tl.phone,
-                  role: tl.role || 'Team Leader',
-                  designation: tl.designation || 'Team Leader',
-                  branch: tl.branch || 'Head Office',
-                  status: tl.status || 'Active',
-                  password: passwordInput,
-                  is_temp_password: (tl.is_temp_password === true || tl.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123'),
-                  must_change_password: (tl.is_temp_password === true || tl.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123')
-                };
-                authRole = 'teamleader';
-                targetDashboard = 'teamleader/dashboard.html';
+              const isTempPwd = (tl.is_temp_password === true || tl.must_change_password === true || passwordInput.toLowerCase() === 'pass123');
+              authUser = {
+                id: tl.team_leader_id || tl.employee_id,
+                team_leader_id: tl.team_leader_id || tl.employee_id,
+                employee_id: tl.employee_id || tl.team_leader_id,
+                full_name: tl.full_name,
+                email: tl.email,
+                phone: tl.phone,
+                role: tl.role || 'Team Leader',
+                designation: tl.designation || 'Team Leader',
+                branch: tl.branch || 'Head Office',
+                status: tl.status || 'Active',
+                is_temp_password: isTempPwd,
+                must_change_password: isTempPwd
+              };
+              authRole = 'teamleader';
+              targetDashboard = 'teamleader/dashboard.html';
 
-                localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
-                sessionStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
-              } else {
-                alert('Incorrect password for Team Leader account.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                return;
-              }
+              localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+              sessionStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
             }
           } catch(tlErr) {
             console.warn("team_leaders check error:", tlErr);
@@ -3604,21 +3654,50 @@ body { padding-top: env(safe-area-inset-top); }
             let cnsFilter = `employee_id.eq.${rawInput},counsellor_id.eq.${rawInput},email.ilike.${rawInput}`;
             if (last10) cnsFilter += `,phone.ilike.*${last10}*`;
 
-            const { data: cnsData } = await client
+            // Step 1: Look up account status without selecting password
+            const { data: cnsProfile } = await client
               .from('counsellors')
-              .select('*')
+              .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
               .or(cnsFilter);
 
-            if (cnsData && cnsData.length > 0) {
-              const cns = cnsData[0];
+            if (cnsProfile && cnsProfile.length > 0) {
+              const cns = cnsProfile[0];
               const cnsStatus = (cns.status || '').toLowerCase();
               if (cnsStatus.includes('fired') || cnsStatus.includes('term')) {
                 alert('⛔ Access Denied: This staff account has been permanently deactivated / terminated by Administration.');
                 if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                 return;
               }
-              if (cns.password === passwordInput) {
+
+              // Step 2: Server-side cryptographic authentication check
+              let verified = false;
+              try {
+                const { data: authRpcRes } = await client.rpc('rpc_verify_c_auth', {
+                  p_login_id: cns.employee_id || cns.counsellor_id,
+                  p_password: passwordInput
+                });
+                if (authRpcRes && authRpcRes.employee_id) {
+                  verified = true;
+                }
+              } catch(rpcE) {
+                console.warn("rpc_verify_c_auth fallback:", rpcE);
+              }
+
+              // Fallback server match if RPC is not available
+              if (!verified) {
+                const { data: passMatch } = await client
+                  .from('counsellors')
+                  .select('employee_id')
+                  .eq('employee_id', cns.employee_id)
+                  .eq('password', passwordInput);
+                if (passMatch && passMatch.length > 0) {
+                  verified = true;
+                }
+              }
+
+              if (verified) {
                 const isTL = ((cns.role || '') + ' ' + (cns.designation || '')).toLowerCase().includes('leader');
+                const isTempPwd = (cns.is_temp_password === true || cns.must_change_password === true || passwordInput.toLowerCase() === 'pass123');
                 authUser = {
                   id: cns.counsellor_id || cns.employee_id,
                   counsellor_id: cns.counsellor_id || cns.employee_id,
@@ -3630,9 +3709,8 @@ body { padding-top: env(safe-area-inset-top); }
                   designation: cns.designation || (isTL ? 'Team Leader' : 'Senior Counsellor'),
                   branch: cns.branch || 'Head Office',
                   status: cns.status || 'Active',
-                  password: passwordInput,
-                  is_temp_password: (cns.is_temp_password === true || cns.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123'),
-                  must_change_password: (cns.is_temp_password === true || cns.must_change_password === true || passwordInput === 'Pass123' || passwordInput === 'Pass@123' || passwordInput.toLowerCase() === 'pass123')
+                  is_temp_password: isTempPwd,
+                  must_change_password: isTempPwd
                 };
                 authRole = isTL ? 'teamleader' : 'counsellor';
                 targetDashboard = isTL ? 'teamleader/dashboard.html' : 'counsellor/dashboard.html';
@@ -3642,10 +3720,6 @@ body { padding-top: env(safe-area-inset-top); }
                 } else {
                   localStorage.setItem('eduvision_counsellor', JSON.stringify(authUser));
                 }
-              } else {
-                alert('Incorrect password for Counsellor account.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                return;
               }
             }
           } catch(cnsErr) {
@@ -3663,8 +3737,9 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: prtData } = await client
               .from('associate_partners')
-              .select('*')
-              .or(prtFilter);
+              .select('partner_id, partner_code, contact_person, company_name, email, phone, tier, status')
+              .or(prtFilter)
+              .eq('password', passwordInput);
 
             if (prtData && prtData.length > 0) {
               const prt = prtData[0];
@@ -3673,26 +3748,20 @@ body { padding-top: env(safe-area-inset-top); }
                 if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                 return;
               }
-              if (prt.password === passwordInput) {
-                authUser = {
-                  id: prt.partner_id,
-                  partner_id: prt.partner_id,
-                  partner_code: prt.partner_code,
-                  full_name: prt.contact_person || prt.company_name || 'Associate Partner',
-                  email: prt.email,
-                  phone: prt.phone,
-                  role: 'associate',
-                  tier: prt.tier || 'Gold Agency',
-                  status: prt.status || 'Active'
-                };
-                authRole = 'associate';
-                targetDashboard = 'associate/dashboard.html';
-                localStorage.setItem('eduvision_partner', JSON.stringify(authUser));
-              } else {
-                alert('Incorrect password for Associate Partner account.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                return;
-              }
+              authUser = {
+                id: prt.partner_id,
+                partner_id: prt.partner_id,
+                partner_code: prt.partner_code,
+                full_name: prt.contact_person || prt.company_name || 'Associate Partner',
+                email: prt.email,
+                phone: prt.phone,
+                role: 'associate',
+                tier: prt.tier || 'Gold Agency',
+                status: prt.status || 'Active'
+              };
+              authRole = 'associate';
+              targetDashboard = 'associate/dashboard.html';
+              localStorage.setItem('eduvision_partner', JSON.stringify(authUser));
             }
           } catch(prtErr) {
             console.warn("associate_partners check error:", prtErr);
@@ -3704,9 +3773,6 @@ body { padding-top: env(safe-area-inset-top); }
         // ─────────────────────────────────────────────────────────────────
         if (!authUser && client) {
           try {
-            let matchedUser = null;
-
-            // Check student_profiles by student_id, email, or phone
             let sOrParts = [
               `student_id.eq.${rawInput}`,
               `email.ilike.${rawInput}`
@@ -3720,39 +3786,32 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: sProfiles } = await client
               .from('student_profiles')
-              .select('*')
+              .select('user_id, student_id, full_name, email, phone, admission_status')
               .or(sOrParts.join(','));
 
             if (sProfiles && sProfiles.length > 0) {
               const sp = sProfiles[0];
-              // Check user in users table by user_id or email or phone
               const { data: uFromS } = await client
                 .from('users')
-                .select('*')
-                .or(`id.eq.${sp.user_id},email.ilike.${sp.email || rawInput}`);
+                .select('id, full_name, email, phone, role')
+                .or(`id.eq.${sp.user_id},email.ilike.${sp.email || rawInput}`)
+                .eq('password', passwordInput);
 
               if (uFromS && uFromS.length > 0) {
                 const u = uFromS[0];
-                if (u.password === passwordInput) {
-                  matchedUser = {
-                    id: sp.user_id || u.id,
-                    student_id: sp.student_id,
-                    full_name: sp.full_name || u.full_name || 'Student',
-                    email: sp.email || u.email,
-                    phone: sp.phone || u.phone,
-                    role: 'student',
-                    status: sp.admission_status || 'Active'
-                  };
-                } else {
-                  alert('Incorrect password. Please try again.');
-                  if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                  return;
-                }
+                authUser = {
+                  id: sp.user_id || u.id,
+                  student_id: sp.student_id,
+                  full_name: sp.full_name || u.full_name || 'Student',
+                  email: sp.email || u.email,
+                  phone: sp.phone || u.phone,
+                  role: 'student',
+                  status: sp.admission_status || 'Active'
+                };
               }
             }
 
-            // Direct users table lookup if not matched via student_profiles
-            if (!matchedUser) {
+            if (!authUser) {
               let uOrParts = [
                 `email.ilike.${rawInput}`
               ];
@@ -3764,34 +3823,26 @@ body { padding-top: env(safe-area-inset-top); }
 
               const { data: uData } = await client
                 .from('users')
-                .select('*')
-                .or(uOrParts.join(','));
+                .select('id, full_name, email, phone, role')
+                .or(uOrParts.join(','))
+                .eq('password', passwordInput);
 
               if (uData && uData.length > 0) {
                 const u = uData[0];
-                if (u.password === passwordInput) {
-                  const uRole = (u.role || 'student').toLowerCase();
-                  matchedUser = {
-                    id: u.id,
-                    full_name: u.full_name || 'Student',
-                    email: u.email,
-                    phone: u.phone,
-                    role: u.role || 'student',
-                    status: 'Active'
-                  };
-                } else {
-                  alert('Incorrect password. Please try again.');
-                  if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                  return;
-                }
+                const uRole = (u.role || 'student').toLowerCase();
+                authUser = {
+                  id: u.id,
+                  full_name: u.full_name || 'Student',
+                  email: u.email,
+                  phone: u.phone,
+                  role: u.role || 'student',
+                  status: 'Active'
+                };
               }
             }
 
-            if (matchedUser) {
-              const uRole = (matchedUser.role || 'student').toLowerCase();
-              authUser = matchedUser;
-              authRole = uRole;
-
+            if (authUser && !targetDashboard) {
+              const uRole = (authUser.role || 'student').toLowerCase();
               const roleRoutes = {
                 'student': 'student/dashboard.html',
                 'associate': 'associate/dashboard.html',
@@ -3809,31 +3860,12 @@ body { padding-top: env(safe-area-inset-top); }
         }
 
         // ─────────────────────────────────────────────────────────────────
-        // 6. DEMO / OFFLINE FALLBACK
-        // ─────────────────────────────────────────────────────────────────
-        if (!authUser) {
-          const cleanPhone = phoneInput.toLowerCase().trim();
-          const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-          const isDemo = isLocalDev && ['student@gmail.com', 'student@eduvision.in', 'raghav', 'demo', '9876543210', '8303632103', 'test'].includes(cleanPhone);
-          if (isDemo) {
-            const demoName = cleanPhone.includes('@') ? cleanPhone.split('@')[0] : (cleanPhone === '8303632103' ? 'Raghav' : 'Student');
-            authUser = {
-              id: 'demo_' + Date.now(),
-              full_name: demoName.charAt(0).toUpperCase() + demoName.slice(1),
-              phone: cleanPhone.includes('@') ? '9876543210' : cleanPhone,
-              email: cleanPhone.includes('@') ? cleanPhone : 'student@eduvision.in',
-              role: 'student',
-              status: 'Active'
-            };
-            authRole = 'student';
-            targetDashboard = 'student/dashboard.html';
-          }
-        }
-
-        // ─────────────────────────────────────────────────────────────────
-        // 7. FINALIZE SESSION & TRANSITION
+        // 6. FINALIZE SESSION & TRANSITION (ZERO PASSWORD STORAGE)
         // ─────────────────────────────────────────────────────────────────
         if (authUser) {
+          // Reset brute force counter on successful authentication
+          EduVisionAuthGuard.reset();
+
           localStorage.removeItem('login_failed_attempts');
           localStorage.setItem('eduvision_user', JSON.stringify({
             id: authUser.id || authUser.employee_id,
@@ -3846,10 +3878,17 @@ body { padding-top: env(safe-area-inset-top); }
             loginTime: new Date().toISOString()
           }));
 
-          console.log(`✅ Authenticated successfully as ${authRole}. Redirecting to: ${targetDashboard}`);
+          console.log(`✅ Authenticated securely as ${authRole}. Redirecting to: ${targetDashboard}`);
           window.location.href = 'welcome.html?redirect=' + encodeURIComponent(targetDashboard);
         } else {
-          alert('Account not found with this Email / Phone / Employee ID. Please check your credentials or register!');
+          // Record failed attempt for rate limiting
+          const failedRecord = EduVisionAuthGuard.recordFailed();
+          const remaining = Math.max(0, EduVisionAuthGuard.MAX_ATTEMPTS - failedRecord.failedCount);
+          if (failedRecord.failedCount >= EduVisionAuthGuard.MAX_ATTEMPTS) {
+            alert('🚨 SECURITY LOCKOUT ACTIVATED: 5 consecutive failed login attempts detected. Access is now suspended for 15 minutes to protect account integrity.');
+          } else {
+            alert(`❌ Invalid Login ID or Password. For security, you have ${remaining} attempt(s) remaining before a temporary 15-minute account freeze.`);
+          }
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
@@ -4207,7 +4246,7 @@ body { padding-top: env(safe-area-inset-top); }
         let studentRecord = null;
         const col = isEmail ? 'email' : 'phone';
 
-        const { data, error: queryErr } = await client.from('users').select('*').ilike(col, val);
+        const { data, error: queryErr } = await client.from('users').select('id, full_name, email, phone, role').ilike(col, val);
         if (data && data.length > 0) {
           studentRecord = data[0];
         }
@@ -4215,7 +4254,7 @@ body { padding-top: env(safe-area-inset-top); }
         if (!studentRecord) {
           // Check associate_partners table
           try {
-            let apQuery = client.from('associate_partners').select('*');
+            let apQuery = client.from('associate_partners').select('partner_id, contact_person, company_name, email, phone, role, partner_code');
             if (isEmail) {
               apQuery = apQuery.ilike('email', val);
             } else {

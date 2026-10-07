@@ -643,7 +643,7 @@ body.modal-open { overflow: hidden !important; }
 
             const { data: dbMatches, error: dbErr } = await sb
               .from('counsellors')
-              .select('*')
+              .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
               .or(orParts.join(','))
               .eq('password', pwd);
 
@@ -660,7 +660,6 @@ body.modal-open { overflow: hidden !important; }
                 status: match.status || 'Active',
                 phone: match.phone || '',
                 email: match.email || '',
-                password: pwd,
                 is_temp_password: isTempPwd,
                 must_change_password: isTempPwd
               };
@@ -690,6 +689,7 @@ body.modal-open { overflow: hidden !important; }
           else if (['Admin', 'Super Admin', 'CEO', 'CTO'].includes(user.role)) animColor = '#ef4444'; // Red Quantum Core
 
           // Persist session immediately
+          EduVisionAuthGuard.recordSuccess();
           localStorage.setItem('eduvision_counsellor', JSON.stringify(user));
           localStorage.setItem('eduvision_staff', JSON.stringify(user));
 
