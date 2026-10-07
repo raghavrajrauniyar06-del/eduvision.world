@@ -18243,8 +18243,9 @@ function getCtoAllEntitiesList() {
     const id = (s.employee_id || s.counsellor_id || s.team_leader_id || s.id || '').trim();
     const name = s.full_name || s.name || s.counsellor_name || 'Staff Member';
     const role = s.role || s.staffType || s.designation || 'Staff';
+    const status = s.status || 'Active';
     if (id && !list.some(x => x.id.toUpperCase() === id.toUpperCase())) {
-      list.push({ id, name, role, type: 'Staff', branch: s.branch || 'Head Office' });
+      list.push({ id, name, role, type: 'Staff', branch: s.branch || 'Head Office', status: status });
     }
   });
 
@@ -19739,15 +19740,16 @@ window.renderCtoGodModeCards = function() {
   loadCtoDelegates();
 
   container.innerHTML = filtered.map(member => {
-    const isSuspended = suspendedList.includes(member.id.toUpperCase());
-    const isDelegate = ctoDelegatesList.some(d => d.empId.toUpperCase() === member.id.toUpperCase() && d.status === 'Active');
+    const isFired = (member.status && (member.status.toLowerCase().includes('fired') || member.status.toLowerCase().includes('terminated')));
+    const isSuspended = isFired || suspendedList.includes(member.id.toUpperCase());
+    const isDelegate = !isFired && ctoDelegatesList.some(d => d.empId.toUpperCase() === member.id.toUpperCase() && d.status === 'Active');
     const roleBadgeColor = member.role.toLowerCase().includes('admin') ? '#f59e0b' :
                            member.role.toLowerCase().includes('leader') ? '#c084fc' :
                            member.role.toLowerCase().includes('counsellor') ? '#38bdf8' :
                            member.role.toLowerCase().includes('partner') ? '#34d399' : '#94a3b8';
 
     return `
-      <div class="glass-box" style="padding:16px 18px; margin:0; border:1px solid ${isSuspended ? 'rgba(239,68,68,0.45)' : 'rgba(255,255,255,0.08)'}; background:${isSuspended ? 'rgba(239,68,68,0.06)' : 'rgba(13,20,36,0.85)'}; border-radius:14px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.2s;">
+      <div class="glass-box" style="padding:16px 18px; margin:0; border:1px solid ${isFired ? 'rgba(239,68,68,0.65)' : isSuspended ? 'rgba(239,68,68,0.45)' : 'rgba(255,255,255,0.08)'}; background:${isFired ? 'rgba(239,68,68,0.12)' : isSuspended ? 'rgba(239,68,68,0.06)' : 'rgba(13,20,36,0.85)'}; border-radius:14px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.2s;">
         <div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
             <div style="display:flex; align-items:center; gap:10px;">
@@ -19763,7 +19765,8 @@ window.renderCtoGodModeCards = function() {
                 </div>
               </div>
             </div>
-            ${isSuspended ? '<span style="background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.4); padding:2px 7px; border-radius:6px; font-size:0.68rem; font-weight:800;">SUSPENDED</span>' :
+            ${isFired ? '<span style="background:rgba(239,68,68,0.25); color:#f87171; border:1px solid #ef4444; padding:2px 7px; border-radius:6px; font-size:0.68rem; font-weight:900; letter-spacing:0.5px;"><i class="fa-solid fa-ban"></i> FIRED / TERMINATED</span>' :
+              isSuspended ? '<span style="background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.4); padding:2px 7px; border-radius:6px; font-size:0.68rem; font-weight:800;">SUSPENDED</span>' :
               isDelegate ? '<span style="background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid rgba(245,158,11,0.4); padding:2px 7px; border-radius:6px; font-size:0.68rem; font-weight:800;">CTO DELEGATE</span>' :
               '<span style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:2px 7px; border-radius:6px; font-size:0.68rem; font-weight:800;">ACTIVE</span>'}
           </div>
