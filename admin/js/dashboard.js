@@ -5354,7 +5354,7 @@ window.switchAdminModule = function(modId) {
   const titles = {
     overview: { title: 'Executive Overview', sub: 'Real-time admin dashboard, staff control, and organizational intelligence' },
     staff: { title: 'Staff & Role Management', sub: 'Manage counsellors, team leaders, role promotions, and system permissions' },
-    counsellorcrm: { title: 'Counsellor CRM Directory', sub: 'Overview of active team counsellors, designations, and contact channels' },
+    counsellorcrm: { title: 'Staff & Team CRM Directory', sub: 'Comprehensive CRM workspaces across Admissions, Accounts, and Team Operations' },
     partners: { title: 'Associate Partners Master', sub: 'B2B educational consultant tie-ups and channel partners' },
     students: { title: 'Students & Admissions Master', sub: 'Unified candidate directory, profile dossier, and admission statuses' },
     leads: { title: 'Leads CRM Pipeline', sub: 'Comprehensive applicant conversion funnel and counselor assignments' },
@@ -13483,7 +13483,11 @@ async function renderAdminCounsellorCRMGrid() {
     const elCntCns = document.getElementById('countDeptCounsellors');
     if (elCntCns) elCntCns.textContent = countCounsellors;
     const elCntTele = document.getElementById('countDeptTelesales');
-    if (elCntTele) elCntTele.textContent = countTelesales;
+    if (elCntTele) {
+      elCntTele.textContent = countTelesales;
+      const btnTele = elCntTele.closest('.crm-dept-tab-btn');
+      if (btnTele) btnTele.style.display = countTelesales > 0 ? 'inline-flex' : 'none';
+    }
     const elCntAcc = document.getElementById('countDeptAccounts');
     if (elCntAcc) elCntAcc.textContent = countAccounts;
     const elCntTerm = document.getElementById('countDeptTerminated');

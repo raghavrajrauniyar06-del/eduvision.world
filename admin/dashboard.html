@@ -4889,7 +4889,7 @@ body.modal-open { overflow: hidden !important; }
           <i class="fa-solid fa-calendar-check" style="color: #f7d377;"></i> <span>Staff Attendance Hub</span>
         </a>
         <a href="#counsellorcrm" class="nav-item" data-module="counsellorcrm" onclick="switchAdminModule('counsellorcrm'); return false;">
-          <i class="fa-solid fa-address-card" style="color: #38bdf8;"></i> <span>Counsellor CRM</span>
+          <i class="fa-solid fa-address-card" style="color: #38bdf8;"></i> <span>Staff &amp; Team CRM</span>
         </a>
         <a href="#partners" class="nav-item" data-module="partners" onclick="switchAdminModule('partners'); return false;">
           <i class="fa-solid fa-handshake" style="color: #2dd4bf;"></i> <span>Associate Partners</span>
@@ -5063,13 +5063,13 @@ body.modal-open { overflow: hidden !important; }
 
       </section>
 
-      <!-- ── MODULE: COUNSELLOR CRM ────────────────────────────────────────── -->
+      <!-- ── MODULE: STAFF & TEAM CRM ────────────────────────────────────────── -->
       <section class="module-view" id="mod-counsellorcrm">
         <div style="background: rgba(15, 23, 42, 0.6); padding: 20px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
           <div>
             <h3 style="font-family:'Playfair Display', serif; font-size:1.35rem; font-weight:700; color:#fff; margin:0; display:flex; align-items:center; gap:12px;">
-              <span>Counsellor &amp; Team CRM Directory</span>
-              <span id="crmGridCounterBadge" style="background:rgba(201,147,42,0.15); border:1px solid rgba(201,147,42,0.35); color:#f7d377; font-size:0.75rem; padding:3px 10px; border-radius:20px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">3 Active Counsellors</span>
+              <span>Staff &amp; Team CRM Directory</span>
+              <span id="crmGridCounterBadge" style="background:rgba(201,147,42,0.15); border:1px solid rgba(201,147,42,0.35); color:#f7d377; font-size:0.75rem; padding:3px 10px; border-radius:20px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">4 Active Counsellors</span>
             </h3>
             <p style="margin:4px 0 0 0; font-size:0.82rem; color:#94a3b8;">Department-segregated CRM workspaces, active operations, and role-based records</p>
           </div>
@@ -5081,10 +5081,7 @@ body.modal-open { overflow: hidden !important; }
         <!-- Corporate Enterprise Department Filter Tabs -->
         <div class="crm-dept-filter-tabs" id="crmDeptFilterTabs" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;">
           <button type="button" class="crm-dept-tab-btn active" data-dept="counsellors" onclick="switchCrmDeptFilter('counsellors')" style="padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.25s; background:linear-gradient(135deg, #c9932a 0%, #8a6015 100%); color:#000; border:none; box-shadow:0 4px 15px rgba(201,147,42,0.3);">
-            <i class="fa-solid fa-graduation-cap"></i> <span>Active Counsellors</span> <span id="countDeptCounsellors" style="background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-size:0.75rem;">3</span>
-          </button>
-          <button type="button" class="crm-dept-tab-btn" data-dept="telesales" onclick="switchCrmDeptFilter('telesales')" style="padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.25s; background:rgba(255,255,255,0.04); color:#94a3b8; border:1px solid rgba(255,255,255,0.1);">
-            <i class="fa-solid fa-headset" style="color:#a855f7;"></i> <span>Telesales Team</span> <span id="countDeptTelesales" style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:12px; font-size:0.75rem;">1</span>
+            <i class="fa-solid fa-graduation-cap"></i> <span>Active Counsellors</span> <span id="countDeptCounsellors" style="background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-size:0.75rem;">4</span>
           </button>
           <button type="button" class="crm-dept-tab-btn" data-dept="accounts" onclick="switchCrmDeptFilter('accounts')" style="padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.25s; background:rgba(255,255,255,0.04); color:#94a3b8; border:1px solid rgba(255,255,255,0.1);">
             <i class="fa-solid fa-file-invoice-dollar" style="color:#38bdf8;"></i> <span>Accounts &amp; CA</span> <span id="countDeptAccounts" style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:12px; font-size:0.75rem;">1</span>
