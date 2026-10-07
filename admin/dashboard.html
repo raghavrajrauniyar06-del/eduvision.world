@@ -6111,61 +6111,109 @@ body.modal-open { overflow: hidden !important; }
         <!-- Authorized CTO Command Surface -->
         <div id="ctoAuthorizedSurface" style="display:none;">
           
-          <!-- 1. Master CTO Executive Header -->
-          <div class="glass-box mac-stagger-1" style="padding:22px 28px; margin-bottom:20px; border:1px solid rgba(245,158,11,0.3); background:radial-gradient(circle at 10% 20%, rgba(201,147,42,0.14) 0%, rgba(13,20,36,0.85) 100%);">
+          <!-- 1. Master CTO Executive Header (Supreme Command) -->
+          <div class="glass-box mac-stagger-1" style="padding:22px 28px; margin-bottom:18px; border:1px solid rgba(245,158,11,0.35); background:radial-gradient(circle at 10% 20%, rgba(201,147,42,0.18) 0%, rgba(13,20,36,0.92) 100%); box-shadow:0 12px 35px rgba(0,0,0,0.4), 0 0 30px rgba(245,158,11,0.12);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
               <div style="display:flex; align-items:center; gap:16px;">
-                <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, #f59e0b, #d97706); display:flex; align-items:center; justify-content:center; color:#070b14; font-size:1.6rem; box-shadow:0 6px 20px rgba(245,158,11,0.4); border:1px solid #fde68a;">
+                <div style="width:56px; height:56px; border-radius:18px; background:linear-gradient(135deg, #f59e0b, #d97706); display:flex; align-items:center; justify-content:center; color:#070b14; font-size:1.75rem; box-shadow:0 8px 24px rgba(245,158,11,0.45); border:2px solid #fde68a;">
                   <i class="fa-solid fa-crown"></i>
                 </div>
                 <div>
                   <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <h2 style="font-family:var(--font-heading); font-size:1.4rem; font-weight:800; color:#fff; margin:0; letter-spacing:0.4px;">
+                    <h2 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:900; color:#fff; margin:0; letter-spacing:0.4px;">
                       CTO RAGHAV RAJ RAUNIYAR
                     </h2>
-                    <span style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#070b14; font-weight:800; font-size:0.65rem; padding:3px 8px; border-radius:6px; letter-spacing:0.8px; text-transform:uppercase; box-shadow:0 2px 8px rgba(245,158,11,0.3);">
-                      CTO CONTROL · MASTER MANAGEMENT
+                    <span style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#070b14; font-weight:900; font-size:0.68rem; padding:4px 10px; border-radius:6px; letter-spacing:0.8px; text-transform:uppercase; box-shadow:0 2px 10px rgba(245,158,11,0.4);">
+                      👑 CTO SUPREME COMMAND · MASTER GOVERNANCE
+                    </span>
+                    <span id="ctoLiveHeartbeatBadge" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;">
+                      <span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span> SYSTEM NOMINAL
                     </span>
                   </div>
-                  <p style="color:var(--text-muted); font-size:0.82rem; margin-top:4px; margin-bottom:0;">
-                    Centralized platform governance, 404 page kill-switches, role permission matrices, and real-time security overrides.
+                  <p style="color:var(--text-muted); font-size:0.82rem; margin-top:5px; margin-bottom:0;">
+                    Supreme enterprise control deck. Real-time governance over all pages, role matrices, employee identities, cloud telemetry &amp; emergency kill-switches.
                   </p>
                 </div>
               </div>
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn-gold" onclick="refreshCtoControlCenter()" style="padding:9px 18px; font-size:0.82rem;">
+                <button type="button" class="btn-outline" onclick="ctoPingAllInfrastructure()" style="padding:9px 16px; font-size:0.8rem; font-weight:700; color:#38bdf8; border-color:rgba(56,189,248,0.4);">
+                  <i class="fa-solid fa-heart-pulse"></i> Ping Infra
+                </button>
+                <button type="button" class="btn-gold" onclick="refreshCtoControlCenter()" style="padding:9px 18px; font-size:0.82rem; font-weight:700;">
                   <i class="fa-solid fa-rotate"></i> Sync Controls
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- 2. Master Metrics Cluster -->
-          <div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:20px;">
-            <div class="glass-box" style="padding:16px 20px;">
-              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Total System Modules</div>
-              <div style="font-size:1.6rem; font-weight:800; color:#38bdf8; margin-top:4px;" id="statTotalModules">0</div>
+          <!-- 2. Master Telemetry HUD Cluster -->
+          <div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:18px;">
+            <div class="glass-box" style="padding:14px 18px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Controlled Modules</div>
+              <div style="font-size:1.55rem; font-weight:800; color:#38bdf8; margin-top:3px;" id="statTotalModules">0</div>
             </div>
-            <div class="glass-box" style="padding:16px 20px;">
-              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Guarded Public Pages</div>
-              <div style="font-size:1.6rem; font-weight:800; color:#34d399; margin-top:4px;" id="statGuardedPages">0</div>
+            <div class="glass-box" style="padding:14px 18px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Guarded Webpages</div>
+              <div style="font-size:1.55rem; font-weight:800; color:#34d399; margin-top:3px;" id="statGuardedPages">0</div>
             </div>
-            <div class="glass-box" style="padding:16px 20px;">
-              <div style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Active Global Locks</div>
-              <div style="font-size:1.6rem; font-weight:800; color:#f87171; margin-top:4px;" id="statGlobalLocks">0</div>
+            <div class="glass-box" style="padding:14px 18px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Global Kill-Switches</div>
+              <div style="font-size:1.55rem; font-weight:800; color:#f87171; margin-top:3px;" id="statGlobalLocks">0</div>
+            </div>
+            <div class="glass-box" style="padding:14px 18px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Active Staff Identity</div>
+              <div style="font-size:1.55rem; font-weight:800; color:#f59e0b; margin-top:3px;" id="statTotalStaff">0</div>
+            </div>
+            <div class="glass-box" style="padding:14px 18px;">
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Cloud Database Link</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#10b981; margin-top:8px; display:flex; align-items:center; gap:6px;" id="statDbSyncStatus">
+                <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span> LIVE CONNECTED
+              </div>
             </div>
           </div>
 
-          <!-- 3. Sub-Navigation Tabs: [ ⚡ Page & 404 Kill-Switches ] vs [ 🛡️ Role Permission Matrix ] -->
+          <!-- 3. Master Quick Superpowers Action Bar (1-Click God-Mode Actions) -->
+          <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:12px 18px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.72rem; color:#f7d377; font-weight:800; text-transform:uppercase; letter-spacing:0.8px;">
+                <i class="fa-solid fa-bolt" style="color:var(--gold-light);"></i> 1-Click Superpowers:
+              </span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" id="btnCtoPanicMode" class="btn-outline" onclick="toggleCtoPanicMode()" style="padding:6px 12px; font-size:0.74rem; font-weight:700; border-radius:8px; color:#fca5a5; border-color:rgba(239,68,68,0.4);" title="Freeze all public & staff changes across the platform">
+                <i class="fa-solid fa-triangle-exclamation"></i> Emergency Panic Lock
+              </button>
+              <button type="button" id="btnCtoMaintenanceMode" class="btn-outline" onclick="toggleCtoMaintenanceMode()" style="padding:6px 12px; font-size:0.74rem; font-weight:700; border-radius:8px; color:#fcd34d; border-color:rgba(245,158,11,0.4);" title="Display Under Maintenance page to non-admins">
+                <i class="fa-solid fa-wrench"></i> Maintenance Mode
+              </button>
+              <button type="button" id="btnCtoWebformsFreeze" class="btn-outline" onclick="toggleCtoWebformsFreeze()" style="padding:6px 12px; font-size:0.74rem; font-weight:700; border-radius:8px; color:#38bdf8; border-color:rgba(56,189,248,0.4);" title="Temporarily pause incoming public admissions & inquiries">
+                <i class="fa-solid fa-snowflake"></i> Freeze Admissions Forms
+              </button>
+              <button type="button" class="btn-outline" onclick="terminateAllNonAdminSessions()" style="padding:6px 12px; font-size:0.74rem; font-weight:700; border-radius:8px; color:#c084fc; border-color:rgba(192,132,252,0.4);" title="Force re-login across all active staff and student sessions">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Terminate Sessions
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. Sub-Navigation Tabs: 6 Power Command Super-Tabs -->
           <div style="display:flex; gap:10px; margin-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; flex-wrap:wrap;">
-            <button class="btn-tab active" id="tabBtnCtoPages" onclick="switchCtoSubTab('pages')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35)); border:1px solid rgba(247,211,119,0.45); color:#f7d377; cursor:pointer;">
+            <button class="btn-tab active" id="tabBtnCtoPages" onclick="switchCtoSubTab('pages')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:linear-gradient(135deg, rgba(201,147,42,0.25), rgba(138,96,21,0.35)); border:1px solid rgba(247,211,119,0.45); color:#f7d377; cursor:pointer;">
               <i class="fa-solid fa-power-off"></i> ⚡ Public Pages &amp; 404 Kill-Switches
             </button>
-            <button class="btn-tab" id="tabBtnCtoMatrix" onclick="switchCtoSubTab('matrix')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
-              <i class="fa-solid fa-shield-halved"></i> 🛡️ Role Permission Matrix
+            <button class="btn-tab" id="tabBtnCtoMatrix" onclick="switchCtoSubTab('matrix')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-sliders"></i> 🛡️ Feature Visibility Matrix
             </button>
-            <button class="btn-tab" id="tabBtnCtoDelegates" onclick="switchCtoSubTab('delegates')" style="padding:10px 20px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+            <button class="btn-tab" id="tabBtnCtoGodMode" onclick="switchCtoSubTab('godmode')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-user-astronaut"></i> 👑 Staff God-Mode &amp; Identity
+            </button>
+            <button class="btn-tab" id="tabBtnCtoDelegates" onclick="switchCtoSubTab('delegates')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
               <i class="fa-solid fa-user-shield"></i> 🔑 Access Delegation Manager
+            </button>
+            <button class="btn-tab" id="tabBtnCtoInfra" onclick="switchCtoSubTab('infra')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-database"></i> 🩺 Cloud DB &amp; Infrastructure
+            </button>
+            <button class="btn-tab" id="tabBtnCtoAudit" onclick="switchCtoSubTab('audit')" style="padding:10px 18px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; cursor:pointer;">
+              <i class="fa-solid fa-clock-rotate-left"></i> 📜 Audit Flight Recorder
             </button>
           </div>
 
@@ -6351,6 +6399,171 @@ body.modal-open { overflow: hidden !important; }
                 </thead>
                 <tbody id="ctoDelegatesTableBody">
                   <!-- Rendered dynamically via renderCtoDelegatesList in dashboard.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SUB-VIEW D: STAFF GOD-MODE & IDENTITY COMMAND (SUPREME AUTHORITY) -->
+          <div id="ctoSubViewGodMode" class="glass-box" style="padding:22px; margin-bottom:20px; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.15rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-user-astronaut" style="color:var(--gold-light);"></i> Staff God-Mode &amp; Identity Command Center
+                </h3>
+                <p style="font-size:0.8rem; color:#94a3b8; margin:3px 0 0;">
+                  Supreme authority over every employee in the organization. Change designations, force password resets, terminate active logins, and grant or revoke privileges.
+                </p>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="ctoGodModeSearchInput" placeholder="Search staff (name, ID, branch)..." oninput="handleCtoGodModeSearch(this.value)" style="padding:8px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:0.85rem; width:260px;">
+              </div>
+            </div>
+
+            <!-- Role Filter Pills -->
+            <div id="ctoGodModeRolePills" style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+              <button class="btn-outline active" onclick="filterCtoGodModeRole('all', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">All Workforce (<span id="ctoGodModeTotalCount">0</span>)</button>
+              <button class="btn-outline" onclick="filterCtoGodModeRole('counsellor', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Counsellors</button>
+              <button class="btn-outline" onclick="filterCtoGodModeRole('team_leader', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Team Leaders</button>
+              <button class="btn-outline" onclick="filterCtoGodModeRole('admin', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Admins &amp; Execs</button>
+              <button class="btn-outline" onclick="filterCtoGodModeRole('associate', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Associate Partners</button>
+              <button class="btn-outline" onclick="filterCtoGodModeRole('student', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Students</button>
+            </div>
+
+            <!-- God-Mode Staff Cards Grid -->
+            <div id="ctoGodModeCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:14px;"></div>
+          </div>
+
+          <!-- SUB-VIEW E: CLOUD INFRASTRUCTURE & DATABASE HEALTH HUB -->
+          <div id="ctoSubViewInfra" class="glass-box" style="padding:22px; margin-bottom:20px; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.15rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-server" style="color:#38bdf8;"></i> Cloud Database &amp; System Infrastructure Telemetry
+                </h3>
+                <p style="font-size:0.8rem; color:#94a3b8; margin:3px 0 0;">
+                  Live telemetry, database schema health, storage quotas, and real-time mesh latency for EduVision Global.
+                </p>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-outline" onclick="reSyncCtoSystemCache()" style="padding:8px 14px; font-size:0.8rem; font-weight:700; color:#cbd5e1;">
+                  <i class="fa-solid fa-broom"></i> Optimize Storage
+                </button>
+                <button type="button" class="btn-gold" onclick="runCtoInfraDiagnostics()" style="padding:8px 18px; font-size:0.8rem; font-weight:700;">
+                  <i class="fa-solid fa-stethoscope"></i> Run Full Diagnostic
+                </button>
+              </div>
+            </div>
+
+            <!-- Health Status Grid -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:20px;">
+              <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Supabase DB Cloud</div>
+                <div style="font-size:1.1rem; font-weight:800; color:#34d399; margin-top:4px; display:flex; align-items:center; gap:6px;" id="infraDbStatus">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span> Online &amp; Healthy
+                </div>
+                <div style="font-size:0.72rem; color:#64748b; margin-top:4px;" id="infraDbLatency">Latency: ~128ms</div>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">LocalStorage Storage</div>
+                <div style="font-size:1.1rem; font-weight:800; color:#38bdf8; margin-top:4px;" id="infraStorageStatus">
+                  Nominal Quota
+                </div>
+                <div style="font-size:0.72rem; color:#64748b; margin-top:4px;" id="infraStorageUsed">Used: Calculating...</div>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Realtime Mesh Broadcast</div>
+                <div style="font-size:1.1rem; font-weight:800; color:#c084fc; margin-top:4px;">
+                  Active Channel
+                </div>
+                <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">Channel: eduvision_sync</div>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Maintenance Mode</div>
+                <div style="font-size:1.1rem; font-weight:800; color:#34d399; margin-top:4px;" id="infraMaintStatus">
+                  NORMAL (Public Live)
+                </div>
+                <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">No global disruptions</div>
+              </div>
+            </div>
+
+            <!-- Database Tables Record Count Strip -->
+            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 18px; margin-bottom:18px;">
+              <div style="font-size:0.75rem; font-weight:800; color:#f7d377; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+                <i class="fa-solid fa-table-cells"></i> Live Primary Database Tables &amp; Record Counts:
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px;" id="infraTableCountersStrip">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Terminal Diagnostic Log Console -->
+            <div style="background:#050811; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:16px 18px; font-family:var(--font-mono, monospace);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;">
+                <span style="font-size:0.75rem; color:#94a3b8; display:flex; align-items:center; gap:8px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#ef4444;"></span>
+                  <span style="width:8px; height:8px; border-radius:50%; background:#f59e0b;"></span>
+                  <span style="width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+                  CTO Console Diagnostic Stream
+                </span>
+                <span style="font-size:0.7rem; color:#64748b;" id="infraDiagnosticTimestamp">Ready for scan</span>
+              </div>
+              <pre id="infraDiagnosticLog" style="margin:0; font-size:0.78rem; color:#34d399; line-height:1.55; max-height:220px; overflow-y:auto; white-space:pre-wrap;">EduVision CTO Autonomous Telemetry Engine v2.4
+Waiting for diagnostic trigger. Click "Run Full Diagnostic" to audit all infrastructure endpoints.</pre>
+            </div>
+          </div>
+
+          <!-- SUB-VIEW F: CTO SECURITY FLIGHT RECORDER & AUDIT TRAIL -->
+          <div id="ctoSubViewAudit" class="glass-box" style="padding:22px; margin-bottom:20px; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.15rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-clock-rotate-left" style="color:var(--gold-light);"></i> Security Flight Recorder &amp; Tamper-Evident Audit Trail
+                </h3>
+                <p style="font-size:0.8rem; color:#94a3b8; margin:3px 0 0;">
+                  Chronological, tamper-evident log of every permission modification, lock release, employee override, and delegate transaction.
+                </p>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-outline" onclick="exportCtoAuditLogs('json')" style="padding:8px 14px; font-size:0.8rem; font-weight:700; color:#38bdf8;">
+                  <i class="fa-solid fa-file-arrow-down"></i> Export JSON
+                </button>
+                <button type="button" class="btn-outline" onclick="exportCtoAuditLogs('csv')" style="padding:8px 14px; font-size:0.8rem; font-weight:700; color:#34d399;">
+                  <i class="fa-solid fa-file-csv"></i> Export CSV
+                </button>
+                <button type="button" class="btn-gold" onclick="loadCtoAuditLogsLive()" style="padding:8px 18px; font-size:0.8rem; font-weight:700;">
+                  <i class="fa-solid fa-rotate"></i> Refresh Log
+                </button>
+              </div>
+            </div>
+
+            <!-- Audit Filter Pills -->
+            <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;" id="ctoAuditFilterPills">
+              <button class="btn-outline active" onclick="filterCtoAuditType('all', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">All Events (<span id="ctoAuditTotalCount">0</span>)</button>
+              <button class="btn-outline" onclick="filterCtoAuditType('page_lock', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Page Kill-Switches</button>
+              <button class="btn-outline" onclick="filterCtoAuditType('feature_toggle', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Feature Toggles</button>
+              <button class="btn-outline" onclick="filterCtoAuditType('god_mode', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Staff God-Mode</button>
+              <button class="btn-outline" onclick="filterCtoAuditType('delegation', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Access Delegations</button>
+            </div>
+
+            <!-- Audit Records Table -->
+            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:14px; overflow:hidden;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.83rem; text-align:left;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.04); color:#94a3b8; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.5px;">
+                    <th style="padding:12px 16px;">Timestamp</th>
+                    <th style="padding:12px 16px;">Event Type</th>
+                    <th style="padding:12px 16px;">Actor / Authority</th>
+                    <th style="padding:12px 16px;">Target Entity</th>
+                    <th style="padding:12px 16px;">Action Details</th>
+                    <th style="padding:12px 16px; text-align:right;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="ctoAuditLiveTableBody">
+                  <!-- Rendered dynamically -->
                 </tbody>
               </table>
             </div>
@@ -7906,6 +8119,120 @@ body.modal-open { overflow: hidden !important; }
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- MODAL 14C: GOD-MODE STAFF DESIGNATION & BRANCH REASSIGNMENT MODAL -->
+  <div class="modal-overlay" id="godModeRoleModal" onclick="if(event.target === this) closeGodModeRoleModal()" style="z-index:99999; display:none; align-items:center; justify-content:center;">
+    <div class="modal-card" style="max-width:540px; width:94%; padding:24px 28px; border-radius:22px; background:rgba(13,20,36,0.96); border:1px solid rgba(245,158,11,0.35); box-shadow:0 20px 50px rgba(0,0,0,0.7);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, rgba(201,147,42,0.3), rgba(201,147,42,0.1)); border:1px solid var(--border-gold); display:flex; align-items:center; justify-content:center; color:var(--gold-light); font-size:1.25rem;">
+            <i class="fa-solid fa-user-gear"></i>
+          </div>
+          <div>
+            <div style="font-size:0.7rem; color:var(--gold-light); text-transform:uppercase; font-weight:800; letter-spacing:0.5px;">
+              CTO GOD-MODE REASSIGNMENT
+            </div>
+            <h3 style="font-family:var(--font-heading); font-size:1.15rem; font-weight:800; color:#fff; margin:2px 0 0;" id="godModeRoleTargetName">
+              Staff Member
+            </h3>
+          </div>
+        </div>
+        <button class="btn-modal-close" onclick="closeGodModeRoleModal()">&times;</button>
+      </div>
+
+      <input type="hidden" id="godModeRoleTargetEmpId">
+
+      <form onsubmit="submitGodModeRoleChange(event)">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="color:#cbd5e1; font-size:0.8rem; font-weight:700;">Reassign Role / Authority *</label>
+          <select id="godModeNewRole" style="width:100%; padding:10px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.85rem;" required>
+            <option value="Counsellor">Counsellor (Admissions Team)</option>
+            <option value="Senior Counsellor">Senior Counsellor (Lead Specialist)</option>
+            <option value="Team Leader">Team Leader (Branch Management)</option>
+            <option value="Admin">Admin (Executive Operations)</option>
+            <option value="Associate Partner">Associate Partner</option>
+            <option value="Student">Student</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="color:#cbd5e1; font-size:0.8rem; font-weight:700;">Designation Title (Display Name)</label>
+          <input type="text" id="godModeNewDesignation" placeholder="e.g. Senior Admissions Lead / Regional Head" style="width:100%; padding:10px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.85rem;">
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px;">
+          <label style="color:#cbd5e1; font-size:0.8rem; font-weight:700;">Branch Office / Regional Center *</label>
+          <select id="godModeNewBranch" style="width:100%; padding:10px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.85rem;" required>
+            <option value="Delhi Head Office">Delhi Head Office</option>
+            <option value="Mumbai Branch">Mumbai Branch</option>
+            <option value="Bangalore Branch">Bangalore Branch</option>
+            <option value="Kolkata Branch">Kolkata Branch</option>
+            <option value="Corporate HQ">Corporate HQ</option>
+            <option value="Remote / Digital">Remote / Digital</option>
+          </select>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn-outline" onclick="closeGodModeRoleModal()">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding:10px 22px; font-weight:700;">
+            <i class="fa-solid fa-check"></i> Save &amp; Reassign Live
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 14D: GOD-MODE FORCE PASSWORD RESET MODAL -->
+  <div class="modal-overlay" id="godModeResetPwdModal" onclick="if(event.target === this) closeGodModeResetPwdModal()" style="z-index:99999; display:none; align-items:center; justify-content:center;">
+    <div class="modal-card" style="max-width:520px; width:94%; padding:24px 28px; border-radius:22px; background:rgba(13,20,36,0.96); border:1px solid rgba(239,68,68,0.35); box-shadow:0 20px 50px rgba(0,0,0,0.7);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:42px; height:42px; border-radius:12px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); display:flex; align-items:center; justify-content:center; color:#f87171; font-size:1.25rem;">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <div>
+            <div style="font-size:0.7rem; color:#fca5a5; text-transform:uppercase; font-weight:800; letter-spacing:0.5px;">
+              FORCE PASSWORD OVERRIDE
+            </div>
+            <h3 style="font-family:var(--font-heading); font-size:1.15rem; font-weight:800; color:#fff; margin:2px 0 0;" id="godModePwdTargetName">
+              Staff Member
+            </h3>
+          </div>
+        </div>
+        <button class="btn-modal-close" onclick="closeGodModeResetPwdModal()">&times;</button>
+      </div>
+
+      <input type="hidden" id="godModePwdTargetEmpId">
+
+      <p style="font-size:0.8rem; color:#cbd5e1; line-height:1.45; margin-bottom:14px;">
+        As CTO, you can immediately override this user's password. The user will be required to choose a new private password immediately upon their next login.
+      </p>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label style="color:#cbd5e1; font-size:0.8rem; font-weight:700;">Temporary Password</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="godModeTempPasswordInput" value="Pass123" style="flex:1; padding:10px 14px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.9rem; font-family:var(--font-mono, monospace); font-weight:700;">
+          <button type="button" class="btn-outline" onclick="generateRandomTempPassword()" style="padding:9px 14px; font-size:0.75rem;">
+            <i class="fa-solid fa-dice"></i> Generate
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px; padding:10px 14px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:8px;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin:0; font-size:0.78rem; color:#fde68a;">
+          <input type="checkbox" id="godModeMustChangePwdCheck" checked style="accent-color:#f59e0b;">
+          <strong>Enforce Mandatory Password Change</strong> on first sign-in
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn-outline" onclick="closeGodModeResetPwdModal()">Cancel</button>
+        <button type="button" class="btn-gold" onclick="submitGodModePasswordReset()" style="padding:10px 22px; font-weight:700; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; border-color:#fca5a5;">
+          <i class="fa-solid fa-shield-halved"></i> Force Reset Now
+        </button>
+      </div>
     </div>
   </div>
 
