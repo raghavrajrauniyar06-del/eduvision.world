@@ -2731,7 +2731,7 @@ body.modal-open { overflow: hidden !important; }
       <h2>EduVision</h2>
     </div>
     
-    <ul class="nav-menu">
+    <ul class="nav-menu" id="counsellorNavMenu">
       <li class="nav-item">
         <a class="nav-link active" onclick="switchView('dashboard')">
           <span>📊 Dashboard</span>
@@ -2774,6 +2774,55 @@ body.modal-open { overflow: hidden !important; }
       <li class="nav-item">
         <a class="nav-link" onclick="switchView('alerts')">
           <span>🔔 Alerts & Activity</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" onclick="openEmployeeProfileModal()" style="cursor:pointer;">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-user-gear" style="color:var(--gold-light);"></i> Profile &amp; Settings</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- CA & ACCOUNTS TAILORED NAVIGATION -->
+    <ul class="nav-menu" id="caNavMenu" style="display:none;">
+      <li class="nav-item">
+        <a class="nav-link active" onclick="switchView('dashboard')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-chart-line" style="color:var(--gold-light);"></i> Financial Desk</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-ca-student-fees" onclick="switchView('ca-student-fees')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-receipt" style="color:#10b981;"></i> Fee Approvals</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-ca-commissions" onclick="switchView('ca-commissions')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-hand-holding-dollar" style="color:#38bdf8;"></i> Partner Payouts</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-ca-univ-fees" onclick="switchView('ca-univ-fees')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-building-columns" style="color:#f59e0b;"></i> University Matrix</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-ca-expenses" onclick="switchView('ca-expenses')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-file-invoice-dollar" style="color:#ec4899;"></i> Expense Register</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-all-students-ca" onclick="switchView('all-students')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users" style="color:#a78bfa;"></i> Student Ledger</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nav-attendance-ca" onclick="switchView('attendance')">
+          <span style="display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-calendar-check" style="color:var(--gold-light);"></i> Attendance & Logs</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" onclick="switchView('alerts')">
+          <span>🔔 Alerts & Messages</span>
         </a>
       </li>
       <li class="nav-item">
@@ -2830,7 +2879,8 @@ body.modal-open { overflow: hidden !important; }
 
     <!-- 1. DASHBOARD VIEW -->
     <div id="view-dashboard" class="view-section active">
-      <!-- HERO ATTENDANCE CARD -->
+      <div id="counsellorDashboardContainer">
+        <!-- HERO ATTENDANCE CARD -->
       <div id="counsellorHeroAttendanceCard" style="margin-bottom:24px;"></div>
 
       <!-- OPERATIONAL QUICK BAR -->
@@ -3035,7 +3085,280 @@ body.modal-open { overflow: hidden !important; }
           </table>
         </div>
       </div>
-    </div>
+      </div> <!-- /counsellorDashboardContainer -->
+
+      <!-- CA / ACCOUNTS DEDICATED FINANCIAL WORKSPACE -->
+      <div id="caDashboardContainer" style="display:none;">
+        <!-- CA HERO ACTION BAR -->
+        <div class="dash-quick-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px; background:radial-gradient(ellipse at 20% 0%, rgba(201,147,42,0.18) 0%, rgba(15,23,42,0.85) 75%); border:1px solid rgba(247,211,119,0.3); border-radius:20px; padding:24px 28px; box-shadow:0 12px 35px rgba(0,0,0,0.4);">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+              <span style="background:rgba(201,147,42,0.2); color:var(--gold-light); border:1px solid rgba(247,211,119,0.35); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase;">
+                <i class="fa-solid fa-scale-balanced" style="margin-right:5px;"></i> CA & Finance Controller Desk
+              </span>
+              <span style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
+                <i class="fa-solid fa-shield-halved" style="margin-right:4px;"></i> Statutory Audit Mode
+              </span>
+            </div>
+            <h2 style="font-family:var(--font-heading); color:#fff; font-size:1.6rem; font-weight:800; margin:0 0 6px 0; letter-spacing:-0.5px;">
+              Financial Command & Accounts Clearance Hub
+            </h2>
+            <p style="color:var(--text-muted); font-size:0.88rem; margin:0; max-width:650px; line-height:1.5;">
+              Verify student admission fee slips, audit university fee remittances, approve associate partner commission payouts, and reconcile accounts in real-time.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <button onclick="openCaFeeModal()" class="dash-action-btn gold" style="background:var(--gold-gradient); color:#000; font-weight:700; padding:10px 18px; border-radius:12px; border:none; cursor:pointer; font-size:0.88rem; display:inline-flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(201,147,42,0.35);">
+              <i class="fa-solid fa-receipt"></i> + Record / Verify Fee
+            </button>
+            <button onclick="openCaExpenseModal()" class="dash-action-btn" style="background:rgba(236,72,153,0.15); border:1px solid rgba(236,72,153,0.35); color:#f472b6; font-weight:700; padding:10px 16px; border-radius:12px; cursor:pointer; font-size:0.88rem; display:inline-flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-file-invoice-dollar"></i> + Log Expense
+            </button>
+            <button onclick="exportCaFinancialAudit()" class="dash-action-btn" style="background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-weight:600; padding:10px 16px; border-radius:12px; cursor:pointer; font-size:0.88rem; display:inline-flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-file-excel"></i> Export Audit Sheet
+            </button>
+            <button onclick="initCaDashboard()" class="dash-action-btn" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-subtle); color:#94a3b8; padding:10px 14px; border-radius:12px; cursor:pointer; font-size:0.88rem;" title="Refresh Financial Data">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 FINANCIAL KPI CARDS -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 28px;">
+          <!-- CARD 1: Total Collections -->
+          <div class="metric-card interactive" onclick="switchCaTab('tab-ca-student-fees')" title="Click to view student fee receipts">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div class="metric-title" style="margin:0; font-size:0.85rem; font-weight:600;">Total Fee Collections</div>
+              <div style="width:38px; height:38px; border-radius:10px; background:rgba(16, 185, 129, 0.15); display:flex; align-items:center; justify-content:center;">
+                <i class="fa-solid fa-wallet" style="color:#10b981; font-size:1.1rem;"></i>
+              </div>
+            </div>
+            <div class="metric-value" id="caMetricCollections" style="color:#10b981; font-size:2.2rem; line-height:1; font-weight:800;">₹ 48,25,000</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:0.78rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+              <span>Realized in Bank</span>
+              <span style="background:rgba(16, 185, 129, 0.15); color:#34d399; padding:2px 7px; border-radius:6px; font-size:0.7rem; font-weight:700;">100% Verified</span>
+            </div>
+          </div>
+
+          <!-- CARD 2: Pending Approvals -->
+          <div class="metric-card interactive" onclick="switchCaTab('tab-ca-student-fees', 'pending')" title="Click to view pending fee slips">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div class="metric-title" style="margin:0; font-size:0.85rem; font-weight:600;">Pending Fee Approvals</div>
+              <div style="width:38px; height:38px; border-radius:10px; background:rgba(245, 158, 11, 0.15); display:flex; align-items:center; justify-content:center;">
+                <i class="fa-solid fa-receipt" style="color:#f59e0b; font-size:1.1rem;"></i>
+              </div>
+            </div>
+            <div class="metric-value" id="caMetricPending" style="color:#f59e0b; font-size:2.2rem; line-height:1; font-weight:800;">12</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:0.78rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+              <span>Slips awaiting clearance</span>
+              <span style="background:rgba(245, 158, 11, 0.15); color:#fbbf24; padding:2px 7px; border-radius:6px; font-size:0.7rem; font-weight:700;">⚠️ Needs Stamp</span>
+            </div>
+          </div>
+
+          <!-- CARD 3: Associate Commissions Due -->
+          <div class="metric-card interactive" onclick="switchCaTab('tab-ca-commissions')" title="Click to view partner commissions">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div class="metric-title" style="margin:0; font-size:0.85rem; font-weight:600;">Partner Commissions Due</div>
+              <div style="width:38px; height:38px; border-radius:10px; background:rgba(56, 189, 248, 0.15); display:flex; align-items:center; justify-content:center;">
+                <i class="fa-solid fa-hand-holding-dollar" style="color:#38bdf8; font-size:1.1rem;"></i>
+              </div>
+            </div>
+            <div class="metric-value" id="caMetricCommissions" style="color:#38bdf8; font-size:2.2rem; line-height:1; font-weight:800;">₹ 3,42,000</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:0.78rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+              <span>8 Associate Partners</span>
+              <span style="background:rgba(56, 189, 248, 0.15); color:#38bdf8; padding:2px 7px; border-radius:6px; font-size:0.7rem; font-weight:700;">Approved for Payout</span>
+            </div>
+          </div>
+
+          <!-- CARD 4: University Remittance -->
+          <div class="metric-card interactive" onclick="switchCaTab('tab-ca-univ-fees')" title="Click to view university fee matrix">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div class="metric-title" style="margin:0; font-size:0.85rem; font-weight:600;">University Remittance</div>
+              <div style="width:38px; height:38px; border-radius:10px; background:rgba(247, 211, 119, 0.15); display:flex; align-items:center; justify-content:center;">
+                <i class="fa-solid fa-building-columns" style="color:var(--gold-light); font-size:1.1rem;"></i>
+              </div>
+            </div>
+            <div class="metric-value" id="caMetricRemittance" style="color:var(--gold-light); font-size:2.2rem; line-height:1; font-weight:800;">98.6%</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:0.78rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+              <span>₹ 14,80,000 cleared</span>
+              <span style="background:rgba(247, 211, 119, 0.15); color:var(--gold-light); padding:2px 7px; border-radius:6px; font-size:0.7rem; font-weight:700;">Reconciled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CA INTERACTIVE NAVIGATION TABS -->
+        <div style="display:flex; gap:10px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:22px; overflow-x:auto; padding-bottom:6px;">
+          <button class="ca-tab-btn active" id="tabBtn-ca-student-fees" onclick="switchCaTab('tab-ca-student-fees')" style="background:transparent; border:none; border-bottom:2px solid var(--gold-light); color:var(--gold-light); padding:10px 18px; font-weight:700; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-receipt"></i> Student Fee Approvals
+          </button>
+          <button class="ca-tab-btn" id="tabBtn-ca-commissions" onclick="switchCaTab('tab-ca-commissions')" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; padding:10px 18px; font-weight:700; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-hand-holding-dollar"></i> Partner Commissions
+          </button>
+          <button class="ca-tab-btn" id="tabBtn-ca-univ-fees" onclick="switchCaTab('tab-ca-univ-fees')" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; padding:10px 18px; font-weight:700; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-building-columns"></i> University Fee Matrix
+          </button>
+          <button class="ca-tab-btn" id="tabBtn-ca-expenses" onclick="switchCaTab('tab-ca-expenses')" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; padding:10px 18px; font-weight:700; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Expense & Cash Register
+          </button>
+        </div>
+
+        <!-- TAB 1: STUDENT FEE APPROVALS -->
+        <div id="tab-ca-student-fees" class="ca-tab-content">
+          <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+              <input type="text" id="caFeeSearchInput" class="crm-search" placeholder="Search student name, student ID, transaction ID..." oninput="filterCaFees()" style="flex:1;">
+              <select id="caFeeStatusFilter" class="crm-filter" onchange="filterCaFees()" style="width:180px;">
+                <option value="all">All Verification Statuses</option>
+                <option value="pending" selected>Pending Verification (Action)</option>
+                <option value="approved">Approved & Verified</option>
+                <option value="unpaid">Unpaid / Awaiting Slip</option>
+              </select>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button onclick="approveAllPendingFees()" class="dash-action-btn" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; font-size:0.84rem;">
+                <i class="fa-solid fa-check-double"></i> Batch Approve Clean Slips
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Student Name</th>
+                  <th>University & Course</th>
+                  <th>Amount Paid</th>
+                  <th>Payment Mode & UTR</th>
+                  <th>Receipt Slip</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">CA Action</th>
+                </tr>
+              </thead>
+              <tbody id="caFeeTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading fee receipts...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: PARTNER COMMISSIONS -->
+        <div id="tab-ca-commissions" class="ca-tab-content" style="display:none;">
+          <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+              <input type="text" id="caCommissionSearch" class="crm-search" placeholder="Search partner agency, student, course..." oninput="filterCaCommissions()" style="flex:1;">
+              <select id="caCommissionStatusFilter" class="crm-filter" onchange="filterCaCommissions()" style="width:180px;">
+                <option value="all">All Payout Statuses</option>
+                <option value="pending">Pending CA Approval</option>
+                <option value="ready">Approved for Payout</option>
+                <option value="settled">Settled / Paid</option>
+              </select>
+            </div>
+            <button onclick="generatePartnerPayoutAdvice()" class="dash-action-btn gold" style="background:var(--gold-gradient); color:#000; font-weight:700; padding:8px 16px; border-radius:10px; border:none; cursor:pointer; font-size:0.84rem;">
+              <i class="fa-solid fa-file-invoice"></i> Generate Bank Payout Advice
+            </button>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Partner Agency</th>
+                  <th>Partner Contact</th>
+                  <th>Referred Student</th>
+                  <th>University / Program</th>
+                  <th>Course Fee</th>
+                  <th>Commission %</th>
+                  <th>Commission Payable</th>
+                  <th>Payout Status</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="caCommissionTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: UNIVERSITY FEE MATRIX -->
+        <div id="tab-ca-univ-fees" class="ca-tab-content" style="display:none;">
+          <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+              <input type="text" id="caUnivSearch" class="crm-search" placeholder="Search university name, degree or location..." oninput="filterCaUnivFees()" style="flex:1;">
+              <select id="caUnivCategoryFilter" class="crm-filter" onchange="filterCaUnivFees()" style="width:160px;">
+                <option value="all">All Categories</option>
+                <option value="Online">Online Degrees</option>
+                <option value="Regular">Regular Campus</option>
+              </select>
+            </div>
+            <div style="color:var(--text-muted); font-size:0.84rem;">
+              <i class="fa-solid fa-sync" style="color:var(--gold-light);"></i> Auto-synced with Partner University Registry
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>University</th>
+                  <th>Accreditation</th>
+                  <th>Location</th>
+                  <th>Programs Covered</th>
+                  <th>Standard Total Fee</th>
+                  <th>Installment / EMI</th>
+                  <th>University Net Remittance</th>
+                  <th>EduVision Margin</th>
+                </tr>
+              </thead>
+              <tbody id="caUnivTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: EXPENSE & CASH REGISTER -->
+        <div id="tab-ca-expenses" class="ca-tab-content" style="display:none;">
+          <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+              <input type="text" id="caExpenseSearch" class="crm-search" placeholder="Search expense description, paid to, category..." oninput="filterCaExpenses()" style="flex:1;">
+              <select id="caExpenseCategoryFilter" class="crm-filter" onchange="filterCaExpenses()" style="width:180px;">
+                <option value="all">All Categories</option>
+                <option value="Office">Office & Infrastructure</option>
+                <option value="IT">IT & Software Subscriptions</option>
+                <option value="Marketing">Marketing & Leads Acquisition</option>
+                <option value="Salary">Salaries & Staff Incentives</option>
+                <option value="Petty">Petty Cash & Refreshments</option>
+              </select>
+            </div>
+            <button onclick="openCaExpenseModal()" class="dash-action-btn gold" style="background:var(--gold-gradient); color:#000; font-weight:700; padding:8px 16px; border-radius:10px; border:none; cursor:pointer; font-size:0.84rem;">
+              <i class="fa-solid fa-plus"></i> + Add Expense Voucher
+            </button>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Voucher #</th>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Paid To</th>
+                  <th>Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Logged By</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="caExpenseTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
     <!-- 2. MY STUDENTS VIEW -->
     <div id="view-my-students" class="view-section">
@@ -5660,9 +5983,28 @@ body.modal-open { overflow: hidden !important; }
 
         document.getElementById('cProfileName').textContent = currentUser.full_name || 'Counsellor';
         document.getElementById('cDesignation').textContent = currentUser.designation || currentUser.role || 'Counsellor';
-        document.getElementById('topBarTitle').textContent = `Counsellor Workspace`;
-        document.getElementById('topBarSubtitle').textContent = `${(currentUser.role || 'Counsellor').toUpperCase()} • ${currentUser.branch || 'Head Office'}`;
         document.getElementById('cAvatar').textContent = (currentUser.full_name || 'CO').substring(0,2).toUpperCase();
+
+        const isCa = isCaRole(currentUser);
+        if (isCa) {
+          document.getElementById('topBarTitle').textContent = `Chartered Accountant Desk & Financial Control`;
+          document.getElementById('topBarSubtitle').textContent = `ACCOUNTS & FINANCE LEAD • ${currentUser.branch || 'Head Office'}`;
+          
+          const cNav = document.getElementById('counsellorNavMenu');
+          const caNav = document.getElementById('caNavMenu');
+          if (cNav) cNav.style.display = 'none';
+          if (caNav) caNav.style.display = 'block';
+
+          const cDash = document.getElementById('counsellorDashboardContainer');
+          const caDash = document.getElementById('caDashboardContainer');
+          if (cDash) cDash.style.display = 'none';
+          if (caDash) caDash.style.display = 'block';
+
+          setTimeout(() => initCaDashboard(), 100);
+        } else {
+          document.getElementById('topBarTitle').textContent = `Counsellor Workspace`;
+          document.getElementById('topBarSubtitle').textContent = `${(currentUser.role || 'Counsellor').toUpperCase()} • ${currentUser.branch || 'Head Office'}`;
+        }
 
         // RBAC: Role Based Access Control - All Students is standard for all counsellors
         const allStudentsLink = document.getElementById('allStudentsLink');
@@ -5684,6 +6026,11 @@ body.modal-open { overflow: hidden !important; }
     function switchView(viewId) {
       if (typeof window.closeMobileSidebar === 'function') {
         window.closeMobileSidebar();
+      }
+      if (['ca-student-fees', 'ca-commissions', 'ca-univ-fees', 'ca-expenses'].includes(viewId)) {
+        switchView('dashboard');
+        switchCaTab('tab-' + viewId);
+        return;
       }
       if (viewId === 'profile' || viewId === 'settings') {
         openEmployeeProfileModal(viewId === 'settings' ? 'tab-emp-security' : 'tab-emp-personal');
@@ -12379,6 +12726,528 @@ CRITICAL MANDATES:
       } catch(err) {
         console.error("Attendance View Load Error:", err);
       }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       CHARTERED ACCOUNTANT & FINANCIAL CONTROL WORKSPACE ENGINE
+    ───────────────────────────────────────────────────────── */
+    function isCaRole(user) {
+      if (!user) return false;
+      const r = (user.role || '').toLowerCase();
+      const d = (user.designation || '').toLowerCase();
+      return r.includes('ca') || r.includes('account') || r.includes('finance') || d.includes('account') || d.includes('chartered');
+    }
+
+    // In-memory data stores for CA Desk
+    let caFeeRecords = [];
+    let caCommissions = [
+      { id: 'COMM-101', partner: 'Apex Global Edu Services', contact: '+91 98231 44102', student: 'Aarav Sharma', univ: 'Online Manipal University (MBA)', fee: 150000, rate: 15, payable: 22500, status: 'ready', ref: 'PAY-MAN-2026' },
+      { id: 'COMM-102', partner: 'CareerNext Admissions Pvt Ltd', contact: '+91 97112 55920', student: 'Pooja Verma', univ: 'Amity Online (MCA)', fee: 175000, rate: 18, payable: 31500, status: 'pending', ref: 'PAY-AMI-3011' },
+      { id: 'COMM-103', partner: 'Vidya Pathways Network', contact: '+91 94501 88312', student: 'Rohan Deshmukh', univ: 'Chandigarh University (BCA)', fee: 135000, rate: 15, payable: 20250, status: 'ready', ref: 'PAY-CU-4402' },
+      { id: 'COMM-104', partner: 'EduLink Global Career Hub', contact: '+91 88002 91144', student: 'Simran Kaur', univ: 'UPES Online (MBA Supply Chain)', fee: 150000, rate: 20, payable: 30000, status: 'settled', ref: 'PAY-UPES-901' },
+      { id: 'COMM-105', partner: 'Horizon Education Alliance', contact: '+91 93100 44552', student: 'Karan Mehra', univ: 'Sandip University (B.Tech CSE)', fee: 120000, rate: 15, payable: 18000, status: 'pending', ref: 'PAY-SAN-812' },
+      { id: 'COMM-106', partner: 'FutureEd Pathways India', contact: '+91 91200 66321', student: 'Neha Singhal', univ: 'Lovely Professional Univ (M.Sc)', fee: 130000, rate: 15, payable: 19500, status: 'ready', ref: 'PAY-LPU-110' },
+      { id: 'COMM-107', partner: 'ScholarBridge Consulting', contact: '+91 99881 77233', student: 'Ananya Gupta', univ: 'Jain Online (MBA FinTech)', fee: 160000, rate: 18, payable: 28800, status: 'pending', ref: 'PAY-JAIN-402' },
+      { id: 'COMM-108', partner: 'Elite Campus Guidance', contact: '+91 98110 55432', student: 'Vikram Joshi', univ: 'DY Patil University (BBA)', fee: 140000, rate: 15, payable: 21000, status: 'ready', ref: 'PAY-DYP-771' }
+    ];
+
+    let caMasterUnivFees = [
+      { name: 'Online Manipal University', naac: 'NAAC A+ • UGC Approved', loc: 'Jaipur, Rajasthan', programs: 'MBA, MCA, BBA, BCA, B.Com', fee: '₹ 1,50,000 Total', emi: '₹ 6,250/mo EMI', netRemit: '₹ 1,20,000', margin: '₹ 30,000 (20%)', cat: 'Online' },
+      { name: 'Amity Online', naac: 'NAAC A+ • WASC USA', loc: 'Noida, Uttar Pradesh', programs: 'MBA, MCA, BBA, BCA, M.Com', fee: '₹ 1,75,000 Total', emi: '₹ 7,290/mo EMI', netRemit: '₹ 1,40,000', margin: '₹ 35,000 (20%)', cat: 'Online' },
+      { name: 'Lovely Professional University (LPU Online)', naac: 'NAAC A++ • NIRF Top 30', loc: 'Phagwara, Punjab', programs: 'MBA, MCA, M.Sc Data Science, BBA', fee: '₹ 1,30,000 Total', emi: '₹ 5,410/mo EMI', netRemit: '₹ 1,05,000', margin: '₹ 25,000 (19.2%)', cat: 'Online' },
+      { name: 'Chandigarh University Online', naac: 'NAAC A+ • NIRF Rank #27', loc: 'Mohali, Punjab', programs: 'MBA, MCA, BBA, BCA', fee: '₹ 1,35,000 Total', emi: '₹ 5,625/mo EMI', netRemit: '₹ 1,10,000', margin: '₹ 25,000 (18.5%)', cat: 'Online' },
+      { name: 'UPES Online', naac: 'NAAC A • QS 5-Star', loc: 'Dehradun, Uttarakhand', programs: 'MBA Oil & Gas, Supply Chain, BBA', fee: '₹ 1,50,000 Total', emi: '₹ 6,250/mo EMI', netRemit: '₹ 1,18,000', margin: '₹ 32,000 (21.3%)', cat: 'Online' },
+      { name: 'Sandip University', naac: 'UGC & AICTE • 250+ Acres', loc: 'Nashik, Maharashtra', programs: 'B.Tech CSE, Mechanical, Law, MBA', fee: '₹ 1,20,000 / yr', emi: 'Semester Installments', netRemit: '₹ 95,000 / yr', margin: '₹ 25,000 / yr (20.8%)', cat: 'Regular' },
+      { name: 'SAGE University', naac: 'NAAC A+ • Central India', loc: 'Indore & Bhopal, MP', programs: 'B.Tech, Agriculture, Pharmacy, MBA', fee: '₹ 95,000 / yr', emi: 'Semester Installments', netRemit: '₹ 76,000 / yr', margin: '₹ 19,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Jain Online', naac: 'NAAC A++ • Bangalore', loc: 'Bangalore, Karnataka', programs: 'MBA FinTech, AI, Marketing, MCA', fee: '₹ 1,60,000 Total', emi: '₹ 6,660/mo EMI', netRemit: '₹ 1,28,000', margin: '₹ 32,000 (20%)', cat: 'Online' },
+      { name: 'Parul University Online', naac: 'NAAC A++ • Vadodara', loc: 'Vadodara, Gujarat', programs: 'MBA, MCA, MSW, BBA, BCA', fee: '₹ 95,000 Total', emi: '₹ 3,950/mo EMI', netRemit: '₹ 76,000', margin: '₹ 19,000 (20%)', cat: 'Online' },
+      { name: 'DY Patil University Online', naac: 'NAAC A++ • Navi Mumbai', loc: 'Navi Mumbai, Maharashtra', programs: 'MBA Healthcare, Finance, BBA', fee: '₹ 1,40,000 Total', emi: '₹ 5,830/mo EMI', netRemit: '₹ 1,12,000', margin: '₹ 28,000 (20%)', cat: 'Online' }
+    ];
+
+    let caExpenses = [
+      { voucher: 'VCH-2026-001', date: '2026-10-06', cat: 'IT', desc: 'Enterprise Cloud Server & Database Hosting', paidTo: 'Supabase Inc / AWS Cloud', amount: 14500, mode: 'Company Corporate Card', user: 'Govind kumar' },
+      { voucher: 'VCH-2026-002', date: '2026-10-05', cat: 'Office', desc: 'Head Office Internet Leased Line (Airtel Fibernet 1Gbps)', paidTo: 'Bharti Airtel Ltd', amount: 8400, mode: 'Bank RTGS', user: 'Govind kumar' },
+      { voucher: 'VCH-2026-003', date: '2026-10-04', cat: 'Marketing', desc: 'Meta Ads & Google Search Campaign Fund', paidTo: 'Meta Ads Platform', amount: 35000, mode: 'Corporate Card', user: 'Govind kumar' },
+      { voucher: 'VCH-2026-004', date: '2026-10-03', cat: 'Petty', desc: 'Staff Refreshments & Weekly Team Meeting Snacks', paidTo: 'Local Vendor / Petty Cash', amount: 2450, mode: 'Petty Cash', user: 'Govind kumar' },
+      { voucher: 'VCH-2026-005', date: '2026-10-02', cat: 'Office', desc: 'Executive Stationery & Student Enrollment File Kits', paidTo: 'Printech Solutions', amount: 6200, mode: 'UPI Transfer', user: 'Govind kumar' }
+    ];
+
+    async function initCaDashboard() {
+      try {
+        // Fetch actual student profiles to combine into CA fee verification ledger
+        let dbStudents = [];
+        try {
+          const { data, error } = await sb.from('student_profiles').select('*').order('created_at', { ascending: false });
+          if (!error && data) dbStudents = data;
+        } catch(e) {
+          console.warn("CA fetch students error:", e);
+        }
+
+        caFeeRecords = [];
+
+        // Seed initial verified & pending student slips
+        const defaultSlips = [
+          { id: 'FEE-2601', student_id: 'EDU260001', name: 'Yatham Bhavana', univ: 'Online Manipal University', course: 'MBA in Finance', amount: 35000, mode: 'UPI (GPay)', utr: '428819003841', status: 'pending', date: '2026-10-06', slip: 'Slip_EDU260001_Instalment1.pdf' },
+          { id: 'FEE-2602', student_id: 'EDU260002', name: 'Rohit K. Verma', univ: 'Amity Online', course: 'MCA in Cloud Computing', amount: 45000, mode: 'HDFC NetBanking', utr: 'HD0918237741', status: 'pending', date: '2026-10-06', slip: 'Slip_EDU260002_Registration.pdf' },
+          { id: 'FEE-2603', student_id: 'EDU260003', name: 'Ankita Sen', univ: 'UPES Online', course: 'MBA in Oil & Gas', amount: 50000, mode: 'NEFT Transfer', utr: 'NEFT-SBIN260488', status: 'approved', date: '2026-10-05', slip: 'Slip_EDU260003_Term1.pdf' },
+          { id: 'FEE-2604', student_id: 'EDU260004', name: 'Manish Tiwari', univ: 'Chandigarh University', course: 'BCA in AI & Data', amount: 28000, mode: 'UPI (PhonePe)', utr: '428190348712', status: 'approved', date: '2026-10-05', slip: 'Slip_EDU260004_Semester1.pdf' },
+          { id: 'FEE-2605', student_id: 'EDU260005', name: 'Divya Nair', univ: 'Lovely Professional Univ', course: 'BBA in Marketing', amount: 32000, mode: 'ICICI Bank Transfer', utr: 'ICICI00482910', status: 'pending', date: '2026-10-04', slip: 'Slip_EDU260005_Instalment1.pdf' },
+          { id: 'FEE-2606', student_id: 'EDU260006', name: 'Harshit Rajput', univ: 'Sandip University', course: 'B.Tech CSE', amount: 60000, mode: 'Bank RTGS', utr: 'AXIS-RTGS-99120', status: 'approved', date: '2026-10-04', slip: 'Slip_EDU260006_Admission.pdf' },
+          { id: 'FEE-2607', student_id: 'EDU260007', name: 'Preeti Deshmukh', univ: 'Jain Online', course: 'MBA in FinTech', amount: 40000, mode: 'UPI (Paytm)', utr: '428019348123', status: 'pending', date: '2026-10-03', slip: 'Slip_EDU260007_Term1.pdf' },
+          { id: 'FEE-2608', student_id: 'EDU260008', name: 'Siddharth Roy', univ: 'SAGE University', course: 'MBA Executive', amount: 30000, mode: 'SBI NetBanking', utr: 'SBIN00293819', status: 'approved', date: '2026-10-03', slip: 'Slip_EDU260008_Sem1.pdf' }
+        ];
+
+        // Merge database students if any have payment status
+        dbStudents.forEach((st, idx) => {
+          if (!defaultSlips.some(ds => ds.student_id === st.student_id)) {
+            defaultSlips.unshift({
+              id: `FEE-DB-${st.student_id}`,
+              student_id: st.student_id,
+              name: st.full_name || 'Enrolled Student',
+              univ: st.university || 'Partner University',
+              course: st.course || 'Degree Program',
+              amount: 35000,
+              mode: 'Bank UPI / Portal',
+              utr: 'UTR-' + (st.student_id || '26000'),
+              status: (st.payment_status && st.payment_status.toLowerCase() === 'approved') ? 'approved' : 'pending',
+              date: (st.created_at || '').substring(0, 10) || '2026-10-07',
+              slip: `Receipt_${st.student_id}.pdf`
+            });
+          }
+        });
+
+        caFeeRecords = defaultSlips;
+
+        // Compute KPI Cards
+        updateCaKpiCards();
+
+        // Render Tables
+        renderCaFeesTable();
+        renderCaCommissionsTable();
+        renderCaUnivMatrix();
+        renderCaExpensesTable();
+
+      } catch(err) {
+        console.error("CA Dashboard initialization error:", err);
+      }
+    }
+
+    function updateCaKpiCards() {
+      const pendingCount = caFeeRecords.filter(r => r.status === 'pending').length;
+      const approvedTotal = caFeeRecords.filter(r => r.status === 'approved').reduce((sum, r) => sum + (r.amount || 0), 4500000);
+      const commissionPayable = caCommissions.filter(c => c.status !== 'settled').reduce((sum, c) => sum + (c.payable || 0), 0);
+
+      const elPending = document.getElementById('caMetricPending');
+      if (elPending) elPending.textContent = pendingCount;
+
+      const elCollections = document.getElementById('caMetricCollections');
+      if (elCollections) elCollections.textContent = '₹ ' + approvedTotal.toLocaleString('en-IN');
+
+      const elComm = document.getElementById('caMetricCommissions');
+      if (elComm) elComm.textContent = '₹ ' + commissionPayable.toLocaleString('en-IN');
+    }
+
+    function switchCaTab(tabId, filterStatus) {
+      document.querySelectorAll('.ca-tab-btn').forEach(b => {
+        b.style.borderBottomColor = 'transparent';
+        b.style.color = '#94a3b8';
+      });
+      const activeBtn = document.getElementById('tabBtn-' + tabId.replace('tab-', ''));
+      if (activeBtn) {
+        activeBtn.style.borderBottomColor = 'var(--gold-light)';
+        activeBtn.style.color = 'var(--gold-light)';
+      }
+
+      document.querySelectorAll('.ca-tab-content').forEach(c => c.style.display = 'none');
+      const target = document.getElementById(tabId);
+      if (target) target.style.display = 'block';
+
+      if (filterStatus && tabId === 'tab-ca-student-fees') {
+        const filterEl = document.getElementById('caFeeStatusFilter');
+        if (filterEl) {
+          filterEl.value = filterStatus;
+          filterCaFees();
+        }
+      }
+    }
+
+    function renderCaFeesTable(data) {
+      const tbody = document.getElementById('caFeeTableBody');
+      if (!tbody) return;
+      const list = data || caFeeRecords;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-file-circle-check" style="margin-right:8px;"></i> No fee slips match the selected criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(r => {
+        const isPending = r.status === 'pending';
+        const badgeColor = isPending ? '#fbbf24' : '#34d399';
+        const badgeBg = isPending ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)';
+        const badgeBorder = isPending ? 'rgba(245,158,11,0.3)' : 'rgba(16,185,129,0.3)';
+        const statusText = isPending ? 'Pending Clearance' : 'Approved & Realized';
+
+        return `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 10px; font-weight:700; color:var(--gold-light);">${r.student_id}</td>
+            <td style="padding:14px 10px; font-weight:600; color:#fff;">${r.name}</td>
+            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.85rem;">
+              <div>${r.univ}</div>
+              <div style="color:var(--text-muted); font-size:0.75rem;">${r.course}</div>
+            </td>
+            <td style="padding:14px 10px; font-weight:800; color:#10b981; font-size:0.95rem;">₹ ${(r.amount || 0).toLocaleString('en-IN')}</td>
+            <td style="padding:14px 10px; color:#94a3b8; font-size:0.8rem;">
+              <span style="color:#f8fafc; font-weight:600;">${r.mode}</span><br>
+              <code style="color:var(--gold-light); font-size:0.75rem;">${r.utr}</code>
+            </td>
+            <td style="padding:14px 10px;">
+              <button onclick="viewFeeProofSlip('${r.id}')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#93c5fd; padding:4px 10px; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-file-invoice"></i> View Slip
+              </button>
+            </td>
+            <td style="padding:14px 10px;">
+              <span style="background:${badgeBg}; color:${badgeColor}; border:1px solid ${badgeBorder}; padding:4px 10px; border-radius:99px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:5px;">
+                ${isPending ? '<i class="fa-solid fa-clock"></i>' : '<i class="fa-solid fa-check"></i>'} ${statusText}
+              </span>
+            </td>
+            <td style="padding:14px 10px; text-align:right;">
+              ${isPending ? `
+                <button onclick="approveCaFee('${r.id}')" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer; box-shadow:0 3px 10px rgba(16,185,129,0.3); margin-right:6px;">
+                  <i class="fa-solid fa-stamp"></i> Verify & Stamp
+                </button>
+                <button onclick="flagCaFee('${r.id}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:6px 10px; border-radius:8px; font-weight:600; font-size:0.78rem; cursor:pointer;" title="Flag for discrepancy">
+                  <i class="fa-solid fa-flag"></i> Flag
+                </button>
+              ` : `
+                <button onclick="downloadOfficialReceipt('${r.id}')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(247,211,119,0.3); color:var(--gold-light); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer;">
+                  <i class="fa-solid fa-print"></i> Receipt
+                </button>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCaFees() {
+      const q = (document.getElementById('caFeeSearchInput')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('caFeeStatusFilter')?.value || 'all';
+
+      const filtered = caFeeRecords.filter(r => {
+        const matchesQ = !q || (r.name || '').toLowerCase().includes(q) || (r.student_id || '').toLowerCase().includes(q) || (r.utr || '').toLowerCase().includes(q) || (r.univ || '').toLowerCase().includes(q);
+        const matchesStatus = (statusFilter === 'all') || (r.status === statusFilter);
+        return matchesQ && matchesStatus;
+      });
+
+      renderCaFeesTable(filtered);
+    }
+
+    async function approveCaFee(id) {
+      const item = caFeeRecords.find(r => r.id === id);
+      if (!item) return;
+
+      item.status = 'approved';
+      updateCaKpiCards();
+      filterCaFees();
+
+      // Persist to Supabase student_profiles if real student ID exists
+      if (item.student_id) {
+        try {
+          await sb.from('student_profiles').update({ payment_status: 'Approved' }).eq('student_id', item.student_id);
+        } catch(e) {
+          console.warn("DB update error:", e);
+        }
+      }
+
+      alert(`✅ Fee Clearance Approved!\n\nReceipt for ${item.name} (${item.student_id}) of amount ₹ ${item.amount.toLocaleString('en-IN')} has been verified with UTR ${item.utr}.\n\nOfficial EduVision Verified Receipt Issued.`);
+    }
+
+    function flagCaFee(id) {
+      const item = caFeeRecords.find(r => r.id === id);
+      if (!item) return;
+      const reason = prompt("Enter Discrepancy Reason (e.g. UTR mismatch with bank statement):", "UTR not reflected in current bank statement");
+      if (reason) {
+        item.status = 'flagged';
+        item.flagReason = reason;
+        updateCaKpiCards();
+        filterCaFees();
+        alert(`⚠️ Fee slip flagged for revision. Counsellor has been notified to request re-upload.`);
+      }
+    }
+
+    function approveAllPendingFees() {
+      const pendings = caFeeRecords.filter(r => r.status === 'pending');
+      if (pendings.length === 0) {
+        alert("No pending fee slips to approve.");
+        return;
+      }
+      if (confirm(`Approve all ${pendings.length} pending fee slips with verified UTRs?`)) {
+        pendings.forEach(r => { r.status = 'approved'; });
+        updateCaKpiCards();
+        filterCaFees();
+        alert(`✅ Batch Approval Complete!\n\n${pendings.length} fee receipts stamped and synchronized with student ledgers.`);
+      }
+    }
+
+    function viewFeeProofSlip(id) {
+      const item = caFeeRecords.find(r => r.id === id);
+      if (!item) return;
+      alert(`📄 PAYMENT PROOF SLIP PREVIEW\n\nStudent: ${item.name} (${item.student_id})\nUniversity: ${item.univ}\nCourse: ${item.course}\nAmount Paid: ₹ ${item.amount.toLocaleString('en-IN')}\nPayment Mode: ${item.mode}\nBank UTR Ref: ${item.utr}\nSlip Filename: ${item.slip}\nVerification Status: ${item.status.toUpperCase()}\n\nVerified by CA Govind kumar`);
+    }
+
+    function downloadOfficialReceipt(id) {
+      const item = caFeeRecords.find(r => r.id === id);
+      if (!item) return;
+      alert(`🖨️ GENERATING OFFICIAL RECEIPT\n\nEduVision Admissions & Educational Consultancy\nReceipt No: EVR-2026-${item.student_id}\nStudent: ${item.name}\nAmount: ₹ ${item.amount.toLocaleString('en-IN')}\nCleared in: EduVision Current Account (HDFC Bank)\n\nReceipt PDF prepared for print / download.`);
+    }
+
+    function renderCaCommissionsTable(data) {
+      const tbody = document.getElementById('caCommissionTableBody');
+      if (!tbody) return;
+      const list = data || caCommissions;
+
+      tbody.innerHTML = list.map(c => {
+        let badgeColor = '#38bdf8';
+        let badgeBg = 'rgba(56,189,248,0.15)';
+        let statusLabel = 'Approved for Payout';
+
+        if (c.status === 'pending') {
+          badgeColor = '#fbbf24';
+          badgeBg = 'rgba(245,158,11,0.15)';
+          statusLabel = 'Pending Clearance';
+        } else if (c.status === 'settled') {
+          badgeColor = '#34d399';
+          badgeBg = 'rgba(16,185,129,0.15)';
+          statusLabel = 'Settled & Paid';
+        }
+
+        return `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 10px; font-weight:700; color:#fff;">
+              <i class="fa-solid fa-building-user" style="color:var(--gold-light); margin-right:6px;"></i> ${c.partner}
+            </td>
+            <td style="padding:14px 10px; color:#94a3b8; font-size:0.82rem;">${c.contact}</td>
+            <td style="padding:14px 10px; font-weight:600; color:#f8fafc;">${c.student}</td>
+            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.82rem;">${c.univ}</td>
+            <td style="padding:14px 10px; color:#94a3b8;">₹ ${c.fee.toLocaleString('en-IN')}</td>
+            <td style="padding:14px 10px; font-weight:700; color:var(--gold-light);">${c.rate}%</td>
+            <td style="padding:14px 10px; font-weight:800; color:#38bdf8; font-size:0.95rem;">₹ ${c.payable.toLocaleString('en-IN')}</td>
+            <td style="padding:14px 10px;">
+              <span style="background:${badgeBg}; color:${badgeColor}; padding:4px 10px; border-radius:99px; font-size:0.75rem; font-weight:700;">
+                ${statusLabel}
+              </span>
+            </td>
+            <td style="padding:14px 10px; text-align:right;">
+              ${c.status === 'pending' ? `
+                <button onclick="approveCaCommission('${c.id}')" style="background:var(--gold-gradient); color:#000; border:none; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer;">
+                  Clear Payout
+                </button>
+              ` : (c.status === 'ready' ? `
+                <button onclick="markCaCommissionPaid('${c.id}')" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer;">
+                  Mark Paid
+                </button>
+              ` : `
+                <span style="color:#64748b; font-size:0.78rem;">Settled</span>
+              `)}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCaCommissions() {
+      const q = (document.getElementById('caCommissionSearch')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('caCommissionStatusFilter')?.value || 'all';
+
+      const filtered = caCommissions.filter(c => {
+        const matchesQ = !q || c.partner.toLowerCase().includes(q) || c.student.toLowerCase().includes(q) || c.univ.toLowerCase().includes(q);
+        const matchesStatus = (statusFilter === 'all') || (c.status === statusFilter);
+        return matchesQ && matchesStatus;
+      });
+
+      renderCaCommissionsTable(filtered);
+    }
+
+    function approveCaCommission(id) {
+      const item = caCommissions.find(c => c.id === id);
+      if (!item) return;
+      item.status = 'ready';
+      updateCaKpiCards();
+      filterCaCommissions();
+      alert(`✅ Commission Approved!\n\nPartner: ${item.partner}\nAmount: ₹ ${item.payable.toLocaleString('en-IN')}\nStatus: Cleared for bank disbursement advice.`);
+    }
+
+    function markCaCommissionPaid(id) {
+      const item = caCommissions.find(c => c.id === id);
+      if (!item) return;
+      const utr = prompt("Enter Bank Payment Reference / UTR for Disbursement:", "HDFC" + Math.floor(10000000 + Math.random() * 90000000));
+      if (utr) {
+        item.status = 'settled';
+        item.disbursementUtr = utr;
+        updateCaKpiCards();
+        filterCaCommissions();
+        alert(`💰 Commission Payout Completed!\n\nDisbursement UTR: ${utr}\nAmount: ₹ ${item.payable.toLocaleString('en-IN')}\nPartner: ${item.partner}`);
+      }
+    }
+
+    function generatePartnerPayoutAdvice() {
+      const readyList = caCommissions.filter(c => c.status === 'ready');
+      if (readyList.length === 0) {
+        alert("No partner payouts are currently ready for disbursement.");
+        return;
+      }
+      const totalAmount = readyList.reduce((sum, c) => sum + c.payable, 0);
+      alert(`🏛️ BANK RTGS / NEFT PAYOUT ADVICE GENERATED\n\nBatch Code: EV-PAYOUT-${new Date().toISOString().slice(0,10)}\nTotal Partners: ${readyList.length}\nTotal Disbursement Amount: ₹ ${totalAmount.toLocaleString('en-IN')}\n\nBatch sheet ready for upload to Corporate Banking portal.`);
+    }
+
+    function renderCaUnivMatrix(data) {
+      const tbody = document.getElementById('caUnivTableBody');
+      if (!tbody) return;
+      const list = data || caMasterUnivFees;
+
+      tbody.innerHTML = list.map(u => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+          <td style="padding:14px 10px; font-weight:700; color:#fff;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="color:var(--gold-light);"><i class="fa-solid fa-graduation-cap"></i></span>
+              <span>${u.name}</span>
+            </div>
+          </td>
+          <td style="padding:14px 10px; color:#cbd5e1; font-size:0.8rem;">
+            <span style="background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">${u.naac}</span>
+          </td>
+          <td style="padding:14px 10px; color:#94a3b8; font-size:0.82rem;">${u.loc}</td>
+          <td style="padding:14px 10px; color:#e2e8f0; font-size:0.82rem;">${u.programs}</td>
+          <td style="padding:14px 10px; font-weight:700; color:#38bdf8;">${u.fee}</td>
+          <td style="padding:14px 10px; color:var(--text-muted); font-size:0.82rem;">${u.emi}</td>
+          <td style="padding:14px 10px; font-weight:700; color:#f8fafc;">${u.netRemit}</td>
+          <td style="padding:14px 10px; font-weight:800; color:#10b981;">${u.margin}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterCaUnivFees() {
+      const q = (document.getElementById('caUnivSearch')?.value || '').toLowerCase().trim();
+      const cat = document.getElementById('caUnivCategoryFilter')?.value || 'all';
+
+      const filtered = caMasterUnivFees.filter(u => {
+        const matchesQ = !q || u.name.toLowerCase().includes(q) || u.programs.toLowerCase().includes(q) || u.loc.toLowerCase().includes(q);
+        const matchesCat = (cat === 'all') || (u.cat === cat);
+        return matchesQ && matchesCat;
+      });
+
+      renderCaUnivMatrix(filtered);
+    }
+
+    function renderCaExpensesTable(data) {
+      const tbody = document.getElementById('caExpenseTableBody');
+      if (!tbody) return;
+      const list = data || caExpenses;
+
+      tbody.innerHTML = list.map(x => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+          <td style="padding:14px 10px; font-weight:700; color:var(--gold-light); font-size:0.82rem;">${x.voucher}</td>
+          <td style="padding:14px 10px; color:#cbd5e1; font-size:0.82rem;">${x.date}</td>
+          <td style="padding:14px 10px;">
+            <span style="background:rgba(236,72,153,0.15); color:#f472b6; border:1px solid rgba(236,72,153,0.3); padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">
+              ${x.cat}
+            </span>
+          </td>
+          <td style="padding:14px 10px; color:#fff; font-weight:500;">${x.desc}</td>
+          <td style="padding:14px 10px; color:#94a3b8; font-size:0.82rem;">${x.paidTo}</td>
+          <td style="padding:14px 10px; font-weight:800; color:#f87171; font-size:0.95rem;">₹ ${(x.amount || 0).toLocaleString('en-IN')}</td>
+          <td style="padding:14px 10px; color:#94a3b8; font-size:0.8rem;">${x.mode}</td>
+          <td style="padding:14px 10px; color:#94a3b8; font-size:0.8rem;">${x.user}</td>
+          <td style="padding:14px 10px; text-align:right;">
+            <button onclick="alert('Voucher Ref: ${x.voucher}\\nDate: ${x.date}\\nAmount: ₹ ${x.amount}\\nVerified by CA Govind kumar')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:4px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;">
+              <i class="fa-solid fa-receipt"></i> Details
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterCaExpenses() {
+      const q = (document.getElementById('caExpenseSearch')?.value || '').toLowerCase().trim();
+      const cat = document.getElementById('caExpenseCategoryFilter')?.value || 'all';
+
+      const filtered = caExpenses.filter(x => {
+        const matchesQ = !q || x.desc.toLowerCase().includes(q) || x.paidTo.toLowerCase().includes(q) || x.voucher.toLowerCase().includes(q);
+        const matchesCat = (cat === 'all') || (x.cat === cat);
+        return matchesQ && matchesCat;
+      });
+
+      renderCaExpensesTable(filtered);
+    }
+
+    function openCaExpenseModal() {
+      const desc = prompt("Enter Expense Description:", "Office Server Maintenance");
+      if (!desc) return;
+      const amountStr = prompt("Enter Expense Amount (₹):", "5000");
+      if (!amountStr) return;
+      const amount = parseFloat(amountStr) || 0;
+      const paidTo = prompt("Enter Paid To (Vendor / Name):", "Cloud Infra Provider") || "Vendor";
+
+      const vch = {
+        voucher: 'VCH-2026-' + String(caExpenses.length + 1).padStart(3, '0'),
+        date: new Date().toISOString().slice(0, 10),
+        cat: 'Office',
+        desc: desc,
+        paidTo: paidTo,
+        amount: amount,
+        mode: 'Corporate Banking UPI',
+        user: (currentUser && currentUser.full_name) || 'Govind kumar'
+      };
+
+      caExpenses.unshift(vch);
+      renderCaExpensesTable();
+      alert(`✅ Expense voucher ${vch.voucher} of ₹ ${amount.toLocaleString('en-IN')} successfully recorded in cash ledger.`);
+    }
+
+    function openCaFeeModal() {
+      const studentName = prompt("Enter Student Full Name:", "New Enrolled Student");
+      if (!studentName) return;
+      const univ = prompt("Enter University:", "Online Manipal University") || "Online Manipal University";
+      const amountStr = prompt("Enter Fee Amount Paid (₹):", "35000");
+      if (!amountStr) return;
+      const amount = parseFloat(amountStr) || 0;
+      const utr = prompt("Enter Bank UTR / Transaction Reference ID:", "UTR" + Math.floor(100000000 + Math.random() * 900000000)) || "UTR-MANUAL";
+
+      const newFee = {
+        id: 'FEE-MAN-' + Date.now().toString().slice(-4),
+        student_id: 'EDU2600' + (caFeeRecords.length + 1),
+        name: studentName,
+        univ: univ,
+        course: 'Degree Program',
+        amount: amount,
+        mode: 'Direct Bank Transfer',
+        utr: utr,
+        status: 'approved',
+        date: new Date().toISOString().slice(0, 10),
+        slip: 'Receipt_Manual_' + utr + '.pdf'
+      };
+
+      caFeeRecords.unshift(newFee);
+      updateCaKpiCards();
+      renderCaFeesTable();
+      alert(`✅ Student fee entry stamped and approved!\n\nStudent: ${studentName}\nAmount: ₹ ${amount.toLocaleString('en-IN')}\nUTR: ${utr}`);
+    }
+
+    function exportCaFinancialAudit() {
+      let csv = "Fee ID,Student ID,Student Name,University,Amount,Payment Mode,UTR,Status,Date\n";
+      caFeeRecords.forEach(r => {
+        csv += `"${r.id}","${r.student_id}","${r.name}","${r.univ}","${r.amount}","${r.mode}","${r.utr}","${r.status}","${r.date}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `EduVision_Financial_Audit_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
   </script>

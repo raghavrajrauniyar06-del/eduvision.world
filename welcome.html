@@ -385,17 +385,30 @@
 
   // Personalize top badge if user info exists in localStorage
   try {
-    const rawUser = localStorage.getItem('eduvision_user') || 
+    const rawUser = localStorage.getItem('eduvision_staff') ||
                     localStorage.getItem('eduvision_counsellor') || 
+                    localStorage.getItem('eduvision_user') || 
                     localStorage.getItem('eduvision_team_leader') || 
                     localStorage.getItem('eduvision_admin');
     if (rawUser) {
       const u = JSON.parse(rawUser);
       const rawName = u.full_name || u.name || u.contact_person || '';
-      const name = rawName ? rawName.split(' ')[0] : 'Raghav';
-      let role = u.role || 'Student';
-      role = role.charAt(0).toUpperCase() + role.slice(1);
-      document.getElementById('badgeText').textContent = '✦ Welcome, ' + name + '! • ' + role + ' Portal';
+      const name = rawName ? rawName.split(' ')[0] : 'Member';
+      let role = u.designation || u.role || 'Staff';
+      const rLower = (u.role || '').toLowerCase();
+      const dLower = (u.designation || '').toLowerCase();
+      if (rLower.includes('ca') || rLower.includes('account') || dLower.includes('account') || dLower.includes('chartered')) {
+        role = 'CA & Accounts Desk';
+      } else if (rLower === 'counsellor' || rLower === 'senior counsellor') {
+        role = 'Counsellor Portal';
+      } else if (rLower.includes('telesales')) {
+        role = 'Telesales Desk';
+      } else if (rLower.includes('team leader') || rLower.includes('teamleader')) {
+        role = 'Team Leader Command';
+      } else if (rLower.includes('admin') || rLower.includes('ceo') || rLower.includes('cto')) {
+        role = 'Executive Control';
+      }
+      document.getElementById('badgeText').textContent = '✦ Welcome, ' + name + '! • ' + role;
     }
   } catch(e) {}
 
@@ -408,8 +421,9 @@
     }
 
     try {
-      const userStr = localStorage.getItem('eduvision_user') ||
+      const userStr = localStorage.getItem('eduvision_staff') ||
                       localStorage.getItem('eduvision_counsellor') ||
+                      localStorage.getItem('eduvision_user') ||
                       localStorage.getItem('eduvision_team_leader') ||
                       localStorage.getItem('eduvision_admin');
       if (userStr) {
@@ -421,6 +435,8 @@
           'counsellor': 'counsellor/dashboard.html',
           'ca_accounts': 'counsellor/dashboard.html',
           'ca / accounts & finance': 'counsellor/dashboard.html',
+          'chartered accountant / accounts lead': 'counsellor/dashboard.html',
+          'telesales executive': 'counsellor/dashboard.html',
           'hr_operations': 'counsellor/dashboard.html',
           'hr & operations manager': 'counsellor/dashboard.html',
           'doc_verifier': 'counsellor/dashboard.html',
@@ -439,6 +455,7 @@
         };
         const rLower = (u.role || '').toLowerCase();
         if (roleRoutes[rLower]) return roleRoutes[rLower];
+        if (rLower.includes('ca') || rLower.includes('account') || rLower.includes('finance')) return 'counsellor/dashboard.html';
       }
     } catch(e) {}
 

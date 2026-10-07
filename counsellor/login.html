@@ -572,7 +572,7 @@ body.modal-open { overflow: hidden !important; }
         document.getElementById('takeoverContent').classList.add('show');
         orb.classList.remove('show');
         
-        setTimeout(function() { if(callback) callback(); }, 1500);
+        setTimeout(function() { if(callback) callback(); }, 250);
       }, 400); // Let orb spin in center before exploding
     }
 
@@ -691,6 +691,7 @@ body.modal-open { overflow: hidden !important; }
 
           // Persist session immediately
           localStorage.setItem('eduvision_counsellor', JSON.stringify(user));
+          localStorage.setItem('eduvision_staff', JSON.stringify(user));
 
           triggerOrbSuccess(animColor, 'Authenticating ' + user.role + '...', function() {
               window.location.href = '../welcome.html?redirect=counsellor/dashboard.html';

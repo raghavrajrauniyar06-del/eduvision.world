@@ -154,23 +154,14 @@ form { margin: 0 !important; padding: 0 !important; width: 100% !important; box-
 .auth-footer a { color: #64748b !important; font-size: 0.84rem !important; font-weight: 500 !important; text-decoration: none !important; transition: color 0.2s !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; }
 .auth-footer a:hover { color: #fbbf24 !important; }
 
-/* Orb, Shockwave, Takeover, Success Modal */
-.dim-overlay { position: fixed; inset: 0; background: rgba(2,4,8,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99998; display: none; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-.dim-overlay.active { display: block !important; opacity: 1 !important; pointer-events: all !important; }
-.auth-orb { position: fixed; width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle, var(--orb-color, #fbbf24) 0%, transparent 70%); box-shadow: 0 0 40px var(--orb-shadow, rgba(245,158,11,0.5)), 0 0 80px var(--orb-shadow, rgba(245,158,11,0.3)); z-index: 99999; opacity: 0; transform: translate(-50%, -50%) scale(0.5); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
-.auth-orb.show { display: block !important; opacity: 1 !important; pointer-events: none !important; animation: orbPulse 1.2s ease-in-out infinite; }
-.auth-orb.center { top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) scale(1) !important; }
-@keyframes orbPulse { 0%,100% { box-shadow: 0 0 40px var(--orb-shadow); transform: translate(-50%,-50%) scale(1); } 50% { box-shadow: 0 0 60px var(--orb-shadow); transform: translate(-50%,-50%) scale(1.15); } }
-.shockwave-base { position: fixed; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; transform: translate(-50%, -50%); z-index: 99999; pointer-events: none; display: none; opacity: 0; }
-.shockwave-white { background: rgba(255,255,255,0.9); }
-.shockwave-color { background: var(--orb-color, rgba(245,158,11,0.6)); }
-.shockwave-base.expand { display: block !important; opacity: 1 !important; animation: shockExpand 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes shockExpand { from { width: 0; height: 0; opacity: 0.9; } to { width: 300vmax; height: 300vmax; opacity: 0; } }
-.takeover-content { position: fixed; inset: 0; z-index: 100000; display: none !important; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; opacity: 0; }
-.takeover-content.show { display: flex !important; opacity: 1 !important; pointer-events: all !important; }
-.takeover-logo { font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 800; color: #fff; letter-spacing: -0.03em; text-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: takeoverFade 0.6s ease both; }
-.takeover-text { font-size: 1.1rem; color: rgba(255,255,255,0.8); margin-top: 8px; animation: takeoverFade 0.6s 0.15s ease both; }
-@keyframes takeoverFade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+/* Overlay systems hidden - NO ugly full-screen yellow takeover */
+.takeover-content,
+.dim-overlay,
+.shockwave-base {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
 .success-modal-overlay { position: fixed !important; inset: 0 !important; background: rgba(2,4,8,0.85) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; z-index: 100000 !important; display: none !important; align-items: center !important; justify-content: center !important; padding: 20px !important; opacity: 0 !important; transition: opacity 0.35s ease !important; }
 .success-modal-overlay.show { display: flex !important; opacity: 1 !important; }
 .success-modal-box { text-align: center; padding: 40px; }
@@ -262,15 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!user) { alert('Invalid Employee ID or Password.'); btn.style.color = '#050811'; btn.disabled = false; stopOrbLoader(); return; }
       if (user.status && user.status.trim().toLowerCase() !== 'active') { alert('Your account is not Active. Contact your Team Leader.'); btn.style.color = '#050811'; btn.disabled = false; stopOrbLoader(); return; }
 
-      let animColor = '#fbbf24';
-      if (user.role === 'Counsellor' || user.role === 'Senior Counsellor') animColor = '#f7d377';
-      else if (user.role === 'Accountant') animColor = '#4ade80';
-      else if (user.role === 'HR') animColor = '#818cf8';
-      else if (user.role === 'Operations') animColor = '#38bdf8';
+      btn.style.background = '#10b981';
+      btn.style.color = '#fff';
+      btn.innerHTML = '<i class="fa-solid fa-check" style="margin-right:8px;"></i> Access Granted — Loading...';
 
       localStorage.setItem('eduvision_staff', JSON.stringify(user));
       localStorage.setItem('eduvision_counsellor', JSON.stringify(user));
-      triggerOrbSuccess(animColor, 'Welcome, ' + (user.full_name || user.role) + '!', function() { window.location.href = '../counsellor/dashboard.html'; });
+      
+      setTimeout(function() {
+        window.location.href = '../welcome.html?redirect=counsellor/dashboard.html';
+      }, 300);
     } catch (err) { console.error(err); alert('Error: ' + err.message); btn.style.color = '#050811'; btn.disabled = false; stopOrbLoader(); }
   });
 });
