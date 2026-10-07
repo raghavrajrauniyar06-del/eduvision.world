@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="../shared/page_guard.js?v=20260919_V2"></script>
@@ -102,8 +102,16 @@
     .skill-chip-dot{width:8px;height:8px;min-width:8px;border-radius:50%;background:var(--gold);}
     .recruiter-scroll{overflow:hidden;padding:20px 0;}
     .recruiter-track{display:flex;gap:20px;animation:scrollTrack 25s linear infinite;width:max-content;will-change:transform;transform:translateZ(0);}
-    .recruiter-track:hover{animation-play-state:paused;}
+    .recruiter-track:hover, .recruiter-track:focus-within{animation-play-state:paused;}
     @keyframes scrollTrack{from{transform:translate3d(0,0,0);}to{transform:translate3d(-50%,0,0);}}
+    @media (prefers-reduced-motion: reduce) {
+      .recruiter-track, .bg-orb { animation: none !important; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+    :focus-visible {
+      outline: 2px solid var(--gold) !important;
+      outline-offset: 2px !important;
+    }
     .recruiter-chip{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 20px;white-space:nowrap;font-size:0.9rem;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:10px;transition:0.3s;}
     .recruiter-chip img{width:24px;height:24px;border-radius:5px;object-fit:contain;background:#ffffff;padding:2px;flex-shrink:0;}
     .recruiter-chip:hover{border-color:var(--gold);color:var(--gold);}
@@ -383,12 +391,20 @@
       <div style="background:var(--surface); border:1px solid rgba(212,175,55,0.2); border-radius:16px; padding:24px;">
         <h3 style="color:var(--gold); font-size:1.1rem; margin-bottom:16px;">&#128179; Other Charges</h3>
         <table style="width:100%; border-collapse:collapse; font-size:0.9rem; color:var(--text);">
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Forms &amp; Prospectus</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;500/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(One Time)</span></td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Hostel (Security Deposit)</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;5,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(Refundable)</span></td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Hostel Fees</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;75,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(Per Year)</span></td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Uniform Fees</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;5,500/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(at admission)</span></td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Convocation &amp; Certificate</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;3,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(final semester)</span></td></tr>
-          <tr><td style="padding:12px 0;">University Caution Money</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;3,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(refundable)</span></td></tr>
+          <thead>
+            <tr style="border-bottom:1px solid rgba(212,175,55,0.3);">
+              <th scope="col" style="text-align:left; padding:8px 0; font-size:0.85rem; color:var(--gold); font-weight:700;">Fee Category</th>
+              <th scope="col" style="text-align:right; padding:8px 0; font-size:0.85rem; color:var(--gold); font-weight:700;">Amount &amp; Terms</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Forms &amp; Prospectus</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;500/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(One Time)</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Hostel (Security Deposit)</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;5,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(Refundable)</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Hostel Fees</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;75,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(Per Year)</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Uniform Fees</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;5,500/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(at admission)</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:12px 0;">Convocation &amp; Certificate</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;3,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(final semester)</span></td></tr>
+            <tr><td style="padding:12px 0;">University Caution Money</td><td style="text-align:right; color:var(--gold); font-weight:700;">&#8377;3,000/- <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">(refundable)</span></td></tr>
+          </tbody>
         </table>
       </div>
       
@@ -490,11 +506,11 @@
       <div class="apply-title">Start Your Journey &ndash; <span>It's Free!</span></div>
       <div class="apply-subtitle">Fill out the form and our expert counsellors will call you within 24 hours.</div>
       <form class="apply-form" id="applyForm">
-        <div class="form-group"><label>Full Name</label><input type="text" name="full_name" placeholder="Your full name" required></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" name="mobile" placeholder="+91 00000 00000" required></div>
-        <div class="form-group"><label>City / Location</label><input type="text" name="city" placeholder="e.g. Sector 69, Gurgaon, Delhi NCR" required></div>
-        <div class="form-group"><label>Interested Course</label>
-          <select name="course_interest">
+        <div class="form-group"><label for="suName">Full Name</label><input type="text" id="suName" name="full_name" placeholder="Your full name" required autocomplete="name"></div>
+        <div class="form-group"><label for="suPhone">Phone Number</label><input type="tel" id="suPhone" name="mobile" placeholder="+91 00000 00000" required autocomplete="tel"></div>
+        <div class="form-group"><label for="suCity">City / Location</label><input type="text" id="suCity" name="city" placeholder="e.g. Sector 69, Gurgaon, Delhi NCR" required></div>
+        <div class="form-group"><label for="suCourse">Interested Course</label>
+          <select id="suCourse" name="course_interest" aria-label="Interested Course">
             <option value="">Select a course</option>
             <option>B.Tech (CSE/IT)</option>
             <option>BCA</option>
@@ -505,15 +521,15 @@
             <option>Other</option>
           </select>
         </div>
-        <div class="form-group"><label>Preferred Mode</label>
-          <select name="mode">
+        <div class="form-group"><label for="suMode">Preferred Mode</label>
+          <select id="suMode" name="mode" aria-label="Preferred Mode">
             <option value="">Select mode</option>
             <option>Regular / Campus</option>
             <option>Online / Distance</option>
           </select>
         </div>
-        <div class="form-group"><label>Current Education</label>
-          <select name="education">
+        <div class="form-group"><label for="suEdu">Current Education</label>
+          <select id="suEdu" name="education" aria-label="Current Education">
             <option value="">Select level</option>
             <option>10th Pass</option>
             <option>12th Pass</option>
@@ -534,7 +550,7 @@
 
 <footer>
   <div>&#169; 2025 <strong style="color:var(--gold)">EduVision</strong> &middot; Sector 69, Gurgaon, Delhi NCR</div>
-  <div>&#128222; +91 63064 20146 &nbsp;|&nbsp; <a href="mailto:info@eduvisionconsultancy.com">info@eduvisionconsultancy.com</a></div>
+  <div>&#128222; +91 63064 20146 &nbsp;|&nbsp; <a href="mailto:info@eduvisionconsultancy.com" style="text-decoration:underline; color:var(--gold);">info@eduvisionconsultancy.com</a></div>
   <div><a href="../index.html">&#8592; Back to Home</a></div>
 </footer>
 
@@ -678,10 +694,6 @@ document.getElementById("applyForm").addEventListener("submit", async function(e
     if (b) { b.textContent = origText; b.disabled = false; }
     alert('❌ ' + (err.message || 'Something went wrong. Please try again or contact us on WhatsApp.'));
   }
-});
-    if(r.ok){e.target.style.display="none";document.getElementById("formSuccess").style.display="block";}
-    else{b.textContent="Submit";b.disabled=false;}
-  }catch(err){b.textContent="Submit";b.disabled=false;}
 });
 
 var scrolled=false;window.addEventListener("scroll",function(){if(!scrolled){requestAnimationFrame(function(){document.getElementById("mainNav").style.borderBottomColor=window.scrollY>50?"rgba(212,175,55,0.3)":"rgba(212,175,55,0.18)";scrolled=false;});scrolled=true;}},{passive:true});

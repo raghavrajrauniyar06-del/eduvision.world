@@ -21,7 +21,7 @@
 ═══════════════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{
-  outline:2px solid rgba(201,151,42,.85);outline-offset:3px;border-radius:4px;
+  outline:2px solid rgba(201,151,42,.85) !important;outline-offset:3px !important;border-radius:4px;
 }
 :root{
   --bg:#0a0a0a;
@@ -198,7 +198,7 @@ nav.scrolled .nav-links a:hover{color:var(--gold-2) !important;background:rgba(2
 .nav-highlight-btn {
   background: linear-gradient(135deg, #fefce8, #fef9c3) !important;
   border: 1.5px solid #c9932a !important;
-  color: #9a650d !important;
+  color: #78350f !important;
   font-weight: 800 !important;
   padding: 6px 16px !important;
   border-radius: 20px !important;
@@ -215,7 +215,8 @@ nav.scrolled .nav-links a:hover{color:var(--gold-2) !important;background:rgba(2
 }
 .nav-highlight-btn:hover {
   background: linear-gradient(135deg, #c9932a, #8a6015) !important;
-  color: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
   border-color: #c9932a !important;
   box-shadow: 0 8px 24px rgba(201, 147, 42, 0.45) !important;
   transform: translateY(-2px) !important;
@@ -227,7 +228,8 @@ nav.scrolled .nav-highlight-btn {
 }
 nav.scrolled .nav-highlight-btn:hover {
   background: linear-gradient(135deg, #c9932a, #8a6015) !important;
-  color: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
 }
 @keyframes ringBell {
   0%, 100% { transform: rotate(0deg); }
@@ -1267,8 +1269,8 @@ footer{
 .ft-links li a{font-size:.82rem;color:var(--muted);text-decoration:none;transition:color .25s;}
 .ft-links li a:hover{color:var(--text);}
 .ft-bottom{border-top:1px solid var(--border);padding-top:clamp(20px,3vw,28px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.ft-copy{font-size:.75rem;color:rgba(255,255,255,.3);}
-.ft-dev{font-size:.85rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.ft-copy{font-size:.75rem;color:rgba(255,255,255,.75);}
+.ft-dev{font-size:.85rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.75);text-transform:uppercase;}
 .ft-dev span{background:linear-gradient(135deg,#f0b429,#fff0a8,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;opacity:1;text-shadow:0 2px 14px rgba(201,147,42,.4);letter-spacing:.08em;margin-left:4px;}
 
 /* ═══ FAB DOCK ═══ */
@@ -5681,16 +5683,16 @@ body { padding-top: env(safe-area-inset-top); }
   <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
 <div id="mobileNav">
-  <button id="mobileNavClose">✕</button>
+  <button id="mobileNavClose" aria-label="Close navigation menu">✕</button>
   <a href="#courses">Courses</a>
-  <a href="latest-updates.html" style="background:linear-gradient(135deg,#c9932a,#8a6015); color:#fff; font-weight:800; border-radius:12px; padding:10px 24px; box-shadow:0 4px 20px rgba(201,147,42,0.4);">🔔 Latest Updates</a>
+  <a href="latest-updates.html" style="background:linear-gradient(135deg,#c9932a,#8a6015); color:#000000; font-weight:900; border-radius:12px; padding:10px 24px; box-shadow:0 4px 20px rgba(201,147,42,0.4);">🔔 Latest Updates</a>
   <a href="#about">About</a>
   <a href="#services">Services</a>
   <a href="#partners" onclick="filterUniMode('all', document.querySelector('.uni-tab[data-mode=\'all\']')); closeMobileNav();">Universities</a>
   <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin:-2px 0 10px;">
-    <span onclick="filterUniMode('regular', document.querySelector('.uni-tab[data-mode=\'regular\']')); closeMobileNav();" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">🏛️ Regular</span>
-    <span onclick="filterUniMode('online', document.querySelector('.uni-tab[data-mode=\'online\']')); closeMobileNav();" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">💻 Online</span>
-    <span onclick="filterUniMode('distance', document.querySelector('.uni-tab[data-mode=\'distance\']')); closeMobileNav();" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">🌐 Distance</span>
+    <span role="button" tabindex="0" aria-label="Filter Regular Campus Universities" onclick="filterUniMode('regular', document.querySelector('.uni-tab[data-mode=\'regular\']')); closeMobileNav();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();filterUniMode('regular', document.querySelector('.uni-tab[data-mode=\'regular\']')); closeMobileNav();}" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">🏛️ Regular</span>
+    <span role="button" tabindex="0" aria-label="Filter Online Mode Universities" onclick="filterUniMode('online', document.querySelector('.uni-tab[data-mode=\'online\']')); closeMobileNav();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();filterUniMode('online', document.querySelector('.uni-tab[data-mode=\'online\']')); closeMobileNav();}" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">💻 Online</span>
+    <span role="button" tabindex="0" aria-label="Filter Distance Learning Universities" onclick="filterUniMode('distance', document.querySelector('.uni-tab[data-mode=\'distance\']')); closeMobileNav();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();filterUniMode('distance', document.querySelector('.uni-tab[data-mode=\'distance\']')); closeMobileNav();}" style="font-size:0.8rem; padding:4px 10px; border-radius:16px; background:rgba(201,147,42,0.18); border:1px solid rgba(201,147,42,0.4); color:#fff; cursor:pointer;">🌐 Distance</span>
   </div>
   <a href="#testimonials">Reviews</a>
   <a href="#faq">FAQ</a>
@@ -5828,7 +5830,7 @@ body { padding-top: env(safe-area-inset-top); }
           <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
         </button>
       </div>
-      <div class="gsearch-panel" id="courseSearchResults" role="listbox" aria-label="Course suggestions"><div class="gsearch-panel-inner" id="courseSearchResultsInner"></div></div>
+      <div class="gsearch-panel" id="courseSearchResults" role="region" aria-label="Course search results"><div class="gsearch-panel-inner" id="courseSearchResultsInner" role="listbox" aria-label="Course suggestions"></div></div>
     </div>
     <div class="crs-filters reveal d1">
       <button class="crs-tab active" data-cat="All">All Programs</button>
@@ -5945,42 +5947,42 @@ body { padding-top: env(safe-area-inset-top); }
     </div>
     <div class="services-grid">
 
-      <div class="svc-card reveal d1" onclick="openSvcModal('admission')" style="cursor:pointer;">
+      <div class="svc-card reveal d1" role="button" tabindex="0" aria-label="Admission Assistance - View Details" onclick="openSvcModal('admission')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('admission');}" style="cursor:pointer;">
         <div class="svc-icon">🎓</div>
         <div class="svc-title">Admission Assistance</div>
         <div class="svc-body">End-to-end support for university admissions across 1500+ programs from UGC-recognised institutions.</div>
         <div class="svc-arrow">View Details →</div>
       </div>
 
-      <div class="svc-card reveal d2" onclick="openSvcModal('online')" style="cursor:pointer;">
+      <div class="svc-card reveal d2" role="button" tabindex="0" aria-label="Online Education - View Details" onclick="openSvcModal('online')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('online');}" style="cursor:pointer;">
         <div class="svc-icon">💻</div>
         <div class="svc-title">Online Education</div>
         <div class="svc-body">World-class online programs in AI, Digital Marketing, and professional certifications. Flexible timings.</div>
         <div class="svc-arrow">View Details →</div>
       </div>
 
-      <div class="svc-card reveal d3" onclick="openSvcModal('distance')" style="cursor:pointer;">
+      <div class="svc-card reveal d3" role="button" tabindex="0" aria-label="Distance Education - View Details" onclick="openSvcModal('distance')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('distance');}" style="cursor:pointer;">
         <div class="svc-icon">📖</div>
         <div class="svc-title">Distance Education</div>
         <div class="svc-body">Study from home with full government recognition. 100+ degree programs in distance mode.</div>
         <div class="svc-arrow">View Details →</div>
       </div>
 
-      <div class="svc-card reveal d4" onclick="openSvcModal('career')" style="cursor:pointer;">
+      <div class="svc-card reveal d4" role="button" tabindex="0" aria-label="Career Counselling - Book Free Session" onclick="openSvcModal('career')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('career');}" style="cursor:pointer;">
         <div class="svc-icon">🧭</div>
         <div class="svc-title">Career Counselling</div>
         <div class="svc-body">FREE one-on-one career guidance sessions with CEO Miss Ishika Sharma. Personalized roadmap.</div>
         <div class="svc-arrow">Book Free →</div>
       </div>
 
-      <div class="svc-card reveal d5" onclick="openSvcModal('docs')" style="cursor:pointer;">
+      <div class="svc-card reveal d5" role="button" tabindex="0" aria-label="Documentation Support - View Details" onclick="openSvcModal('docs')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('docs');}" style="cursor:pointer;">
         <div class="svc-icon">📋</div>
         <div class="svc-title">Documentation Support</div>
         <div class="svc-body">Complete help with eligibility, document preparation, application filing and scholarships.</div>
         <div class="svc-arrow">View Details →</div>
       </div>
 
-      <div class="svc-card reveal d6" onclick="openSvcModal('language')" style="cursor:pointer;">
+      <div class="svc-card reveal d6" role="button" tabindex="0" aria-label="Language Training - View Details" onclick="openSvcModal('language')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSvcModal('language');}" style="cursor:pointer;">
         <div class="svc-icon">🌐</div>
         <div class="svc-title">Language Training</div>
         <div class="svc-body">Professional Japanese (JLPT) and Chinese (HSK) courses for international career opportunities.</div>
@@ -6282,6 +6284,15 @@ body { padding-top: env(safe-area-inset-top); }
 @keyframes testi-smooth {
   from { transform: translateX(0) translateZ(0); }
   to   { transform: translateX(-50%) translateZ(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, #testiTrack {
+    animation: none !important;
+  }
+}
+.marquee-track:focus-within, #testiTrack:focus-within {
+  animation-play-state: paused !important;
 }
 
 /* ── hero orbs — GPU only ── */
@@ -8999,7 +9010,7 @@ section, .container {
 
     <!-- DISTANCE MODE SECTION -->
     <div id="uniSecDistance" style="text-align: left; margin-top: 80px;">
-      <div style="display: inline-block; background: #ecfdf5; color: #059669; padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 0.05em;">DISTANCE MODE</div>
+      <div style="display: inline-block; background: #ecfdf5; color: #047857; padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 0.05em;">DISTANCE MODE</div>
       <h3 class="section-heading" style="font-size:2.2rem; margin-bottom: 40px; color: var(--gold);">🔓 Unlock Excellence with Top Distance Universities</h3>
       
       <div style="display: flex; gap: 40px; margin-bottom: 50px; flex-wrap: wrap; align-items: stretch;">
@@ -9098,24 +9109,24 @@ section, .container {
         <div class="counsel-form-card">
           <form class="fgrid" id="leadForm" onsubmit="handleForm(event)">
             <div class="ff">
-              <label>Full Name</label>
-              <input type="text" name="full_name" placeholder="Your full name" required autocomplete="name"/>
+              <label for="leadFullName">Full Name</label>
+              <input type="text" id="leadFullName" name="full_name" placeholder="Your full name" required autocomplete="name"/>
             </div>
             <div class="ff">
-              <label>Mobile Number</label>
-              <input type="tel" name="mobile" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/>
+              <label for="leadMobile">Mobile Number</label>
+              <input type="tel" id="leadMobile" name="mobile" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/>
             </div>
             <div class="ff">
-              <label>Email Address</label>
-              <input type="email" name="email" placeholder="your@email.com" autocomplete="email"/>
+              <label for="leadEmail">Email Address</label>
+              <input type="email" id="leadEmail" name="email" placeholder="your@email.com" autocomplete="email"/>
             </div>
             <div class="ff">
-              <label>Your City</label>
-              <input type="text" name="city" placeholder="City name"/>
+              <label for="leadCity">Your City</label>
+              <input type="text" id="leadCity" name="city" placeholder="City name"/>
             </div>
             <div class="ff full">
-              <label>Interested Course</label>
-              <select name="course_interest" required>
+              <label for="leadCourse">Interested Course</label>
+              <select id="leadCourse" name="course_interest" required aria-label="Interested Course">
                 <option value="" disabled selected>Select a course category</option>
                 <option>10th / 12th Admission</option>
                 <option>BA / BCom / BSc</option>
@@ -9132,8 +9143,8 @@ section, .container {
               </select>
             </div>
             <div class="ff full">
-              <label>Your Goals (optional)</label>
-              <textarea name="message" placeholder="Tell us about your career goals or any questions…"></textarea>
+              <label for="leadMessage">Your Goals (optional)</label>
+              <textarea id="leadMessage" name="message" placeholder="Tell us about your career goals or any questions…" aria-label="Your Goals (optional)"></textarea>
             </div>
             <button type="submit" class="form-btn">✦ Submit — Get Free Counseling Call</button>
           </form>
@@ -9237,9 +9248,9 @@ section, .container {
         </div>
         <div class="ft-tagline">Your Vision, Our Mission. India's trusted education partner — guiding students to brighter futures </div>
         <div class="ft-socials">
-          <a href="https://wa.me/916306420146" class="ft-soc" target="_blank" rel="noopener noreferrer">💬</a>
-          <a href="tel:+916306420146" class="ft-soc">📞</a>
-          <a href="mailto:eduvisionconsultancy190@gmail.com" class="ft-soc">📧</a>
+          <a href="https://wa.me/916306420146" class="ft-soc" target="_blank" rel="noopener noreferrer" aria-label="Chat with EduVision on WhatsApp (opens in new tab)">💬</a>
+          <a href="tel:+916306420146" class="ft-soc" aria-label="Call EduVision Helpline">📞</a>
+          <a href="mailto:eduvisionconsultancy190@gmail.com" class="ft-soc" aria-label="Email EduVision Support">📧</a>
         </div>
       </div>
       <div>
@@ -9279,7 +9290,7 @@ section, .container {
       <div class="ft-copy">© 2026 EduVision · Sector 69, Gurgaon, Delhi NCR · All Rights Reserved.</div>
       <div class="ft-dev" style="text-align:right;">
         DESIGNER / CTO / DEVELOPER <span>RAGHAV RAJ RAUNIYAR</span>
-        <div style="font-size: 0.7rem; font-weight: 500; text-transform: lowercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-top: 4px; text-shadow: none;">raghavrajrauniyar06@gmail.com</div>
+        <div style="font-size: 0.7rem; font-weight: 500; text-transform: lowercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.72); margin-top: 4px; text-shadow: none;">raghavrajrauniyar06@gmail.com</div>
       </div>
     </div>
   </div>
@@ -9294,7 +9305,7 @@ section, .container {
 
 <div id="chatOverlay"></div>
 <!-- EDUVISION AI CHATBOT -->
-<button id="chatToggle" title="Chat with EduVision AI" aria-label="Open EduVision AI">
+<button id="chatToggle" title="AI EDU - Chat with EduVision AI" aria-label="AI EDU - Chat with EduVision AI Assistant">
   <span class="radar-ring"></span>
   <span class="radar-ring"></span>
   <span class="toggle-icon-bot">
@@ -9319,26 +9330,26 @@ section, .container {
         Career Assistant &bull; Online
       </div>
     </div>
-    <button class="chat-hdr-btn" id="chatSettingsBtn" title="Settings">⚙</button>
-    <button class="chat-hdr-btn" id="chatMinimize" title="Minimize">&#8722;</button>
-    <button class="chat-hdr-btn" id="chatClose" title="Close">&#10005;</button>
+    <button class="chat-hdr-btn" id="chatSettingsBtn" title="Settings" aria-label="AI Assistant Settings">⚙</button>
+    <button class="chat-hdr-btn" id="chatMinimize" title="Minimize" aria-label="Minimize AI Chat">&#8722;</button>
+    <button class="chat-hdr-btn" id="chatClose" title="Close" aria-label="Close AI Chat">&#10005;</button>
   </div>
 
   <!-- Settings Panel -->
   <div id="chatSettingsPanel" class="chat-settings-panel">
     <div class="settings-hdr">
       <span>AI Engine Settings</span>
-      <button id="closeSettingsBtn" class="settings-close-btn">&#10005;</button>
+      <button id="closeSettingsBtn" class="settings-close-btn" aria-label="Close settings">&#10005;</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;padding:16px;">
-      <label class="settings-label" style="font-size:0.8rem;color:rgba(255,255,255,0.85);font-weight:700;">AI Processing Engine</label>
-      <select id="aiEngineSelect" class="settings-select" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:10px;color:#fff;padding:8px 12px;font-size:0.82rem;outline:none;">
+      <label class="settings-label" for="aiEngineSelect" style="font-size:0.8rem;color:rgba(255,255,255,0.85);font-weight:700;">AI Processing Engine</label>
+      <select id="aiEngineSelect" aria-label="AI Processing Engine" class="settings-select" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:10px;color:#fff;padding:8px 12px;font-size:0.82rem;outline:none;">
         <option value="neural" style="background:#141418;color:#fff;">EduVision Cognitive Brain (High-IQ Offline AI)</option>
         <option value="gemini" style="background:#141418;color:#fff;">Gemini Live AI (Cloud AI Mode)</option>
       </select>
       <div id="geminiKeyArea" style="display:none;flex-direction:column;gap:6px;">
-        <label class="settings-label" style="font-size:0.75rem;color:var(--muted);margin-top:2px;">Google Gemini API Key (Optional)</label>
-        <input type="password" id="geminiApiKeyInput" class="settings-input" placeholder="AIzaSy... (Paste Gemini key)" style="width:100%;box-sizing:border-box;padding:8px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:8px;color:#fff;font-size:0.8rem;outline:none;">
+        <label class="settings-label" for="geminiApiKeyInput" style="font-size:0.75rem;color:var(--muted);margin-top:2px;">Google Gemini API Key (Optional)</label>
+        <input type="password" id="geminiApiKeyInput" autocomplete="current-password" aria-label="Google Gemini API Key" class="settings-input" placeholder="AIzaSy... (Paste Gemini key)" style="width:100%;box-sizing:border-box;padding:8px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:8px;color:#fff;font-size:0.8rem;outline:none;">
         <p class="settings-hint" style="font-size:0.72rem;color:rgba(255,255,255,0.6);margin:2px 0 0 0;line-height:1.4;">Free API key from <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer" style="color:#f7d268;text-decoration:underline;">Google AI Studio</a>. If left blank, EduVision Cognitive Brain responds instantly.</p>
       </div>
       <button id="saveSettingsBtn" class="settings-save-btn" style="background:linear-gradient(135deg,#f7d268,#c9932a);border:none;border-radius:10px;color:#1a1204;font-weight:800;padding:10px;cursor:pointer;font-size:0.85rem;margin-top:4px;">Save Settings</button>
@@ -9350,8 +9361,8 @@ section, .container {
 
   <!-- Input -->
   <div class="chat-input-area">
-    <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
-    <button id="chatSend">&#10148;</button>
+    <textarea id="chatInput" placeholder="Type your message..." rows="1" aria-label="Type your message"></textarea>
+    <button id="chatSend" aria-label="Send message">&#10148;</button>
   </div>
 </div>
 
@@ -9401,12 +9412,12 @@ section, .container {
         <div class="cm-form-hd-bar"></div>
       </div>
       <form class="cm-form" id="cmForm" onsubmit="handleCmForm(event)">
-        <div class="cm-field"><label>Full Name</label><input type="text" name="full_name" placeholder="Your name" required/></div>
-        <div class="cm-field"><label>Mobile</label><input type="tel" name="mobile" placeholder="+91 XXXXX XXXXX" required pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/></div>
-        <div class="cm-field"><label>Email</label><input type="email" name="email" placeholder="your@email.com"/></div>
-        <div class="cm-field"><label>City</label><input type="text" name="city" placeholder="Your city"/></div>
-        <div class="cm-field full"><label>Course Interested In</label><input type="text" name="course_interest" id="cmCourseInput" readonly/></div>
-        <div class="cm-field full"><label>Message (optional)</label><textarea name="message" placeholder="Tell us your goals…"></textarea></div>
+        <div class="cm-field"><label for="cmFullName">Full Name</label><input type="text" id="cmFullName" name="full_name" placeholder="Your name" required/></div>
+        <div class="cm-field"><label for="cmMobile">Mobile</label><input type="tel" id="cmMobile" name="mobile" placeholder="+91 XXXXX XXXXX" required pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" title="Please enter a valid 10-digit Indian mobile number"/></div>
+        <div class="cm-field"><label for="cmEmail">Email</label><input type="email" id="cmEmail" name="email" placeholder="your@email.com"/></div>
+        <div class="cm-field"><label for="cmCity">City</label><input type="text" id="cmCity" name="city" placeholder="Your city"/></div>
+        <div class="cm-field full"><label for="cmCourseInput">Course Interested In</label><input type="text" name="course_interest" id="cmCourseInput" readonly/></div>
+        <div class="cm-field full"><label for="cmMessage">Message (optional)</label><textarea id="cmMessage" name="message" placeholder="Tell us your goals…" aria-label="Message (optional)"></textarea></div>
         <button type="submit" class="cm-submit">✦ Submit — Get Free Counselling Call</button>
       </form>
       <div class="cm-success" id="cmSuccess">

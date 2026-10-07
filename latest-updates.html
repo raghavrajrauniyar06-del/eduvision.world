@@ -53,6 +53,19 @@
       font-family: 'Outfit', sans-serif;
     }
 
+    :focus-visible {
+      outline: 2px solid #f7d377 !important;
+      outline-offset: 2px !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     /* ═══ NAVBAR ═══ */
     nav#navbar {
       padding-top: env(safe-area-inset-top);
@@ -267,7 +280,8 @@
 
     #mobileNav a.mobile-highlight {
       background: linear-gradient(135deg, var(--gold), #8a6015);
-      color: #ffffff;
+      color: #000000;
+      font-weight: 900;
       box-shadow: 0 4px 20px rgba(201,147,42,0.4);
     }
 
@@ -1184,7 +1198,7 @@
       padding-top: 30px;
       border-top: 1px solid rgba(255,255,255,0.08);
       font-size: 0.85rem;
-      color: #64748b;
+      color: #94a3b8;
     }
   
     /* 100% Live Server Failsafe - Instant Visibility & Zero Blur Leak */
@@ -1866,7 +1880,7 @@ body { padding-top: env(safe-area-inset-top); }
 
   <!-- MOBILE NAV -->
   <div id="mobileNav">
-    <button id="mobileNavClose">✕</button>
+    <button id="mobileNavClose" aria-label="Close navigation menu">✕</button>
     <a href="index.html">Home</a>
     <a href="index.html#courses">Courses</a>
     <a href="index.html#partners">Universities</a>
