@@ -948,6 +948,90 @@ body { padding-top: env(safe-area-inset-top); }
       if (modal) modal.style.display = 'none';
     }
 
+    
+    function isUUID(str) {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(str).trim());
+    }
+
+    async function universalFindAccount(rawInput, client) {
+      const raw = String(rawInput || '').trim();
+      if (!raw) return null;
+
+      const isEmail = raw.includes('@');
+      const digits = raw.replace(/\D/g, '');
+      const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+
+      const tables = [
+        { name: 'counsellors', role: 'counsellor' },
+        { name: 'admin_users', role: 'admin' },
+        { name: 'users', role: 'student' },
+        { name: 'student_profiles', role: 'student' },
+        { name: 'team_leaders', role: 'teamleader' },
+        { name: 'associate_partners', role: 'associate' }
+      ];
+
+      for (const t of tables) {
+        let orParts = [];
+        if (isEmail) {
+          orParts.push(`email.ilike.${raw}`);
+        } else {
+          if (last10) {
+            orParts.push(`phone.ilike.*${last10}*`);
+            orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (raw.length >= 4) {
+            orParts.push(`phone.ilike.*${raw}*`);
+          }
+
+          if (t.name === 'counsellors') {
+            orParts.push(`counsellor_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'admin_users') {
+            orParts.push(`employee_id.ilike.${raw}`);
+            if (isUUID(raw)) orParts.push(`admin_id.eq.${raw}`);
+          } else if (t.name === 'team_leaders') {
+            orParts.push(`team_leader_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'student_profiles') {
+            orParts.push(`student_id.ilike.${raw}`);
+          } else if (t.name === 'associate_partners') {
+            orParts.push(`partner_code.ilike.${raw}`);
+            orParts.push(`partner_id.ilike.${raw}`);
+          } else if (t.name === 'users') {
+            if (isUUID(raw)) orParts.push(`id.eq.${raw}`);
+          }
+        }
+
+        if (orParts.length === 0) continue;
+
+        try {
+          const { data, error } = await client
+            .from(t.name)
+            .select('*')
+            .or(orParts.join(','))
+            .limit(1);
+
+          if (!error && data && data.length > 0) {
+            const rec = data[0];
+            const email = (rec.email || '').trim().toLowerCase();
+            const name = rec.full_name || rec.contact_person || rec.name || 'User';
+            const phone = rec.phone || '';
+            const role = (rec.role || t.role).toLowerCase();
+            return {
+              found: true,
+              table: t.name,
+              email,
+              name,
+              phone,
+              role,
+              record: rec
+            };
+          }
+        } catch(e) {}
+      }
+
+      return null;
+    }
+
     async function handleSendRoleForgot(portalName, tableName) {
       const inp = document.getElementById('roleForgotInput');
       const statusEl = document.getElementById('roleForgotStatus');
@@ -955,49 +1039,51 @@ body { padding-top: env(safe-area-inset-top); }
       const val = inp ? inp.value.trim() : '';
 
       if (!val) {
-        if (statusEl) { statusEl.textContent = 'Please enter your registered mobile or email.'; statusEl.style.color = '#ef4444'; }
+        if (statusEl) { statusEl.textContent = 'Please enter your registered mobile, email, or Employee ID.'; statusEl.style.color = '#ef4444'; }
         if (inp) inp.focus();
         return;
       }
 
       if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching Account...'; }
-      if (statusEl) { statusEl.textContent = 'Verifying staff records in database...'; statusEl.style.color = '#f7d377'; }
+      if (statusEl) { statusEl.textContent = 'Verifying records in database...'; statusEl.style.color = '#f7d377'; }
 
       try {
-        const isEmail = val.includes('@');
-        const col = isEmail ? 'email' : 'phone';
         const client = (typeof sb !== 'undefined' && sb) ? sb : (typeof supabaseClient !== 'undefined' ? supabaseClient : window.supabase.createClient('https://ewxvqpyusveiynplzxed.supabase.co', 'sb_publishable_NFUbLO9g-UTt-Z9fUuQoyw__Xrxq2IC'));
         
-        // Query database table
-        const { data, error } = await client.from(tableName).select('*').ilike(col, val);
-        if (!data || data.length === 0) {
-          throw new Error('No ' + portalName + ' account found with this ' + (isEmail ? 'email address' : 'mobile number') + '.');
+        const match = await universalFindAccount(val, client);
+        if (!match) {
+          throw new Error('No account found with this ' + (val.includes('@') ? 'email address' : 'mobile number / ID') + '.');
         }
 
-        const rec = data[0];
-        const targetEmail = (rec.email || '').trim().toLowerCase();
+        const targetEmail = match.email;
         if (!targetEmail || !targetEmail.includes('@')) {
-          throw new Error('This account does not have a registered email address for OTP delivery.');
+          throw new Error('Account verified (' + match.name + '), but no registered email is found for OTP delivery.');
         }
 
         if (statusEl) {
-          statusEl.textContent = '✓ Account verified (' + (rec.name || rec.full_name || portalName) + ')! Sending 6-digit OTP...';
+          statusEl.textContent = '✓ Account verified: ' + match.name + ' (' + targetEmail + ')! Sending 6-digit OTP...';
           statusEl.style.color = '#4ade80';
         }
 
-        // Dispatch OTP via Supabase Auth
-        try {
-          await client.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } });
-        } catch(e){}
+        const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Store pending auth for otp-verify.html
+        try {
+          await client.auth.signInWithOtp({
+            email: targetEmail,
+            options: { shouldCreateUser: true }
+          });
+        } catch(e) {}
+
         sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({
           identifier: targetEmail,
-          phone: rec.phone || '',
-          name: rec.name || rec.full_name || portalName,
+          phone: match.phone || '',
+          name: match.name,
           mode: 'recovery',
-          role: portalName,
-          portal: portalName
+          role: match.role || portalName,
+          portal: portalName,
+          table: match.table,
+          expectedOtp: secureOtp,
+          timestamp: Date.now()
         }));
 
         if (statusEl) {
@@ -1010,12 +1096,11 @@ body { padding-top: env(safe-area-inset-top); }
         }, 700);
 
       } catch(err) {
-        console.error("Forgot OTP Error:", err);
+        console.error("Role Forgot OTP Error:", err);
         if (statusEl) { statusEl.textContent = '❌ ' + (err.message || 'Failed to send OTP.'); statusEl.style.color = '#ef4444'; }
         if (btn) { btn.disabled = false; btn.innerHTML = 'Find Account & Send 6-Digit OTP ➔'; }
       }
     }
-
   </script>
 
   <!-- ADMIN FORGOT PASSWORD MODAL -->

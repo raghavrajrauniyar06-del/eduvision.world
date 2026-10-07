@@ -271,25 +271,109 @@ function togglePassword(btn, inputId) { const input = document.getElementById(in
 
 function openForgotModal() { const m = document.getElementById('forgotModal'); const i = document.getElementById('forgotInput'); const s = document.getElementById('forgotStatus'); const b = document.getElementById('btnSendForgot'); if (b) { b.disabled = false; b.innerHTML = 'Find Account & Send OTP ➔'; } if (s) s.textContent = ''; if (i) i.value = ''; if (m) m.style.display = 'flex'; setTimeout(() => { if (i) i.focus(); }, 120); }
 function closeForgotModal() { const m = document.getElementById('forgotModal'); if (m) m.style.display = 'none'; }
+
+    function isUUID(str) {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(str).trim());
+    }
+
+    async function universalFindAccount(rawInput, client) {
+      const raw = String(rawInput || '').trim();
+      if (!raw) return null;
+
+      const isEmail = raw.includes('@');
+      const digits = raw.replace(/\D/g, '');
+      const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+
+      const tables = [
+        { name: 'counsellors', role: 'counsellor' },
+        { name: 'admin_users', role: 'admin' },
+        { name: 'users', role: 'student' },
+        { name: 'student_profiles', role: 'student' },
+        { name: 'team_leaders', role: 'teamleader' },
+        { name: 'associate_partners', role: 'associate' }
+      ];
+
+      for (const t of tables) {
+        let orParts = [];
+        if (isEmail) {
+          orParts.push(`email.ilike.${raw}`);
+        } else {
+          if (last10) {
+            orParts.push(`phone.ilike.*${last10}*`);
+            orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (raw.length >= 4) {
+            orParts.push(`phone.ilike.*${raw}*`);
+          }
+
+          if (t.name === 'counsellors') {
+            orParts.push(`counsellor_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'admin_users') {
+            orParts.push(`employee_id.ilike.${raw}`);
+            if (isUUID(raw)) orParts.push(`admin_id.eq.${raw}`);
+          } else if (t.name === 'team_leaders') {
+            orParts.push(`team_leader_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'student_profiles') {
+            orParts.push(`student_id.ilike.${raw}`);
+          } else if (t.name === 'associate_partners') {
+            orParts.push(`partner_code.ilike.${raw}`);
+            orParts.push(`partner_id.ilike.${raw}`);
+          } else if (t.name === 'users') {
+            if (isUUID(raw)) orParts.push(`id.eq.${raw}`);
+          }
+        }
+
+        if (orParts.length === 0) continue;
+
+        try {
+          const { data, error } = await client
+            .from(t.name)
+            .select('*')
+            .or(orParts.join(','))
+            .limit(1);
+
+          if (!error && data && data.length > 0) {
+            const rec = data[0];
+            const email = (rec.email || '').trim().toLowerCase();
+            const name = rec.full_name || rec.contact_person || rec.name || 'User';
+            const phone = rec.phone || '';
+            const role = (rec.role || t.role).toLowerCase();
+            return {
+              found: true,
+              table: t.name,
+              email,
+              name,
+              phone,
+              role,
+              record: rec
+            };
+          }
+        } catch(e) {}
+      }
+
+      return null;
+    }
+
 async function handleSendForgot() {
   const inp = document.getElementById('forgotInput'); const s = document.getElementById('forgotStatus'); const b = document.getElementById('btnSendForgot'); const val = inp ? inp.value.trim() : '';
-  if (!val) { if (s) { s.textContent = 'Please enter your registered mobile or email.'; s.style.color = '#ef4444'; } return; }
+  if (!val) { if (s) { s.textContent = 'Please enter your registered mobile, email, or Employee ID.'; s.style.color = '#ef4444'; } return; }
   if (b) { b.disabled = true; b.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching...'; }
   if (s) { s.textContent = 'Verifying staff records...'; s.style.color = '#fbbf24'; }
   try {
-    const isEmail = val.includes('@'); const col = isEmail ? 'email' : 'phone';
-    const { data, error } = await sb.from('counsellors').select('counsellor_id, employee_id, full_name, email, phone').ilike(col, val);
-    if (!data || data.length === 0) throw new Error('No staff account found.');
-    const rec = data[0]; const targetEmail = (rec.email || '').trim().toLowerCase();
-    if (!targetEmail.includes('@')) throw new Error('No email registered for OTP delivery.');
-    if (s) { s.textContent = '✓ Account verified (' + (rec.full_name || 'Staff') + ')! Sending OTP...'; s.style.color = '#4ade80'; }
-    try { await sb.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: false } }); } catch(e){}
-    sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({ identifier: targetEmail, phone: rec.phone || '', name: rec.full_name || 'Staff', mode: 'recovery', role: 'staff', portal: 'staff' }));
+    const match = await universalFindAccount(val, sb);
+    if (!match) throw new Error('No staff account found with this mobile or email.');
+    const targetEmail = match.email;
+    if (!targetEmail || !targetEmail.includes('@')) throw new Error('No email registered for OTP delivery.');
+    if (s) { s.textContent = '✓ Account verified (' + match.name + ')! Sending 6-digit OTP...'; s.style.color = '#4ade80'; }
+    const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    try { await sb.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } }); } catch(e){}
+    sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({ identifier: targetEmail, phone: match.phone || '', name: match.name, mode: 'recovery', role: match.role || 'staff', portal: 'staff', table: match.table, expectedOtp: secureOtp, timestamp: Date.now() }));
     if (s) { s.textContent = '✓ OTP sent to ' + targetEmail + '! Redirecting...'; s.style.color = '#4ade80'; }
     setTimeout(() => { window.location.href = '../otp-verify.html'; }, 700);
   } catch(err) { if (s) { s.textContent = '❌ ' + (err.message || 'Failed.'); s.style.color = '#ef4444'; } if (b) { b.disabled = false; b.innerHTML = 'Find Account & Send OTP ➔'; } }
 }
-</script>
+  </script>
 
 <!-- ORB & SHOCKWAVE ELEMENTS -->
 <div class="dim-overlay" id="dimOverlay"></div>

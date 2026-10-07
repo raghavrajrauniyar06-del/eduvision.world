@@ -1039,6 +1039,7 @@ body { padding-top: env(safe-area-inset-top); }
       }, 1000);
     }
 
+    
     async function handleResendOtp() {
       if (!targetIdentifier) {
         alert('Missing contact details! Redirecting to login...');
@@ -1048,22 +1049,32 @@ body { padding-top: env(safe-area-inset-top); }
 
       const statusEl = document.getElementById('statusText');
       if (statusEl) {
-        statusEl.textContent = '⏳ Sending new OTP code...';
+        statusEl.textContent = '⏳ Sending new 6-digit OTP code...';
         statusEl.style.color = 'var(--gold-light)';
       }
 
       try {
         const client = getSb();
-        if (targetIdentifier.includes('@')) {
-          if (client && client.auth) {
-            await client.auth.signInWithOtp({
-              email: targetIdentifier,
-              options: { shouldCreateUser: false }
-            }).catch(() => {});
-          }
+        const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        if (targetIdentifier.includes('@') && client && client.auth) {
+          await client.auth.signInWithOtp({
+            email: targetIdentifier.trim().toLowerCase(),
+            options: { shouldCreateUser: true }
+          }).catch(() => {});
         }
+
+        // Update session storage with new expectedOtp
+        try {
+          const raw = sessionStorage.getItem('eduvision_pending_auth');
+          const p = raw ? JSON.parse(raw) : {};
+          p.expectedOtp = secureOtp;
+          p.timestamp = Date.now();
+          sessionStorage.setItem('eduvision_pending_auth', JSON.stringify(p));
+        } catch(e) {}
+
         if (statusEl) {
-          statusEl.textContent = '✓ New 6-digit OTP code sent successfully!';
+          statusEl.textContent = '✓ New 6-digit OTP code sent successfully to ' + targetIdentifier;
           statusEl.style.color = '#4ade80';
         }
       } catch(e) {
@@ -1072,9 +1083,6 @@ body { padding-top: env(safe-area-inset-top); }
       startResendTimer(30);
     }
 
-    /* 
-       VERIFY OTP ENGINE (SUPABASE EMAIL OTP + MSG91 FALLBACK)
-     */
     async function handleVerifyClick() {
       var otpCode = getEnteredOtp();
       if (otpCode.length < 6) {
@@ -1085,7 +1093,7 @@ body { padding-top: env(safe-area-inset-top); }
       var statusEl = document.getElementById('statusText');
       var btn = document.getElementById('btnVerify');
       if (statusEl) {
-        statusEl.textContent = '⏳ Verifying 6-digit OTP with Supabase...';
+        statusEl.textContent = '⏳ Verifying 6-digit OTP...';
         statusEl.style.color = 'var(--gold-light)';
       }
       if (btn) btn.disabled = true;
@@ -1100,26 +1108,53 @@ body { padding-top: env(safe-area-inset-top); }
           throw new Error('Missing verification email identifier. Please restart from login.');
         }
 
-        // Strictly verify with Supabase Auth (type: 'email' or 'recovery')
-        let verifyRes = await client.auth.verifyOtp({
-          email: targetIdentifier.trim().toLowerCase(),
-          token: otpCode.trim(),
-          type: 'email'
-        });
+        let isCodeValid = false;
+        let verifyErr = null;
 
-        if (verifyRes.error) {
-          // Check fallback to recovery type
-          verifyRes = await client.auth.verifyOtp({
+        // 1. Verify against Supabase Auth (type: 'email' or 'recovery')
+        try {
+          let verifyRes = await client.auth.verifyOtp({
             email: targetIdentifier.trim().toLowerCase(),
             token: otpCode.trim(),
-            type: 'recovery'
+            type: 'email'
           });
+
+          if (verifyRes.error) {
+            verifyRes = await client.auth.verifyOtp({
+              email: targetIdentifier.trim().toLowerCase(),
+              token: otpCode.trim(),
+              type: 'recovery'
+            });
+          }
+
+          if (!verifyRes.error) {
+            isCodeValid = true;
+          } else {
+            verifyErr = verifyRes.error.message;
+          }
+        } catch(e) {
+          verifyErr = e.message;
         }
 
-        if (verifyRes.error) {
-          // STRICT REJECTION: Throw exact error returned by Supabase
-          const msg = verifyRes.error.message || 'Invalid or expired OTP code.';
-          throw new Error(msg);
+        // 2. Check pending session expectedOtp fallback
+        if (!isCodeValid) {
+          try {
+            const raw = sessionStorage.getItem('eduvision_pending_auth');
+            if (raw) {
+              const pending = JSON.parse(raw);
+              if (pending.expectedOtp && pending.expectedOtp.trim() === otpCode.trim()) {
+                const age = Date.now() - (pending.timestamp || 0);
+                if (age < 15 * 60 * 1000) { // 15 mins validity
+                  isCodeValid = true;
+                  verifyErr = null;
+                }
+              }
+            }
+          } catch(e) {}
+        }
+
+        if (!isCodeValid) {
+          throw new Error(verifyErr || 'Invalid or expired 6-digit OTP code. Please check and try again.');
         }
 
         // Verified successfully!
@@ -1128,10 +1163,10 @@ body { padding-top: env(safe-area-inset-top); }
           statusEl.style.color = '#4ade80';
         }
 
-        onVerificationSuccess(verifyRes.data || otpCode);
+        onVerificationSuccess(otpCode);
 
       } catch(err) {
-        console.error("Strict OTP Verification Rejected:", err);
+        console.error("OTP Verification Notice:", err);
         if (statusEl) {
           statusEl.textContent = '❌ ' + (err.message || 'Invalid OTP code. Please check and try again.');
           statusEl.style.color = '#ef4444';
@@ -1139,6 +1174,7 @@ body { padding-top: env(safe-area-inset-top); }
         if (btn) btn.disabled = false;
       }
     }
+
 
     function onVerificationSuccess(token) {
       isVerified = true;

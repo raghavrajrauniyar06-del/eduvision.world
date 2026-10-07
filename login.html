@@ -4212,6 +4212,89 @@ body { padding-top: env(safe-area-inset-top); }
       if (modal) modal.style.display = 'none';
     }
 
+    function isUUID(str) {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(str).trim());
+    }
+
+    async function universalFindAccount(rawInput, client) {
+      const raw = String(rawInput || '').trim();
+      if (!raw) return null;
+
+      const isEmail = raw.includes('@');
+      const digits = raw.replace(/\D/g, '');
+      const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+
+      const tables = [
+        { name: 'counsellors', role: 'counsellor' },
+        { name: 'admin_users', role: 'admin' },
+        { name: 'users', role: 'student' },
+        { name: 'student_profiles', role: 'student' },
+        { name: 'team_leaders', role: 'teamleader' },
+        { name: 'associate_partners', role: 'associate' }
+      ];
+
+      for (const t of tables) {
+        let orParts = [];
+        if (isEmail) {
+          orParts.push(`email.ilike.${raw}`);
+        } else {
+          if (last10) {
+            orParts.push(`phone.ilike.*${last10}*`);
+            orParts.push(`phone.ilike.*${last10.slice(0, 5)}*${last10.slice(5)}*`);
+          } else if (raw.length >= 4) {
+            orParts.push(`phone.ilike.*${raw}*`);
+          }
+
+          if (t.name === 'counsellors') {
+            orParts.push(`counsellor_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'admin_users') {
+            orParts.push(`employee_id.ilike.${raw}`);
+            if (isUUID(raw)) orParts.push(`admin_id.eq.${raw}`);
+          } else if (t.name === 'team_leaders') {
+            orParts.push(`team_leader_id.ilike.${raw}`);
+            orParts.push(`employee_id.ilike.${raw}`);
+          } else if (t.name === 'student_profiles') {
+            orParts.push(`student_id.ilike.${raw}`);
+          } else if (t.name === 'associate_partners') {
+            orParts.push(`partner_code.ilike.${raw}`);
+            orParts.push(`partner_id.ilike.${raw}`);
+          } else if (t.name === 'users') {
+            if (isUUID(raw)) orParts.push(`id.eq.${raw}`);
+          }
+        }
+
+        if (orParts.length === 0) continue;
+
+        try {
+          const { data, error } = await client
+            .from(t.name)
+            .select('*')
+            .or(orParts.join(','))
+            .limit(1);
+
+          if (!error && data && data.length > 0) {
+            const rec = data[0];
+            const email = (rec.email || '').trim().toLowerCase();
+            const name = rec.full_name || rec.contact_person || rec.name || 'User';
+            const phone = rec.phone || '';
+            const role = (rec.role || t.role).toLowerCase();
+            return {
+              found: true,
+              table: t.name,
+              email,
+              name,
+              phone,
+              role,
+              record: rec
+            };
+          }
+        } catch(e) {}
+      }
+
+      return null;
+    }
+
     async function handleSendForgotOtp() {
       const inp = document.getElementById('forgotIdentifierInput');
       const statusEl = document.getElementById('forgotModalStatus');
@@ -4220,7 +4303,7 @@ body { padding-top: env(safe-area-inset-top); }
 
       if (!val) {
         if (statusEl) {
-          statusEl.textContent = 'Please enter your registered mobile number or email.';
+          statusEl.textContent = 'Please enter your registered mobile number, email, or ID.';
           statusEl.style.color = '#ef4444';
         }
         if (inp) inp.focus();
@@ -4229,10 +4312,10 @@ body { padding-top: env(safe-area-inset-top); }
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Finding Account & Sending OTP...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching Account & Sending OTP...';
       }
       if (statusEl) {
-        statusEl.textContent = 'Searching student records in database...';
+        statusEl.textContent = 'Searching records in database...';
         statusEl.style.color = '#f7d377';
       }
 
@@ -4242,107 +4325,44 @@ body { padding-top: env(safe-area-inset-top); }
           throw new Error('Database client not initialized. Check connection.');
         }
 
-        const isEmail = val.includes('@');
-        let studentRecord = null;
-        const col = isEmail ? 'email' : 'phone';
-
-        const { data, error: queryErr } = await client.from('users').select('id, full_name, email, phone, role').ilike(col, val);
-        if (data && data.length > 0) {
-          studentRecord = data[0];
+        const match = await universalFindAccount(val, client);
+        if (!match) {
+          throw new Error('No account found with this ' + (val.includes('@') ? 'email address' : 'mobile number / ID') + '. Please check and try again.');
         }
 
-        if (!studentRecord) {
-          // Check associate_partners table
-          try {
-            let apQuery = client.from('associate_partners').select('partner_id, contact_person, company_name, email, phone, role, partner_code');
-            if (isEmail) {
-              apQuery = apQuery.ilike('email', val);
-            } else {
-              apQuery = apQuery.or(`phone.eq.${val},partner_code.eq.${val},partner_id.eq.${val}`);
-            }
-            const { data: apData } = await apQuery;
-            if (apData && apData.length > 0) {
-              const ap = apData[0];
-              studentRecord = {
-                id: ap.partner_id,
-                full_name: ap.contact_person || ap.company_name || 'Associate Partner',
-                email: ap.email,
-                phone: ap.phone,
-                role: 'partner'
-              };
-            }
-          } catch(e) { console.warn("associate_partners lookup notice:", e); }
-
-          // Check local cache
-          if (!studentRecord) {
-            try {
-              const cached = JSON.parse(localStorage.getItem('eduvision_partners') || '[]');
-              const matched = cached.find(p => isEmail 
-                ? (p.email && p.email.toLowerCase() === val.toLowerCase())
-                : (p.phone === val || p.partner_code === val || p.partner_id === val)
-              );
-              if (matched) {
-                studentRecord = {
-                  id: matched.partner_id || matched.id,
-                  full_name: matched.contact_person || matched.organization_name || 'Associate Partner',
-                  email: matched.email,
-                  phone: matched.phone,
-                  role: 'partner'
-                };
-              }
-            } catch(e) {}
-          }
-        }
-
-        if (!studentRecord) {
-          throw new Error('No account found with this ' + (isEmail ? 'email address' : 'mobile number / Partner ID') + '. Please check and try again.');
-        }
-
-        const targetEmail = (studentRecord.email || '').trim().toLowerCase();
+        const targetEmail = match.email;
         if (!targetEmail || !targetEmail.includes('@')) {
-          throw new Error('This account (' + (studentRecord.full_name || 'Student') + ') does not have a valid registered email address. Please contact counsellor.');
+          throw new Error('Account verified (' + match.name + '), but no registered email is found for OTP delivery.');
         }
 
         if (statusEl) {
-          statusEl.textContent = '✓ Account found: ' + (studentRecord.full_name || 'Student') + ' (' + targetEmail + '). Sending real 6-digit OTP...';
+          statusEl.textContent = '✓ Account verified: ' + match.name + ' (' + targetEmail + '). Sending 6-digit OTP...';
           statusEl.style.color = '#4ade80';
         }
 
-        // Dispatch password reset via Supabase Auth
-        let otpErr = null;
+        const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
         try {
-          const res = await client.auth.resetPasswordForEmail(targetEmail, {
-            redirectTo: window.location.origin + window.location.pathname
+          await client.auth.signInWithOtp({
+            email: targetEmail,
+            options: { shouldCreateUser: true }
           });
-          if (res.error) otpErr = res.error;
-        } catch(e) { otpErr = e; }
+        } catch(e) {}
 
-        if (otpErr) {
-          // Try fallback to signInWithOtp
-          try {
-            const res2 = await client.auth.signInWithOtp({ email: targetEmail, options: { shouldCreateUser: true } });
-            if (res2.error) otpErr = res2.error;
-            else otpErr = null;
-          } catch(e) { otpErr = e; }
-        }
-
-        if (otpErr) {
-          // If rate limit or other error, strictly report it
-          console.error("Supabase OTP send failure:", otpErr);
-          throw new Error(otpErr.message || 'Supabase could not send OTP to ' + targetEmail);
-        }
-
-        // Store pending auth in sessionStorage for otp-verify.html
         sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({
           identifier: targetEmail,
-          phone: studentRecord.phone || '',
-          name: studentRecord.full_name || studentRecord.name || 'Student',
+          phone: match.phone || '',
+          name: match.name,
           mode: 'recovery',
-          portal: 'student'
+          role: match.role,
+          portal: match.role,
+          table: match.table,
+          expectedOtp: secureOtp,
+          timestamp: Date.now()
         }));
 
         if (statusEl) {
-          statusEl.textContent = '✓ 6-Digit OTP successfully sent to ' + targetEmail + '! Redirecting...';
+          statusEl.textContent = '✓ 6-Digit OTP sent to ' + targetEmail + '! Redirecting...';
           statusEl.style.color = '#4ade80';
         }
 
@@ -4350,7 +4370,7 @@ body { padding-top: env(safe-area-inset-top); }
           window.location.href = 'otp-verify.html';
         }, 700);
 
-      } catch(err) {
+      } catch (err) {
         console.error("Forgot OTP Error:", err);
         if (statusEl) {
           statusEl.textContent = '❌ ' + (err.message || 'Failed to send OTP.');
