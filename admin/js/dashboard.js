@@ -19454,126 +19454,129 @@ function renderCtoPageCards() {
   const grid = document.getElementById('ctoPageCardsGrid');
   if (!grid) return;
 
-  if (!window.EduPageGuard || typeof window.EduPageGuard.getControls !== 'function') {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> EduPageGuard engine is initializing...</div>';
-    return;
-  }
-
-  const controls = window.EduPageGuard.getControls();
-  const keys = Object.keys(controls);
-
-  // Update counter
-  const countEl = document.getElementById('ctoCountAll');
-  if (countEl) countEl.textContent = keys.length;
-  const guardedEl = document.getElementById('statGuardedPages');
-  if (guardedEl) guardedEl.textContent = keys.length;
-
-  let pagesCount = 0, sectionsCount = 0, portalsCount = 0;
-  keys.forEach(k => {
-    const grp = controls[k] && controls[k].group;
-    if (grp === 'public_pages') pagesCount++;
-    else if (grp === 'home_sections') sectionsCount++;
-    else if (grp === 'portals') portalsCount++;
-  });
-  const cPages = document.getElementById('ctoCountPages');
-  if (cPages) cPages.textContent = pagesCount;
-  const cSections = document.getElementById('ctoCountSections');
-  if (cSections) cSections.textContent = sectionsCount;
-  const cPortals = document.getElementById('ctoCountPortals');
-  if (cPortals) cPortals.textContent = portalsCount;
-
-  let filteredKeys = keys.filter(key => {
-    const item = controls[key];
-    if (ctoActivePageCategory !== 'all' && item.group !== ctoActivePageCategory) {
-      return false;
+  try {
+    if (!window.EduPageGuard || typeof window.EduPageGuard.getControls !== 'function') {
+      console.warn('[CTO Page Guard] EduPageGuard engine initializing...');
+      return;
     }
-    if (ctoActivePageSearchQuery) {
-      const matchText = (item.name + ' ' + (item.desc || '') + ' ' + (item.url || '') + ' ' + key).toLowerCase();
-      if (!matchText.includes(ctoActivePageSearchQuery)) {
+
+    const controls = window.EduPageGuard.getControls() || {};
+    const keys = Object.keys(controls);
+
+    // Update counter
+    const countEl = document.getElementById('ctoCountAll');
+    if (countEl) countEl.textContent = keys.length;
+    const guardedEl = document.getElementById('statGuardedPages');
+    if (guardedEl) guardedEl.textContent = keys.length;
+
+    let pagesCount = 0, sectionsCount = 0, portalsCount = 0;
+    keys.forEach(k => {
+      const grp = controls[k] && controls[k].group;
+      if (grp === 'public_pages') pagesCount++;
+      else if (grp === 'home_sections') sectionsCount++;
+      else if (grp === 'portals') portalsCount++;
+    });
+    const cPages = document.getElementById('ctoCountPages');
+    if (cPages) cPages.textContent = pagesCount;
+    const cSections = document.getElementById('ctoCountSections');
+    if (cSections) cSections.textContent = sectionsCount;
+    const cPortals = document.getElementById('ctoCountPortals');
+    if (cPortals) cPortals.textContent = portalsCount;
+
+    let filteredKeys = keys.filter(key => {
+      const item = controls[key] || {};
+      const grp = item.group || 'public_pages';
+      if (ctoActivePageCategory !== 'all' && grp !== ctoActivePageCategory) {
         return false;
       }
+      if (ctoActivePageSearchQuery) {
+        const matchText = ((item.name || '') + ' ' + (item.desc || '') + ' ' + (item.url || '') + ' ' + key).toLowerCase();
+        if (!matchText.includes(ctoActivePageSearchQuery)) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    if (filteredKeys.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:36px 20px; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:14px; color:#94a3b8;">
+          <i class="fa-solid fa-filter-circle-xmark" style="font-size:1.8rem; margin-bottom:8px; opacity:0.6;"></i>
+          <div style="font-size:0.92rem; font-weight:600; color:#fff;">No guarded targets match your filter</div>
+          <div style="font-size:0.78rem; margin-top:4px;">Try clearing your search query or selecting a different category pill.</div>
+        </div>
+      `;
+      return;
     }
-    return true;
-  });
 
-  if (filteredKeys.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1; text-align:center; padding:36px 20px; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:14px; color:#94a3b8;">
-        <i class="fa-solid fa-filter-circle-xmark" style="font-size:1.8rem; margin-bottom:8px; opacity:0.6;"></i>
-        <div style="font-size:0.92rem; font-weight:600; color:#fff;">No guarded targets match your filter</div>
-        <div style="font-size:0.78rem; margin-top:4px;">Try clearing your search query or selecting a different category pill.</div>
-      </div>
-    `;
-    return;
-  }
+    grid.innerHTML = filteredKeys.map(key => {
+      const item = controls[key] || {};
+      const isEnabled = item.enabled !== false;
+      const isPage = item.type === 'page';
+      const itemName = item.name || key;
+      const itemDesc = item.desc || 'Guarded target endpoint by CTO authority.';
+      const itemIcon = item.icon || (isPage ? 'fa-file' : 'fa-cube');
+      const itemUrl = (typeof item.url === 'string') ? item.url : '';
+      const itemGroup = item.group || 'public_pages';
 
-  grid.innerHTML = filteredKeys.map(key => {
-    const item = controls[key];
-    const isEnabled = item.enabled !== false;
-    const isPage = item.type === 'page';
+      const statusPill = isEnabled
+        ? `<span id="pill-${key}" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>`
+        : `<span id="pill-${key}" style="background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.5); color:#f87171; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444;"></span> DISABLED (404 Gate)</span>`;
 
-    // Status pill
-    const statusPill = isEnabled
-      ? '<span style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>'
-      : '<span style="background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.5); color:#f87171; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444;"></span> DISABLED (404 Gate)</span>';
+      const cardBg = isEnabled
+        ? 'background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);'
+        : 'background:radial-gradient(circle at 10% 10%, rgba(239,68,68,0.12) 0%, rgba(18,10,15,0.92) 100%); border:1px solid rgba(239,68,68,0.45); box-shadow:0 0 20px rgba(239,68,68,0.15);';
 
-    // Card background & border based on status
-    const cardBg = isEnabled
-      ? 'background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);'
-      : 'background:radial-gradient(circle at 10% 10%, rgba(239,68,68,0.12) 0%, rgba(18,10,15,0.92) 100%); border:1px solid rgba(239,68,68,0.45); box-shadow:0 0 20px rgba(239,68,68,0.15);';
+      const testLink = itemUrl
+        ? `<a href="${itemUrl.startsWith('/') ? '..' + itemUrl : itemUrl}" target="_blank" style="font-size:0.74rem; color:${isEnabled ? '#38bdf8' : '#fca5a5'}; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> ${isEnabled ? 'Open Page' : 'Test 404 Route'}
+          </a>`
+        : '';
 
-    const testLink = item.url
-      ? `<a href="${item.url.startsWith('/') ? '..' + item.url : item.url}" target="_blank" style="font-size:0.74rem; color:${isEnabled ? '#38bdf8' : '#fca5a5'}; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
-          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> ${isEnabled ? 'Open Page' : 'Test 404 Route'}
-        </a>`
-      : '';
-
-    return `
-      <div style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; ${cardBg}">
-        <div>
-          <!-- Top Row: Icon, Title & Status -->
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div style="width:36px; height:36px; border-radius:10px; background:${isEnabled ? 'rgba(56,189,248,0.15)' : 'rgba(239,68,68,0.2)'}; border:1px solid ${isEnabled ? 'rgba(56,189,248,0.35)' : 'rgba(239,68,68,0.45)'}; display:flex; align-items:center; justify-content:center; color:${isEnabled ? '#38bdf8' : '#f87171'}; font-size:1.05rem; flex-shrink:0;">
-                <i class="fa-solid ${item.icon || 'fa-file'}"></i>
+      return `
+        <div class="cto-page-card" data-key="${key}" data-group="${itemGroup}" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; ${cardBg}">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; border-radius:10px; background:${isEnabled ? 'rgba(56,189,248,0.15)' : 'rgba(239,68,68,0.2)'}; border:1px solid ${isEnabled ? 'rgba(56,189,248,0.35)' : 'rgba(239,68,68,0.45)'}; display:flex; align-items:center; justify-content:center; color:${isEnabled ? '#38bdf8' : '#f87171'}; font-size:1.05rem; flex-shrink:0;">
+                  <i class="fa-solid ${itemIcon}"></i>
+                </div>
+                <div>
+                  <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                    ${itemName}
+                  </h4>
+                  <span style="font-size:0.7rem; color:${isPage ? '#cbd5e1' : '#fde047'}; font-family:var(--font-mono); opacity:0.85;">
+                    ${itemUrl || key}
+                  </span>
+                </div>
               </div>
-              <div>
-                <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
-                  ${item.name}
-                </h4>
-                <span style="font-size:0.7rem; color:${isPage ? '#cbd5e1' : '#fde047'}; font-family:var(--font-mono); opacity:0.85;">
-                  ${item.url || key}
-                </span>
-              </div>
+              ${statusPill}
             </div>
-            ${statusPill}
+            <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+              ${itemDesc}
+            </p>
           </div>
 
-          <!-- Description -->
-          <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
-            ${item.desc || 'Guarded by CTO Kill-Switch matrix.'}
-          </p>
-        </div>
-
-        <!-- Bottom Action Bar: Toggle Switch + Test Link -->
-        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
-          ${testLink}
-
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:0.72rem; color:${isEnabled ? '#10b981' : '#ef4444'}; font-weight:700; text-transform:uppercase;">
-              ${isEnabled ? 'ONLINE' : 'KILL (404)'}
-            </span>
-            <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
-              <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleCtoPageControl('${key}')" style="opacity:0; width:0; height:0;">
-              <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:${isEnabled ? '#10b981' : 'rgba(239,68,68,0.45)'}; border:1px solid ${isEnabled ? '#34d399' : 'rgba(239,68,68,0.6)'}; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:${isEnabled ? '0 2px 8px rgba(16,185,129,0.3)' : 'none'};">
-                <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:${isEnabled ? 'translateX(20px)' : 'translateX(0)'}; box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+            ${testLink}
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="label-${key}" style="font-size:0.72rem; color:${isEnabled ? '#10b981' : '#ef4444'}; font-weight:700; text-transform:uppercase;">
+                ${isEnabled ? 'ONLINE' : 'KILL (404)'}
               </span>
-            </label>
+              <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+                <input type="checkbox" id="switch-${key}" ${isEnabled ? 'checked' : ''} onchange="toggleCtoPageControl('${key}')" style="opacity:0; width:0; height:0;">
+                <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:${isEnabled ? '#10b981' : 'rgba(239,68,68,0.45)'}; border:1px solid ${isEnabled ? '#34d399' : 'rgba(239,68,68,0.6)'}; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:${isEnabled ? '0 2px 8px rgba(16,185,129,0.3)' : 'none'};">
+                  <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:${isEnabled ? 'translateX(20px)' : 'translateX(0)'}; box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('[CTO Page Guard] Render error:', err);
+  }
 }
 window.renderCtoPageCards = renderCtoPageCards;
 

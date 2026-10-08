@@ -286,10 +286,8 @@
         // Merge defaults in case new pages were added
         const merged = Object.assign({}, DEFAULT_PAGE_CONTROLS);
         for (const k in parsed) {
-          if (merged[k]) {
-            merged[k] = Object.assign({}, merged[k], parsed[k]);
-          } else {
-            merged[k] = parsed[k];
+          if (DEFAULT_PAGE_CONTROLS[k] && parsed[k] && typeof parsed[k] === 'object') {
+            merged[k] = Object.assign({}, DEFAULT_PAGE_CONTROLS[k], parsed[k]);
           }
         }
         return merged;

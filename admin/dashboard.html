@@ -6262,7 +6262,803 @@ body.modal-open { overflow: hidden !important; }
             </div>
 
             <!-- Page Cards Dynamic Grid -->
-            <div id="ctoPageCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px;"></div>
+            
+            <!-- Quick Feature Matrix Navigation Banner -->
+            <div style="background:rgba(201,147,42,0.12); border:1px solid rgba(247,211,119,0.3); border-radius:12px; padding:12px 18px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <i class="fa-solid fa-circle-info" style="color:#f7d377; font-size:1.1rem;"></i>
+                <span style="font-size:0.83rem; color:#f1f5f9;">
+                  <strong>Need to turn OFF Admin CRM Modules &amp; Staff Features?</strong> Switch to the <strong>Feature Visibility Matrix</strong> tab to toggle/lock features for everyone or specific staff.
+                </span>
+              </div>
+              <button type="button" class="btn-gold" onclick="switchCtoSubTab('matrix')" style="padding:6px 14px; font-size:0.78rem; font-weight:700;">
+                <i class="fa-solid fa-sliders"></i> Open Feature Matrix (53 Modules)
+              </button>
+            </div>
+
+            <!-- Page Cards Dynamic Grid -->
+            <div id="ctoPageCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px;">
+
+    <div class="cto-page-card" data-key="page_course_details" data-group="public_pages" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Course Details Page
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /course-details.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-page_course_details" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Public detailed degree course syllabus, fees, eligibility & career prospect page
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../course-details.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-page_course_details" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-page_course_details" checked onchange="toggleCtoPageControl('page_course_details')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="page_latest_updates" data-group="public_pages" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Latest Updates & News Bulletin
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /latest-updates.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-page_latest_updates" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Public university notifications, admission alerts & live education news desk
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../latest-updates.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-page_latest_updates" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-page_latest_updates" checked onchange="toggleCtoPageControl('page_latest_updates')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="page_login" data-group="public_pages" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-right-to-bracket"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Universal Multi-Role Login Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /login.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-page_login" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Public unified sign-in portal for Students, Staff & Partners
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../login.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-page_login" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-page_login" checked onchange="toggleCtoPageControl('page_login')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="page_otp_verify" data-group="public_pages" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                OTP Authentication Gateway
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /otp-verify.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-page_otp_verify" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Public 2-step OTP verification and authentication gateway
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../otp-verify.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-page_otp_verify" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-page_otp_verify" checked onchange="toggleCtoPageControl('page_otp_verify')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="page_universities_all" data-group="public_pages" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Partner Universities Directory & Pages
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /universities/
+              </span>
+            </div>
+          </div>
+          <span id="pill-page_universities_all" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          All 27+ Partner University detail & admission breakdown pages
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../universities/" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-page_universities_all" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-page_universities_all" checked onchange="toggleCtoPageControl('page_universities_all')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_courses" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Degree Courses Grid / Slider
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#courses
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_courses" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Popular degree programs (B.Tech, MBA, MCA, BCA, MBBS, etc.) on index.html
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#courses" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_courses" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_courses" checked onchange="toggleCtoPageControl('section_home_courses')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_partners" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-landmark"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Partner Universities Showcase
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#partners
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_partners" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Approved partner university logos, accreditations & campus highlights on index.html
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#partners" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_partners" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_partners" checked onchange="toggleCtoPageControl('section_home_partners')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_lead_form" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-file-signature"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Direct Admission & Enquiry Form
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#contact
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_lead_form" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Instant online student registration & lead capture form on index.html
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#contact" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_lead_form" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_lead_form" checked onchange="toggleCtoPageControl('section_home_lead_form')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_counselling" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Free Career Counselling Banner
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#counselling
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_counselling" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          1-on-1 expert counsellor booking & career guidance section
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#counselling" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_counselling" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_counselling" checked onchange="toggleCtoPageControl('section_home_counselling')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_services" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Student Support Services
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#services
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_services" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Admission guidance, EMI financing, scholarship & documentation services
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#services" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_services" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_services" checked onchange="toggleCtoPageControl('section_home_services')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_why" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Why EduVision Advantage Section
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#why
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_why" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Platform trust statistics, 100% placement track record & metrics
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#why" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_why" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_why" checked onchange="toggleCtoPageControl('section_home_why')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_testimonials" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-comments-dollar"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Student Reviews & Testimonials
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#testimonials
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_testimonials" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Alumni ratings, video interviews and success stories carousel
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#testimonials" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_testimonials" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_testimonials" checked onchange="toggleCtoPageControl('section_home_testimonials')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_faq" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Frequently Asked Questions (FAQ)
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                /#faq
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_faq" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Admission eligibility, UGC approvals & distance learning FAQ accordion
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../#faq" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_faq" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_faq" checked onchange="toggleCtoPageControl('section_home_faq')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="section_home_ai_copilot" data-group="home_sections" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Floating AI Copilot & Chatbot
+              </h4>
+              <span style="font-size:0.7rem; color:#fde047; font-family:var(--font-mono); opacity:0.85;">
+                All Pages (Floating)
+              </span>
+            </div>
+          </div>
+          <span id="pill-section_home_ai_copilot" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Intelligent RAG AI admission advisor and 24/7 student chat widget
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="All Pages (Floating)" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-section_home_ai_copilot" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-section_home_ai_copilot" checked onchange="toggleCtoPageControl('section_home_ai_copilot')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="portal_student" data-group="portals" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Student Dashboard Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /student/dashboard.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-portal_student" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Candidate dashboard, application tracker & document submission portal
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../student/dashboard.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-portal_student" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-portal_student" checked onchange="toggleCtoPageControl('portal_student')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="portal_counsellor" data-group="portals" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Counsellor CRM Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /counsellor/dashboard.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-portal_counsellor" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Counsellor lead conversion funnel, call desk & student allocation
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../counsellor/dashboard.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-portal_counsellor" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-portal_counsellor" checked onchange="toggleCtoPageControl('portal_counsellor')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="portal_teamleader" data-group="portals" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-users-gear"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Team Leader Management Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /teamleader/dashboard.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-portal_teamleader" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Team oversight, attendance monitoring & target tracking portal
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../teamleader/dashboard.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-portal_teamleader" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-portal_teamleader" checked onchange="toggleCtoPageControl('portal_teamleader')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="portal_associate" data-group="portals" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-handshake"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Associate Partner Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /associate/dashboard.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-portal_associate" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          B2B consultant & agency partner admission submission desk
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../associate/dashboard.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-portal_associate" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-portal_associate" checked onchange="toggleCtoPageControl('portal_associate')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cto-page-card" data-key="portal_branch" data-group="portals" style="border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease; background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0%, rgba(10,15,28,0.9) 100%); border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; color:#38bdf8; font-size:1.05rem; flex-shrink:0;">
+              <i class="fa-solid fa-sitemap"></i>
+            </div>
+            <div>
+              <h4 style="margin:0; font-size:0.92rem; font-weight:700; color:#fff; letter-spacing:0.2px;">
+                Regional Branch Office Portal
+              </h4>
+              <span style="font-size:0.7rem; color:#cbd5e1; font-family:var(--font-mono); opacity:0.85;">
+                /branch/dashboard.html
+              </span>
+            </div>
+          </div>
+          <span id="pill-portal_branch" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> LIVE (Active)</span>
+        </div>
+        <p style="font-size:0.76rem; color:#94a3b8; line-height:1.4; margin:8px 0 14px; min-height:32px;">
+          Regional branch office management & operations console
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); margin-top:6px;">
+        <a href="../branch/dashboard.html" target="_blank" style="font-size:0.74rem; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i> Open Page
+      </a>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="label-portal_branch" style="font-size:0.72rem; color:#10b981; font-weight:700; text-transform:uppercase;">
+            ONLINE
+          </span>
+          <label class="switch-ios" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="switch-portal_branch" checked onchange="toggleCtoPageControl('portal_branch')" style="opacity:0; width:0; height:0;">
+            <span class="slider-ios" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#10b981; border:1px solid #34d399; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:34px; box-shadow:0 2px 8px rgba(16,185,129,0.3);">
+              <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background:#fff; transition:0.3s cubic-bezier(0.16, 1, 0.3, 1); border-radius:50%; transform:translateX(20px); box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+            </div>
           </div>
 
           <!-- SUB-VIEW B: ROLE PERMISSION MATRIX & 3-TIER CONTROL (EVERYONE, TEAM, SPECIFIC PERSON) -->
@@ -9334,7 +10130,7 @@ Waiting for diagnostic trigger. Click "Run Full Diagnostic" to audit all infrast
 
 
 
-<script src="js/dashboard.js"></script>
+<script src="js/dashboard.js?v=20261008_V4"></script>
 <script>
 // ═══ BULLETPROOF CHANNEL CREATION — uses sb.rpc (anon key safe) ═══
 (function() {
