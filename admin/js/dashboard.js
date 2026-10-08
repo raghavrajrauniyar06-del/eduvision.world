@@ -9477,7 +9477,7 @@ window.submitCreateStaff = async function(event) {
             full_name: name,
             phone: phone,
             email: email,
-            password: password,
+            password: hashedStaffPwd,
             branch: branch || 'Head Office',
             role: role || 'Team Leader',
             designation: role || 'Team Leader',
@@ -9683,7 +9683,7 @@ window.submitPromoteStaff = async function(event) {
             full_name: counsellor.full_name,
             phone: counsellor.phone,
             email: counsellor.email,
-            password: counsellor.password || 'EduVision@123',
+            password: (counsellor.password && counsellor.password.length === 64) ? counsellor.password : await hashPassword(counsellor.password || 'EduVision@123'),
             branch: newBranch,
             role: targetRole,
             designation: finalDesignation,
@@ -10437,7 +10437,7 @@ window.submitPartnerCreate = async function(event) {
         location: location,
         status: accountStatus,
         partner_code: username,
-        password: password
+        password: (password && password.length === 64) ? password : await hashPassword(password)
       };
 
       const fullPayload = {
@@ -10553,7 +10553,7 @@ window.submitPartnerCreate = async function(event) {
         tier: tier,
         commission_rate: commission,
         location: location,
-        password: password,
+        password: (password && password.length === 64) ? password : await hashPassword(password),
         mapped_universities: [],
         employees: []
       };
@@ -20326,6 +20326,15 @@ window.submitGodModePasswordReset = function() {
       reset_at: new Date().toISOString()
     };
     localStorage.setItem('eduvision_pwd_overrides', JSON.stringify(pwdOverrides));
+    /* submitGodModePasswordReset_supabase_sync */
+    if (typeof sb !== 'undefined' && sb) {
+      hashPassword(tempPwd).then(h => {
+        sb.from('admin_users').update({ password: h, is_temp_password: true, must_change_password: mustChange }).ilike('employee_id', empId).then(()=>{});
+        sb.from('counsellors').update({ password: h, is_temp_password: true, must_change_password: mustChange }).ilike('employee_id', empId).then(()=>{});
+        sb.from('team_leaders').update({ password: h, is_temp_password: true, must_change_password: mustChange }).ilike('employee_id', empId).then(()=>{});
+        sb.from('users').update({ password: h, is_temp_password: true, must_change_password: mustChange }).ilike('email', empId).then(()=>{});
+      });
+    }
   } catch(e) {}
 
   recordCtoAuditLog(

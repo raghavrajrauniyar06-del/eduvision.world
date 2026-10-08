@@ -17,6 +17,29 @@ const crypto = require('crypto');
 const { google } = require('googleapis');
 const { createClient } = require('@supabase/supabase-js');
 
+
+function verifyPasswordMatchSync(dbPassword, inputPassword) {
+  if (!dbPassword || !inputPassword) return false;
+  const p = String(inputPassword).trim();
+  const db = String(dbPassword).trim();
+  if (db === p || db.toLowerCase() === p.toLowerCase()) return true;
+
+  const hExact = hashPwd(p);
+  if (db === hExact) return true;
+
+  if (db === hashPwd(p.toUpperCase())) return true;
+  if (db === hashPwd(p.toLowerCase())) return true;
+
+  const pLower = p.toLowerCase();
+  if (pLower === 'pass123' || pLower === 'pass@123') {
+    const defaults = ['PASS123', 'Pass123', 'pass123', 'Pass@123', 'PASS@123'];
+    for (const d of defaults) {
+      if (db === d || db === hashPwd(d)) return true;
+    }
+  }
+  return false;
+}
+
 function hashPwd(p) {
   if (!p) return '';
   return crypto.createHash('sha256').update(p).digest('hex');
@@ -2004,7 +2027,7 @@ app.post('/api/auth/change-password', async (req, res) => {
                                (foundUser.counsellor_id && localCreds[foundUser.counsellor_id]) || 
                                foundUser.password;
 
-      const isCurMatch = (effectivePassword === current_password || effectivePassword === hashPwd(current_password));
+      const isCurMatch = verifyPasswordMatchSync(effectivePassword, current_password);
       if (!isCurMatch) {
         return res.status(400).json({ success: false, error: 'Current password is incorrect. Please verify and try again.' });
       }
@@ -2055,7 +2078,7 @@ app.post('/api/auth/change-password', async (req, res) => {
                                localCreds[userRec.id] || 
                                userRec.password;
 
-      const isCurMatch = (effectivePassword === current_password || effectivePassword === hashPwd(current_password));
+      const isCurMatch = verifyPasswordMatchSync(effectivePassword, current_password);
       if (!isCurMatch) {
         return res.status(400).json({ success: false, error: 'Current password is incorrect. Please verify and try again.' });
       }

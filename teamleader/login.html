@@ -643,7 +643,7 @@ async function hashPassword(plainText) {
             console.error("Team leader Supabase error:", error);
           }
 
-          let user = (data && data.length > 0) ? data.find(x => x.password === pwd || x.password === hashedPwd) : null;
+          let user = (data && data.length > 0) ? data.find(x => verifyPasswordMatch(x.password, pwd)) : null;
 
           // 2. Also check counsellors table for Team Leader accounts
           if (!user) {
@@ -665,7 +665,7 @@ async function hashPassword(plainText) {
               .or(cOrParts.join(','));
 
             if (!cErr && cData && cData.length > 0) {
-              const matchedC = cData.find(x => x.password === pwd || x.password === hashedPwd);
+              const matchedC = cData.find(x => verifyPasswordMatch(x.password, pwd));
               const rLower = (matchedC.role || '').toLowerCase();
               if (rLower.includes('leader') || rLower.includes('team') || rLower.includes('admin') || rLower.includes('head')) {
                 user = {

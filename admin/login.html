@@ -715,7 +715,7 @@ body { padding-top: env(safe-area-inset-top); }
           console.warn("admin_users query notice:", error);
           data = null;
         } else if (data && data.length > 0) {
-          const match = data.find(x => x.password === password || x.password === hashedPwd);
+          const match = data.find(x => verifyPasswordMatch(x.password, password));
           data = match ? [match] : null;
         }
 
@@ -739,7 +739,7 @@ body { padding-top: env(safe-area-inset-top); }
             .or(cOrParts.join(','));
 
           if (!cErr && cData && cData.length > 0) {
-            const cUser = cData.find(x => x.password === password || x.password === hashedPwd);
+            const cUser = cData.find(x => verifyPasswordMatch(x.password, password));
             if (cUser) {
             const roleLower = (cUser.role || '').toLowerCase();
             if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
@@ -776,7 +776,7 @@ body { padding-top: env(safe-area-inset-top); }
             .or(tOrParts.join(','));
 
           if (!tErr && tData && tData.length > 0) {
-            const tUser = tData.find(x => x.password === password || x.password === hashedPwd);
+            const tUser = tData.find(x => verifyPasswordMatch(x.password, password));
             if (tUser) {
             const roleLower = (tUser.role || '').toLowerCase();
             if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
