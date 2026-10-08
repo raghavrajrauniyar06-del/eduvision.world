@@ -1286,12 +1286,13 @@ body { padding-top: env(safe-area-inset-top); }
 
         const isEmail = contact.includes('@');
         const col = isEmail ? 'email' : 'phone';
+        const hashedP1 = await hashPassword(p1);
         let targetRoute = 'student/dashboard.html';
 
         if (pRole === 'counsellor') {
           targetRoute = 'counsellor/dashboard.html';
           if (client) {
-            try { await client.from('counsellors').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            try { await client.from('counsellors').update({ password: hashedP1 }).ilike(col, contact); } catch(e){}
             const { data: cRec } = await client.from('counsellors').select('*').ilike(col, contact).maybeSingle();
             if (cRec) {
               localStorage.setItem('eduvision_counsellor', JSON.stringify(cRec));
@@ -1300,7 +1301,7 @@ body { padding-top: env(safe-area-inset-top); }
         } else if (pRole === 'teamleader') {
           targetRoute = 'teamleader/dashboard.html';
           if (client) {
-            try { await client.from('team_leaders').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            try { await client.from('team_leaders').update({ password: hashedP1 }).ilike(col, contact); } catch(e){}
             const { data: tlRec } = await client.from('team_leaders').select('*').ilike(col, contact).maybeSingle();
             if (tlRec) {
               localStorage.setItem('eduvision_team_leader', JSON.stringify(tlRec));
@@ -1309,7 +1310,7 @@ body { padding-top: env(safe-area-inset-top); }
         } else if (pRole === 'admin') {
           targetRoute = 'admin/dashboard.html';
           if (client) {
-            try { await client.from('admin_users').update({ password: p1 }).ilike(col, contact); } catch(e){}
+            try { await client.from('admin_users').update({ password: hashedP1 }).ilike(col, contact); } catch(e){}
             const { data: aRec } = await client.from('admin_users').select('*').ilike(col, contact).maybeSingle();
             if (aRec) {
               localStorage.setItem('eduvision_admin', JSON.stringify(aRec));
@@ -1324,7 +1325,7 @@ body { padding-top: env(safe-area-inset-top); }
 
           if (client) {
             try {
-              await client.from('users').update({ password: p1 }).ilike(col, contact);
+              await client.from('users').update({ password: hashedP1 }).ilike(col, contact);
               const { data: uData } = await client.from('users').select('*').ilike(col, contact);
               if (uData && uData.length > 0) {
                 studentRecord = uData[0];

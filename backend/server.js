@@ -13,8 +13,14 @@ process.on('unhandledRejection', (reason) => {
 const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
+const crypto = require('crypto');
 const { google } = require('googleapis');
 const { createClient } = require('@supabase/supabase-js');
+
+function hashPwd(p) {
+  if (!p) return '';
+  return crypto.createHash('sha256').update(p).digest('hex');
+}
 
 const StorageService = require('./storage/StorageService');
 const GoogleDriveStorageProvider = require('./storage/GoogleDriveStorageProvider');
@@ -1998,23 +2004,25 @@ app.post('/api/auth/change-password', async (req, res) => {
                                (foundUser.counsellor_id && localCreds[foundUser.counsellor_id]) || 
                                foundUser.password;
 
-      if (effectivePassword !== current_password) {
+      const isCurMatch = (effectivePassword === current_password || effectivePassword === hashPwd(current_password));
+      if (!isCurMatch) {
         return res.status(400).json({ success: false, error: 'Current password is incorrect. Please verify and try again.' });
       }
 
       const targetId = foundUser[idColumn];
+      const hashedNew = hashPwd(new_password);
       try {
         await sb
           .from(targetTable)
-          .update({ password: new_password })
+          .update({ password: hashedNew })
           .eq(idColumn, targetId);
       } catch(e) {}
 
       // Save into persistent credentials vault
-      localCreds[user_id] = new_password;
-      if (foundUser.employee_id) localCreds[foundUser.employee_id] = new_password;
-      if (foundUser.counsellor_id) localCreds[foundUser.counsellor_id] = new_password;
-      if (foundUser.email) localCreds[foundUser.email] = new_password;
+      localCreds[user_id] = hashedNew;
+      if (foundUser.employee_id) localCreds[foundUser.employee_id] = hashedNew;
+      if (foundUser.counsellor_id) localCreds[foundUser.counsellor_id] = hashedNew;
+      if (foundUser.email) localCreds[foundUser.email] = hashedNew;
       fs.writeFileSync(credStore, JSON.stringify(localCreds, null, 2), 'utf8');
 
       return res.json({ success: true, message: 'Employee password updated successfully!' });
@@ -2047,22 +2055,24 @@ app.post('/api/auth/change-password', async (req, res) => {
                                localCreds[userRec.id] || 
                                userRec.password;
 
-      if (effectivePassword !== current_password) {
+      const isCurMatch = (effectivePassword === current_password || effectivePassword === hashPwd(current_password));
+      if (!isCurMatch) {
         return res.status(400).json({ success: false, error: 'Current password is incorrect. Please verify and try again.' });
       }
 
+      const hashedNew = hashPwd(new_password);
       try {
         await sb
           .from('users')
-          .update({ password: new_password })
+          .update({ password: hashedNew })
           .eq('id', userRec.id);
       } catch(e) {}
 
       // Save into persistent credentials vault
-      localCreds[user_id] = new_password;
-      if (sData && sData.student_id) localCreds[sData.student_id] = new_password;
-      localCreds[userRec.id] = new_password;
-      if (userRec.email) localCreds[userRec.email] = new_password;
+      localCreds[user_id] = hashedNew;
+      if (sData && sData.student_id) localCreds[sData.student_id] = hashedNew;
+      localCreds[userRec.id] = hashedNew;
+      if (userRec.email) localCreds[userRec.email] = hashedNew;
       fs.writeFileSync(credStore, JSON.stringify(localCreds, null, 2), 'utf8');
 
       return res.json({ success: true, message: 'Student password updated successfully!' });

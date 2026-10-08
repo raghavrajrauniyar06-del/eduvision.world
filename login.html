@@ -3509,6 +3509,58 @@ body { padding-top: env(safe-area-inset-top); }
       }
     };
 
+    async function hashPassword(plainText) {
+      if (!plainText) return '';
+      if (typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined') {
+        try {
+          const msgUint8 = new TextEncoder().encode(plainText);
+          const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch(e) {}
+      }
+      function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
+      const pow = Math.pow, maxW = pow(2, 32);
+      let len = 'length', i, j, res = '', words = [], aLen = plainText[len] * 8;
+      let hash = [], k = [], pC = 0, comp = {};
+      for (let c = 2; pC < 64; c++) {
+        if (!comp[c]) {
+          for (i = c + c; i < 312; i += c) comp[i] = true;
+          hash[pC] = (pow(c, .5) * maxW) | 0;
+          k[pC++] = (pow(c, 1 / 3) * maxW) | 0;
+        }
+      }
+      hash = hash.slice(0, 8);
+      plainText += '\x80';
+      while (plainText[len] % 64 - 56) plainText += '\x00';
+      for (i = 0; i < plainText[len]; i++) {
+        j = plainText.charCodeAt(i);
+        if (j >> 8) return '';
+        words[i >> 2] |= j << ((3 - i) % 4) * 8;
+      }
+      words[words[len]] = ((aLen / maxW) | 0);
+      words[words[len]] = (aLen | 0);
+      for (j = 0; j < words[len];) {
+        const w = words.slice(j, j += 16), oH = hash;
+        hash = hash.slice(0, 8);
+        for (i = 0; i < 64; i++) {
+          const w15 = w[i - 15], w2 = w[i - 2], a = hash[0], e = hash[4];
+          const t1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] + (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+          const t2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+          hash = [(t1 + t2) | 0].concat(hash);
+          hash[4] = (hash[4] + t1) | 0;
+        }
+        for (i = 0; i < 8; i++) hash[i] = (hash[i] + oH[i]) | 0;
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j + 1; j--) {
+          const b = (hash[i] >> (j * 8)) & 255;
+          res += ((b < 16) ? '0' : '') + b.toString(16);
+        }
+      }
+      return res;
+    }
+
     async function handleLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
 
@@ -3564,6 +3616,7 @@ body { padding-top: env(safe-area-inset-top); }
         const isEmail = rawInput.includes('@');
         const digits = rawInput.replace(/\D/g, '');
         const last10 = digits.length >= 10 ? digits.slice(-10) : '';
+        const hashedPwd = await hashPassword(passwordInput);
 
         // ─────────────────────────────────────────────────────────────────
         // 1. CHECK ADMIN_USERS TABLE (For CTO, Super Admin, Admins)
@@ -3576,28 +3629,29 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: admData } = await client
               .from('admin_users')
-              .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status')
-              .or(adminFilter)
-              .eq('password', passwordInput);
+              .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status, password')
+              .or(adminFilter);
 
             if (admData && admData.length > 0) {
-              const adm = admData[0];
-              authUser = {
-                id: adm.admin_id,
-                admin_id: adm.admin_id,
-                employee_id: adm.employee_id || 'ADM001',
-                full_name: adm.full_name,
-                email: adm.email,
-                phone: adm.phone,
-                role: adm.role || 'Admin',
-                designation: adm.designation || 'Administrator',
-                branch: adm.branch || 'Head Office',
-                status: adm.status || 'Active'
-              };
-              authRole = (adm.role || 'admin').toLowerCase();
-              targetDashboard = 'admin/dashboard.html';
-              localStorage.setItem('eduvision_admin', JSON.stringify(authUser));
-              sessionStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+              const adm = admData.find(a => a.password === passwordInput || a.password === hashedPwd);
+              if (adm) {
+                authUser = {
+                  id: adm.admin_id,
+                  admin_id: adm.admin_id,
+                  employee_id: adm.employee_id || 'ADM001',
+                  full_name: adm.full_name,
+                  email: adm.email,
+                  phone: adm.phone,
+                  role: adm.role || 'Admin',
+                  designation: adm.designation || 'Administrator',
+                  branch: adm.branch || 'Head Office',
+                  status: adm.status || 'Active'
+                };
+                authRole = (adm.role || 'admin').toLowerCase();
+                targetDashboard = 'admin/dashboard.html';
+                localStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+                sessionStorage.setItem('eduvision_admin', JSON.stringify(authUser));
+              }
             }
           } catch (admErr) {
             console.warn("admin_users check error:", admErr);
@@ -3614,32 +3668,33 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: tlData } = await client
               .from('team_leaders')
-              .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
-              .or(tlFilter)
-              .eq('password', passwordInput);
+              .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password, password')
+              .or(tlFilter);
 
             if (tlData && tlData.length > 0) {
-              const tl = tlData[0];
-              const isTempPwd = (tl.is_temp_password === true || tl.must_change_password === true || passwordInput.toLowerCase() === 'pass123');
-              authUser = {
-                id: tl.team_leader_id || tl.employee_id,
-                team_leader_id: tl.team_leader_id || tl.employee_id,
-                employee_id: tl.employee_id || tl.team_leader_id,
-                full_name: tl.full_name,
-                email: tl.email,
-                phone: tl.phone,
-                role: tl.role || 'Team Leader',
-                designation: tl.designation || 'Team Leader',
-                branch: tl.branch || 'Head Office',
-                status: tl.status || 'Active',
-                is_temp_password: isTempPwd,
-                must_change_password: isTempPwd
-              };
-              authRole = 'teamleader';
-              targetDashboard = 'teamleader/dashboard.html';
+              const tl = tlData.find(t => t.password === passwordInput || t.password === hashedPwd);
+              if (tl) {
+                const isTempPwd = (tl.is_temp_password === true || tl.must_change_password === true || passwordInput.toLowerCase() === 'pass123');
+                authUser = {
+                  id: tl.team_leader_id || tl.employee_id,
+                  team_leader_id: tl.team_leader_id || tl.employee_id,
+                  employee_id: tl.employee_id || tl.team_leader_id,
+                  full_name: tl.full_name,
+                  email: tl.email,
+                  phone: tl.phone,
+                  role: tl.role || 'Team Leader',
+                  designation: tl.designation || 'Team Leader',
+                  branch: tl.branch || 'Head Office',
+                  status: tl.status || 'Active',
+                  is_temp_password: isTempPwd,
+                  must_change_password: isTempPwd
+                };
+                authRole = 'teamleader';
+                targetDashboard = 'teamleader/dashboard.html';
 
-              localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
-              sessionStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+                localStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+                sessionStorage.setItem('eduvision_team_leader', JSON.stringify(authUser));
+              }
             }
           } catch(tlErr) {
             console.warn("team_leaders check error:", tlErr);
@@ -3654,10 +3709,10 @@ body { padding-top: env(safe-area-inset-top); }
             let cnsFilter = `employee_id.eq.${rawInput},counsellor_id.eq.${rawInput},email.ilike.${rawInput}`;
             if (last10) cnsFilter += `,phone.ilike.*${last10}*`;
 
-            // Step 1: Look up account status without selecting password
+            // Step 1: Look up account status and password
             const { data: cnsProfile } = await client
               .from('counsellors')
-              .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
+              .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password, password')
               .or(cnsFilter);
 
             if (cnsProfile && cnsProfile.length > 0) {
@@ -3669,29 +3724,37 @@ body { padding-top: env(safe-area-inset-top); }
                 return;
               }
 
-              // Step 2: Server-side cryptographic authentication check
+              // Step 2: Direct match (plain or SHA-256 hash)
               let verified = false;
-              try {
-                const { data: authRpcRes } = await client.rpc('rpc_verify_c_auth', {
-                  p_login_id: cns.employee_id || cns.counsellor_id,
-                  p_password: passwordInput
-                });
-                if (authRpcRes && authRpcRes.employee_id) {
-                  verified = true;
-                }
-              } catch(rpcE) {
-                console.warn("rpc_verify_c_auth fallback:", rpcE);
+              if (cns.password && (cns.password === passwordInput || cns.password === hashedPwd)) {
+                verified = true;
               }
 
-              // Fallback server match if RPC is not available
+              // Step 3: Server-side cryptographic authentication check if direct check didn't match
+              if (!verified) {
+                try {
+                  const { data: authRpcRes } = await client.rpc('rpc_verify_c_auth', {
+                    p_login_id: cns.employee_id || cns.counsellor_id,
+                    p_password: passwordInput
+                  });
+                  if (authRpcRes && authRpcRes.employee_id) {
+                    verified = true;
+                  }
+                } catch(rpcE) {
+                  console.warn("rpc_verify_c_auth fallback:", rpcE);
+                }
+              }
+
+              // Step 4: Fallback server match if RPC is not available
               if (!verified) {
                 const { data: passMatch } = await client
                   .from('counsellors')
-                  .select('employee_id')
-                  .eq('employee_id', cns.employee_id)
-                  .eq('password', passwordInput);
+                  .select('employee_id, password')
+                  .eq('employee_id', cns.employee_id);
                 if (passMatch && passMatch.length > 0) {
-                  verified = true;
+                  if (passMatch[0].password === passwordInput || passMatch[0].password === hashedPwd) {
+                    verified = true;
+                  }
                 }
               }
 
@@ -3737,31 +3800,32 @@ body { padding-top: env(safe-area-inset-top); }
 
             const { data: prtData } = await client
               .from('associate_partners')
-              .select('partner_id, partner_code, contact_person, company_name, email, phone, tier, status')
-              .or(prtFilter)
-              .eq('password', passwordInput);
+              .select('partner_id, partner_code, contact_person, company_name, email, phone, tier, status, password')
+              .or(prtFilter);
 
             if (prtData && prtData.length > 0) {
-              const prt = prtData[0];
-              if (prt.status === 'Suspended') {
-                alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
-                return;
+              const prt = prtData.find(p => p.password === passwordInput || p.password === hashedPwd);
+              if (prt) {
+                if (prt.status === 'Suspended') {
+                  alert('🚫 Access Denied: Your partner portal access has been Suspended. Please contact EduVision Admin.');
+                  if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                  return;
+                }
+                authUser = {
+                  id: prt.partner_id,
+                  partner_id: prt.partner_id,
+                  partner_code: prt.partner_code,
+                  full_name: prt.contact_person || prt.company_name || 'Associate Partner',
+                  email: prt.email,
+                  phone: prt.phone,
+                  role: 'associate',
+                  tier: prt.tier || 'Gold Agency',
+                  status: prt.status || 'Active'
+                };
+                authRole = 'associate';
+                targetDashboard = 'associate/dashboard.html';
+                localStorage.setItem('eduvision_partner', JSON.stringify(authUser));
               }
-              authUser = {
-                id: prt.partner_id,
-                partner_id: prt.partner_id,
-                partner_code: prt.partner_code,
-                full_name: prt.contact_person || prt.company_name || 'Associate Partner',
-                email: prt.email,
-                phone: prt.phone,
-                role: 'associate',
-                tier: prt.tier || 'Gold Agency',
-                status: prt.status || 'Active'
-              };
-              authRole = 'associate';
-              targetDashboard = 'associate/dashboard.html';
-              localStorage.setItem('eduvision_partner', JSON.stringify(authUser));
             }
           } catch(prtErr) {
             console.warn("associate_partners check error:", prtErr);
@@ -3793,21 +3857,22 @@ body { padding-top: env(safe-area-inset-top); }
               const sp = sProfiles[0];
               const { data: uFromS } = await client
                 .from('users')
-                .select('id, full_name, email, phone, role')
-                .or(`id.eq.${sp.user_id},email.ilike.${sp.email || rawInput}`)
-                .eq('password', passwordInput);
+                .select('id, full_name, email, phone, role, password')
+                .or(`id.eq.${sp.user_id},email.ilike.${sp.email || rawInput}`);
 
               if (uFromS && uFromS.length > 0) {
-                const u = uFromS[0];
-                authUser = {
-                  id: sp.user_id || u.id,
-                  student_id: sp.student_id,
-                  full_name: sp.full_name || u.full_name || 'Student',
-                  email: sp.email || u.email,
-                  phone: sp.phone || u.phone,
-                  role: 'student',
-                  status: sp.admission_status || 'Active'
-                };
+                const u = uFromS.find(x => x.password === passwordInput || x.password === hashedPwd);
+                if (u) {
+                  authUser = {
+                    id: sp.user_id || u.id,
+                    student_id: sp.student_id,
+                    full_name: sp.full_name || u.full_name || 'Student',
+                    email: sp.email || u.email,
+                    phone: sp.phone || u.phone,
+                    role: 'student',
+                    status: sp.admission_status || 'Active'
+                  };
+                }
               }
             }
 
@@ -3823,21 +3888,21 @@ body { padding-top: env(safe-area-inset-top); }
 
               const { data: uData } = await client
                 .from('users')
-                .select('id, full_name, email, phone, role')
-                .or(uOrParts.join(','))
-                .eq('password', passwordInput);
+                .select('id, full_name, email, phone, role, password')
+                .or(uOrParts.join(','));
 
               if (uData && uData.length > 0) {
-                const u = uData[0];
-                const uRole = (u.role || 'student').toLowerCase();
-                authUser = {
-                  id: u.id,
-                  full_name: u.full_name || 'Student',
-                  email: u.email,
-                  phone: u.phone,
-                  role: u.role || 'student',
-                  status: 'Active'
-                };
+                const u = uData.find(x => x.password === passwordInput || x.password === hashedPwd);
+                if (u) {
+                  authUser = {
+                    id: u.id,
+                    full_name: u.full_name || 'Student',
+                    email: u.email,
+                    phone: u.phone,
+                    role: u.role || 'student',
+                    status: 'Active'
+                  };
+                }
               }
             }
 
@@ -5312,7 +5377,8 @@ body { padding-top: env(safe-area-inset-top); }
 
           // 2. Update in public.users table
           if (recoveryUserEmail) {
-            await client.from('users').update({ password: p1 }).ilike('email', recoveryUserEmail);
+            const hashedP1 = await hashPassword(p1);
+            await client.from('users').update({ password: hashedP1 }).ilike('email', recoveryUserEmail);
           }
         }
 

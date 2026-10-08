@@ -708,13 +708,15 @@ body { padding-top: env(safe-area-inset-top); }
 
         let { data, error } = await sb
           .from('admin_users')
-          .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
-          .or(adminOrParts.join(','))
-          .eq('password', password);
+          .select('admin_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password, password')
+          .or(adminOrParts.join(','));
 
         if (error) {
           console.warn("admin_users query notice:", error);
           data = null;
+        } else if (data && data.length > 0) {
+          const match = data.find(x => x.password === password || x.password === hashedPwd);
+          data = match ? [match] : null;
         }
 
         // 2. If not found in admin_users, check counsellors for CEO/CTO/Admin roles
@@ -733,12 +735,12 @@ body { padding-top: env(safe-area-inset-top); }
 
           const { data: cData, error: cErr } = await sb
             .from('counsellors')
-            .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
-            .or(cOrParts.join(','))
-            .eq('password', password);
+            .select('counsellor_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password, password')
+            .or(cOrParts.join(','));
 
           if (!cErr && cData && cData.length > 0) {
-            const cUser = cData[0];
+            const cUser = cData.find(x => x.password === password || x.password === hashedPwd);
+            if (cUser) {
             const roleLower = (cUser.role || '').toLowerCase();
             if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
               data = [{
@@ -770,12 +772,12 @@ body { padding-top: env(safe-area-inset-top); }
 
           const { data: tData, error: tErr } = await sb
             .from('team_leaders')
-            .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password')
-            .or(tOrParts.join(','))
-            .eq('password', password);
+            .select('team_leader_id, employee_id, full_name, email, phone, role, designation, branch, status, is_temp_password, must_change_password, password')
+            .or(tOrParts.join(','));
 
           if (!tErr && tData && tData.length > 0) {
-            const tUser = tData[0];
+            const tUser = tData.find(x => x.password === password || x.password === hashedPwd);
+            if (tUser) {
             const roleLower = (tUser.role || '').toLowerCase();
             if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
               data = [{

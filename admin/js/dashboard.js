@@ -16,6 +16,59 @@ const sb = window.supabase ? window.supabase.createClient(SUPABASE_PROJECT_URL, 
 window.sb = sb;
 window.SUPABASE_SERVICE_ROLE_KEY = SUPABASE_SERVICE_ROLE_KEY;
 
+async function hashPassword(plainText) {
+  if (!plainText) return '';
+  if (typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined') {
+    try {
+      const msgUint8 = new TextEncoder().encode(plainText);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch(e) {}
+  }
+  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
+  const pow = Math.pow, maxW = pow(2, 32);
+  let len = 'length', i, j, res = '', words = [], aLen = plainText[len] * 8;
+  let hash = [], k = [], pC = 0, comp = {};
+  for (let c = 2; pC < 64; c++) {
+    if (!comp[c]) {
+      for (i = c + c; i < 312; i += c) comp[i] = true;
+      hash[pC] = (pow(c, .5) * maxW) | 0;
+      k[pC++] = (pow(c, 1 / 3) * maxW) | 0;
+    }
+  }
+  hash = hash.slice(0, 8);
+  plainText += '\x80';
+  while (plainText[len] % 64 - 56) plainText += '\x00';
+  for (i = 0; i < plainText[len]; i++) {
+    j = plainText.charCodeAt(i);
+    if (j >> 8) return '';
+    words[i >> 2] |= j << ((3 - i) % 4) * 8;
+  }
+  words[words[len]] = ((aLen / maxW) | 0);
+  words[words[len]] = (aLen | 0);
+  for (j = 0; j < words[len];) {
+    const w = words.slice(j, j += 16), oH = hash;
+    hash = hash.slice(0, 8);
+    for (i = 0; i < 64; i++) {
+      const w15 = w[i - 15], w2 = w[i - 2], a = hash[0], e = hash[4];
+      const t1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] + (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+      const t2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+      hash = [(t1 + t2) | 0].concat(hash);
+      hash[4] = (hash[4] + t1) | 0;
+    }
+    for (i = 0; i < 8; i++) hash[i] = (hash[i] + oH[i]) | 0;
+  }
+  for (i = 0; i < 8; i++) {
+    for (j = 3; j + 1; j--) {
+      const b = (hash[i] >> (j * 8)) & 255;
+      res += ((b < 16) ? '0' : '') + b.toString(16);
+    }
+  }
+  return res;
+}
+
+
 // Admin helper function to perform database operations via REST API (Guaranteed administrative service persistence)
 async function adminFetch(endpoint, options = {}) {
   window.adminFetch = adminFetch;
@@ -9243,7 +9296,7 @@ window.submitCreateStaff = async function(event) {
         updated_at: new Date().toISOString()
       };
       if (password) {
-        updatePayload.password = password;
+        updatePayload.password = await hashPassword(password);
       }
 
       if (targetType === 'Admin') {
@@ -9270,7 +9323,7 @@ window.submitCreateStaff = async function(event) {
               role: role,
               designation: role,
               status: status,
-              ...(password ? { password } : {})
+              ...(password ? { password: await hashPassword(password) } : {})
             })
           });
         } catch(tle) {
@@ -9299,7 +9352,7 @@ window.submitCreateStaff = async function(event) {
             location: branch,
             tier: role,
             status: status,
-            ...(password ? { password } : {})
+            ...(password ? { password: await hashPassword(password) } : {})
           })
         });
         await loadAssociatePartners();
@@ -9318,7 +9371,7 @@ window.submitCreateStaff = async function(event) {
           body: JSON.stringify({
             full_name: name,
             phone: phone,
-            ...(password ? { password } : {})
+            ...(password ? { password: await hashPassword(password) } : {})
           })
         });
       } catch(ignoreUser){}
@@ -9359,7 +9412,7 @@ window.submitCreateStaff = async function(event) {
         full_name: name,
         email: email,
         phone: phone,
-        password: password || 'Pass123',
+        password: hashedStaffPwd,
         is_temp_password: true,
         must_change_password: true,
         role: role || 'Admin',
@@ -9382,21 +9435,7 @@ window.submitCreateStaff = async function(event) {
         body: JSON.stringify(adminPayload)
       });
 
-      // Sync to universal users table
-      try {
-        await adminFetch('users', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: adminId,
-            full_name: name,
-            email: email,
-            phone: phone,
-            password: password,
-            role: 'admin',
-            created_at: new Date().toISOString()
-          })
-        });
-      } catch(ignoreU){}
+      // Note: Staff records reside strictly in admin_users (not users)
 
     } else if (staffType === 'Team Leader') {
       const tlPayload = {
@@ -9405,7 +9444,7 @@ window.submitCreateStaff = async function(event) {
         full_name: name,
         phone: phone,
         email: email,
-        password: password || 'Pass123',
+        password: hashedStaffPwd,
         is_temp_password: true,
         must_change_password: true,
         branch: branch || 'Head Office',
@@ -9448,21 +9487,7 @@ window.submitCreateStaff = async function(event) {
         });
       } catch(ignoreC){}
 
-      // Sync to universal users table
-      try {
-        await adminFetch('users', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: empId,
-            full_name: name,
-            email: email,
-            phone: phone,
-            password: password,
-            role: 'teamleader',
-            created_at: new Date().toISOString()
-          })
-        });
-      } catch(ignoreU){}
+      // Note: Staff records reside strictly in team_leaders (not users)
 
     } else if (staffType === 'Associate Partner') {
       const partnerId = empId.startsWith('PRT-') ? empId : ('PRT-' + (empId.replace(/\D/g, '') || Math.floor(1000 + Math.random() * 9000)));
@@ -9473,7 +9498,7 @@ window.submitCreateStaff = async function(event) {
         contact_person: name,
         phone: phone,
         email: email,
-        password: password || 'Pass123',
+        password: hashedStaffPwd,
         is_temp_password: true,
         must_change_password: true,
         location: branch || 'Head Office',
@@ -9494,20 +9519,7 @@ window.submitCreateStaff = async function(event) {
         body: JSON.stringify(partnerPayload)
       });
 
-      try {
-        await adminFetch('users', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: partnerId,
-            full_name: name,
-            email: email,
-            phone: phone,
-            password: password,
-            role: 'partner',
-            created_at: new Date().toISOString()
-          })
-        });
-      } catch(ignoreU){}
+      // Note: Partner records reside strictly in associate_partners (not users)
 
       await loadAssociatePartners();
 
@@ -9520,7 +9532,7 @@ window.submitCreateStaff = async function(event) {
         full_name: name,
         phone: phone,
         email: email,
-        password: password || 'Pass123',
+        password: hashedStaffPwd,
         is_temp_password: true,
         must_change_password: true,
         branch: branch || 'Head Office',
@@ -9543,20 +9555,7 @@ window.submitCreateStaff = async function(event) {
         body: JSON.stringify(counsellorPayload)
       });
 
-      try {
-        await adminFetch('users', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: empId,
-            full_name: name,
-            email: email,
-            phone: phone,
-            password: password,
-            role: roleName.toLowerCase(),
-            created_at: new Date().toISOString()
-          })
-        });
-      } catch(ignoreU){}
+      // Note: Counsellor records reside strictly in counsellors (not users)
     }
 
     showToast(`⚡ ${staffType} created successfully in Supabase database!`, "success");
