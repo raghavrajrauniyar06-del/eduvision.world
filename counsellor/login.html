@@ -790,6 +790,24 @@ body.modal-open { overflow: hidden !important; }
     }
 
     
+    
+    function getOtpVerifyUrl() {
+      try {
+        const loc = window.location;
+        const pathParts = loc.pathname.split('/').filter(Boolean);
+        if (pathParts.length > 0 && pathParts[pathParts.length - 1].endsWith('.html')) {
+          pathParts.pop();
+        }
+        if (pathParts.length > 0 && ['admin', 'counsellor', 'teamleader', 'staff', 'associate'].includes(pathParts[pathParts.length - 1])) {
+          pathParts.pop();
+        }
+        const basePath = pathParts.length > 0 ? '/' + pathParts.join('/') : '';
+        return loc.origin + basePath + '/otp-verify.html';
+      } catch(e) {
+        return window.location.origin + '/otp-verify.html';
+      }
+    }
+
     function isUUID(str) {
       return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(str).trim());
     }
@@ -911,7 +929,10 @@ body.modal-open { overflow: hidden !important; }
         try {
           await client.auth.signInWithOtp({
             email: targetEmail,
-            options: { shouldCreateUser: true }
+            options: {
+              shouldCreateUser: true,
+              emailRedirectTo: getOtpVerifyUrl()
+            }
           });
         } catch(e) {}
 

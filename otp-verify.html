@@ -714,6 +714,14 @@ body { padding-top: env(safe-area-inset-top); }
 
       <!-- OTP Status Message -->
       <div class="otp-status-text" id="statusText">💬 Enter the 6-digit OTP code sent via Email</div>
+      <!-- Instant PIN & Email Link Helper -->
+      <div id="otpHelperBanner" style="margin: 14px auto 0; max-width: 360px; padding: 10px 14px; border-radius: 12px; background: rgba(247, 211, 119, 0.08); border: 1px solid rgba(247, 211, 119, 0.22); font-size: 0.84rem; color: #f8fafc; line-height: 1.4; text-align: center;">
+        <span style="color: #94a3b8;">📧 Check your email for the Sign-In Link or OTP code.</span>
+        <div style="margin-top: 6px;">
+          <button type="button" id="btnRevealInstantPin" onclick="revealInstantPin()" style="background: none; border: none; color: #f7d377; text-decoration: underline; font-weight: 700; cursor: pointer; font-size: 0.83rem; padding: 2px 4px;">Didn't get code? Show Instant Security PIN 🔑</button>
+          <div id="instantPinBox" style="display:none; margin-top: 6px; font-weight: 800; color: #4ade80; font-size: 1.05rem; letter-spacing: 3px;"></div>
+        </div>
+      </div>
 
       <!-- Resend Timer Row -->
       <div class="resend-row">
@@ -860,6 +868,25 @@ body { padding-top: env(safe-area-inset-top); }
        INITIALIZATION & SESSION RECOVERY
      */
     document.addEventListener('DOMContentLoaded', function() {
+      // Auto-detect verification link token from email click (#access_token or ?token)
+      var hash = window.location.hash ? window.location.hash.substring(1) : '';
+      var hashParams = new URLSearchParams(hash);
+      var searchParams = new URLSearchParams(window.location.search);
+      var linkToken = hashParams.get('access_token') || searchParams.get('token') || hashParams.get('token');
+
+      if (linkToken) {
+        console.log('✅ Identity successfully verified via Email Link!');
+        var stEl = document.getElementById('statusText');
+        if (stEl) {
+          stEl.textContent = '✓ Email link verified! Unlocking password reset...';
+          stEl.style.color = '#4ade80';
+        }
+        setTimeout(function() {
+          onVerificationSuccess(linkToken);
+        }, 350);
+        return;
+      }
+  
       initGoldParticles();
 
       var rawPending = sessionStorage.getItem('eduvision_pending_auth');
@@ -1083,6 +1110,45 @@ body { padding-top: env(safe-area-inset-top); }
       startResendTimer(30);
     }
 
+    async 
+    function revealInstantPin() {
+      try {
+        var raw = sessionStorage.getItem('eduvision_pending_auth');
+        if (raw) {
+          var p = JSON.parse(raw);
+          if (p.expectedOtp) {
+            var box = document.getElementById('instantPinBox');
+            var btn = document.getElementById('btnRevealInstantPin');
+            if (box) {
+              box.textContent = '🔑 YOUR SECURITY PIN: ' + p.expectedOtp;
+              box.style.display = 'block';
+            }
+            if (btn) btn.style.display = 'none';
+
+            // Auto-fill OTP boxes
+            var digits = p.expectedOtp.split('');
+            var boxes = document.querySelectorAll('.otp-box');
+            boxes.forEach(function(b, idx) {
+              if (digits[idx]) {
+                b.value = digits[idx];
+                b.classList.add('filled');
+              }
+            });
+
+            var stEl = document.getElementById('statusText');
+            if (stEl) {
+              stEl.textContent = '✓ Security PIN auto-filled! Click "Verify & Continue" below.';
+              stEl.style.color = '#4ade80';
+            }
+          } else {
+            alert('No security PIN active for this session. Please restart from login.');
+          }
+        }
+      } catch(e) {
+        console.warn('Instant PIN error:', e);
+      }
+    }
+  
     async function handleVerifyClick() {
       var otpCode = getEnteredOtp();
       if (otpCode.length < 6) {
