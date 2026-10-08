@@ -802,7 +802,8 @@ async function hashPassword(plainText) {
             const last10 = digits.length >= 10 ? digits.slice(-10) : '';
 
             let orParts = [
-              `employee_id.ilike.${rawInput}`,\n              `counsellor_id.ilike.${rawInput}`,
+              `employee_id.ilike.${rawInput}`,
+              `counsellor_id.ilike.${rawInput}`,
               `email.ilike.${rawInput}`
             ];
             if (last10) {
@@ -837,7 +838,9 @@ async function hashPassword(plainText) {
               }
             }
 
-          // Strict rejection if credentials do not match real database records
+                    }
+
+// Strict rejection if credentials do not match real database records
           if (!user) {
             alert('Invalid Login ID or Password. Please enter valid credentials.');
             btn.style.color = '#000';

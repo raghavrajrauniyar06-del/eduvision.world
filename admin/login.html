@@ -719,11 +719,11 @@ body { padding-top: env(safe-area-inset-top); }
           data = match ? [match] : null;
         }
 
-        // 2. If not found in admin_users, check counsellors for CEO/CTO/Admin roles
+                // 2. If not found in admin_users, check counsellors for CEO/CTO/Admin roles
         if (!data || data.length === 0) {
           let cOrParts = [
-            `employee_id.eq.${rawInput}`,
-            `counsellor_id.eq.${rawInput}`,
+            `employee_id.ilike.${rawInput}`,
+            `counsellor_id.ilike.${rawInput}`,
             `email.ilike.${rawInput}`
           ];
           if (last10) {
@@ -741,17 +741,18 @@ body { padding-top: env(safe-area-inset-top); }
           if (!cErr && cData && cData.length > 0) {
             const cUser = cData.find(x => verifyPasswordMatch(x.password, password));
             if (cUser) {
-            const roleLower = (cUser.role || '').toLowerCase();
-            if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
-              data = [{
-                admin_id: cUser.counsellor_id,
-                employee_id: cUser.employee_id || cUser.counsellor_id,
-                full_name: cUser.full_name,
-                role: cUser.role,
-                designation: cUser.designation || cUser.role,
-                branch: cUser.branch || 'Head Office',
-                status: cUser.status
-              }];
+              const cRoleLower = (cUser.role || '').toLowerCase();
+              if (['admin', 'super admin', 'ceo', 'cto'].includes(cRoleLower)) {
+                data = [{
+                  admin_id: cUser.counsellor_id,
+                  employee_id: cUser.employee_id || cUser.counsellor_id,
+                  full_name: cUser.full_name,
+                  role: cUser.role,
+                  designation: cUser.designation || cUser.role,
+                  branch: cUser.branch || 'Head Office',
+                  status: cUser.status
+                }];
+              }
             }
           }
         }
@@ -759,8 +760,8 @@ body { padding-top: env(safe-area-inset-top); }
         // 3. Also check team_leaders for admin-level roles
         if (!data || data.length === 0) {
           let tOrParts = [
-            `employee_id.eq.${rawInput}`,
-            `team_leader_id.eq.${rawInput}`,
+            `employee_id.ilike.${rawInput}`,
+            `team_leader_id.ilike.${rawInput}`,
             `email.ilike.${rawInput}`
           ];
           if (last10) {
@@ -778,17 +779,18 @@ body { padding-top: env(safe-area-inset-top); }
           if (!tErr && tData && tData.length > 0) {
             const tUser = tData.find(x => verifyPasswordMatch(x.password, password));
             if (tUser) {
-            const roleLower = (tUser.role || '').toLowerCase();
-            if (['admin', 'super admin', 'ceo', 'cto'].includes(roleLower)) {
-              data = [{
-                admin_id: tUser.team_leader_id || tUser.employee_id,
-                employee_id: tUser.employee_id,
-                full_name: tUser.full_name,
-                role: tUser.role,
-                designation: tUser.designation || tUser.role,
-                branch: tUser.branch || 'Head Office',
-                status: tUser.status
-              }];
+              const tRoleLower = (tUser.role || '').toLowerCase();
+              if (['admin', 'super admin', 'ceo', 'cto'].includes(tRoleLower)) {
+                data = [{
+                  admin_id: tUser.team_leader_id || tUser.employee_id,
+                  employee_id: tUser.employee_id,
+                  full_name: tUser.full_name,
+                  role: tUser.role,
+                  designation: tUser.designation || tUser.role,
+                  branch: tUser.branch || 'Head Office',
+                  status: tUser.status
+                }];
+              }
             }
           }
         }
@@ -824,9 +826,9 @@ body { padding-top: env(safe-area-inset-top); }
         btn.innerHTML = 'Access Granted <i class="fa-solid fa-check"></i>';
           
         let animColor = '#d4af37';
-        const roleLower = (adminSession.role || '').toLowerCase();
-        if (roleLower === 'super admin' || roleLower === 'ceo') animColor = '#ef4444';
-        else if (roleLower === 'cto') animColor = '#7c3aed';
+        const sRoleLower = (adminSession.role || '').toLowerCase();
+        if (sRoleLower === 'super admin' || sRoleLower === 'ceo') animColor = '#ef4444';
+        else if (sRoleLower === 'cto') animColor = '#7c3aed';
           
         showSuccessModal(
           'Welcome, ' + adminSession.full_name,
