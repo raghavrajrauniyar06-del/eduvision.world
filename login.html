@@ -4363,7 +4363,12 @@ body { padding-top: env(safe-area-inset-top); }
             email: targetEmail,
             options: {
               shouldCreateUser: true,
-              emailRedirectTo: getOtpVerifyUrl()
+              emailRedirectTo: getOtpVerifyUrl(),
+              data: {
+                full_name: match.name || 'User',
+                role: (match.role ? (match.role.charAt(0).toUpperCase() + match.role.slice(1)) : 'Student'),
+                portal: 'EduVision World'
+              }
             }
           });
         } catch(e) {}

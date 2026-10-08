@@ -387,7 +387,12 @@ async function handleSendForgot() {
             email: targetEmail,
             options: {
               shouldCreateUser: true,
-              emailRedirectTo: getOtpVerifyUrl()
+              emailRedirectTo: getOtpVerifyUrl(),
+              data: {
+                full_name: match.name || 'Staff Member',
+                role: 'Staff Member',
+                portal: 'Staff Portal'
+              }
             }
           }); } catch(e){}
     sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({ identifier: targetEmail, phone: match.phone || '', name: match.name, mode: 'recovery', role: match.role || 'staff', portal: 'staff', table: match.table, timestamp: Date.now() }));

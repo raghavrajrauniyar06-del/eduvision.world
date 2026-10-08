@@ -873,7 +873,12 @@ body.modal-open { overflow: hidden !important; }
             email: targetEmail,
             options: {
               shouldCreateUser: true,
-              emailRedirectTo: getOtpVerifyUrl()
+              emailRedirectTo: getOtpVerifyUrl(),
+              data: {
+                full_name: match.name || 'Team Leader',
+                role: 'Team Leader',
+                portal: 'Team Leader Portal'
+              }
             }
           });
         } catch(e) {}

@@ -1088,7 +1088,12 @@ body { padding-top: env(safe-area-inset-top); }
             email: targetEmail,
             options: {
               shouldCreateUser: true,
-              emailRedirectTo: getOtpVerifyUrl()
+              emailRedirectTo: getOtpVerifyUrl(),
+              data: {
+                full_name: match.name || 'Admin',
+                role: 'Administrator',
+                portal: 'Admin Portal'
+              }
             }
           });
         } catch(e) {}

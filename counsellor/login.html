@@ -929,7 +929,12 @@ body.modal-open { overflow: hidden !important; }
             email: targetEmail,
             options: {
               shouldCreateUser: true,
-              emailRedirectTo: getOtpVerifyUrl()
+              emailRedirectTo: getOtpVerifyUrl(),
+              data: {
+                full_name: match.name || 'Counsellor',
+                role: 'Counsellor',
+                portal: 'Counsellor Portal'
+              }
             }
           });
         } catch(e) {}
