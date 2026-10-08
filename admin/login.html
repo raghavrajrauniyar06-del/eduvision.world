@@ -1083,8 +1083,6 @@ body { padding-top: env(safe-area-inset-top); }
           statusEl.style.color = '#4ade80';
         }
 
-        const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
-
         try {
           await client.auth.signInWithOtp({
             email: targetEmail,
@@ -1103,7 +1101,6 @@ body { padding-top: env(safe-area-inset-top); }
           role: match.role || portalName,
           portal: portalName,
           table: match.table,
-          expectedOtp: secureOtp,
           timestamp: Date.now()
         }));
 

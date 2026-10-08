@@ -714,20 +714,6 @@ body { padding-top: env(safe-area-inset-top); }
 
       <!-- OTP Status Message -->
       <div class="otp-status-text" id="statusText">💬 Enter the 6-digit OTP code sent via Email</div>
-      <!-- Instant PIN & Email Link Helper -->
-      <div id="otpHelperBanner" style="margin: 18px auto 8px; width: 100%; max-width: 380px; padding: 14px 18px; border-radius: 16px; background: rgba(201, 147, 42, 0.12); border: 1.5px solid rgba(247, 211, 119, 0.35); font-size: 0.85rem; color: #f8fafc; line-height: 1.4; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <div style="font-weight: 700; color: #f7d377; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-          <span>⚡ Instant 1-Click Verification</span>
-        </div>
-        <div style="color: #cbd5e1; font-size: 0.82rem; margin-bottom: 8px;">
-          Agar email me 6-digit code nahi dikh raha ya link open nahi ho raha:
-        </div>
-        <button type="button" id="btnRevealInstantPin" onclick="revealInstantPin()" style="background: linear-gradient(135deg, #f7d377 0%, #c9932a 100%); color: #070b12; border: none; font-weight: 800; font-size: 0.88rem; padding: 8px 18px; border-radius: 99px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(201,147,42,0.4);">
-          🔑 Auto-Fill Instant Security PIN
-        </button>
-        <div id="instantPinBox" style="display:none; margin-top: 8px; font-weight: 800; color: #4ade80; font-size: 1.15rem; letter-spacing: 3px;"></div>
-      </div>
-      </div>
 
       <!-- Resend Timer Row -->
       <div class="resend-row">
@@ -1088,73 +1074,31 @@ body { padding-top: env(safe-area-inset-top); }
 
       try {
         const client = getSb();
-        const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
         if (targetIdentifier.includes('@') && client && client.auth) {
-          await client.auth.signInWithOtp({
+          const resendRes = await client.auth.signInWithOtp({
             email: targetIdentifier.trim().toLowerCase(),
-            options: { shouldCreateUser: true }
-          }).catch(() => {});
+            options: {
+              shouldCreateUser: false,
+              emailRedirectTo: window.location.origin + window.location.pathname
+            }
+          });
+          if (resendRes.error) throw resendRes.error;
         }
-
-        // Update session storage with new expectedOtp
-        try {
-          const raw = sessionStorage.getItem('eduvision_pending_auth');
-          const p = raw ? JSON.parse(raw) : {};
-          p.expectedOtp = secureOtp;
-          p.timestamp = Date.now();
-          sessionStorage.setItem('eduvision_pending_auth', JSON.stringify(p));
-        } catch(e) {}
 
         if (statusEl) {
           statusEl.textContent = '✓ New 6-digit OTP code sent successfully to ' + targetIdentifier;
           statusEl.style.color = '#4ade80';
         }
       } catch(e) {
-        if (statusEl) statusEl.textContent = 'New code sent.';
+        if (statusEl) {
+          statusEl.textContent = '❌ ' + (e.message || 'Failed to resend code. Please wait and try again.');
+          statusEl.style.color = '#ef4444';
+        }
       }
       startResendTimer(30);
     }
 
-    async 
-    function revealInstantPin() {
-      try {
-        var raw = sessionStorage.getItem('eduvision_pending_auth');
-        if (raw) {
-          var p = JSON.parse(raw);
-          if (p.expectedOtp) {
-            var box = document.getElementById('instantPinBox');
-            var btn = document.getElementById('btnRevealInstantPin');
-            if (box) {
-              box.textContent = '🔑 YOUR SECURITY PIN: ' + p.expectedOtp;
-              box.style.display = 'block';
-            }
-            if (btn) btn.style.display = 'none';
-
-            // Auto-fill OTP boxes
-            var digits = p.expectedOtp.split('');
-            var boxes = document.querySelectorAll('.otp-box');
-            boxes.forEach(function(b, idx) {
-              if (digits[idx]) {
-                b.value = digits[idx];
-                b.classList.add('filled');
-              }
-            });
-
-            var stEl = document.getElementById('statusText');
-            if (stEl) {
-              stEl.textContent = '✓ Security PIN auto-filled! Click "Verify & Continue" below.';
-              stEl.style.color = '#4ade80';
-            }
-          } else {
-            alert('No security PIN active for this session. Please restart from login.');
-          }
-        }
-      } catch(e) {
-        console.warn('Instant PIN error:', e);
-      }
-    }
-  
     async function handleVerifyClick() {
       var otpCode = getEnteredOtp();
       if (otpCode.length < 6) {
@@ -1183,7 +1127,7 @@ body { padding-top: env(safe-area-inset-top); }
         let isCodeValid = false;
         let verifyErr = null;
 
-        // 1. Verify against Supabase Auth (type: 'email' or 'recovery')
+        // 1. Verify 6-digit OTP against Supabase Auth (type: 'email' or 'recovery')
         try {
           let verifyRes = await client.auth.verifyOtp({
             email: targetIdentifier.trim().toLowerCase(),
@@ -1208,25 +1152,8 @@ body { padding-top: env(safe-area-inset-top); }
           verifyErr = e.message;
         }
 
-        // 2. Check pending session expectedOtp fallback
         if (!isCodeValid) {
-          try {
-            const raw = sessionStorage.getItem('eduvision_pending_auth');
-            if (raw) {
-              const pending = JSON.parse(raw);
-              if (pending.expectedOtp && pending.expectedOtp.trim() === otpCode.trim()) {
-                const age = Date.now() - (pending.timestamp || 0);
-                if (age < 15 * 60 * 1000) { // 15 mins validity
-                  isCodeValid = true;
-                  verifyErr = null;
-                }
-              }
-            }
-          } catch(e) {}
-        }
-
-        if (!isCodeValid) {
-          throw new Error(verifyErr || 'Invalid or expired 6-digit OTP code. Please check and try again.');
+          throw new Error(verifyErr || 'Invalid or expired 6-digit OTP code. Please check your email and try again.');
         }
 
         // Verified successfully!

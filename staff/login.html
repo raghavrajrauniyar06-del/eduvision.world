@@ -383,8 +383,6 @@ async function handleSendForgot() {
     if (!match) throw new Error('No staff account found with this mobile or email.');
     const targetEmail = match.email;
     if (!targetEmail || !targetEmail.includes('@')) throw new Error('No email registered for OTP delivery.');
-    if (s) { s.textContent = '✓ Account verified (' + match.name + ')! Sending 6-digit OTP...'; s.style.color = '#4ade80'; }
-    const secureOtp = Math.floor(100000 + Math.random() * 900000).toString();
     try { await sb.auth.signInWithOtp({
             email: targetEmail,
             options: {
@@ -392,7 +390,7 @@ async function handleSendForgot() {
               emailRedirectTo: getOtpVerifyUrl()
             }
           }); } catch(e){}
-    sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({ identifier: targetEmail, phone: match.phone || '', name: match.name, mode: 'recovery', role: match.role || 'staff', portal: 'staff', table: match.table, expectedOtp: secureOtp, timestamp: Date.now() }));
+    sessionStorage.setItem('eduvision_pending_auth', JSON.stringify({ identifier: targetEmail, phone: match.phone || '', name: match.name, mode: 'recovery', role: match.role || 'staff', portal: 'staff', table: match.table, timestamp: Date.now() }));
     if (s) { s.textContent = '✓ OTP sent to ' + targetEmail + '! Redirecting...'; s.style.color = '#4ade80'; }
     setTimeout(() => { window.location.href = '../otp-verify.html'; }, 700);
   } catch(err) { if (s) { s.textContent = '❌ ' + (err.message || 'Failed.'); s.style.color = '#ef4444'; } if (b) { b.disabled = false; b.innerHTML = 'Find Account & Send OTP ➔'; } }
