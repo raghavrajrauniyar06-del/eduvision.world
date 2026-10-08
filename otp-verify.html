@@ -715,12 +715,18 @@ body { padding-top: env(safe-area-inset-top); }
       <!-- OTP Status Message -->
       <div class="otp-status-text" id="statusText">💬 Enter the 6-digit OTP code sent via Email</div>
       <!-- Instant PIN & Email Link Helper -->
-      <div id="otpHelperBanner" style="margin: 14px auto 0; max-width: 360px; padding: 10px 14px; border-radius: 12px; background: rgba(247, 211, 119, 0.08); border: 1px solid rgba(247, 211, 119, 0.22); font-size: 0.84rem; color: #f8fafc; line-height: 1.4; text-align: center;">
-        <span style="color: #94a3b8;">📧 Check your email for the Sign-In Link or OTP code.</span>
-        <div style="margin-top: 6px;">
-          <button type="button" id="btnRevealInstantPin" onclick="revealInstantPin()" style="background: none; border: none; color: #f7d377; text-decoration: underline; font-weight: 700; cursor: pointer; font-size: 0.83rem; padding: 2px 4px;">Didn't get code? Show Instant Security PIN 🔑</button>
-          <div id="instantPinBox" style="display:none; margin-top: 6px; font-weight: 800; color: #4ade80; font-size: 1.05rem; letter-spacing: 3px;"></div>
+      <div id="otpHelperBanner" style="margin: 18px auto 8px; width: 100%; max-width: 380px; padding: 14px 18px; border-radius: 16px; background: rgba(201, 147, 42, 0.12); border: 1.5px solid rgba(247, 211, 119, 0.35); font-size: 0.85rem; color: #f8fafc; line-height: 1.4; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div style="font-weight: 700; color: #f7d377; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>⚡ Instant 1-Click Verification</span>
         </div>
+        <div style="color: #cbd5e1; font-size: 0.82rem; margin-bottom: 8px;">
+          Agar email me 6-digit code nahi dikh raha ya link open nahi ho raha:
+        </div>
+        <button type="button" id="btnRevealInstantPin" onclick="revealInstantPin()" style="background: linear-gradient(135deg, #f7d377 0%, #c9932a 100%); color: #070b12; border: none; font-weight: 800; font-size: 0.88rem; padding: 8px 18px; border-radius: 99px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(201,147,42,0.4);">
+          🔑 Auto-Fill Instant Security PIN
+        </button>
+        <div id="instantPinBox" style="display:none; margin-top: 8px; font-weight: 800; color: #4ade80; font-size: 1.15rem; letter-spacing: 3px;"></div>
+      </div>
       </div>
 
       <!-- Resend Timer Row -->
