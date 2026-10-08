@@ -13,150 +13,94 @@
       <td align="center">
 
         <!-- MAIN EMAIL CARD CONTAINER -->
-        <table role="presentation" width="100%" style="max-width: 600px; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 14px 45px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
+        <table role="presentation" width="100%" style="max-width: 580px; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
           
-          <!-- TOP REAL CAMPUS PHOTOGRAPH -->
+          <!-- TOP REAL STUDENTS PHOTO (AAPKA EXACT ATTACHED IMAGE) -->
           <tr>
             <td style="padding: 0; line-height: 0; background-color: #ffffff;">
-              <img src="https://raw.githubusercontent.com/raghavrajrauniyar06-del/eduvision.world/main/campus_header_bg.jpg" alt="EduVision University Campus" width="600" style="width: 100%; max-width: 600px; height: 260px; object-fit: cover; display: block; border: 0;">
+              <img src="https://raw.githubusercontent.com/raghavrajrauniyar06-del/eduvision.world/main/eduvision_students_banner.jpg" alt="EduVision Students Campus" width="580" style="width: 100%; max-width: 580px; height: auto; display: block; border: 0;">
             </td>
           </tr>
 
-          <!-- HEADER BRANDING BAR -->
+          <!-- WHITE CLEAN CARD: OTP & DETAILS -->
           <tr>
-            <td style="padding: 20px 28px 0; background: #ffffff;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td align="left" valign="middle">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                      <tr>
-                        <td valign="middle" style="padding-right: 12px;">
-                          <img src="https://raw.githubusercontent.com/raghavrajrauniyar06-del/eduvision.world/main/animations/eduvision_correct_logo.png" alt="EduVision" width="44" height="44" style="display: block; border-radius: 8px;">
-                        </td>
-                        <td valign="middle">
-                          <div style="font-size: 22px; font-weight: 900; color: #0f172a; line-height: 1.1;">
-                            Edu<span style="color: #c9932a;">Vision</span>
-                          </div>
-                          <div style="font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;">
-                            Learn • Grow • Succeed
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td align="right" valign="middle" style="border-left: 2px solid #f59e0b; padding-left: 14px;">
-                    <div style="font-size: 12px; font-weight: 700; color: #475569; line-height: 1.3;">
-                      Your Education<br>Partner for a<br><span style="color: #c9932a;">Brighter Future</span>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- WHITE FLOATING CARD: OTP CONTENT -->
-          <tr>
-            <td style="padding: 22px 28px 10px; background: #ffffff;">
+            <td style="padding: 30px 26px 12px; background: #ffffff; text-align: center;">
               
-              <table role="presentation" width="100%" style="background: #ffffff; border: 1.5px solid #f1f5f9; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); padding: 28px 20px; text-align: center;" cellspacing="0" cellpadding="0" border="0">
-                
-                <!-- BADGE -->
+              <!-- BADGE: SECURE VERIFICATION -->
+              <div style="display: inline-block; padding: 6px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 99px; margin-bottom: 12px;">
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #334155; text-transform: uppercase;">
+                  🛡️ SECURE VERIFICATION
+                </span>
+              </div>
+
+              <!-- HEADING -->
+              <h1 style="margin: 6px 0 10px; font-size: 28px; font-weight: 900; color: #0f172a; font-family: 'Georgia', serif;">
+                Your <span style="color: #c9932a;">Verification Code</span>
+              </h1>
+              <p style="margin: 0 0 24px; font-size: 14px; color: #64748b; line-height: 1.5;">
+                Use the 6-digit code below to continue securely to your <strong>EduVision</strong> account.
+              </p>
+
+              <!-- DYNAMIC 6-DIGIT OTP PASSCODE -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto 18px;">
                 <tr>
-                  <td align="center">
-                    <div style="display: inline-block; padding: 6px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 99px; margin-bottom: 12px;">
-                      <span style="font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #334155; text-transform: uppercase;">
-                        🛡️ SECURE VERIFICATION
-                      </span>
+                  <td style="background: #ffffff; border: 2.5px solid #e2e8f0; border-radius: 16px; padding: 18px 32px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);">
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, monospace; font-size: 44px; font-weight: 900; letter-spacing: 14px; color: #0f172a; text-indent: 14px;">
+                      {{ .Token }}
                     </div>
                   </td>
                 </tr>
+              </table>
 
-                <!-- TITLE -->
+              <!-- VALIDITY PILL -->
+              <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 99px; padding: 8px 22px; font-size: 13px; color: #64748b; margin-bottom: 26px;">
+                ⏱️ Valid for <strong style="color: #c9932a;">15 minutes</strong> &nbsp;•&nbsp; Never share this code with anyone.
+              </div>
+
+              <!-- 4 TRUST PILLARS -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px solid #f1f5f9; padding-top: 22px; margin-bottom: 10px;">
                 <tr>
-                  <td align="center">
-                    <h1 style="margin: 6px 0 10px; font-size: 28px; font-weight: 900; color: #0f172a; font-family: 'Georgia', serif;">
-                      Your <span style="color: #c9932a;">Verification Code</span>
-                    </h1>
-                    <p style="margin: 0 0 24px; font-size: 14px; color: #64748b; line-height: 1.5;">
-                      Use the 6-digit code below to continue securely to your <strong>EduVision</strong> account.
-                    </p>
+                  <td width="25%" align="center" valign="top" style="padding: 4px;">
+                    <div style="width: 36px; height: 36px; background: #fef3c7; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">🛡️</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Secure</div>
+                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Your data is safe with us</div>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 4px;">
+                    <div style="width: 36px; height: 36px; background: #e0f2fe; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">🔒</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Private</div>
+                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Information is confidential</div>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 4px;">
+                    <div style="width: 36px; height: 36px; background: #fee2e2; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">👥</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Trusted</div>
+                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Used by thousands of students</div>
+                  </td>
+                  <td width="25%" align="center" valign="top" style="padding: 4px;">
+                    <div style="width: 36px; height: 36px; background: #dcfce7; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">⚡</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Fast</div>
+                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Quick & instant access</div>
                   </td>
                 </tr>
-
-                <!-- DYNAMIC 6-DIGIT OTP CODE -->
-                <tr>
-                  <td align="center">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto 18px;">
-                      <tr>
-                        <td style="background: #ffffff; border: 2.5px solid #e2e8f0; border-radius: 16px; padding: 18px 32px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);">
-                          <div style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, monospace; font-size: 44px; font-weight: 900; letter-spacing: 14px; color: #0f172a; text-indent: 14px;">
-                            {{ .Token }}
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <!-- TIME VALIDITY PILL -->
-                <tr>
-                  <td align="center">
-                    <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 99px; padding: 8px 22px; font-size: 13px; color: #64748b; margin-bottom: 24px;">
-                      ⏱️ Valid for <strong style="color: #c9932a;">15 minutes</strong> &nbsp;•&nbsp; Never share this code with anyone.
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- 4 TRUST PILLARS -->
-                <tr>
-                  <td>
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top: 1px solid #f1f5f9; padding-top: 20px;">
-                      <tr>
-                        <td width="25%" align="center" valign="top" style="padding: 4px;">
-                          <div style="width: 36px; height: 36px; background: #fef3c7; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">🛡️</div>
-                          <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Secure</div>
-                          <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Your data is safe with us</div>
-                        </td>
-                        <td width="25%" align="center" valign="top" style="padding: 4px;">
-                          <div style="width: 36px; height: 36px; background: #e0f2fe; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">🔒</div>
-                          <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Private</div>
-                          <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Information is confidential</div>
-                        </td>
-                        <td width="25%" align="center" valign="top" style="padding: 4px;">
-                          <div style="width: 36px; height: 36px; background: #fee2e2; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">👥</div>
-                          <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Trusted</div>
-                          <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Used by thousands of students</div>
-                        </td>
-                        <td width="25%" align="center" valign="top" style="padding: 4px;">
-                          <div style="width: 36px; height: 36px; background: #dcfce7; border-radius: 50%; text-align: center; line-height: 36px; font-size: 16px; margin: 0 auto 6px;">⚡</div>
-                          <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Fast</div>
-                          <div style="font-size: 11px; color: #94a3b8; line-height: 1.3; margin-top: 2px;">Quick & instant access</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
               </table>
 
             </td>
           </tr>
 
-          <!-- SECURITY NOTICE CARD -->
+          <!-- SECURITY NOTICE CARD (LIGHT GREEN) -->
           <tr>
-            <td style="padding: 10px 28px 24px;">
-              <table role="presentation" width="100%" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 16px; padding: 16px 20px;" cellspacing="0" cellpadding="0" border="0">
+            <td style="padding: 10px 26px 24px;">
+              <table role="presentation" width="100%" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 14px; padding: 14px 18px;" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td width="40" valign="middle">
-                    <div style="width: 38px; height: 38px; background: #dcfce7; border-radius: 50%; text-align: center; line-height: 38px; font-size: 18px;">
+                  <td width="38" valign="middle">
+                    <div style="width: 34px; height: 34px; background: #dcfce7; border-radius: 50%; text-align: center; line-height: 34px; font-size: 16px;">
                       ✉️
                     </div>
                   </td>
-                  <td valign="middle" style="padding-left: 14px;">
+                  <td valign="middle" style="padding-left: 12px;">
                     <div style="font-size: 13px; font-weight: 800; color: #166534;">
                       Didn't request this code?
                     </div>
-                    <div style="font-size: 12px; color: #15803d; margin-top: 3px; line-height: 1.4;">
+                    <div style="font-size: 12px; color: #15803d; margin-top: 2px; line-height: 1.4;">
                       You can safely ignore this email or contact our support team if you have any concerns.
                     </div>
                   </td>
@@ -167,7 +111,7 @@
 
           <!-- FOOTER -->
           <tr>
-            <td style="padding: 24px 28px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
+            <td style="padding: 22px 26px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td align="left" valign="middle">
@@ -185,7 +129,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="padding-top: 16px; border-top: 1px solid #e2e8f0; margin-top: 14px;">
+                  <td colspan="2" style="padding-top: 14px; border-top: 1px solid #e2e8f0; margin-top: 12px;">
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td align="left" style="font-size: 11px; color: #64748b;">
@@ -205,7 +149,7 @@
           </tr>
 
         </table>
-        <!-- END MAIN CARD CONTAINER -->
+        <!-- END MAIN EMAIL CARD CONTAINER -->
 
       </td>
     </tr>
