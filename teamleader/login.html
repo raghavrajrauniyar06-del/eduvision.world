@@ -590,6 +590,53 @@ async function hashPassword(plainText) {
 }
 
 
+    
+    const EduVisionAuthGuard = {
+      MAX_ATTEMPTS: 5,
+      LOCKOUT_MS: 15 * 60 * 1000,
+      STORAGE_KEY: 'eduvision_auth_guard',
+      getState() {
+        try {
+          const raw = localStorage.getItem(this.STORAGE_KEY);
+          return raw ? JSON.parse(raw) : { count: 0, lockUntil: 0, lastAttempt: 0 };
+        } catch(e) {
+          return { count: 0, lockUntil: 0, lastAttempt: 0 };
+        }
+      },
+      check() {
+        const state = this.getState();
+        const now = Date.now();
+        if (state.lockUntil && now < state.lockUntil) {
+          const remainingMinutes = Math.ceil((state.lockUntil - now) / 60000);
+          return { allowed: false, message: 'Access temporarily protected due to multiple failed login attempts. Please try again in ' + remainingMinutes + ' minute(s).' };
+        }
+        return { allowed: true };
+      },
+      recordFailure() {
+        const state = this.getState();
+        const now = Date.now();
+        state.count = (state.count || 0) + 1;
+        state.lastAttempt = now;
+        if (state.count >= this.MAX_ATTEMPTS) {
+          state.lockUntil = now + this.LOCKOUT_MS;
+        }
+        try {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
+        } catch(e) {}
+      },
+      recordSuccess() {
+        try {
+          localStorage.removeItem(this.STORAGE_KEY);
+        } catch(e) {}
+      },
+      reset() {
+        try {
+          localStorage.removeItem(this.STORAGE_KEY);
+        } catch(e) {}
+      }
+    };
+    window.EduVisionAuthGuard = EduVisionAuthGuard;
+
     document.addEventListener('DOMContentLoaded', () => {
       // Prefill if session exists
       const session = localStorage.getItem('eduvision_team_leader');
@@ -703,7 +750,7 @@ async function hashPassword(plainText) {
           user.must_change_password = user.is_temp_password;
 
           // Persist session immediately
-          EduVisionAuthGuard.recordSuccess();
+          if (typeof EduVisionAuthGuard !== 'undefined' && typeof EduVisionAuthGuard.recordSuccess === 'function') { EduVisionAuthGuard.recordSuccess(); }
           localStorage.setItem('eduvision_team_leader', JSON.stringify(user));
 
           triggerOrbSuccess(animColor, 'Authenticating ' + user.role + '...', function() {

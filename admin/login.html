@@ -816,7 +816,7 @@ body { padding-top: env(safe-area-inset-top); }
           must_change_password: isTempPwd
         };
 
-        EduVisionAuthGuard.recordSuccess();
+        if (typeof EduVisionAuthGuard !== 'undefined' && typeof EduVisionAuthGuard.recordSuccess === 'function') { EduVisionAuthGuard.recordSuccess(); }
         localStorage.setItem('eduvision_admin', JSON.stringify(adminSession));
           
         btn.style.background = '#10b981';
