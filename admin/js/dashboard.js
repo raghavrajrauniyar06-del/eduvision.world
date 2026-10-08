@@ -19468,6 +19468,20 @@ function renderCtoPageCards() {
   const guardedEl = document.getElementById('statGuardedPages');
   if (guardedEl) guardedEl.textContent = keys.length;
 
+  let pagesCount = 0, sectionsCount = 0, portalsCount = 0;
+  keys.forEach(k => {
+    const grp = controls[k] && controls[k].group;
+    if (grp === 'public_pages') pagesCount++;
+    else if (grp === 'home_sections') sectionsCount++;
+    else if (grp === 'portals') portalsCount++;
+  });
+  const cPages = document.getElementById('ctoCountPages');
+  if (cPages) cPages.textContent = pagesCount;
+  const cSections = document.getElementById('ctoCountSections');
+  if (cSections) cSections.textContent = sectionsCount;
+  const cPortals = document.getElementById('ctoCountPortals');
+  if (cPortals) cPortals.textContent = portalsCount;
+
   let filteredKeys = keys.filter(key => {
     const item = controls[key];
     if (ctoActivePageCategory !== 'all' && item.group !== ctoActivePageCategory) {

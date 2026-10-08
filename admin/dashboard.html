@@ -6167,7 +6167,7 @@ body.modal-open { overflow: hidden !important; }
           </div>
 
           <!-- 2. Master Telemetry HUD Cluster -->
-          <div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:18px;">
+          <div class="stats-grid" style="display:grid !important; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:18px; width:100%;">
             <div class="glass-box" style="padding:14px 18px;">
               <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Controlled Modules</div>
               <div style="font-size:1.55rem; font-weight:800; color:#38bdf8; margin-top:3px;" id="statTotalModules">0</div>
@@ -6256,9 +6256,9 @@ body.modal-open { overflow: hidden !important; }
             <!-- Category Filter Pills -->
             <div id="ctoPageFilterPills" style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
               <button class="btn-outline active" onclick="filterCtoPageCategory('all', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">All Targets (<span id="ctoCountAll">0</span>)</button>
-              <button class="btn-outline" onclick="filterCtoPageCategory('public_pages', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Public Webpages (404 Gate)</button>
-              <button class="btn-outline" onclick="filterCtoPageCategory('home_sections', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Homepage Sections</button>
-              <button class="btn-outline" onclick="filterCtoPageCategory('portals', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Staff &amp; Student Portals</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('public_pages', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Public Webpages (404 Gate) (<span id="ctoCountPages">0</span>)</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('home_sections', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Homepage Sections (<span id="ctoCountSections">0</span>)</button>
+              <button class="btn-outline" onclick="filterCtoPageCategory('portals', this)" style="font-size:0.75rem; padding:5px 12px; border-radius:8px;">Staff &amp; Student Portals (<span id="ctoCountPortals">0</span>)</button>
             </div>
 
             <!-- Page Cards Dynamic Grid -->
