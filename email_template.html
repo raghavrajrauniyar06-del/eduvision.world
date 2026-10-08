@@ -15,30 +15,30 @@
         <!-- MAIN EMAIL CARD CONTAINER -->
         <table role="presentation" width="100%" style="max-width: 580px; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
           
-          <!-- TOP REAL STUDENTS PHOTO (AAPKA EXACT ATTACHED IMAGE) -->
+          <!-- TOP REAL STUDENTS PHOTO (AAPKA EXACT NEW ATTACHED IMAGE) -->
           <tr>
             <td style="padding: 0; line-height: 0; background-color: #ffffff;">
-              <img src="https://raw.githubusercontent.com/raghavrajrauniyar06-del/eduvision.world/main/eduvision_students_banner.jpg" alt="EduVision Students Campus" width="580" style="width: 100%; max-width: 580px; height: auto; display: block; border: 0;">
+              <img src="https://raw.githubusercontent.com/raghavrajrauniyar06-del/eduvision.world/main/eduvision_campus_banner_v2.jpg" alt="EduVision Students Campus" width="580" style="width: 100%; max-width: 580px; height: auto; display: block; border: 0;">
             </td>
           </tr>
 
           <!-- WHITE CLEAN CARD: OTP & DETAILS -->
           <tr>
-            <td style="padding: 30px 26px 12px; background: #ffffff; text-align: center;">
+            <td style="padding: 28px 26px 12px; background: #ffffff; text-align: center;">
               
-              <!-- BADGE: SECURE VERIFICATION -->
+              <!-- DYNAMIC ROLE BADGE: ADMIN / COUNSELLOR / STUDENT -->
               <div style="display: inline-block; padding: 6px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 99px; margin-bottom: 12px;">
                 <span style="font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #334155; text-transform: uppercase;">
-                  🛡️ SECURE VERIFICATION
+                  🛡️ {{ .Data.role }} VERIFICATION
                 </span>
               </div>
 
-              <!-- HEADING -->
-              <h1 style="margin: 6px 0 10px; font-size: 28px; font-weight: 900; color: #0f172a; font-family: 'Georgia', serif;">
-                Your <span style="color: #c9932a;">Verification Code</span>
+              <!-- HEADING WITH USER NAME -->
+              <h1 style="margin: 6px 0 10px; font-size: 26px; font-weight: 900; color: #0f172a; font-family: 'Georgia', serif;">
+                Hello, <span style="color: #c9932a;">{{ .Data.full_name }}</span>
               </h1>
               <p style="margin: 0 0 24px; font-size: 14px; color: #64748b; line-height: 1.5;">
-                Use the 6-digit code below to continue securely to your <strong>EduVision</strong> account.
+                Use the 6-digit one-time passcode below to securely authenticate your <strong>EduVision {{ .Data.role }}</strong> account.
               </p>
 
               <!-- DYNAMIC 6-DIGIT OTP PASSCODE -->
@@ -101,7 +101,7 @@
                       Didn't request this code?
                     </div>
                     <div style="font-size: 12px; color: #15803d; margin-top: 2px; line-height: 1.4;">
-                      You can safely ignore this email or contact our support team if you have any concerns.
+                      You can safely ignore this email or contact our support team if you suspect unauthorized activity.
                     </div>
                   </td>
                 </tr>
