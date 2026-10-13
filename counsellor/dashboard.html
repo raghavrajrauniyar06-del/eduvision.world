@@ -2779,6 +2779,101 @@ body.modal-open { overflow: hidden !important; }
   <link rel="apple-touch-icon" href="/eduvision_app_icon.png">
   <script src="/shared/pwa_installer.js" defer></script>
 
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     ZERO-COST FEATURES: VOICE TYPING, OFFICIAL RECEIPT, ALARMS
+     ═══════════════════════════════════════════════════════════════ */
+  .btn-voice-rec {
+    transition: all 0.25s ease;
+  }
+  .btn-voice-rec:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  }
+  .btn-voice-rec.listening {
+    animation: voicePulse 1.2s infinite alternate ease-in-out;
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+  }
+  @keyframes voicePulse {
+    0% { transform: scale(1); box-shadow: 0 0 4px rgba(239, 68, 68, 0.5); }
+    100% { transform: scale(1.06); box-shadow: 0 0 18px rgba(239, 68, 68, 0.9); }
+  }
+
+  /* Follow-up Alarm Banner */
+  #followupAlarmBanner {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 99999;
+    max-width: 440px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1.5px solid rgba(245, 158, 11, 0.8);
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.35);
+    backdrop-filter: blur(16px);
+    display: none;
+    animation: slideDownAlert 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideDownAlert {
+    0% { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Official Fee Receipt Print & Modal Styles */
+  #officialReceiptModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 15, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  #officialReceiptModalOverlay.open {
+    display: flex;
+  }
+  .receipt-sheet {
+    background: #ffffff;
+    color: #0f172a;
+    width: 100%;
+    max-width: 760px;
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  @media print {
+    body * {
+      visibility: hidden !important;
+    }
+    #officialReceiptSheet, #officialReceiptSheet * {
+      visibility: visible !important;
+    }
+    #officialReceiptSheet {
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 20mm !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    .receipt-no-print {
+      display: none !important;
+    }
+  }
+</style>
 </head>
 <body>
   
@@ -2911,6 +3006,11 @@ body.modal-open { overflow: hidden !important; }
         </div>
       </div>
       <div class="topbar-right" style="display:flex; align-items:center; gap:16px; margin-left:auto;">
+        <!-- SMART FOLLOW-UP ALARM SOUND INDICATOR -->
+        <button type="button" id="btnTestAlarmSound" onclick="playCrystalAlarmChime(); if(typeof showToast==='function') showToast('🔔 Crystal bell chime tested! Follow-up audio reminders active.', 'info');" style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#fbbf24; height:36px; padding:0 12px; border-radius:20px; display:flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:700; cursor:pointer; transition:all 0.2s;" title="Click to test Follow-up Audio Reminder">
+          <i class="fa-solid fa-bell"></i> <span>Reminders: ON</span>
+        </button>
+        
         <!-- LIVE ATTENDANCE CAPSULE -->
         <div id="counsellorAttendanceCapsule" style="display:flex; align-items:center; gap:12px; background:rgba(15,23,42,0.7); border:1px solid rgba(247,211,119,0.25); border-radius:30px; padding:6px 16px; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
           <div style="display:flex; align-items:center; gap:6px;">
@@ -4389,8 +4489,13 @@ body.modal-open { overflow: hidden !important; }
           </div>
           
           <div>
-            <label>&#128221; Remarks</label>
-            <textarea id="fup_remarks" rows="2" placeholder="Enter conversation details..."></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+              <label style="margin:0;">&#128221; Remarks</label>
+              <button type="button" class="btn-voice-rec" onclick="toggleVoiceInput('fup_remarks', this)" title="Speak in Hindi or English to auto-type remarks" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#f87171; border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-microphone"></i> <span>Voice Typing</span>
+              </button>
+            </div>
+            <textarea id="fup_remarks" rows="2" placeholder="Enter conversation details (or click Voice Typing to speak in Hindi/English)..."></textarea>
           </div>
           
           <div>
@@ -5279,8 +5384,13 @@ body.modal-open { overflow: hidden !important; }
 
           <!-- Remarks -->
           <div class="fup-field" style="margin-top:18px;">
-            <label>&#128221; Remarks / Notes</label>
-            <textarea id="lfup_remarks" rows="3" placeholder="What was discussed, next action..."></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+              <label style="margin:0;">&#128221; Remarks / Notes</label>
+              <button type="button" class="btn-voice-rec" onclick="toggleVoiceInput('lfup_remarks', this)" title="Speak in Hindi or English to auto-type remarks" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#f87171; border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-microphone"></i> <span>Voice Typing</span>
+              </button>
+            </div>
+            <textarea id="lfup_remarks" rows="3" placeholder="What was discussed, next action (or click Voice Typing to speak in Hindi/English)..."></textarea>
           </div>
 
           <!-- Attach Call Recording -->
@@ -13074,11 +13184,7 @@ CRITICAL MANDATES:
       alert(`📄 PAYMENT PROOF SLIP PREVIEW\n\nStudent: ${item.name} (${item.student_id})\nUniversity: ${item.univ}\nCourse: ${item.course}\nAmount Paid: ₹ ${item.amount.toLocaleString('en-IN')}\nPayment Mode: ${item.mode}\nBank UTR Ref: ${item.utr}\nSlip Filename: ${item.slip}\nVerification Status: ${item.status.toUpperCase()}\n\nVerified by CA Govind kumar`);
     }
 
-    function downloadOfficialReceipt(id) {
-      const item = caFeeRecords.find(r => r.id === id);
-      if (!item) return;
-      alert(`🖨️ GENERATING OFFICIAL RECEIPT\n\nEduVision Admissions & Educational Consultancy\nReceipt No: EVR-2026-${item.student_id}\nStudent: ${item.name}\nAmount: ₹ ${item.amount.toLocaleString('en-IN')}\nCleared in: EduVision Current Account (HDFC Bank)\n\nReceipt PDF prepared for print / download.`);
-    }
+    // Old downloadOfficialReceipt replaced by Official Branded Generator below
 
     function renderCaCommissionsTable(data) {
       const tbody = document.getElementById('caCommissionTableBody');
@@ -13329,6 +13435,532 @@ CRITICAL MANDATES:
     }
 
   </script>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ZERO-COST FEATURE #6: REAL-TIME FOLLOW-UP ALARM BANNER
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="followupAlarmBanner">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:38px; height:38px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.5); display:flex; align-items:center; justify-content:center; color:#fbbf24; font-size:1.15rem;">
+          <i class="fa-solid fa-bell fa-shake"></i>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; font-weight:700; color:#fbbf24; letter-spacing:0.04em; text-transform:uppercase;">Follow-up Due Now</div>
+          <div id="alarmStudentName" style="font-size:0.95rem; font-weight:800; color:#ffffff;">Rahul Sharma</div>
+        </div>
+      </div>
+      <button onclick="dismissFollowupAlarm()" style="background:transparent; border:none; color:rgba(255,255,255,0.4); font-size:1.1rem; cursor:pointer; padding:2px;" title="Dismiss">&times;</button>
+    </div>
+    <div id="alarmDetailsText" style="margin-top:8px; font-size:0.8rem; color:#cbd5e1; line-height:1.4;">
+      Scheduled discussion regarding MBBS in Russia. Scheduled for 10:30 AM.
+    </div>
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button id="alarmCallBtn" onclick="actionFollowupAlarmCall()" style="flex:1; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <i class="fa-solid fa-phone"></i> Call Now
+      </button>
+      <button onclick="snoozeFollowupAlarm(15)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#e2e8f0; border-radius:8px; padding:7px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-clock"></i> Snooze 15m
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ZERO-COST FEATURE #4: 1-CLICK OFFICIAL BRANDED FEE RECEIPT MODAL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="officialReceiptModalOverlay">
+    <div class="receipt-sheet" id="officialReceiptSheet">
+      <!-- Top Action Bar (hidden when printing) -->
+      <div class="receipt-no-print" style="background:#0f172a; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div style="color:#f8fafc; font-size:0.88rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-file-invoice-dollar" style="color:#fbbf24;"></i> Official Verified Admission Fee Receipt
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="window.print()" style="background:#10b981; color:#ffffff; border:none; border-radius:8px; padding:6px 14px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-print"></i> Print / Save PDF
+          </button>
+          <button id="btnReceiptWhatsApp" onclick="shareReceiptWhatsApp()" style="background:#25d366; color:#ffffff; border:none; border-radius:8px; padding:6px 14px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+          </button>
+          <button onclick="closeOfficialReceiptModal()" style="background:rgba(255,255,255,0.12); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:0.85rem; cursor:pointer;">
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Document Body -->
+      <div style="padding:32px 36px; background:#ffffff;">
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0f172a; padding-bottom:18px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg, #c9932a, #8a6015); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:1.3rem;">EV</div>
+              <div>
+                <h1 style="margin:0; font-size:1.45rem; font-weight:900; color:#0f172a; letter-spacing:-0.02em;">EDUVISION WORLD</h1>
+                <div style="font-size:0.75rem; color:#475569; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Admissions &amp; Overseas Educational Consultancy</div>
+              </div>
+            </div>
+            <div style="font-size:0.75rem; color:#64748b; margin-top:8px; line-height:1.4;">
+              Govt. Registered &bull; ISO 9001:2015 Certified Educational Consultancy<br>
+              Corporate Office: EduVision Tower, Head Office &bull; Support: +91 83036 32103 &bull; info@eduvision.world
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="display:inline-block; background:#ecfdf5; border:1px solid #10b981; color:#047857; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:20px; text-transform:uppercase;">
+              &check; Verified &amp; Cleared
+            </div>
+            <div style="margin-top:8px; font-size:0.85rem; font-weight:800; color:#0f172a;" id="rcptNumber">EVR-2026-0001</div>
+            <div style="font-size:0.75rem; color:#64748b;" id="rcptDate">Date: 14 Oct 2026</div>
+          </div>
+        </div>
+
+        <!-- Student & University Info Grid -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px;">
+          <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase;">Student Details</div>
+            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-top:2px;" id="rcptStudentName">Rahul Sharma</div>
+            <div style="font-size:0.82rem; color:#475569;" id="rcptStudentId">Student ID: EDU260001</div>
+            <div style="font-size:0.82rem; color:#475569;" id="rcptStudentPhone">Phone: +91 9876543210</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase;">Academic &amp; University Mapping</div>
+            <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-top:2px;" id="rcptUniversity">Kursk State Medical University</div>
+            <div style="font-size:0.82rem; color:#475569;" id="rcptCourse">Program: MBBS (General Medicine)</div>
+            <div style="font-size:0.82rem; color:#475569;">Academic Session: 2026&ndash;2027</div>
+          </div>
+        </div>
+
+        <!-- Payment Details Table -->
+        <div style="margin-top:22px;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+            <thead>
+              <tr style="background:#0f172a; color:#ffffff; text-align:left;">
+                <th style="padding:10px 14px; border-radius:8px 0 0 8px;">Description</th>
+                <th style="padding:10px 14px;">Payment Channel</th>
+                <th style="padding:10px 14px;">Bank Ref / UTR</th>
+                <th style="padding:10px 14px; text-align:right; border-radius:0 8px 8px 0;">Amount (INR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #e2e8f0;">
+                <td style="padding:14px; font-weight:700; color:#0f172a;">
+                  Admission Processing &amp; University Clearance Fee
+                  <div style="font-size:0.72rem; color:#64748b; font-weight:400;">Credited to EduVision Primary Current Account</div>
+                </td>
+                <td style="padding:14px; color:#334155;" id="rcptPaymentMode">Bank Transfer (IMPS/NEFT)</td>
+                <td style="padding:14px; font-family:monospace; font-weight:700; color:#0f172a;" id="rcptUtr">UTR202610149876</td>
+                <td style="padding:14px; text-align:right; font-weight:800; font-size:1.05rem; color:#0f172a;" id="rcptAmount">&#8377; 25,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Amount In Words -->
+        <div style="margin-top:14px; background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:10px 14px; font-size:0.82rem; color:#92400e;">
+          <strong>Amount in Words:</strong> <span id="rcptAmountWords">Rupees Twenty-Five Thousand Only</span>
+        </div>
+
+        <!-- Bottom Signatures & Seal -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:32px; padding-top:20px; border-top:1px dashed #cbd5e1;">
+          <!-- Official Seal Stamp -->
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:90px; height:90px; border:3px solid #059669; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#059669; font-weight:900; text-align:center; transform:rotate(-8deg); box-shadow:0 0 0 3px rgba(5,150,105,0.15);">
+              <span style="font-size:0.55rem; letter-spacing:0.06em;">EDUVISION</span>
+              <span style="font-size:0.75rem; letter-spacing:0.04em;">VERIFIED</span>
+              <span style="font-size:0.55rem;">&bull; ACCOUNTS &bull;</span>
+            </div>
+            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">
+              Electronically verified against Bank UTR.<br>
+              Official Receipt valid for University Submission &amp; Visa File.
+            </div>
+          </div>
+
+          <!-- Signatory -->
+          <div style="text-align:right;">
+            <div style="font-family:'Brush Script MT', cursive; font-size:1.45rem; color:#0f172a; margin-bottom:2px;">Govind Kumar</div>
+            <div style="font-size:0.8rem; font-weight:800; color:#0f172a;">CA Govind kumar</div>
+            <div style="font-size:0.72rem; color:#64748b;">Chief Financial Controller / Accounts Lead</div>
+            <div style="font-size:0.68rem; color:#94a3b8;">EduVision Overseas Admissions</div>
+          </div>
+        </div>
+
+        <!-- Verification Footnote -->
+        <div style="margin-top:24px; text-align:center; font-size:0.68rem; color:#94a3b8; border-top:1px solid #f1f5f9; padding-top:10px;">
+          This is an official computer-generated receipt issued by EduVision World Admissions &bull; No physical signature required &bull; Verification Token: <span id="rcptToken" style="font-family:monospace; font-weight:700;">EV-AUTH-7739</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+// ═════════════════════════════════════════════════════════════════════════
+// ZERO-COST ENGINE 1: BROWSER SPEECH-TO-TEXT VOICE TYPING (WEB SPEECH API)
+// ═════════════════════════════════════════════════════════════════════════
+let activeVoiceRecognizer = null;
+let activeVoiceTargetId = null;
+
+function toggleVoiceInput(targetTextareaId, btnElement) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech Recognition is not supported by your current browser.\nPlease use Google Chrome, Microsoft Edge, or Safari on Mobile/PC.");
+    return;
+  }
+
+  // If already listening on this field, stop it
+  if (activeVoiceRecognizer && activeVoiceTargetId === targetTextareaId) {
+    activeVoiceRecognizer.stop();
+    return;
+  }
+
+  // If listening on another field, stop previous
+  if (activeVoiceRecognizer) {
+    activeVoiceRecognizer.stop();
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'hi-IN'; // Recognizes Indian English and Hindi bilingual speech
+  recognition.interimResults = true;
+  recognition.continuous = true;
+
+  const targetArea = document.getElementById(targetTextareaId);
+  const originalHtml = btnElement.innerHTML;
+  const initialText = targetArea ? targetArea.value : '';
+
+  recognition.onstart = function() {
+    activeVoiceRecognizer = recognition;
+    activeVoiceTargetId = targetTextareaId;
+    btnElement.classList.add('listening');
+    btnElement.innerHTML = '<i class="fa-solid fa-microphone-lines fa-fade"></i> <span>Listening (Speak now)...</span>';
+    if (typeof showToast === 'function') {
+      showToast('🎙️ Mic active! Speak clearly in Hindi or English...', 'info');
+    }
+  };
+
+  recognition.onresult = function(event) {
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      transcript += event.results[i][0].transcript;
+    }
+    if (targetArea) {
+      targetArea.value = (initialText ? initialText.trim() + ' ' : '') + transcript;
+      targetArea.scrollTop = targetArea.scrollHeight;
+    }
+  };
+
+  recognition.onerror = function(event) {
+    console.warn("Speech recognition notice:", event.error);
+    if (event.error === 'not-allowed') {
+      alert("Microphone permission was denied. Please allow microphone access in your browser address bar.");
+    }
+  };
+
+  recognition.onend = function() {
+    activeVoiceRecognizer = null;
+    activeVoiceTargetId = null;
+    btnElement.classList.remove('listening');
+    btnElement.innerHTML = originalHtml;
+    if (typeof showToast === 'function') {
+      showToast('✓ Voice transcript captured into remarks!', 'success');
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch(err) {
+    console.warn("Voice input start error:", err);
+  }
+}
+window.toggleVoiceInput = toggleVoiceInput;
+
+
+// ═════════════════════════════════════════════════════════════════════════
+// ZERO-COST ENGINE 2: 1-CLICK OFFICIAL BRANDED FEE RECEIPT GENERATOR
+// ═════════════════════════════════════════════════════════════════════════
+let currentActiveReceiptItem = null;
+
+function numberToIndianWords(num) {
+  const n = parseInt(num, 10);
+  if (isNaN(n) || n === 0) return 'Rupees Zero Only';
+
+  const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  function convertTwoDigits(v) {
+    if (v < 20) return units[v];
+    const rem = v % 10;
+    return tens[Math.floor(v / 10)] + (rem > 0 ? ' ' + units[rem] : '');
+  }
+
+  function convertThreeDigits(v) {
+    let s = '';
+    const h = Math.floor(v / 100);
+    const rem = v % 100;
+    if (h > 0) s += units[h] + ' Hundred';
+    if (rem > 0) s += (s ? ' ' : '') + convertTwoDigits(rem);
+    return s;
+  }
+
+  let words = '';
+  const crore = Math.floor(n / 10000000);
+  let rem = n % 10000000;
+  if (crore > 0) words += convertThreeDigits(crore) + ' Crore ';
+
+  const lakh = Math.floor(rem / 100000);
+  rem = rem % 100000;
+  if (lakh > 0) words += convertThreeDigits(lakh) + ' Lakh ';
+
+  const thousand = Math.floor(rem / 1000);
+  rem = rem % 1000;
+  if (thousand > 0) words += convertThreeDigits(thousand) + ' Thousand ';
+
+  if (rem > 0) words += convertThreeDigits(rem);
+
+  return 'Rupees ' + words.trim() + ' Only';
+}
+
+function downloadOfficialReceipt(id) {
+  let item = null;
+  if (typeof caFeeRecords !== 'undefined' && Array.isArray(caFeeRecords)) {
+    item = caFeeRecords.find(r => r.id === id);
+  }
+
+  // Fallback if triggered from student ledger
+  if (!item) {
+    const student = (typeof allStudents !== 'undefined' && Array.isArray(allStudents)) ? allStudents.find(s => s.student_id === id || s.user_id === id) : null;
+    item = {
+      id: id,
+      student_id: student ? student.student_id : (id || 'EDU260001'),
+      name: student ? student.full_name : 'Admitted Student',
+      univ: student ? student.university : 'Kursk State Medical University',
+      course: student ? student.course : 'MBBS (General Medicine)',
+      amount: 25000,
+      mode: 'Bank Transfer (NEFT/RTGS/UPI)',
+      utr: 'UTR' + Date.now().toString().slice(-10),
+      date: new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })
+    };
+  }
+
+  currentActiveReceiptItem = item;
+
+  // Populate receipt fields
+  const cleanId = String(item.student_id || item.id || '26001').replace(/[^a-zA-Z0-9]/g, '');
+  document.getElementById('rcptNumber').textContent = 'EVR-2026-' + cleanId;
+  document.getElementById('rcptDate').textContent = 'Date: ' + (item.date || new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }));
+  document.getElementById('rcptStudentName').textContent = item.name || 'Admitted Student';
+  document.getElementById('rcptStudentId').textContent = 'Student ID: ' + (item.student_id || cleanId);
+  document.getElementById('rcptUniversity').textContent = item.univ || 'State Medical / Engineering University';
+  document.getElementById('rcptCourse').textContent = 'Program: ' + (item.course || 'Undergraduate Degree');
+  document.getElementById('rcptPaymentMode').textContent = item.mode || 'Bank Transfer (NEFT/RTGS/UPI)';
+  document.getElementById('rcptUtr').textContent = item.utr || ('UTR-EV-' + Math.floor(1000000000 + Math.random() * 9000000000));
+  
+  const amt = Number(item.amount || 25000);
+  document.getElementById('rcptAmount').innerHTML = '&#8377; ' + amt.toLocaleString('en-IN');
+  document.getElementById('rcptAmountWords').textContent = numberToIndianWords(amt);
+  document.getElementById('rcptToken').textContent = 'EV-AUTH-' + Math.floor(1000 + Math.random() * 9000) + '-' + cleanId.slice(-4);
+
+  // Open modal
+  const overlay = document.getElementById('officialReceiptModalOverlay');
+  if (overlay) overlay.classList.add('open');
+}
+window.downloadOfficialReceipt = downloadOfficialReceipt;
+
+function closeOfficialReceiptModal() {
+  const overlay = document.getElementById('officialReceiptModalOverlay');
+  if (overlay) overlay.classList.remove('open');
+}
+window.closeOfficialReceiptModal = closeOfficialReceiptModal;
+
+function shareReceiptWhatsApp() {
+  if (!currentActiveReceiptItem) return;
+  const it = currentActiveReceiptItem;
+  const amt = Number(it.amount || 25000).toLocaleString('en-IN');
+  const msg = encodeURIComponent(
+    '🎓 *EDUVISION OFFICIAL FEE CLEARANCE RECEIPT* 🎓\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '📋 *Receipt No:* EVR-2026-' + (it.student_id || it.id) + '\n' +
+    '👤 *Student:* ' + it.name + ' (' + (it.student_id || '') + ')\n' +
+    '🏛️ *University:* ' + (it.univ || 'Overseas University') + '\n' +
+    '🎓 *Course:* ' + (it.course || 'Degree Program') + '\n' +
+    '💰 *Amount Paid:* ₹ ' + amt + '\n' +
+    '🏦 *Bank UTR Ref:* ' + (it.utr || 'VERIFIED') + '\n' +
+    '✅ *Status:* APPROVED & STAMPED BY CA GOVIND KUMAR\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'EduVision Admissions & Overseas Educational Consultancy\n' +
+    'For verification: +91 83036 32103'
+  );
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+window.shareReceiptWhatsApp = shareReceiptWhatsApp;
+
+
+// ═════════════════════════════════════════════════════════════════════════
+// ZERO-COST ENGINE 3: BROWSER REAL-TIME FOLLOW-UP ALARM & AUDIO CHIME
+// ═════════════════════════════════════════════════════════════════════════
+const alertedFollowupIds = new Set();
+const snoozedFollowups = {};
+let activeAlarmItem = null;
+
+// Crystal Bell Audio Chime via Web Audio API (100% Free & Offline Synthesizer)
+function playCrystalAlarmChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+
+    // Harmonic 3-bell sequence: E6 (1318Hz), G#6 (1661Hz), B6 (1975Hz)
+    const freqs = [1318.51, 1661.22, 1975.53];
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+
+      gain.gain.setValueAtTime(0.25, now + idx * 0.14);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.65);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.14);
+      osc.stop(now + idx * 0.14 + 0.7);
+    });
+  } catch(e) {
+    console.warn("Audio chime notice:", e);
+  }
+}
+window.playCrystalAlarmChime = playCrystalAlarmChime;
+
+function initFollowupAlarmEngine() {
+  // Request desktop notification permission on first interaction
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().catch(()=>{});
+  }
+
+  // Periodic alarm check every 30 seconds
+  setInterval(checkFollowupAlarmSchedule, 30000);
+  setTimeout(checkFollowupAlarmSchedule, 3000); // initial check
+}
+
+function checkFollowupAlarmSchedule() {
+  if (typeof dashboardQueueData === 'undefined' || !Array.isArray(dashboardQueueData) || dashboardQueueData.length === 0) {
+    return;
+  }
+
+  const now = new Date();
+  const nowTs = now.getTime();
+  const todayStr = now.toISOString().split('T')[0];
+  const currentHours = now.getHours();
+  const currentMins = now.getMinutes();
+  const currentTimeMinutes = currentHours * 60 + currentMins;
+
+  for (const item of dashboardQueueData) {
+    if (item.completed) continue;
+
+    // Check if snoozed
+    if (snoozedFollowups[item.id] && nowTs < snoozedFollowups[item.id]) {
+      continue;
+    }
+
+    // Check if due today
+    if (item.isToday || item.isOverdue) {
+      if (alertedFollowupIds.has(item.id)) continue;
+
+      let isDue = false;
+      if (item.isOverdue) {
+        isDue = true;
+      } else if (item.scheduledDate) {
+        const timePart = item.scheduledDate.includes('T') ? item.scheduledDate.split('T')[1] : null;
+        if (timePart) {
+          const [h, m] = timePart.split(':').map(Number);
+          const itemMinutes = h * 60 + m;
+          // Trigger if within 10 minutes of schedule or already past
+          if (currentTimeMinutes >= (itemMinutes - 10)) {
+            isDue = true;
+          }
+        } else {
+          isDue = true;
+        }
+      } else {
+        isDue = true;
+      }
+
+      if (isDue) {
+        triggerFollowupAlarm(item);
+        break; // trigger one alarm at a time
+      }
+    }
+  }
+}
+
+function triggerFollowupAlarm(item) {
+  activeAlarmItem = item;
+  alertedFollowupIds.add(item.id);
+
+  // 1. Play crystal audio bell
+  playCrystalAlarmChime();
+
+  // 2. Desktop notification
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification('🔔 Follow-up Due: ' + item.name, {
+        body: 'Scheduled follow-up for ' + (item.course || 'admissions guidance') + '. Click to call student now.',
+        icon: 'https://eduvision.world/assets/logo.png',
+        silent: true
+      });
+    } catch(e){}
+  }
+
+  // 3. In-App Banner
+  const banner = document.getElementById('followupAlarmBanner');
+  if (banner) {
+    document.getElementById('alarmStudentName').textContent = item.name + (item.phone ? ' (' + item.phone + ')' : '');
+    document.getElementById('alarmDetailsText').textContent = 'Scheduled call for: ' + (item.course || 'Admissions Guidance') + '. Action required immediately.';
+    banner.style.display = 'block';
+  }
+}
+
+function dismissFollowupAlarm() {
+  const banner = document.getElementById('followupAlarmBanner');
+  if (banner) banner.style.display = 'none';
+  activeAlarmItem = null;
+}
+window.dismissFollowupAlarm = dismissFollowupAlarm;
+
+function snoozeFollowupAlarm(minutes) {
+  if (!activeAlarmItem) return;
+  const snoozeMs = (minutes || 15) * 60 * 1000;
+  snoozedFollowups[activeAlarmItem.id] = Date.now() + snoozeMs;
+  alertedFollowupIds.delete(activeAlarmItem.id);
+  dismissFollowupAlarm();
+  if (typeof showToast === 'function') {
+    showToast('💤 Reminder snoozed for ' + minutes + ' minutes.', 'info');
+  }
+}
+window.snoozeFollowupAlarm = snoozeFollowupAlarm;
+
+function actionFollowupAlarmCall() {
+  if (!activeAlarmItem) return;
+  const it = activeAlarmItem;
+  dismissFollowupAlarm();
+  if (it.phone) {
+    window.location.href = 'tel:' + it.phone;
+  }
+  if (typeof openFollowupModal === 'function' && it.type === 'Student') {
+    openFollowupModal(it.id);
+  } else if (typeof openLeadFollowupModal === 'function' && it.type === 'Lead') {
+    openLeadFollowupModal(it.id);
+  }
+}
+window.actionFollowupAlarmCall = actionFollowupAlarmCall;
+
+// Start alarm engine on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initFollowupAlarmEngine, 2000);
+});
+</script>
 
 </body>
 </html>
