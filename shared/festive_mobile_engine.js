@@ -271,40 +271,14 @@
       opacity: 1;
     }
 
-    /* Festive Top/Bottom Greeting Pill */
-    .festive-greeting-pill {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      z-index: 99990;
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      background: linear-gradient(135deg, rgba(30, 20, 10, 0.92) 0%, rgba(20, 10, 15, 0.94) 100%);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 6px 14px 6px 12px;
-      border-radius: 50px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 12px rgba(245, 158, 11, 0.25);
-      color: #fef08a;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transform: translateY(-50px) scale(0.9);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-      user-select: none;
+    /* Never cover navbar login button */
+    #loginNavBtn {
+      position: relative !important;
+      z-index: 900 !important;
     }
-    body.eduvision-festive-active .festive-greeting-pill {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .festive-greeting-pill:hover {
-      box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4), 0 0 18px rgba(225, 29, 72, 0.4);
-      border-color: rgba(251, 191, 36, 0.8);
+    body.eduvision-festive-active #loginNavBtn {
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.45) !important;
+      border-color: rgba(251, 191, 36, 0.8) !important;
     }
     .festive-diya-icon {
       font-size: 1.15rem;
@@ -317,7 +291,7 @@
       100% { transform: scale(1.02) rotate(2deg); filter: drop-shadow(0 0 6px #e11d48); }
     }
 
-    /* Floating Festive Toggle Badge (Bottom Left) */
+    /* Upgraded Festive Badge with Greeting (Bottom Left - Never Blocks Navbar) */
     .festive-toggle-badge {
       position: fixed;
       bottom: 22px;
@@ -325,34 +299,57 @@
       z-index: 99990;
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.90);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      padding: 7px 13px;
+      gap: 9px;
+      background: linear-gradient(135deg, rgba(20, 15, 10, 0.94) 0%, rgba(15, 23, 42, 0.96) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 8px 16px;
       border-radius: 40px;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 12px rgba(245, 158, 11, 0.2);
       color: #f8fafc;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
     .festive-toggle-badge:hover {
-      background: rgba(30, 41, 59, 0.98);
-      border-color: rgba(245, 158, 11, 0.8);
+      background: linear-gradient(135deg, rgba(30, 20, 10, 0.98) 0%, rgba(20, 30, 50, 0.98) 100%);
+      border-color: rgba(251, 191, 36, 0.8);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35);
+      box-shadow: 0 10px 28px rgba(245, 158, 11, 0.35);
+    }
+    .festive-greeting-text {
+      color: #fef08a;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .festive-tag-pill {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde047;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .festive-toggle-badge.is-off .festive-greeting-text {
+      color: #94a3b8;
+    }
+    .festive-toggle-badge.is-off .festive-tag-pill {
+      background: rgba(100, 116, 139, 0.2);
+      border-color: rgba(100, 116, 139, 0.3);
+      color: #94a3b8;
     }
     .festive-toggle-badge .festive-status-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 6px #10b981;
+      box-shadow: 0 0 8px #10b981;
       transition: background 0.3s;
+      flex-shrink: 0;
     }
     .festive-toggle-badge.is-off .festive-status-dot {
       background: #64748b;
@@ -543,8 +540,11 @@
       .festive-toggle-badge {
         bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
         left: 14px !important;
-        padding: 5px 10px !important;
-        font-size: 0.72rem !important;
+        padding: 6px 12px !important;
+        font-size: 0.74rem !important;
+      }
+      .festive-greeting-text {
+        display: none !important;
       }
 
       /* Public mobile bottom dock */
@@ -756,33 +756,18 @@
     }
   }
 
-  // ── 4. FESTIVE GREETING PILL & THEME TOGGLE ──
+  // ── 4. FESTIVE GREETING & THEME TOGGLE (BOTTOM-LEFT, ZERO NAVBAR OVERLAP) ──
   function setupFestiveUI() {
-    // 1. Greeting Pill
-    const greetingPill = document.createElement('div');
-    greetingPill.className = 'festive-greeting-pill';
-    greetingPill.id = 'festiveGreetingPill';
-    greetingPill.title = 'Click to hear festival chime';
-    greetingPill.innerHTML = `
-      <span class="festive-diya-icon">🪔</span>
-      <span>शुभ नवरात्रि एवं दुर्गा पूजा! Happy Navratri 🌸</span>
-    `;
-    greetingPill.addEventListener('click', function() {
-      playAuspiciousFestiveChime();
-      greetingPill.style.transform = 'scale(1.08)';
-      setTimeout(() => greetingPill.style.transform = 'scale(1)', 200);
-    });
-    document.body.appendChild(greetingPill);
-
-    // 2. Bottom-Left Festive Toggle Switch
+    // Safe Bottom-Left Festive Badge (Combined Greeting + Toggle + Chime)
     const toggleBadge = document.createElement('div');
     toggleBadge.className = 'festive-toggle-badge' + (isFestiveActive ? '' : ' is-off');
     toggleBadge.id = 'festiveToggleBadge';
-    toggleBadge.title = 'Toggle Durga Puja & Navratri Festive Mode';
+    toggleBadge.title = 'Click to toggle Durga Puja & Navratri Festive Mode & Chime';
     toggleBadge.innerHTML = `
       <span class="festive-status-dot"></span>
       <span class="festive-diya-icon">🪔</span>
-      <span id="festiveToggleTxt">${isFestiveActive ? 'Festive Mode: ON' : 'Festive Mode: OFF'}</span>
+      <span class="festive-greeting-text">शुभ नवरात्रि एवं दुर्गा पूजा!</span>
+      <span class="festive-tag-pill" id="festiveToggleTxt">${isFestiveActive ? 'Mode: ON' : 'Mode: OFF'}</span>
     `;
 
     toggleBadge.addEventListener('click', function(e) {
@@ -803,14 +788,14 @@
     if (active) {
       document.body.classList.add('eduvision-festive-active');
       if (toggleBadge) toggleBadge.classList.remove('is-off');
-      if (toggleTxt) toggleTxt.textContent = 'Festive Mode: ON';
+      if (toggleTxt) toggleTxt.textContent = 'Mode: ON';
       if (!animFrameId && particleCanvas) {
         initFestiveCanvas();
       }
     } else {
       document.body.classList.remove('eduvision-festive-active');
       if (toggleBadge) toggleBadge.classList.add('is-off');
-      if (toggleTxt) toggleTxt.textContent = 'Festive Mode: OFF';
+      if (toggleTxt) toggleTxt.textContent = 'Mode: OFF';
       if (particleCtx && particleCanvas) {
         particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
       }
