@@ -9637,7 +9637,7 @@ function completeIntroHandover() {
     if (nb) nb.classList.add('visible');
     const fb = document.getElementById('fabDock');
     if (fb) fb.classList.add('show');
-  }, 350);
+  }, 200);
 
   // Final Stage Hide & Hero trigger
   setTimeout(() => {
@@ -9658,6 +9658,23 @@ function completeIntroHandover() {
 function startCinematicIntro() {
   const introEl = document.getElementById('intro');
   if (!introEl) return;
+
+  // Instant 0ms bypass for repeat visits in the same session
+  try {
+    if (sessionStorage.getItem('eduvision_intro_seen') === 'true') {
+      introEl.style.display = 'none';
+      document.body.classList.remove('loading');
+      const nb = document.getElementById('navbar');
+      if (nb) nb.classList.add('visible');
+      if (typeof startHero === 'function') startHero();
+      const ct = document.getElementById('chatToggle');
+      if (ct) {
+        ct.classList.add('visible');
+        if (typeof positionChatToggleAboveFabDock === 'function') positionChatToggleAboveFabDock();
+      }
+      return;
+    }
+  } catch(e) {}
 
   const laser = document.getElementById('laser');
   const glassPod = document.getElementById('glassPod');
@@ -9706,7 +9723,7 @@ function startCinematicIntro() {
               if (introEl.dataset.exited !== 'true') {
                 completeIntroHandover();
               }
-            }, (isMobile ? 700 : 2200));
+            }, (isMobile ? 350 : 650));
 
           }, 300);
 
@@ -9714,9 +9731,9 @@ function startCinematicIntro() {
 
       }, 350);
 
-    }, 700);
+    }, 400);
 
-  }, 250);
+  }, 150);
 
   // Safety fallback
   setTimeout(() => {

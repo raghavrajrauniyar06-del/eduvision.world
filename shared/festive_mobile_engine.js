@@ -244,6 +244,28 @@
       --festive-marigold: #fbbf24;
     }
 
+    /* Auspicious Festive Navbar Aura */
+    body.eduvision-festive-active nav {
+      border-bottom: 2px solid rgba(245, 158, 11, 0.45) !important;
+      box-shadow: 0 4px 24px rgba(245, 158, 11, 0.22) !important;
+    }
+
+    /* Hero Festive Tag */
+    body.eduvision-festive-active .hero-default-text {
+      display: none !important;
+    }
+    body.eduvision-festive-active .hero-festive-tag {
+      display: inline-block !important;
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #fb7185 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+    body.eduvision-festive-active #hero {
+      background: radial-gradient(circle at 50% 18%, rgba(245, 158, 11, 0.14), rgba(225, 29, 72, 0.06), transparent 75%) !important;
+    }
+
     body.eduvision-festive-active .btn-primary,
     body.eduvision-festive-active .apply-glow,
     body.eduvision-festive-active .portal-modal-close:hover {
@@ -603,7 +625,7 @@
       if (ctx.state === 'suspended') ctx.resume();
 
       // Pentatonic temple bell chord: G4 (392Hz), C5 (523Hz), E5 (659Hz), G5 (784Hz)
-      const frequencies = [392, 523.25, 659.25, 783.99];
+      const frequencies = [392, 493.88, 587.33, 783.99, 1174.66]; // Sacred Temple Bell Harmonics
       const now = ctx.currentTime;
 
       frequencies.forEach((freq, idx) => {
@@ -635,6 +657,70 @@
   let particleCtx = null;
   let particles = [];
   let animFrameId = null;
+
+  // Interactive Celebratory Pushp-Varsha & Sparkle Burst
+  class BurstParticle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 7 + 3;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed - 2.5; // Upward initial launch
+      this.gravity = 0.18;
+      this.rot = Math.random() * 360;
+      this.vRot = (Math.random() - 0.5) * 6;
+      this.size = Math.random() * 12 + 8;
+      this.life = 1;
+      this.decay = Math.random() * 0.015 + 0.012;
+      this.type = Math.random() > 0.4 ? 'petal' : (Math.random() > 0.5 ? 'sparkle' : 'diya');
+      this.color = Math.random() > 0.5 ? '#f59e0b' : (Math.random() > 0.5 ? '#e11d48' : '#fbbf24');
+    }
+    update() {
+      this.vy += this.gravity;
+      this.vx *= 0.98;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.rot += this.vRot;
+      this.life -= this.decay;
+    }
+    draw(ctx) {
+      if (this.life <= 0) return;
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate((this.rot * Math.PI) / 180);
+      ctx.globalAlpha = Math.max(0, this.life);
+
+      if (this.type === 'petal') {
+        const rad = this.size;
+        ctx.beginPath();
+        ctx.moveTo(0, -rad);
+        ctx.bezierCurveTo(rad * 0.8, -rad * 0.5, rad * 0.8, rad * 0.5, 0, rad);
+        ctx.bezierCurveTo(-rad * 0.8, rad * 0.5, -rad * 0.8, -rad * 0.5, 0, -rad);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      } else {
+        const s = this.size * 0.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, s, 0, Math.PI * 2);
+        ctx.fillStyle = '#fde047';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  let burstParticles = [];
+
+  function triggerFestiveCelebrationBurst(x, y) {
+    if (!particleCanvas) initFestiveCanvas();
+    const count = window.innerWidth < 768 ? 20 : 35;
+    for (let i = 0; i < count; i++) {
+      burstParticles.push(new BurstParticle(x || window.innerWidth / 2, y || window.innerHeight / 2));
+    }
+  }
 
   class FestiveParticle {
     constructor(w, h) {
@@ -748,6 +834,13 @@
         particles[i].update(w, h);
         particles[i].draw(particleCtx);
       }
+      for (let i = burstParticles.length - 1; i >= 0; i--) {
+        burstParticles[i].update();
+        burstParticles[i].draw(particleCtx);
+        if (burstParticles[i].life <= 0) {
+          burstParticles.splice(i, 1);
+        }
+      }
       animFrameId = requestAnimationFrame(loop);
     }
 
@@ -772,8 +865,13 @@
 
     toggleBadge.addEventListener('click', function(e) {
       e.stopPropagation();
-      setFestiveMode(!isFestiveActive);
+      const rect = toggleBadge.getBoundingClientRect();
+      const nextActive = !isFestiveActive;
+      setFestiveMode(nextActive);
       playAuspiciousFestiveChime();
+      if (nextActive) {
+        triggerFestiveCelebrationBurst(rect.left + rect.width / 2, rect.top);
+      }
     });
     document.body.appendChild(toggleBadge);
   }
@@ -991,6 +1089,7 @@
     setMode: setFestiveMode,
     isFestive: () => isFestiveActive,
     playChime: playAuspiciousFestiveChime,
-    refreshTables: enhanceAllTablesForMobile
+    refreshTables: enhanceAllTablesForMobile,
+    celebrate: triggerFestiveCelebrationBurst
   };
 })();
