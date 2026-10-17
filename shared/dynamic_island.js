@@ -451,19 +451,19 @@ document.addEventListener("DOMContentLoaded", function () {
         overflow: visible !important;
         margin-bottom: 15px !important;
       }
-      table.data-table {
+      table.data-table, table.crm-data-table, table.admin-roster-table, table.crm-pipeline-table, table.team-grid-table {
         display: block !important;
         width: 100% !important;
         overflow: visible !important;
       }
-      table.data-table thead {
+      table.data-table thead, table.crm-data-table thead, table.admin-roster-table thead, table.crm-pipeline-table thead, table.team-grid-table thead {
         display: none !important;
       }
-      table.data-table tbody {
+      table.data-table tbody, table.crm-data-table tbody, table.admin-roster-table tbody, table.crm-pipeline-table tbody, table.team-grid-table tbody {
         display: block !important;
         width: 100% !important;
       }
-      table.data-table tr {
+      table.data-table tr, table.crm-data-table tr, table.admin-roster-table tr, table.crm-pipeline-table tr, table.team-grid-table tr {
         display: block !important;
         width: 100% !important;
         background: #0f172a !important; /* Premium dark background */
@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", function () {
         box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         box-sizing: border-box !important;
       }
-      table.data-table td {
+      table.data-table td, table.crm-data-table td, table.admin-roster-table td, table.crm-pipeline-table td, table.team-grid-table td {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
@@ -486,12 +486,12 @@ document.addEventListener("DOMContentLoaded", function () {
         box-sizing: border-box !important;
         white-space: normal !important;
       }
-      table.data-table td:last-child {
+      table.data-table td:last-child, table.crm-data-table td:last-child, table.admin-roster-table td:last-child, table.crm-pipeline-table td:last-child, table.team-grid-table td:last-child {
         border-bottom: none !important;
         padding-top: 10px !important;
         justify-content: flex-end !important;
       }
-      table.data-table td::before {
+      table.data-table td::before, table.crm-data-table td::before, table.admin-roster-table td::before, table.crm-pipeline-table td::before, table.team-grid-table td::before {
         content: attr(data-label);
         font-weight: 600 !important;
         color: #94a3b8 !important; /* var(--text-muted) */
@@ -521,6 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
           Today's Briefing <span style="font-size:0.58rem;opacity:0.5;margin-left:4px">v20</span>
         </div>
         <div class="di-header-actions">
+          <button class="di-festive-btn" onclick="if(window.EduFestiveEngine) window.EduFestiveEngine.toggle();" title="Toggle Durga Puja and Navratri Festive Mode" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);border-radius:50%;width:24px;height:24px;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">🪔</button>
           <button class="di-refresh-btn" onclick="diRefresh(event)" title="Refresh">↻</button>
           <button class="di-collapse-btn" onclick="diCollapse(event)" title="Minimize">▼</button>
         </div>

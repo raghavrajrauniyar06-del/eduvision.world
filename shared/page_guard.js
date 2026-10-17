@@ -675,5 +675,25 @@
     get404Url: compute404Url
   };
 
+  // ── AUTO-HYDRATE GLOBAL FESTIVE & MOBILE SMOOTH UX ENGINE ──
+  (function initFestiveMobileLoader() {
+    try {
+      if (window.__eduvisionFestiveMobileEngineLoaded) return;
+      const curPath = window.location.pathname.toLowerCase();
+      const isSub = curPath.includes('/admin/') || 
+                    curPath.includes('/counsellor/') || 
+                    curPath.includes('/teamleader/') || 
+                    curPath.includes('/super-admin/') || 
+                    curPath.includes('/branch/') || 
+                    curPath.includes('/associate/') || 
+                    curPath.includes('/university/') || 
+                    curPath.includes('/student/');
+      const script = document.createElement('script');
+      script.src = (isSub ? '../shared/' : 'shared/') + 'festive_mobile_engine.js?v=20261017';
+      script.defer = true;
+      document.head.appendChild(script);
+    } catch(e) {}
+  })();
+
   console.log('🛡️ [EduPageGuard] Enterprise Kill-Switch Engine initialized under CTO Raghav authority.');
 })();
