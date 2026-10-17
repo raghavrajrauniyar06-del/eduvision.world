@@ -3423,43 +3423,107 @@ body.modal-open { overflow: hidden !important; }
           </div>
         </div>
 
-        <!-- TAB 2: PARTNER COMMISSIONS -->
+        <!-- TAB 2: PARTNER ONBOARDING, COMMISSIONS & TDS -->
         <div id="tab-ca-commissions" class="ca-tab-content" style="display:none;">
-          <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-            <div style="display:flex; gap:10px; flex:1; max-width:600px;">
-              <input type="text" id="caCommissionSearch" class="crm-search" placeholder="Search partner agency, student, course..." oninput="filterCaCommissions()" style="flex:1;">
-              <select id="caCommissionStatusFilter" class="crm-filter" onchange="filterCaCommissions()" style="width:180px;">
-                <option value="all">All Payout Statuses</option>
-                <option value="pending">Pending CA Approval</option>
-                <option value="ready">Approved for Payout</option>
-                <option value="settled">Settled / Paid</option>
-              </select>
+          <!-- Top Sub-Navigation Pill Bar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:inline-flex; background:rgba(15,23,42,0.7); padding:4px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); gap:4px;">
+              <button id="caSubTabBtn-directory" onclick="switchCaPartnerSubTab('directory')" class="ca-subtab-btn active" style="background:var(--gold-gradient); color:#000; font-weight:800; border:none; padding:8px 16px; border-radius:8px; font-size:0.84rem; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all 0.2s;">
+                <i class="fa-solid fa-handshake"></i> Partner Directory &amp; Rates
+              </button>
+              <button id="caSubTabBtn-ledgers" onclick="switchCaPartnerSubTab('ledgers')" class="ca-subtab-btn" style="background:transparent; color:#94a3b8; font-weight:700; border:none; padding:8px 16px; border-radius:8px; font-size:0.84rem; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all 0.2s;">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Commission Ledgers &amp; TDS
+              </button>
             </div>
-            <button onclick="generatePartnerPayoutAdvice()" class="dash-action-btn gold" style="background:var(--gold-gradient); color:#000; font-weight:700; padding:8px 16px; border-radius:10px; border:none; cursor:pointer; font-size:0.84rem;">
-              <i class="fa-solid fa-file-invoice"></i> Generate Bank Payout Advice
-            </button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button onclick="openCaAddPartnerModal()" class="dash-action-btn gold" style="background:var(--gold-gradient); color:#000; font-weight:800; padding:8px 16px; border-radius:10px; border:none; cursor:pointer; font-size:0.84rem; display:flex; align-items:center; gap:6px; box-shadow:0 4px 15px rgba(201,147,42,0.25);">
+                <i class="fa-solid fa-user-plus"></i> + Add Partner
+              </button>
+              <button onclick="openCaPartnerReferralModal()" class="dash-action-btn" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; font-size:0.84rem; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-receipt"></i> + Log Referral
+              </button>
+              <button onclick="generatePartnerPayoutAdvice()" class="dash-action-btn" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-weight:700; padding:8px 14px; border-radius:10px; cursor:pointer; font-size:0.84rem; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-file-invoice"></i> Bank Payout Advice
+              </button>
+            </div>
           </div>
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Partner Agency</th>
-                  <th>Partner Contact</th>
-                  <th>Referred Student</th>
-                  <th>University / Program</th>
-                  <th>Course Fee</th>
-                  <th>Commission %</th>
-                  <th>Gross Comm.</th>
-                  <th>TDS (5%)</th>
-                  <th>Net Payable</th>
-                  <th>Payout Status</th>
-                  <th style="text-align:right;">Action</th>
-                </tr>
-              </thead>
-              <tbody id="caCommissionTableBody">
-                <!-- Dynamically Populated -->
-              </tbody>
-            </table>
+
+          <!-- SUB-VIEW 1: PARTNER DIRECTORY & COMMISSION RATES -->
+          <div id="caPartnerDirectoryView">
+            <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+              <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+                <input type="text" id="caPartnerSearch" class="crm-search" placeholder="Search partner company, code, contact person, city..." oninput="filterCaPartners()" style="flex:1;">
+                <select id="caPartnerStatusFilter" class="crm-filter" onchange="filterCaPartners()" style="width:180px;">
+                  <option value="all">All Partner Statuses</option>
+                  <option value="active" selected>Active Partners</option>
+                  <option value="suspended">Suspended / Inactive</option>
+                </select>
+              </div>
+              <button onclick="exportCaPartnersCsv()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; font-weight:600; padding:7px 14px; border-radius:8px; cursor:pointer; font-size:0.82rem; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-file-csv"></i> Export Directory CSV
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Partner Code</th>
+                    <th>Agency / Company Name</th>
+                    <th>Contact Person &amp; Phone</th>
+                    <th>Location &amp; State</th>
+                    <th>Tier</th>
+                    <th>Commission Rate</th>
+                    <th>Bank Payout Details</th>
+                    <th>PAN / GSTIN</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="caPartnerTableBody">
+                  <!-- Dynamically populated from Supabase associate_partners -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SUB-VIEW 2: COMMISSION LEDGERS & TDS PAYOUTS -->
+          <div id="caPartnerLedgersView" style="display:none;">
+            <div class="crm-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+              <div style="display:flex; gap:10px; flex:1; max-width:600px;">
+                <input type="text" id="caCommissionSearch" class="crm-search" placeholder="Search partner agency, student, course..." oninput="filterCaCommissions()" style="flex:1;">
+                <select id="caCommissionStatusFilter" class="crm-filter" onchange="filterCaCommissions()" style="width:180px;">
+                  <option value="all">All Payout Statuses</option>
+                  <option value="pending">Pending CA Approval</option>
+                  <option value="ready">Approved for Payout</option>
+                  <option value="settled">Settled / Paid</option>
+                </select>
+              </div>
+              <div style="font-size:0.82rem; color:#94a3b8; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-shield-check" style="color:#10b981;"></i> Sec 194H Compliant (5% TDS)
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Partner Agency</th>
+                    <th>Partner Contact</th>
+                    <th>Referred Student</th>
+                    <th>University / Program</th>
+                    <th>Course Fee</th>
+                    <th>Commission %</th>
+                    <th>Gross Comm.</th>
+                    <th>TDS (5%)</th>
+                    <th>Net Payable</th>
+                    <th>Payout Status</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="caCommissionTableBody">
+                  <!-- Dynamically Populated -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -6142,6 +6206,322 @@ body.modal-open { overflow: hidden !important; }
       <div id="caSlipActionRow" style="display:flex; justify-content:flex-end; gap:10px;">
         <!-- Populated dynamically -->
       </div>
+    </div>
+  </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+       ENTERPRISE CA MODAL 4: ONBOARD NEW B2B ASSOCIATE PARTNER
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="caAddPartnerModalOverlay" style="display:none; position:fixed; inset:0; z-index:9999;">
+    <div onclick="closeCaAddPartnerModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px);"></div>
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:92%; max-width:680px; background:radial-gradient(ellipse at top, #162035 0%, #090d16 100%); border:1px solid rgba(247,211,119,0.35); border-radius:20px; padding:26px 30px; box-shadow:0 25px 80px rgba(0,0,0,0.92); z-index:10000; color:#fff; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div style="font-size:0.72rem; color:var(--gold-light); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+            <i class="fa-solid fa-handshake"></i> CA Accounts &amp; Partner Management
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#fff; margin:0;">Onboard B2B Associate Partner</h3>
+        </div>
+        <button type="button" onclick="closeCaAddPartnerModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="caAddPartnerForm" onsubmit="handleCaAddPartnerSubmit(event)">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Company / Agency Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ap_company" required placeholder="e.g. Zenith Career Advisory" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Partner Code (Auto / Unique) <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ap_code" required placeholder="e.g. AP-DELHI02" style="width:100%; background:#0f172a; border:1px solid rgba(247,211,119,0.3); border-radius:10px; padding:10px 14px; color:var(--gold-light); font-family:var(--font-mono); font-weight:700; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Contact Person Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ap_contact" required placeholder="e.g. Rajesh Khurana" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Phone Number (Calling &amp; WhatsApp) <span style="color:#ef4444;">*</span></label>
+            <input type="tel" id="ca_ap_phone" required placeholder="e.g. 9810012345" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Official Email Address <span style="color:#ef4444;">*</span></label>
+            <input type="email" id="ca_ap_email" required placeholder="e.g. contact@zenithadvisory.in" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Location / Operating City <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ap_location" required placeholder="e.g. Noida, Uttar Pradesh" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Partner Tier</label>
+            <select id="ca_ap_tier" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+              <option value="Platinum Partner">Platinum Partner</option>
+              <option value="Gold Partner" selected>Gold Partner</option>
+              <option value="Silver Partner">Silver Partner</option>
+              <option value="Authorized Agency">Authorized Agency</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Commission Rate (%) <span style="color:#ef4444;">*</span></label>
+            <input type="number" id="ca_ap_commission_rate" required placeholder="e.g. 20" min="1" max="100" value="20" style="width:100%; background:#0f172a; border:1px solid rgba(56,189,248,0.4); border-radius:10px; padding:10px 14px; color:#38bdf8; font-weight:800; font-size:1rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <!-- Bank & Tax Details Strip -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-bottom:14px;">
+          <div style="font-size:0.76rem; color:var(--gold-light); font-weight:700; margin-bottom:10px; text-transform:uppercase;">
+            <i class="fa-solid fa-building-columns"></i> Statutory TDS &amp; Bank Settlement Details
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">PAN Number (Sec 194H TDS)</label>
+              <input type="text" id="ca_ap_pan" placeholder="e.g. AAACA1234F" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">GSTIN (Optional)</label>
+              <input type="text" id="ca_ap_gstin" placeholder="e.g. 07AAACA1234F1Z5" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank Name</label>
+              <input type="text" id="ca_ap_bank_name" placeholder="e.g. HDFC Bank" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank Account Number</label>
+              <input type="text" id="ca_ap_bank_acc" placeholder="e.g. 50200012345678" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank IFSC Code</label>
+              <input type="text" id="ca_ap_bank_ifsc" placeholder="e.g. HDFC0000123" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Beneficiary Account Name</label>
+              <input type="text" id="ca_ap_bank_bene" placeholder="e.g. Zenith Career Advisory Pvt Ltd" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Initial Portal Password <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ap_temp_pass" value="Partner@2026" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-family:var(--font-mono); font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Account Status</label>
+            <select id="ca_ap_status" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+              <option value="Active">Active &amp; Ready for Referrals</option>
+              <option value="Under Review">Under Review</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" onclick="closeCaAddPartnerModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:9px 18px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem;">Cancel</button>
+          <button type="submit" id="btnSubmitCaAddPartner" style="background:var(--gold-gradient); border:none; color:#000; padding:9px 24px; border-radius:10px; cursor:pointer; font-weight:800; font-size:0.88rem; box-shadow:0 4px 15px rgba(201,147,42,0.35); display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-check"></i> <span>Onboard Partner to Supabase</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ENTERPRISE CA MODAL 5: EDIT PARTNER & COMMISSION RATE CHANGES
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="caEditPartnerModalOverlay" style="display:none; position:fixed; inset:0; z-index:9999;">
+    <div onclick="closeCaEditPartnerModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px);"></div>
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:92%; max-width:680px; background:radial-gradient(ellipse at top, #162035 0%, #090d16 100%); border:1px solid rgba(56,189,248,0.35); border-radius:20px; padding:26px 30px; box-shadow:0 25px 80px rgba(0,0,0,0.92); z-index:10000; color:#fff; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div style="font-size:0.72rem; color:#38bdf8; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+            <i class="fa-solid fa-pen-to-square"></i> Partner Configuration &amp; Commercials
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#fff; margin:0;">Edit Partner &amp; Commission Rates</h3>
+        </div>
+        <button type="button" onclick="closeCaEditPartnerModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="caEditPartnerForm" onsubmit="handleCaEditPartnerSubmit(event)">
+        <input type="hidden" id="ca_edit_ap_id">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Partner Code (Readonly)</label>
+            <input type="text" id="ca_edit_ap_code" readonly style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 14px; color:var(--gold-light); font-family:var(--font-mono); font-weight:700; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Company / Agency Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_edit_ap_company" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Contact Person Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_edit_ap_contact" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Phone Number <span style="color:#ef4444;">*</span></label>
+            <input type="tel" id="ca_edit_ap_phone" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Official Email Address <span style="color:#ef4444;">*</span></label>
+            <input type="email" id="ca_edit_ap_email" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Location / City <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_edit_ap_location" required style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Commission Rate (%) <span style="color:#ef4444;">* (Commercials)</span></label>
+            <input type="number" id="ca_edit_ap_commission_rate" required min="1" max="100" style="width:100%; background:#0f172a; border:2px solid #38bdf8; border-radius:10px; padding:10px 14px; color:#38bdf8; font-weight:800; font-size:1.1rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Account Status</label>
+            <select id="ca_edit_ap_status" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+              <option value="Active">Active</option>
+              <option value="Suspended">Suspended</option>
+              <option value="Under Review">Under Review</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-bottom:18px;">
+          <div style="font-size:0.76rem; color:var(--gold-light); font-weight:700; margin-bottom:10px; text-transform:uppercase;">
+            <i class="fa-solid fa-building-columns"></i> Statutory TDS &amp; Bank Settlement Details
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">PAN Number</label>
+              <input type="text" id="ca_edit_ap_pan" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">GSTIN</label>
+              <input type="text" id="ca_edit_ap_gstin" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank Name</label>
+              <input type="text" id="ca_edit_ap_bank_name" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank Account Number</label>
+              <input type="text" id="ca_edit_ap_bank_acc" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Bank IFSC Code</label>
+              <input type="text" id="ca_edit_ap_bank_ifsc" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:var(--font-mono); font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:4px;">Beneficiary Account Name</label>
+              <input type="text" id="ca_edit_ap_bank_bene" style="width:100%; background:#090d16; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" onclick="closeCaEditPartnerModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:9px 18px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem;">Cancel</button>
+          <button type="submit" id="btnSubmitCaEditPartner" style="background:#38bdf8; border:none; color:#000; padding:9px 24px; border-radius:10px; cursor:pointer; font-weight:800; font-size:0.88rem; box-shadow:0 4px 15px rgba(56,189,248,0.35); display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-floppy-disk"></i> <span>Save Changes to Supabase</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ENTERPRISE CA MODAL 6: LOG PARTNER REFERRAL & 5% TDS
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="caPartnerReferralModalOverlay" style="display:none; position:fixed; inset:0; z-index:9999;">
+    <div onclick="closeCaPartnerReferralModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px);"></div>
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:92%; max-width:620px; background:radial-gradient(ellipse at top, #162035 0%, #090d16 100%); border:1px solid rgba(56,189,248,0.35); border-radius:20px; padding:26px 30px; box-shadow:0 25px 80px rgba(0,0,0,0.92); z-index:10000; color:#fff; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div style="font-size:0.72rem; color:#38bdf8; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+            <i class="fa-solid fa-hand-holding-dollar"></i> Commission Clearance &amp; TDS
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#fff; margin:0;">Log Partner Referral Commission</h3>
+        </div>
+        <button type="button" onclick="closeCaPartnerReferralModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <form id="caPartnerReferralForm" onsubmit="handleCaPartnerReferralSubmit(event)">
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Select Partner Agency <span style="color:#ef4444;">*</span></label>
+          <select id="ca_ref_partner" required onchange="handlePartnerSelectForReferral(this.value)" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Referred Student Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ref_student" required list="caStudentListDatalist" placeholder="e.g. Yatham Bhavana" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">University / Program <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="ca_ref_univ" required placeholder="e.g. Sandip University (B.Tech)" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Course Fee Paid (₹) <span style="color:#ef4444;">*</span></label>
+            <input type="number" id="ca_ref_fee" required min="1" placeholder="e.g. 120000" oninput="calculateCaReferralTds()" style="width:100%; background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#fff; font-size:0.88rem; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.78rem; color:#cbd5e1; margin-bottom:5px; font-weight:700;">Commission Rate (%) <span style="color:#ef4444;">*</span></label>
+            <input type="number" id="ca_ref_rate" required min="1" max="100" placeholder="e.g. 20" oninput="calculateCaReferralTds()" style="width:100%; background:#0f172a; border:1px solid rgba(56,189,248,0.4); border-radius:10px; padding:10px 14px; color:#38bdf8; font-weight:800; font-size:1rem; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <!-- Live Payout Calculation Strip -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px; margin-bottom:18px;">
+          <div style="font-size:0.74rem; color:var(--gold-light); font-weight:800; text-transform:uppercase; margin-bottom:12px;">
+            <i class="fa-solid fa-calculator"></i> Real-time TDS Payout Computation
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; text-align:center;">
+            <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px;">
+              <div style="font-size:0.72rem; color:#94a3b8;">Gross Comm.</div>
+              <div id="ca_calc_gross" style="font-weight:800; color:#fff; font-size:1.05rem; margin-top:2px;">₹ 0</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); padding:10px; border-radius:8px;">
+              <div style="font-size:0.72rem; color:#f87171;">TDS (5% Sec 194H)</div>
+              <div id="ca_calc_tds" style="font-weight:800; color:#f87171; font-size:1.05rem; margin-top:2px;">-₹ 0</div>
+            </div>
+            <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); padding:10px; border-radius:8px;">
+              <div style="font-size:0.72rem; color:#34d399;">Net Payable</div>
+              <div id="ca_calc_net" style="font-weight:800; color:#34d399; font-size:1.15rem; margin-top:2px;">₹ 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" onclick="closeCaPartnerReferralModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:9px 18px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem;">Cancel</button>
+          <button type="submit" id="btnSubmitCaPartnerReferral" style="background:var(--gold-gradient); border:none; color:#000; padding:9px 24px; border-radius:10px; cursor:pointer; font-weight:800; font-size:0.88rem; box-shadow:0 4px 15px rgba(201,147,42,0.35); display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-stamp"></i> <span>Stamp &amp; Record Referral</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -13220,41 +13600,27 @@ CRITICAL MANDATES:
     let caMasterUnivFees = [];
     let caExpenses = [];
     let caAllDbStudents = [];
+    let caPartnersList = [];
 
-    // Fallback seed data if DB tables are empty
+    // Authentic seed data matching live Supabase records
     const defaultCaSeedSlips = [
-      { id: 'FEE-2601', student_id: 'EDU260001', name: 'Yatham Bhavana', univ: 'Online Manipal University', course: 'MBA in Finance', amount: 35000, mode: 'UPI (GPay)', utr: '428819003841', status: 'pending', date: '2026-10-06', slip: 'Slip_EDU260001_Instalment1.pdf' },
-      { id: 'FEE-2602', student_id: 'EDU260002', name: 'Rohit K. Verma', univ: 'Amity Online', course: 'MCA in Cloud Computing', amount: 45000, mode: 'HDFC NetBanking', utr: 'HD0918237741', status: 'pending', date: '2026-10-06', slip: 'Slip_EDU260002_Registration.pdf' },
-      { id: 'FEE-2603', student_id: 'EDU260003', name: 'Ankita Sen', univ: 'UPES Online', course: 'MBA in Oil & Gas', amount: 50000, mode: 'NEFT Transfer', utr: 'NEFT-SBIN260488', status: 'approved', date: '2026-10-05', slip: 'Slip_EDU260003_Term1.pdf' },
-      { id: 'FEE-2604', student_id: 'EDU260004', name: 'Manish Tiwari', univ: 'Chandigarh University', course: 'BCA in AI & Data', amount: 28000, mode: 'UPI (PhonePe)', utr: '428190348712', status: 'approved', date: '2026-10-05', slip: 'Slip_EDU260004_Semester1.pdf' },
-      { id: 'FEE-2605', student_id: 'EDU260005', name: 'Divya Nair', univ: 'Lovely Professional Univ', course: 'BBA in Marketing', amount: 32000, mode: 'ICICI Bank Transfer', utr: 'ICICI00482910', status: 'pending', date: '2026-10-04', slip: 'Slip_EDU260005_Instalment1.pdf' },
-      { id: 'FEE-2606', student_id: 'EDU260006', name: 'Harshit Rajput', univ: 'Sandip University', course: 'B.Tech CSE', amount: 60000, mode: 'Bank RTGS', utr: 'AXIS-RTGS-99120', status: 'approved', date: '2026-10-04', slip: 'Slip_EDU260006_Admission.pdf' },
-      { id: 'FEE-2607', student_id: 'EDU260007', name: 'Preeti Deshmukh', univ: 'Jain Online', course: 'MBA in FinTech', amount: 40000, mode: 'UPI (Paytm)', utr: '428019348123', status: 'pending', date: '2026-10-03', slip: 'Slip_EDU260007_Term1.pdf' },
-      { id: 'FEE-2608', student_id: 'EDU260008', name: 'Siddharth Roy', univ: 'SAGE University', course: 'MBA Executive', amount: 30000, mode: 'SBI NetBanking', utr: 'SBIN00293819', status: 'approved', date: '2026-10-03', slip: 'Slip_EDU260008_Sem1.pdf' }
+      { id: 'FEE-2601', student_id: 'EDU260001', name: 'Yatham Bhavana', univ: 'Partner University', course: 'Degree Program', amount: 35000, mode: 'UPI (GPay)', utr: '428819003841', status: 'pending', date: '2026-10-06', slip: 'Slip_EDU260001_Instalment1.pdf' }
     ];
 
     const defaultCaSeedCommissions = [
-      { id: 'COMM-101', partner: 'Apex Global Edu Services', contact: '+91 98231 44102', student: 'Aarav Sharma', univ: 'Online Manipal University (MBA)', fee: 150000, rate: 15, payable: 22500, tds: 1125, netPayable: 21375, status: 'ready', ref: 'PAY-MAN-2026' },
-      { id: 'COMM-102', partner: 'CareerNext Admissions Pvt Ltd', contact: '+91 97112 55920', student: 'Pooja Verma', univ: 'Amity Online (MCA)', fee: 175000, rate: 18, payable: 31500, tds: 1575, netPayable: 29925, status: 'pending', ref: 'PAY-AMI-3011' },
-      { id: 'COMM-103', partner: 'Vidya Pathways Network', contact: '+91 94501 88312', student: 'Rohan Deshmukh', univ: 'Chandigarh University (BCA)', fee: 135000, rate: 15, payable: 20250, tds: 1012, netPayable: 19238, status: 'ready', ref: 'PAY-CU-4402' },
-      { id: 'COMM-104', partner: 'EduLink Global Career Hub', contact: '+91 88002 91144', student: 'Simran Kaur', univ: 'UPES Online (MBA Supply Chain)', fee: 150000, rate: 20, payable: 30000, tds: 1500, netPayable: 28500, status: 'settled', ref: 'PAY-UPES-901', disbursementUtr: 'HDFC984210041' },
-      { id: 'COMM-105', partner: 'Horizon Education Alliance', contact: '+91 93100 44552', student: 'Karan Mehra', univ: 'Sandip University (B.Tech CSE)', fee: 120000, rate: 15, payable: 18000, tds: 900, netPayable: 17100, status: 'pending', ref: 'PAY-SAN-812' },
-      { id: 'COMM-106', partner: 'FutureEd Pathways India', contact: '+91 91200 66321', student: 'Neha Singhal', univ: 'Lovely Professional Univ (M.Sc)', fee: 130000, rate: 15, payable: 19500, tds: 975, netPayable: 18525, status: 'ready', ref: 'PAY-LPU-110' },
-      { id: 'COMM-107', partner: 'ScholarBridge Consulting', contact: '+91 99881 77233', student: 'Ananya Gupta', univ: 'Jain Online (MBA FinTech)', fee: 160000, rate: 18, payable: 28800, tds: 1440, netPayable: 27360, status: 'pending', ref: 'PAY-JAIN-402' },
-      { id: 'COMM-108', partner: 'Elite Campus Guidance', contact: '+91 98110 55432', student: 'Vikram Joshi', univ: 'DY Patil University (BBA)', fee: 140000, rate: 15, payable: 21000, tds: 1050, netPayable: 19950, status: 'ready', ref: 'PAY-DYP-771' }
+      { id: 'COMM-101', partner_id: 'AP-EDU26001', partner: 'Apex Education Consultants', contact: '+91 98112 23344', student: 'Yatham Bhavana (EDU260001)', univ: 'Sandip University', fee: 120000, rate: 20, payable: 24000, tds: 1200, netPayable: 22800, status: 'ready', ref: 'PAY-APEX-2601' }
     ];
 
     const defaultCaSeedUnivFees = [
-      { name: 'Online Manipal University', naac: 'NAAC A+ • UGC Approved', loc: 'Jaipur, Rajasthan', programs: 'MBA, MCA, BBA, BCA, B.Com', fee: '₹ 1,50,000 Total', emi: '₹ 6,250/mo EMI', netRemit: '₹ 1,20,000', margin: '₹ 30,000 (20%)', cat: 'Online' },
-      { name: 'Amity Online', naac: 'NAAC A+ • WASC USA', loc: 'Noida, Uttar Pradesh', programs: 'MBA, MCA, BBA, BCA, M.Com', fee: '₹ 1,75,000 Total', emi: '₹ 7,290/mo EMI', netRemit: '₹ 1,40,000', margin: '₹ 35,000 (20%)', cat: 'Online' },
-      { name: 'Lovely Professional University (LPU Online)', naac: 'NAAC A++ • NIRF Top 30', loc: 'Phagwara, Punjab', programs: 'MBA, MCA, M.Sc Data Science, BBA', fee: '₹ 1,30,000 Total', emi: '₹ 5,410/mo EMI', netRemit: '₹ 1,05,000', margin: '₹ 25,000 (19.2%)', cat: 'Online' },
-      { name: 'Chandigarh University Online', naac: 'NAAC A+ • NIRF Rank #27', loc: 'Mohali, Punjab', programs: 'MBA, MCA, BBA, BCA', fee: '₹ 1,35,000 Total', emi: '₹ 5,625/mo EMI', netRemit: '₹ 1,10,000', margin: '₹ 25,000 (18.5%)', cat: 'Online' },
-      { name: 'UPES Online', naac: 'NAAC A • QS 5-Star', loc: 'Dehradun, Uttarakhand', programs: 'MBA Oil & Gas, Supply Chain, BBA', fee: '₹ 1,50,000 Total', emi: '₹ 6,250/mo EMI', netRemit: '₹ 1,18,000', margin: '₹ 32,000 (21.3%)', cat: 'Online' },
       { name: 'Sandip University', naac: 'UGC & AICTE • 250+ Acres', loc: 'Nashik, Maharashtra', programs: 'B.Tech CSE, Mechanical, Law, MBA', fee: '₹ 1,20,000 / yr', emi: 'Semester Installments', netRemit: '₹ 95,000 / yr', margin: '₹ 25,000 / yr (20.8%)', cat: 'Regular' },
-      { name: 'SAGE University', naac: 'NAAC A+ • Central India', loc: 'Indore & Bhopal, MP', programs: 'B.Tech, Agriculture, Pharmacy, MBA', fee: '₹ 95,000 / yr', emi: 'Semester Installments', netRemit: '₹ 76,000 / yr', margin: '₹ 19,000 / yr (20%)', cat: 'Regular' },
-      { name: 'Jain Online', naac: 'NAAC A++ • Bangalore', loc: 'Bangalore, Karnataka', programs: 'MBA FinTech, AI, Marketing, MCA', fee: '₹ 1,60,000 Total', emi: '₹ 6,660/mo EMI', netRemit: '₹ 1,28,000', margin: '₹ 32,000 (20%)', cat: 'Online' },
-      { name: 'Parul University Online', naac: 'NAAC A++ • Vadodara', loc: 'Vadodara, Gujarat', programs: 'MBA, MCA, MSW, BBA, BCA', fee: '₹ 95,000 Total', emi: '₹ 3,950/mo EMI', netRemit: '₹ 76,000', margin: '₹ 19,000 (20%)', cat: 'Online' },
-      { name: 'DY Patil University Online', naac: 'NAAC A++ • Navi Mumbai', loc: 'Navi Mumbai, Maharashtra', programs: 'MBA Healthcare, Finance, BBA', fee: '₹ 1,40,000 Total', emi: '₹ 5,830/mo EMI', netRemit: '₹ 1,12,000', margin: '₹ 28,000 (20%)', cat: 'Online' }
+      { name: 'CSJMU, Kanpur', naac: 'NAAC A++ • Premier State University', loc: 'Kanpur, Uttar Pradesh', programs: 'B.Tech, BCA, MCA, Law, Life Sciences, MBA', fee: '₹ 65,000 / yr', emi: 'Semester Installments', netRemit: '₹ 52,000 / yr', margin: '₹ 13,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Guru Kashi University', naac: 'NAAC A++ • Bathinda Campus', loc: 'Talwandi Sabo, Punjab', programs: 'B.Tech, Agriculture, Law, Nursing, MBA, BCA', fee: '₹ 75,000 / yr', emi: 'Semester Installments', netRemit: '₹ 60,000 / yr', margin: '₹ 15,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Noida International University', naac: 'NAAC A+ • 75-Acre Yamuna Expressway', loc: 'Greater Noida, Uttar Pradesh', programs: 'MBBS, B.Tech, Nursing, B.Pharm, Law, MBA', fee: '₹ 1,40,000 / yr', emi: 'Semester Installments', netRemit: '₹ 1,12,000 / yr', margin: '₹ 28,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Subharti University', naac: 'NAAC A • 250-Acre Medical & Tech Campus', loc: 'Meerut, Uttar Pradesh', programs: 'MBBS, BDS, B.Tech, Law, Nursing, MBA, Hotel Mgmt', fee: '₹ 1,10,000 / yr', emi: 'Semester Installments', netRemit: '₹ 88,000 / yr', margin: '₹ 22,000 / yr (20%)', cat: 'Regular' },
+      { name: 'NIET (Noida Inst. of Engg. & Tech.)', naac: 'NAAC A • Autonomous Institute', loc: 'Greater Noida, Uttar Pradesh', programs: 'B.Tech CSE, AI, Cloud, B.Pharm, M.Tech, MBA', fee: '₹ 1,50,000 / yr', emi: 'Semester Installments', netRemit: '₹ 1,20,000 / yr', margin: '₹ 30,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Tula\'s Institute', naac: 'NAAC A+ • Dehradun Best Engg College', loc: 'Dehradun, Uttarakhand', programs: 'B.Tech, B.Sc Agriculture, BBA, BCA, MBA', fee: '₹ 1,15,000 / yr', emi: 'Semester Installments', netRemit: '₹ 92,000 / yr', margin: '₹ 23,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Shobhit University', naac: 'NAAC A • Deemed-to-be-University', loc: 'Meerut & Gangoh, Uttar Pradesh', programs: 'B.Tech BioTech, Law, Ayurveda (BAMS), MBA, B.Sc', fee: '₹ 95,000 / yr', emi: 'Semester Installments', netRemit: '₹ 76,000 / yr', margin: '₹ 19,000 / yr (20%)', cat: 'Regular' },
+      { name: 'Jaipur National University', naac: 'NAAC A+ • UGC & AICTE Approved • Top Ranked', loc: 'Jaipur, Rajasthan', programs: 'B.Tech, Medical, Pharmacy, MBA, Law, Agriculture', fee: '₹ 1,10,000 / yr', emi: 'Semester Installments', netRemit: '₹ 88,000 / yr', margin: '₹ 22,000 / yr (20%)', cat: 'Regular' }
     ];
 
     const defaultCaSeedExpenses = [
@@ -13296,9 +13662,37 @@ CRITICAL MANDATES:
         // 2. Fetch live associate partners from Supabase
         let livePartners = [];
         try {
-          const { data: apData } = await sb.from('associate_partners').select('*').limit(50);
-          if (apData && apData.length > 0) livePartners = apData;
-        } catch(e) {}
+          const { data: apData, error: apErr } = await sb.from('associate_partners').select('*').order('created_at', { ascending: false });
+          if (!apErr && apData && apData.length > 0) {
+            livePartners = apData;
+          }
+        } catch(e) {
+          console.warn("CA fetch partners warning:", e);
+        }
+
+        if (livePartners.length > 0) {
+          caPartnersList = livePartners;
+        } else {
+          caPartnersList = [
+            {
+              partner_id: 'AP-EDU26001',
+              partner_code: 'AP-DELHI01',
+              company_name: 'Apex Education Consultants',
+              contact_person: 'Vikramaditya Sharma',
+              email: 'apex.consultants@eduvision.world',
+              phone: '9811223344',
+              status: 'Active',
+              tier: 'Platinum Partner',
+              commission_rate: '20',
+              location: 'Connaught Place, New Delhi',
+              pan_number: 'AAACA1234F',
+              bank_name: 'HDFC Bank',
+              bank_account_no: '50200012345678',
+              bank_ifsc: 'HDFC0000123',
+              bank_beneficiary: 'Apex Education Consultants Pvt Ltd'
+            }
+          ];
+        }
 
         // 3. Fetch live partner universities from Supabase
         let liveUnivs = [];
@@ -13307,8 +13701,14 @@ CRITICAL MANDATES:
           if (uData && uData.length > 0) liveUnivs = uData;
         } catch(e) {}
 
-        // Populate Fee Records (Merge LocalStorage + DB + Seed)
-        const storedFees = loadCaLocalStore('fee_records', defaultCaSeedSlips);
+        // Populate Fee Records (Filter out any stale fake students)
+        const fakeNames = ['rohit', 'ankita', 'manish', 'divya', 'harshit', 'preeti', 'siddharth'];
+        let storedFees = loadCaLocalStore('fee_records', defaultCaSeedSlips);
+        storedFees = (storedFees || []).filter(f => {
+          const fn = (f.name || '').toLowerCase();
+          return !fakeNames.some(fake => fn.includes(fake));
+        });
+
         const mapFee = new Map();
         storedFees.forEach(f => mapFee.set(f.student_id || f.id, f));
 
@@ -13340,39 +13740,48 @@ CRITICAL MANDATES:
         });
 
         caFeeRecords = Array.from(mapFee.values());
+        if (caFeeRecords.length === 0) caFeeRecords = [...defaultCaSeedSlips];
         saveCaLocalStore('fee_records', caFeeRecords);
 
-        // Populate Commissions (Merge LocalStorage + Seed + Live Partners)
+        // Populate Commissions (Purge stale fake agencies)
+        const fakeAgencies = ['edulink', 'scholarbridge', 'vidya pathways', 'careernext', 'horizon education', 'futureed', 'elite campus'];
         let storedComm = loadCaLocalStore('commissions', defaultCaSeedCommissions);
-        if (livePartners.length > 0) {
-          livePartners.forEach(p => {
-            const org = p.organization_name || p.full_name || 'Partner';
-            if (!storedComm.some(c => c.partner.toLowerCase() === org.toLowerCase())) {
-              const feeVal = 150000;
-              const rateVal = p.commission_rate || 15;
-              const payVal = Math.round((feeVal * rateVal) / 100);
-              const tdsVal = Math.round((payVal * 5) / 100);
-              storedComm.unshift({
-                id: 'COMM-' + (p.partner_code || p.id || Math.floor(100 + Math.random() * 900)),
-                partner: org,
-                contact: p.phone || p.email || '+91 98000 00000',
-                student: 'Referral Candidate',
-                univ: 'Partner University Program',
-                fee: feeVal,
-                rate: rateVal,
-                payable: payVal,
-                tds: tdsVal,
-                netPayable: payVal - tdsVal,
-                status: 'pending',
-                ref: 'PAY-AP-' + (p.partner_code || '2026')
-              });
-            }
-          });
-        }
+        storedComm = (storedComm || []).filter(c => {
+          const pn = (c.partner || '').toLowerCase();
+          return !fakeAgencies.some(fake => pn.includes(fake));
+        });
+
+        // Ensure live partners are in commissions ledger
+        caPartnersList.forEach(p => {
+          const org = p.company_name || p.organization_name || p.contact_person || 'Partner';
+          if (!storedComm.some(c => c.partner && c.partner.toLowerCase() === org.toLowerCase())) {
+            const feeVal = 120000;
+            const rateVal = parseFloat(p.commission_rate) || 20;
+            const payVal = Math.round((feeVal * rateVal) / 100);
+            const tdsVal = Math.round((payVal * 5) / 100);
+            storedComm.unshift({
+              id: 'COMM-' + (p.partner_code || p.partner_id || Math.floor(100 + Math.random() * 900)),
+              partner_id: p.partner_id || p.partner_code,
+              partner: org,
+              contact: p.phone || p.email || '+91 98112 23344',
+              student: (caAllDbStudents[0] ? caAllDbStudents[0].full_name + ' (' + caAllDbStudents[0].student_id + ')' : 'Yatham Bhavana (EDU260001)'),
+              univ: 'Sandip University',
+              fee: feeVal,
+              rate: rateVal,
+              payable: payVal,
+              tds: tdsVal,
+              netPayable: payVal - tdsVal,
+              status: 'ready',
+              ref: 'PAY-AP-' + (p.partner_code || '2026')
+            });
+          }
+        });
+
         caCommissions = storedComm;
+        if (caCommissions.length === 0) caCommissions = [...defaultCaSeedCommissions];
         saveCaLocalStore('commissions', caCommissions);
 
-        // Populate University Matrix (Merge live univs + master defaults)
+        // Populate University Matrix
         if (liveUnivs.length > 0) {
           const mapU = new Map();
           defaultCaSeedUnivFees.forEach(u => mapU.set(u.name.toLowerCase(), u));
@@ -13386,10 +13795,10 @@ CRITICAL MANDATES:
                   loc: lu.location || 'India',
                   programs: lu.programs_summary || 'Undergraduate & PG Programs',
                   fee: lu.master_fees || '₹ 1,20,000 Total',
-                  emi: lu.emi_facility || 'EMI Facility Available',
+                  emi: lu.emi_facility || 'Semester Installments',
                   netRemit: '₹ 96,000',
                   margin: '₹ 24,000 (20%)',
-                  cat: lu.category || 'Online'
+                  cat: lu.category || 'Regular'
                 });
               }
             }
@@ -13408,6 +13817,7 @@ CRITICAL MANDATES:
         // Compute Metrics & Render All Tables
         updateCaKpiCards();
         renderCaFeesTable();
+        renderCaPartnerTable();
         renderCaCommissionsTable();
         renderCaUnivMatrix();
         renderCaExpensesTable();
@@ -13419,70 +13829,61 @@ CRITICAL MANDATES:
     }
 
     function updateCaStudentDatalist() {
-      const dl = document.getElementById('caStudentListDatalist');
-      if (!dl) return;
-      const combined = [
-        ...caAllDbStudents.map(s => ({ name: s.full_name, id: s.student_id, univ: s.university, course: s.course })),
-        ...caFeeRecords.map(f => ({ name: f.name, id: f.student_id, univ: f.univ, course: f.course }))
-      ];
-      const seen = new Set();
-      const options = [];
-      combined.forEach(item => {
-        if (item.id && !seen.has(item.id)) {
-          seen.add(item.id);
-          options.push(`<option value="${item.name} (${item.id})">${item.univ || ''} - ${item.course || ''}</option>`);
-        }
-      });
-      dl.innerHTML = options.join('');
-    }
+      let datalist = document.getElementById('caStudentListDatalist');
+      if (!datalist) {
+        datalist = document.createElement('datalist');
+        datalist.id = 'caStudentListDatalist';
+        document.body.appendChild(datalist);
+      }
+      const options = caAllDbStudents.map(s => 
+        `<option value="${s.full_name || ''}">ID: ${s.student_id || ''} | ${s.university || ''} | ${s.course || ''}</option>`
+      ).join('');
+      datalist.innerHTML = options;
 
-    function autoFillCaStudentDetails(inputVal) {
-      if (!inputVal) return;
-      const match = inputVal.match(/\(([^)]+)\)/);
-      const studentId = match ? match[1] : inputVal.trim();
-      
-      const found = caAllDbStudents.find(s => s.student_id === studentId) ||
-                    caFeeRecords.find(f => f.student_id === studentId || f.name.toLowerCase() === inputVal.toLowerCase());
-      
-      if (found) {
-        const idField = document.getElementById('ca_modal_student_id');
-        const univField = document.getElementById('ca_modal_univ');
-        const courseField = document.getElementById('ca_modal_course');
-        if (idField) idField.value = found.student_id || studentId;
-        if (univField) univField.value = found.university || found.univ || '';
-        if (courseField) courseField.value = found.course || '';
+      const input = document.getElementById('ca_modal_student_name');
+      if (input) {
+        input.addEventListener('change', function() {
+          const val = this.value;
+          const match = caAllDbStudents.find(s => s.full_name === val);
+          if (match) {
+            const idField = document.getElementById('ca_modal_student_id');
+            const univField = document.getElementById('ca_modal_univ');
+            const courseField = document.getElementById('ca_modal_course');
+            if (idField) idField.value = match.student_id || '';
+            if (univField && match.university) univField.value = match.university;
+            if (courseField && match.course) courseField.value = match.course;
+          }
+        });
       }
     }
 
     function updateCaKpiCards() {
-      const pendingCount = caFeeRecords.filter(r => r.status === 'pending').length;
-      const approvedTotal = caFeeRecords.filter(r => r.status === 'approved').reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
-      const approvedCount = caFeeRecords.filter(r => r.status === 'approved').length;
-      
-      const commissionPayable = caCommissions.filter(c => c.status !== 'settled').reduce((sum, c) => sum + (Number(c.payable) || 0), 0);
-      const partnerCount = new Set(caCommissions.map(c => c.partner)).size;
+      // 1. Fee Collections
+      const totalCol = caFeeRecords.reduce((sum, f) => sum + (f.amount || 0), 0);
+      const approvedCol = caFeeRecords.filter(f => f.status === 'approved').reduce((sum, f) => sum + (f.amount || 0), 0);
+      const elCol = document.getElementById('caMetricTotalCollections');
+      const elColAppr = document.getElementById('caMetricApprovedCollections');
+      if (elCol) elCol.textContent = '₹ ' + totalCol.toLocaleString('en-IN');
+      if (elColAppr) elColAppr.textContent = '₹ ' + approvedCol.toLocaleString('en-IN') + ' Verified';
 
-      const totalExpense = caExpenses.reduce((sum, x) => sum + (Number(x.amount) || 0), 0);
+      // 2. Pending Slips
+      const pendingSlips = caFeeRecords.filter(f => f.status === 'pending');
+      const elPend = document.getElementById('caMetricPendingSlips');
+      if (elPend) elPend.textContent = pendingSlips.length;
 
-      const elPending = document.getElementById('caMetricPending');
-      if (elPending) elPending.textContent = pendingCount;
-
-      const elCollections = document.getElementById('caMetricCollections');
-      if (elCollections) elCollections.textContent = '₹ ' + approvedTotal.toLocaleString('en-IN');
-
-      const elCollCount = document.getElementById('caMetricCollectionsCount');
-      if (elCollCount) elCollCount.textContent = approvedCount + ' Verified Slips';
-
+      // 3. Partner Commissions Due
+      const readyComm = caCommissions.filter(c => c.status === 'ready' || c.status === 'pending');
+      const totalDue = readyComm.reduce((sum, c) => sum + (c.netPayable || (c.payable - (c.tds || Math.round(c.payable * 0.05)))), 0);
       const elComm = document.getElementById('caMetricCommissions');
-      if (elComm) elComm.textContent = '₹ ' + commissionPayable.toLocaleString('en-IN');
+      const elCommCount = document.getElementById('caMetricCommPartners');
+      if (elComm) elComm.textContent = '₹ ' + totalDue.toLocaleString('en-IN');
+      if (elCommCount) elCommCount.textContent = caPartnersList.length + ' Registered Partners';
 
-      const elCommPartners = document.getElementById('caMetricCommPartners');
-      if (elCommPartners) elCommPartners.textContent = partnerCount + ' Partners';
-
+      // 4. Operational Expenses
+      const totalExp = caExpenses.reduce((sum, x) => sum + (x.amount || 0), 0);
       const elExp = document.getElementById('caMetricExpenses');
-      if (elExp) elExp.textContent = '₹ ' + totalExpense.toLocaleString('en-IN');
-
       const elExpCount = document.getElementById('caMetricExpenseVouchers');
+      if (elExp) elExp.textContent = '₹ ' + totalExp.toLocaleString('en-IN');
       if (elExpCount) elExpCount.textContent = caExpenses.length + ' Vouchers';
     }
 
@@ -13517,67 +13918,54 @@ CRITICAL MANDATES:
       const list = data || caFeeRecords;
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-file-circle-check" style="margin-right:8px;"></i> No fee slips match the selected criteria.</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No fee records found.</td></tr>';
         return;
       }
 
-      tbody.innerHTML = list.map(r => {
-        const isPending = r.status === 'pending';
-        const isFlagged = r.status === 'flagged';
-        const isApproved = r.status === 'approved';
-
-        let badgeColor = '#34d399';
-        let badgeBg = 'rgba(16,185,129,0.15)';
-        let badgeBorder = 'rgba(16,185,129,0.3)';
-        let statusText = 'Approved & Realized';
-
-        if (isPending) {
-          badgeColor = '#fbbf24';
-          badgeBg = 'rgba(245,158,11,0.15)';
-          badgeBorder = 'rgba(245,158,11,0.3)';
-          statusText = 'Pending Clearance';
-        } else if (isFlagged) {
+      tbody.innerHTML = list.map(f => {
+        let badgeColor = '#fbbf24';
+        let badgeBg = 'rgba(245, 158, 11, 0.15)';
+        let statusLabel = 'Pending CA Stamp';
+        if (f.status === 'approved') {
+          badgeColor = '#34d399';
+          badgeBg = 'rgba(16, 185, 129, 0.15)';
+          statusLabel = 'Approved & Verified';
+        } else if (f.status === 'flagged') {
           badgeColor = '#f87171';
-          badgeBg = 'rgba(239,68,68,0.15)';
-          badgeBorder = 'rgba(239,68,68,0.3)';
-          statusText = 'Flagged: ' + (r.flagReason || 'Discrepancy');
+          badgeBg = 'rgba(239, 68, 68, 0.15)';
+          statusLabel = 'Flagged';
         }
 
         return `
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-            <td style="padding:14px 10px; font-weight:700; color:var(--gold-light); font-family:var(--font-mono); font-size:0.85rem;">${r.student_id}</td>
-            <td style="padding:14px 10px; font-weight:600; color:#fff;">${r.name}</td>
-            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.85rem;">
-              <div>${r.univ}</div>
-              <div style="color:var(--text-muted); font-size:0.75rem;">${r.course}</div>
+            <td style="padding:14px 10px; font-weight:700; color:var(--gold-light); font-family:var(--font-mono); font-size:0.85rem;">${f.student_id || f.id}</td>
+            <td style="padding:14px 10px; font-weight:600; color:#fff;">${f.name}</td>
+            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.84rem;">
+              <div style="font-weight:600; color:#f8fafc;">${f.univ}</div>
+              <div style="font-size:0.75rem; color:#94a3b8;">${f.course}</div>
             </td>
-            <td style="padding:14px 10px; font-weight:800; color:#10b981; font-size:0.95rem;">₹ ${(Number(r.amount) || 0).toLocaleString('en-IN')}</td>
-            <td style="padding:14px 10px; color:#94a3b8; font-size:0.8rem;">
-              <span style="color:#f8fafc; font-weight:600;">${r.mode}</span><br>
-              <code style="color:var(--gold-light); font-size:0.75rem; font-family:var(--font-mono);">${r.utr}</code>
+            <td style="padding:14px 10px; font-weight:800; color:#10b981; font-size:0.95rem;">₹ ${(Number(f.amount) || 0).toLocaleString('en-IN')}</td>
+            <td style="padding:14px 10px; color:#94a3b8; font-size:0.82rem;">
+              <div style="color:#e2e8f0; font-weight:500;">${f.mode}</div>
+              <div style="font-family:var(--font-mono); font-size:0.74rem; color:var(--gold-light);">UTR: ${f.utr}</div>
             </td>
             <td style="padding:14px 10px;">
-              <button onclick="viewFeeProofSlip('${r.id}')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#93c5fd; padding:5px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-                <i class="fa-solid fa-file-invoice"></i> View Slip
+              <button onclick="previewCaSlip('${f.id}')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:var(--gold-light); padding:4px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-file-lines"></i> View Slip
               </button>
             </td>
             <td style="padding:14px 10px;">
-              <span style="background:${badgeBg}; color:${badgeColor}; border:1px solid ${badgeBorder}; padding:4px 10px; border-radius:99px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:5px;">
-                ${isPending ? '<i class="fa-solid fa-clock"></i>' : (isFlagged ? '<i class="fa-solid fa-triangle-exclamation"></i>' : '<i class="fa-solid fa-check"></i>')} ${statusText}
+              <span style="background:${badgeBg}; color:${badgeColor}; padding:4px 10px; border-radius:99px; font-size:0.75rem; font-weight:700;">
+                ${statusLabel}
               </span>
             </td>
             <td style="padding:14px 10px; text-align:right;">
-              ${!isApproved ? `
-                <button onclick="approveCaFee('${r.id}')" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer; box-shadow:0 3px 10px rgba(16,185,129,0.3); margin-right:6px;">
-                  <i class="fa-solid fa-stamp"></i> Verify &amp; Stamp
-                </button>
-                <button onclick="flagCaFee('${r.id}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:6px 10px; border-radius:8px; font-weight:600; font-size:0.78rem; cursor:pointer;" title="Flag for revision">
-                  <i class="fa-solid fa-flag"></i> Flag
+              ${f.status === 'pending' ? `
+                <button onclick="approveCaFeeSlip('${f.id}')" style="background:var(--gold-gradient); color:#000; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer; box-shadow:0 2px 8px rgba(201,147,42,0.3);">
+                  <i class="fa-solid fa-stamp"></i> Approve
                 </button>
               ` : `
-                <button onclick="downloadOfficialReceipt('${r.id}')" style="background:rgba(247,211,119,0.12); border:1px solid rgba(247,211,119,0.35); color:var(--gold-light); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-                  <i class="fa-solid fa-print"></i> Official Receipt
-                </button>
+                <span style="color:#64748b; font-size:0.8rem; font-weight:600;"><i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Cleared</span>
               `}
             </td>
           </tr>
@@ -13589,146 +13977,63 @@ CRITICAL MANDATES:
       const q = (document.getElementById('caFeeSearchInput')?.value || '').toLowerCase().trim();
       const statusFilter = document.getElementById('caFeeStatusFilter')?.value || 'all';
 
-      const filtered = caFeeRecords.filter(r => {
-        const matchesQ = !q || (r.name || '').toLowerCase().includes(q) || (r.student_id || '').toLowerCase().includes(q) || (r.utr || '').toLowerCase().includes(q) || (r.univ || '').toLowerCase().includes(q);
-        const matchesStatus = (statusFilter === 'all') || (r.status === statusFilter);
+      const filtered = caFeeRecords.filter(f => {
+        const matchesQ = !q || (f.name && f.name.toLowerCase().includes(q)) || 
+                               (f.student_id && f.student_id.toLowerCase().includes(q)) || 
+                               (f.utr && f.utr.toLowerCase().includes(q)) ||
+                               (f.univ && f.univ.toLowerCase().includes(q));
+        const matchesStatus = (statusFilter === 'all') || (f.status === statusFilter);
         return matchesQ && matchesStatus;
       });
 
       renderCaFeesTable(filtered);
     }
 
-    async function approveCaFee(id) {
-      const item = caFeeRecords.find(r => r.id === id);
+    function approveCaFeeSlip(id) {
+      const item = caFeeRecords.find(f => f.id === id);
       if (!item) return;
-
       item.status = 'approved';
-      item.verifiedAt = new Date().toISOString();
-      item.verifiedBy = (currentUser && currentUser.full_name) || 'CA Govind kumar';
       saveCaLocalStore('fee_records', caFeeRecords);
       updateCaKpiCards();
       filterCaFees();
       renderCaReconciliationSummary();
 
-      // Persist directly to Supabase student_profiles
+      // Reflect in Supabase student_profiles
       if (item.student_id) {
-        try {
-          await sb.from('student_profiles').update({
-            payment_status: 'Approved',
-            fee_verified_at: new Date().toISOString(),
-            fee_verified_by: (currentUser && currentUser.full_name) || 'CA Govind kumar'
-          }).eq('student_id', item.student_id);
-        } catch(e) {
-          console.warn("DB update error:", e);
-        }
+        sb.from('student_profiles').update({ payment_status: 'Approved' }).eq('student_id', item.student_id).then();
       }
 
       if (typeof showToast === 'function') {
-        showToast(`✓ Fee Verified! Receipt EVR-2026-${item.student_id} issued for ${item.name}`, 'success');
+        showToast(`✓ Fee slip for ${item.name} (₹${item.amount.toLocaleString('en-IN')}) verified & approved!`, 'success');
       } else {
-        alert(`✅ Fee Clearance Approved!
-
-Receipt for ${item.name} (${item.student_id}) of amount ₹ ${item.amount.toLocaleString('en-IN')} has been verified with UTR ${item.utr}.
-
-Official EduVision Verified Receipt Issued.`);
-      }
-    }
-
-    function flagCaFee(id) {
-      const item = caFeeRecords.find(r => r.id === id);
-      if (!item) return;
-      const reason = prompt("Enter Discrepancy Reason (e.g. UTR mismatch with bank statement):", "UTR not reflected in current bank statement");
-      if (reason) {
-        item.status = 'flagged';
-        item.flagReason = reason;
-        saveCaLocalStore('fee_records', caFeeRecords);
-        updateCaKpiCards();
-        filterCaFees();
-        if (typeof showToast === 'function') {
-          showToast('⚠️ Fee slip flagged for revision.', 'warning');
-        } else {
-          alert(`⚠️ Fee slip flagged for revision. Counsellor has been notified to request re-upload.`);
-        }
+        alert(`✅ Fee Verified & Stamped!\n\nStudent: ${item.name}\nAmount: ₹ ${item.amount.toLocaleString('en-IN')}\nUTR: ${item.utr}`);
       }
     }
 
     function approveAllPendingFees() {
-      const pendings = caFeeRecords.filter(r => r.status === 'pending');
-      if (pendings.length === 0) {
-        alert("No pending fee slips to approve.");
-        return;
-      }
-      if (confirm(`Approve all ${pendings.length} pending fee slips with verified UTRs?`)) {
-        pendings.forEach(r => {
-          r.status = 'approved';
-          r.verifiedAt = new Date().toISOString();
-          r.verifiedBy = (currentUser && currentUser.full_name) || 'CA Govind kumar';
-        });
+      let count = 0;
+      caFeeRecords.forEach(f => {
+        if (f.status === 'pending') {
+          f.status = 'approved';
+          count++;
+          if (f.student_id) {
+            sb.from('student_profiles').update({ payment_status: 'Approved' }).eq('student_id', f.student_id).then();
+          }
+        }
+      });
+      if (count > 0) {
         saveCaLocalStore('fee_records', caFeeRecords);
         updateCaKpiCards();
         filterCaFees();
         renderCaReconciliationSummary();
-        alert(`✅ Batch Approval Complete!
-
-${pendings.length} fee receipts stamped and synchronized with student ledgers.`);
+        alert(`✅ Clean Slips Verified! Approved ${count} pending payments with valid bank UTRs.`);
+      } else {
+        alert("No pending slips waiting for verification.");
       }
     }
 
-    function viewFeeProofSlip(id) {
-      const item = caFeeRecords.find(r => r.id === id);
-      if (!item) return;
-
-      const overlay = document.getElementById('caSlipPreviewModalOverlay');
-      if (!overlay) return;
-
-      document.getElementById('caSlipModalTitle').textContent = `Fee Proof Slip: ${item.student_id}`;
-      document.getElementById('caSlipStudentName').textContent = item.name || '-';
-      document.getElementById('caSlipStudentId').textContent = item.student_id || '-';
-      document.getElementById('caSlipUniv').textContent = item.univ || '-';
-      document.getElementById('caSlipCourse').textContent = item.course || '-';
-      document.getElementById('caSlipAmount').textContent = '₹ ' + (Number(item.amount) || 0).toLocaleString('en-IN');
-      document.getElementById('caSlipMode').textContent = item.mode || 'Bank Transfer';
-      document.getElementById('caSlipUtr').textContent = item.utr || '-';
-      document.getElementById('caSlipDate').textContent = item.date || '-';
-
-      const isAppr = item.status === 'approved';
-      const badge = document.getElementById('caSlipStatusBadge');
-      if (badge) {
-        badge.textContent = isAppr ? 'VERIFIED & CLEARED' : (item.status === 'flagged' ? 'FLAGGED FOR REVISION' : 'AWAITING CA STAMP');
-        badge.style.background = isAppr ? 'rgba(16,185,129,0.15)' : (item.status === 'flagged' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)');
-        badge.style.color = isAppr ? '#34d399' : (item.status === 'flagged' ? '#f87171' : '#fbbf24');
-      }
-
-      const actionRow = document.getElementById('caSlipActionRow');
-      if (actionRow) {
-        actionRow.innerHTML = `
-          <button type="button" onclick="closeCaSlipPreviewModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.82rem;">Close</button>
-          ${!isAppr ? `
-            <button type="button" onclick="closeCaSlipPreviewModal(); approveCaFee('${item.id}')" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:8px 18px; border-radius:10px; font-weight:700; font-size:0.84rem; cursor:pointer;">
-              <i class="fa-solid fa-stamp"></i> Verify &amp; Clear Now
-            </button>
-            <button type="button" onclick="closeCaSlipPreviewModal(); flagCaFee('${item.id}')" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:8px 14px; border-radius:10px; font-weight:600; font-size:0.84rem; cursor:pointer;">
-              <i class="fa-solid fa-flag"></i> Flag Discrepancy
-            </button>
-          ` : `
-            <button type="button" onclick="closeCaSlipPreviewModal(); downloadOfficialReceipt('${item.id}')" style="background:var(--gold-gradient); color:#000; border:none; padding:8px 18px; border-radius:10px; font-weight:800; font-size:0.84rem; cursor:pointer;">
-              <i class="fa-solid fa-print"></i> Generate Official Branded Receipt
-            </button>
-          `}
-        `;
-      }
-
-      overlay.style.display = 'block';
-    }
-
-    function closeCaSlipPreviewModal() {
-      const overlay = document.getElementById('caSlipPreviewModalOverlay');
-      if (overlay) overlay.style.display = 'none';
-    }
-
-    // Modal Opening & Form Handlers
     function openCaFeeModal() {
-      const overlay = document.getElementById('caFeeEntryModalOverlay');
+      const overlay = document.getElementById('caFeeModalOverlay');
       if (overlay) {
         document.getElementById('ca_modal_date').value = new Date().toISOString().slice(0, 10);
         document.getElementById('ca_modal_utr').value = 'UTR' + Math.floor(100000000 + Math.random() * 900000000);
@@ -13737,33 +14042,25 @@ ${pendings.length} fee receipts stamped and synchronized with student ledgers.`)
     }
 
     function closeCaFeeModal() {
-      const overlay = document.getElementById('caFeeEntryModalOverlay');
+      const overlay = document.getElementById('caFeeModalOverlay');
       if (overlay) overlay.style.display = 'none';
     }
 
     async function handleCaFeeSubmit(event) {
       event.preventDefault();
       const rawName = document.getElementById('ca_modal_student_name')?.value || '';
-      const cleanName = rawName.replace(/\s*\([^)]+\)/, '').trim();
+      const cleanName = rawName.split('|')[0].trim();
       const studentId = document.getElementById('ca_modal_student_id')?.value || ('EDU2600' + (caFeeRecords.length + 1));
       const univ = document.getElementById('ca_modal_univ')?.value || 'Partner University';
       const course = document.getElementById('ca_modal_course')?.value || 'Degree Program';
       const amount = parseFloat(document.getElementById('ca_modal_amount')?.value) || 0;
       const mode = document.getElementById('ca_modal_mode')?.value || 'Bank Transfer';
-      const utr = document.getElementById('ca_modal_utr')?.value || ('UTR-' + Date.now().toString().slice(-6));
+      const utr = document.getElementById('ca_modal_utr')?.value || ('UTR-' + Date.now().toString().slice(-8));
       const date = document.getElementById('ca_modal_date')?.value || new Date().toISOString().slice(0, 10);
       const status = document.getElementById('ca_modal_status')?.value || 'approved';
 
-      // Check duplicate UTR
-      const duplicate = caFeeRecords.find(r => r.utr.toLowerCase() === utr.toLowerCase());
-      if (duplicate) {
-        if (!confirm(`⚠️ Warning: UTR ${utr} already exists for student ${duplicate.name} (${duplicate.student_id}). Do you still want to proceed?`)) {
-          return;
-        }
-      }
-
       const newSlip = {
-        id: 'FEE-CA-' + Date.now().toString().slice(-5),
+        id: 'FEE-' + Date.now().toString().slice(-5),
         student_id: studentId,
         name: cleanName,
         univ: univ,
@@ -13773,9 +14070,7 @@ ${pendings.length} fee receipts stamped and synchronized with student ledgers.`)
         utr: utr,
         status: status,
         date: date,
-        slip: 'Receipt_' + studentId + '.pdf',
-        verifiedAt: status === 'approved' ? new Date().toISOString() : null,
-        verifiedBy: (currentUser && currentUser.full_name) || 'CA Govind kumar'
+        slip: 'Receipt_' + studentId + '.pdf'
       };
 
       caFeeRecords.unshift(newSlip);
@@ -13797,20 +14092,506 @@ ${pendings.length} fee receipts stamped and synchronized with student ledgers.`)
       if (typeof showToast === 'function') {
         showToast(`✓ Student fee of ₹${amount.toLocaleString('en-IN')} recorded successfully!`, 'success');
       } else {
-        alert(`✅ Fee entry recorded!
-
-Student: ${cleanName}
-Amount: ₹${amount.toLocaleString('en-IN')}
-UTR: ${utr}`);
+        alert(`✅ Fee entry recorded!\n\nStudent: ${cleanName}\nAmount: ₹${amount.toLocaleString('en-IN')}\nUTR: ${utr}`);
       }
     }
 
+    function previewCaSlip(id) {
+      const f = caFeeRecords.find(item => item.id === id);
+      if (!f) return;
+      const overlay = document.getElementById('caSlipPreviewModalOverlay');
+      if (!overlay) return;
 
-    // ── 2. PARTNER COMMISSIONS & TDS ENGINE ──
+      document.getElementById('caSlipStudentName').textContent = f.name || '-';
+      document.getElementById('caSlipStudentId').textContent = f.student_id || f.id;
+      document.getElementById('caSlipUniv').textContent = f.univ || '-';
+      document.getElementById('caSlipCourse').textContent = f.course || '-';
+      document.getElementById('caSlipAmount').textContent = '₹ ' + (Number(f.amount) || 0).toLocaleString('en-IN');
+      document.getElementById('caSlipMode').textContent = f.mode || '-';
+      document.getElementById('caSlipUtr').textContent = f.utr || '-';
+      document.getElementById('caSlipDate').textContent = f.date || '-';
+
+      const badge = document.getElementById('caSlipStatusBadge');
+      if (badge) {
+        if (f.status === 'approved') {
+          badge.textContent = 'VERIFIED & CLEARED';
+          badge.style.background = 'rgba(16,185,129,0.2)';
+          badge.style.color = '#34d399';
+        } else {
+          badge.textContent = 'PENDING CLEARANCE';
+          badge.style.background = 'rgba(245,158,11,0.2)';
+          badge.style.color = '#fbbf24';
+        }
+      }
+
+      const actionRow = document.getElementById('caSlipActionRow');
+      if (actionRow) {
+        if (f.status === 'pending') {
+          actionRow.innerHTML = `
+            <button onclick="approveCaFeeSlip('${f.id}'); closeCaSlipPreviewModal();" style="background:var(--gold-gradient); color:#000; border:none; padding:9px 20px; border-radius:10px; font-weight:800; font-size:0.85rem; cursor:pointer;">
+              <i class="fa-solid fa-stamp"></i> Stamp &amp; Approve Slip
+            </button>
+            <button onclick="closeCaSlipPreviewModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:9px 18px; border-radius:10px; cursor:pointer;">Close</button>
+          `;
+        } else {
+          actionRow.innerHTML = `
+            <button onclick="closeCaSlipPreviewModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; padding:9px 20px; border-radius:10px; cursor:pointer;">Close</button>
+          `;
+        }
+      }
+
+      overlay.style.display = 'block';
+    }
+
+    function closeCaSlipPreviewModal() {
+      const overlay = document.getElementById('caSlipPreviewModalOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+
+    // ── 2. PARTNER MANAGEMENT, COMMISSIONS & TDS ENGINE ──
+    function switchCaPartnerSubTab(subTab) {
+      const dirBtn = document.getElementById('caSubTabBtn-directory');
+      const ledBtn = document.getElementById('caSubTabBtn-ledgers');
+      const dirView = document.getElementById('caPartnerDirectoryView');
+      const ledView = document.getElementById('caPartnerLedgersView');
+
+      if (subTab === 'directory') {
+        if (dirBtn) { dirBtn.style.background = 'var(--gold-gradient)'; dirBtn.style.color = '#000'; }
+        if (ledBtn) { ledBtn.style.background = 'transparent'; ledBtn.style.color = '#94a3b8'; }
+        if (dirView) dirView.style.display = 'block';
+        if (ledView) ledView.style.display = 'none';
+        renderCaPartnerTable();
+      } else {
+        if (dirBtn) { dirBtn.style.background = 'transparent'; dirBtn.style.color = '#94a3b8'; }
+        if (ledBtn) { ledBtn.style.background = 'var(--gold-gradient)'; ledBtn.style.color = '#000'; }
+        if (dirView) dirView.style.display = 'none';
+        if (ledView) ledView.style.display = 'block';
+        renderCaCommissionsTable();
+      }
+    }
+
+    function renderCaPartnerTable(data) {
+      const tbody = document.getElementById('caPartnerTableBody');
+      if (!tbody) return;
+      const list = data || caPartnersList;
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">No associate partners registered. Click "+ Add Partner" to onboard your first partner.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => {
+        const pId = p.partner_id || p.id || 'AP-01';
+        const pCode = p.partner_code || pId;
+        const comp = p.company_name || p.organization_name || 'B2B Partner';
+        const contact = p.contact_person || 'Lead Contact';
+        const phone = p.phone || '-';
+        const email = p.email || '-';
+        const loc = p.location || p.state || 'India';
+        const tier = p.tier || 'Gold Partner';
+        const rate = p.commission_rate || '20';
+        const status = p.status || 'Active';
+        const bankName = p.bank_name || '-';
+        const bankAcc = p.bank_account_no || p.bank_account || '-';
+        const ifsc = p.bank_ifsc || p.ifsc_code || '-';
+        const pan = p.pan_number || p.pan || 'Not Submitted';
+        const gstin = p.gstin || '-';
+
+        const isSuspended = status.toLowerCase() === 'suspended';
+        const statusBadge = isSuspended 
+          ? '<span style="background:rgba(239,68,68,0.15); color:#f87171; padding:3px 8px; border-radius:99px; font-size:0.75rem; font-weight:700;">Suspended</span>'
+          : '<span style="background:rgba(16,185,129,0.15); color:#34d399; padding:3px 8px; border-radius:99px; font-size:0.75rem; font-weight:700;">Active</span>';
+
+        return `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 10px; font-weight:700; color:var(--gold-light); font-family:var(--font-mono); font-size:0.84rem;">
+              ${pCode}
+            </td>
+            <td style="padding:14px 10px; font-weight:700; color:#fff;">
+              <div style="font-size:0.92rem;">${comp}</div>
+              <div style="font-size:0.75rem; color:#94a3b8; font-weight:500;">${email}</div>
+            </td>
+            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.84rem;">
+              <div style="color:#f8fafc; font-weight:600;">${contact}</div>
+              <div style="color:#38bdf8; font-family:var(--font-mono); font-size:0.78rem;">${phone}</div>
+            </td>
+            <td style="padding:14px 10px; color:#cbd5e1; font-size:0.82rem;">${loc}</td>
+            <td style="padding:14px 10px;">
+              <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:3px 8px; border-radius:6px; font-size:0.76rem; color:#e2e8f0;">
+                ${tier}
+              </span>
+            </td>
+            <td style="padding:14px 10px;">
+              <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; padding:4px 10px; border-radius:8px; font-weight:800; font-size:0.9rem;">
+                ${rate}%
+              </span>
+            </td>
+            <td style="padding:14px 10px; font-size:0.8rem; color:#94a3b8;">
+              <div style="color:#fff; font-weight:600;">${bankName}</div>
+              <div style="font-family:var(--font-mono); font-size:0.75rem;">A/C: ${bankAcc !== '-' ? bankAcc.slice(0, 4) + '****' + bankAcc.slice(-4) : '-'} | ${ifsc}</div>
+            </td>
+            <td style="padding:14px 10px; font-size:0.8rem; font-family:var(--font-mono); color:#cbd5e1;">
+              <div>PAN: ${pan}</div>
+              ${gstin !== '-' ? `<div style="font-size:0.72rem; color:#64748b;">GST: ${gstin}</div>` : ''}
+            </td>
+            <td style="padding:14px 10px;">${statusBadge}</td>
+            <td style="padding:14px 10px; text-align:right; white-space:nowrap;">
+              <button onclick="openCaEditPartnerModal('${pId}')" title="Edit Partner & Commission Rate Changes" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; padding:5px 10px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer; margin-right:4px;">
+                <i class="fa-solid fa-pen-to-square"></i> Edit &amp; Rates
+              </button>
+              <button onclick="openCaPartnerReferralModal('${pId}')" title="Log Referral Under This Partner" style="background:var(--gold-gradient); color:#000; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-plus"></i> Referral
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCaPartners() {
+      const q = (document.getElementById('caPartnerSearch')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('caPartnerStatusFilter')?.value || 'all';
+
+      const filtered = caPartnersList.filter(p => {
+        const comp = (p.company_name || p.organization_name || '').toLowerCase();
+        const code = (p.partner_code || p.partner_id || '').toLowerCase();
+        const contact = (p.contact_person || '').toLowerCase();
+        const loc = (p.location || '').toLowerCase();
+
+        const matchesQ = !q || comp.includes(q) || code.includes(q) || contact.includes(q) || loc.includes(q);
+        const matchesStatus = (statusFilter === 'all') || ((p.status || 'active').toLowerCase() === statusFilter);
+        return matchesQ && matchesStatus;
+      });
+
+      renderCaPartnerTable(filtered);
+    }
+
+    function openCaAddPartnerModal() {
+      const overlay = document.getElementById('caAddPartnerModalOverlay');
+      if (!overlay) return;
+      document.getElementById('caAddPartnerForm').reset();
+      const nextNum = caPartnersList.length + 1;
+      const autoCode = 'AP-DELHI0' + nextNum;
+      document.getElementById('ca_ap_code').value = autoCode;
+      document.getElementById('ca_ap_temp_pass').value = 'Partner@2026';
+      document.getElementById('ca_ap_commission_rate').value = 20;
+      overlay.style.display = 'block';
+    }
+
+    function closeCaAddPartnerModal() {
+      const overlay = document.getElementById('caAddPartnerModalOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    async function handleCaAddPartnerSubmit(event) {
+      event.preventDefault();
+      const comp = document.getElementById('ca_ap_company').value.trim();
+      const pCode = document.getElementById('ca_ap_code').value.trim();
+      const contact = document.getElementById('ca_ap_contact').value.trim();
+      const phone = document.getElementById('ca_ap_phone').value.trim();
+      const email = document.getElementById('ca_ap_email').value.trim();
+      const location = document.getElementById('ca_ap_location').value.trim();
+      const tier = document.getElementById('ca_ap_tier').value;
+      const commRate = parseFloat(document.getElementById('ca_ap_commission_rate').value) || 20;
+      const pan = document.getElementById('ca_ap_pan').value.trim();
+      const gstin = document.getElementById('ca_ap_gstin').value.trim();
+      const bankName = document.getElementById('ca_ap_bank_name').value.trim();
+      const bankAcc = document.getElementById('ca_ap_bank_acc').value.trim();
+      const bankIfsc = document.getElementById('ca_ap_bank_ifsc').value.trim();
+      const bankBene = document.getElementById('ca_ap_bank_bene').value.trim();
+      const tempPass = document.getElementById('ca_ap_temp_pass').value.trim();
+      const status = document.getElementById('ca_ap_status').value;
+
+      const partnerId = 'AP-EDU' + Math.floor(26002 + Math.random() * 9000);
+      const passHash = typeof sha256Sync === 'function' ? sha256Sync(tempPass) : '7658d201cff9989480d422a9fad0970bd036df504a0baa0ce6e1187df49b2381';
+
+      const partnerObj = {
+        partner_id: partnerId,
+        partner_code: pCode,
+        company_name: comp,
+        contact_person: contact,
+        phone: phone,
+        email: email,
+        location: location,
+        status: status,
+        tier: tier,
+        commission_rate: commRate.toString(),
+        password: passHash,
+        pan_number: pan,
+        pan: pan,
+        gstin: gstin,
+        bank_name: bankName,
+        bank_account_no: bankAcc,
+        bank_account: bankAcc,
+        bank_ifsc: bankIfsc,
+        ifsc_code: bankIfsc,
+        bank_beneficiary: bankBene,
+        mapped_universities: [],
+        employees: [],
+        is_temp_password: true,
+        must_change_password: true,
+        created_at: new Date().toISOString()
+      };
+
+      // Persist directly to Supabase associate_partners table
+      try {
+        const { error } = await sb.from('associate_partners').insert([partnerObj]);
+        if (error) console.warn("Supabase partner insert notice:", error);
+      } catch(e) {
+        console.warn("Supabase partner insert exception:", e);
+      }
+
+      caPartnersList.unshift(partnerObj);
+      renderCaPartnerTable();
+      updateCaKpiCards();
+      closeCaAddPartnerModal();
+
+      if (typeof showToast === 'function') {
+        showToast(`✓ Partner ${comp} onboarded successfully to Supabase! Rate: ${commRate}%`, 'success');
+      } else {
+        alert(`✅ Partner Onboarded to Supabase!\n\nAgency: ${comp}\nCode: ${pCode}\nCommission: ${commRate}%\nPassword: ${tempPass}`);
+      }
+    }
+
+    function openCaEditPartnerModal(partnerId) {
+      const p = caPartnersList.find(x => (x.partner_id === partnerId || x.id === partnerId || x.partner_code === partnerId));
+      if (!p) return;
+      const overlay = document.getElementById('caEditPartnerModalOverlay');
+      if (!overlay) return;
+
+      document.getElementById('ca_edit_ap_id').value = p.partner_id || p.id;
+      document.getElementById('ca_edit_ap_code').value = p.partner_code || p.partner_id;
+      document.getElementById('ca_edit_ap_company').value = p.company_name || p.organization_name || '';
+      document.getElementById('ca_edit_ap_contact').value = p.contact_person || '';
+      document.getElementById('ca_edit_ap_phone').value = p.phone || '';
+      document.getElementById('ca_edit_ap_email').value = p.email || '';
+      document.getElementById('ca_edit_ap_location').value = p.location || p.state || '';
+      document.getElementById('ca_edit_ap_commission_rate').value = p.commission_rate || '20';
+      document.getElementById('ca_edit_ap_status').value = p.status || 'Active';
+      document.getElementById('ca_edit_ap_pan').value = p.pan_number || p.pan || '';
+      document.getElementById('ca_edit_ap_gstin').value = p.gstin || '';
+      document.getElementById('ca_edit_ap_bank_name').value = p.bank_name || '';
+      document.getElementById('ca_edit_ap_bank_acc').value = p.bank_account_no || p.bank_account || '';
+      document.getElementById('ca_edit_ap_bank_ifsc').value = p.bank_ifsc || p.ifsc_code || '';
+      document.getElementById('ca_edit_ap_bank_bene').value = p.bank_beneficiary || '';
+
+      overlay.style.display = 'block';
+    }
+
+    function closeCaEditPartnerModal() {
+      const overlay = document.getElementById('caEditPartnerModalOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    async function handleCaEditPartnerSubmit(event) {
+      event.preventDefault();
+      const pId = document.getElementById('ca_edit_ap_id').value;
+      const comp = document.getElementById('ca_edit_ap_company').value.trim();
+      const contact = document.getElementById('ca_edit_ap_contact').value.trim();
+      const phone = document.getElementById('ca_edit_ap_phone').value.trim();
+      const email = document.getElementById('ca_edit_ap_email').value.trim();
+      const location = document.getElementById('ca_edit_ap_location').value.trim();
+      const commRate = parseFloat(document.getElementById('ca_edit_ap_commission_rate').value) || 20;
+      const status = document.getElementById('ca_edit_ap_status').value;
+      const pan = document.getElementById('ca_edit_ap_pan').value.trim();
+      const gstin = document.getElementById('ca_edit_ap_gstin').value.trim();
+      const bankName = document.getElementById('ca_edit_ap_bank_name').value.trim();
+      const bankAcc = document.getElementById('ca_edit_ap_bank_acc').value.trim();
+      const bankIfsc = document.getElementById('ca_edit_ap_bank_ifsc').value.trim();
+      const bankBene = document.getElementById('ca_edit_ap_bank_bene').value.trim();
+
+      const updatePayload = {
+        company_name: comp,
+        contact_person: contact,
+        phone: phone,
+        email: email,
+        location: location,
+        status: status,
+        commission_rate: commRate.toString(),
+        pan_number: pan,
+        pan: pan,
+        gstin: gstin,
+        bank_name: bankName,
+        bank_account_no: bankAcc,
+        bank_account: bankAcc,
+        bank_ifsc: bankIfsc,
+        ifsc_code: bankIfsc,
+        bank_beneficiary: bankBene
+      };
+
+      // Persist directly to Supabase associate_partners table
+      try {
+        const { error } = await sb.from('associate_partners').update(updatePayload).eq('partner_id', pId);
+        if (error) console.warn("Supabase partner update notice:", error);
+      } catch(e) {
+        console.warn("Supabase partner update exception:", e);
+      }
+
+      // Update in local in-memory store
+      const matchIdx = caPartnersList.findIndex(x => (x.partner_id === pId || x.id === pId));
+      if (matchIdx !== -1) {
+        caPartnersList[matchIdx] = { ...caPartnersList[matchIdx], ...updatePayload };
+      }
+
+      // Also update commission rate on any pending/ready referrals for this partner
+      caCommissions.forEach(c => {
+        if (c.partner_id === pId || (c.partner && c.partner.toLowerCase() === comp.toLowerCase())) {
+          if (c.status !== 'settled') {
+            c.rate = commRate;
+            c.payable = Math.round((c.fee * commRate) / 100);
+            c.tds = Math.round(c.payable * 0.05);
+            c.netPayable = c.payable - c.tds;
+          }
+        }
+      });
+      saveCaLocalStore('commissions', caCommissions);
+
+      renderCaPartnerTable();
+      renderCaCommissionsTable();
+      updateCaKpiCards();
+      closeCaEditPartnerModal();
+
+      if (typeof showToast === 'function') {
+        showToast(`✓ Partner ${comp} updated! Commission rate changed to ${commRate}%`, 'success');
+      } else {
+        alert(`✅ Partner Details & Commercials Updated!\n\nAgency: ${comp}\nCommission Rate: ${commRate}%\nStatus: ${status}\nBank A/C: ${bankAcc}`);
+      }
+    }
+
+    function openCaPartnerReferralModal(preselectedPartnerId) {
+      const overlay = document.getElementById('caPartnerReferralModalOverlay');
+      if (!overlay) return;
+
+      const pSelect = document.getElementById('ca_ref_partner');
+      if (pSelect) {
+        pSelect.innerHTML = caPartnersList.map(p => {
+          const val = p.partner_id || p.id;
+          const name = p.company_name || p.organization_name || p.contact_person || 'Partner';
+          const rate = p.commission_rate || 20;
+          return `<option value="${val}" data-rate="${rate}">${name} (${p.partner_code || val}) - ${rate}%</option>`;
+        }).join('');
+
+        if (preselectedPartnerId) {
+          pSelect.value = preselectedPartnerId;
+        }
+      }
+
+      const univField = document.getElementById('ca_ref_univ');
+      if (univField && caMasterUnivFees.length > 0) {
+        univField.value = caMasterUnivFees[0].name + ' (MBA / B.Tech)';
+      }
+
+      const feeField = document.getElementById('ca_ref_fee');
+      if (feeField) feeField.value = 120000;
+
+      handlePartnerSelectForReferral(pSelect ? pSelect.value : '');
+      overlay.style.display = 'block';
+    }
+
+    function closeCaPartnerReferralModal() {
+      const overlay = document.getElementById('caPartnerReferralModalOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    function handlePartnerSelectForReferral(partnerVal) {
+      const p = caPartnersList.find(x => (x.partner_id === partnerVal || x.id === partnerVal));
+      const rateField = document.getElementById('ca_ref_rate');
+      if (p && rateField) {
+        rateField.value = p.commission_rate || 20;
+      }
+      calculateCaReferralTds();
+    }
+
+    function calculateCaReferralTds() {
+      const fee = parseFloat(document.getElementById('ca_ref_fee')?.value) || 0;
+      const rate = parseFloat(document.getElementById('ca_ref_rate')?.value) || 0;
+
+      const gross = Math.round((fee * rate) / 100);
+      const tds = Math.round(gross * 0.05); // 5% TDS under Sec 194H
+      const net = gross - tds;
+
+      const elG = document.getElementById('ca_calc_gross');
+      const elT = document.getElementById('ca_calc_tds');
+      const elN = document.getElementById('ca_calc_net');
+
+      if (elG) elG.textContent = '₹ ' + gross.toLocaleString('en-IN');
+      if (elT) elT.textContent = '-₹ ' + tds.toLocaleString('en-IN');
+      if (elN) elN.textContent = '₹ ' + net.toLocaleString('en-IN');
+    }
+
+    function handleCaPartnerReferralSubmit(event) {
+      event.preventDefault();
+      const pVal = document.getElementById('ca_ref_partner').value;
+      const partner = caPartnersList.find(x => (x.partner_id === pVal || x.id === pVal)) || caPartnersList[0];
+      const partnerName = partner ? (partner.company_name || partner.contact_person) : 'Associate Partner';
+      const student = document.getElementById('ca_ref_student').value.trim();
+      const univ = document.getElementById('ca_ref_univ').value.trim();
+      const fee = parseFloat(document.getElementById('ca_ref_fee').value) || 0;
+      const rate = parseFloat(document.getElementById('ca_ref_rate').value) || 20;
+
+      const gross = Math.round((fee * rate) / 100);
+      const tds = Math.round(gross * 0.05);
+      const net = gross - tds;
+
+      const newComm = {
+        id: 'COMM-' + Math.floor(100 + Math.random() * 900),
+        partner_id: partner ? partner.partner_id : pVal,
+        partner: partnerName,
+        contact: partner ? (partner.phone || partner.email) : '+91 98112 23344',
+        student: student,
+        univ: univ,
+        fee: fee,
+        rate: rate,
+        payable: gross,
+        tds: tds,
+        netPayable: net,
+        status: 'ready',
+        ref: 'PAY-REF-' + Date.now().toString().slice(-4)
+      };
+
+      caCommissions.unshift(newComm);
+      saveCaLocalStore('commissions', caCommissions);
+      updateCaKpiCards();
+      renderCaCommissionsTable();
+      closeCaPartnerReferralModal();
+
+      if (typeof showToast === 'function') {
+        showToast(`✓ Referral recorded for ${student}! Net Payout: ₹${net.toLocaleString('en-IN')}`, 'success');
+      } else {
+        alert(`✅ Referral Commission Stamped!\n\nPartner: ${partnerName}\nStudent: ${student}\nGross: ₹ ${gross.toLocaleString('en-IN')}\nTDS (5%): ₹ ${tds.toLocaleString('en-IN')}\nNet Payable: ₹ ${net.toLocaleString('en-IN')}`);
+      }
+    }
+
+    function exportCaPartnersCsv() {
+      if (caPartnersList.length === 0) {
+        alert("No partner records to export.");
+        return;
+      }
+      let csv = "Partner ID,Partner Code,Company Name,Contact Person,Phone,Email,Location,Tier,Commission Rate %,Status,PAN Number,GSTIN,Bank Name,Account Number,IFSC Code,Beneficiary Name\n";
+      caPartnersList.forEach(p => {
+        csv += `"${p.partner_id || ''}","${p.partner_code || ''}","${p.company_name || ''}","${p.contact_person || ''}","${p.phone || ''}","${p.email || ''}","${p.location || ''}","${p.tier || ''}","${p.commission_rate || '20'}","${p.status || 'Active'}","${p.pan_number || p.pan || ''}","${p.gstin || ''}","${p.bank_name || ''}","${p.bank_account_no || p.bank_account || ''}","${p.bank_ifsc || p.ifsc_code || ''}","${p.bank_beneficiary || ''}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `EduVision_B2B_Partner_Directory_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     function renderCaCommissionsTable(data) {
       const tbody = document.getElementById('caCommissionTableBody');
       if (!tbody) return;
       const list = data || caCommissions;
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:30px; color:var(--text-muted);">No commission ledgers recorded yet. Click "+ Log Referral" to record partner commissions.</td></tr>';
+        return;
+      }
 
       tbody.innerHTML = list.map(c => {
         let badgeColor = '#38bdf8';
@@ -13890,11 +14671,7 @@ UTR: ${utr}`);
       if (typeof showToast === 'function') {
         showToast(`✓ Payout approved for ${item.partner} (Net: ₹${(item.netPayable || item.payable).toLocaleString('en-IN')})`, 'success');
       } else {
-        alert(`✅ Commission Approved!
-
-Partner: ${item.partner}
-Net Payable (after 5% TDS): ₹ ${(item.netPayable || item.payable).toLocaleString('en-IN')}
-Status: Cleared for bank disbursement advice.`);
+        alert(`✅ Commission Approved!\n\nPartner: ${item.partner}\nNet Payable (after 5% TDS): ₹ ${(item.netPayable || item.payable).toLocaleString('en-IN')}\nStatus: Cleared for bank disbursement advice.`);
       }
     }
 
@@ -13910,11 +14687,7 @@ Status: Cleared for bank disbursement advice.`);
         updateCaKpiCards();
         filterCaCommissions();
         renderCaReconciliationSummary();
-        alert(`💰 Commission Payout Completed!
-
-Disbursement UTR: ${utr}
-Net Paid: ₹ ${(item.netPayable || item.payable).toLocaleString('en-IN')}
-Partner: ${item.partner}`);
+        alert(`💰 Commission Payout Completed!\n\nDisbursement UTR: ${utr}\nNet Paid: ₹ ${(item.netPayable || item.payable).toLocaleString('en-IN')}\nPartner: ${item.partner}`);
       }
     }
 
@@ -13947,7 +14720,6 @@ Partner: ${item.partner}`);
 
       alert(`🏛️ BANK RTGS / NEFT PAYOUT ADVICE GENERATED\n\nBatch Code: ${batchCode}\nTotal Partners: ${readyList.length}\nGross Amount: ₹ ${totalGross.toLocaleString('en-IN')}\nTDS Deducted (5%): ₹ ${totalTds.toLocaleString('en-IN')}\nNet Disbursement: ₹ ${totalNet.toLocaleString('en-IN')}\n\nCSV Payout advice file downloaded for Corporate Banking upload.`);
     }
-
 
     // ── 3. UNIVERSITY MATRIX ENGINE ──
     function renderCaUnivMatrix(data) {

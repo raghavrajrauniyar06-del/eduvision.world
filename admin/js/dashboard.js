@@ -17745,14 +17745,13 @@ async function quickReleaseGlobalLock(featureKey) {
 }
 
 const DEFAULT_FALLBACK_STAFF = [
-  { id: 'TL001', employee_id: 'TL001', full_name: 'Vikram Malhotra', role: 'Team Leader', staffType: 'Team Leader', branch: 'Delhi Head Office' },
-  { id: 'TL002', employee_id: 'TL002', full_name: 'Ananya Deshmukh', role: 'Team Leader', staffType: 'Team Leader', branch: 'Mumbai Branch' },
-  { id: 'SR001', employee_id: 'SR001', full_name: 'Amitabh Sen', role: 'Senior Counsellor', staffType: 'Senior Counsellor', branch: 'Kolkata Branch', team_leader_name: 'Vikram Malhotra' },
-  { id: 'CNS001', employee_id: 'CNS001', full_name: 'Neha Sharma', role: 'Counsellor', staffType: 'Counsellor', branch: 'Delhi Head Office', team_leader_name: 'Vikram Malhotra' },
-  { id: 'CNS002', employee_id: 'CNS002', full_name: 'Rahul Verma', role: 'Counsellor', staffType: 'Counsellor', branch: 'Delhi Head Office', team_leader_name: 'Vikram Malhotra' },
-  { id: 'CNS003', employee_id: 'CNS003', full_name: 'Pooja Iyer', role: 'Counsellor', staffType: 'Counsellor', branch: 'Bangalore Branch', team_leader_name: 'Ananya Deshmukh' },
-  { id: 'CNS004', employee_id: 'CNS004', full_name: 'Karan Mehra', role: 'Counsellor', staffType: 'Counsellor', branch: 'Mumbai Branch', team_leader_name: 'Ananya Deshmukh' },
-  { id: 'PRT001', employee_id: 'PRT001', full_name: 'Apex Global Edu (Partner)', role: 'Associate Partner', staffType: 'Associate Partner', branch: 'Jaipur Partner Hub' }
+  { id: 'CNS260001', employee_id: 'EMP267616', full_name: 'Farda Singh', role: 'Senior Counsellor', staffType: 'Senior Counsellor', branch: 'Head Office', email: 'mayadevi91573@gmail.com', phone: '9580985581' },
+  { id: 'CNS260002', employee_id: 'EMP26002', full_name: 'Sahil dehngal', role: 'Counsellor', staffType: 'Counsellor', branch: 'Head Office', email: 'sahildehngal00786@gmail.com', phone: '9306264179' },
+  { id: 'CNS260003', employee_id: 'EMP26003', full_name: 'Hemlata maurya', role: 'Counsellor', staffType: 'Counsellor', branch: 'Head Office', email: 'hemamourya22@gmail.com', phone: '6392530191' },
+  { id: 'CA260001', employee_id: 'EMP26004', full_name: 'Govind kumar', role: 'CA_Accounts', staffType: 'CA_Accounts', branch: 'Head Office', email: 'g92004255@gmail.com', phone: '8603228947' },
+  { id: 'CNS260004', employee_id: 'EMP26005', full_name: 'Vandana Gautam', role: 'Counsellor', staffType: 'Counsellor', branch: 'Head Office', email: 'vg233640@gmail.com', phone: '9170862142', status: 'Fired / Terminated' },
+  { id: 'CNS260005', employee_id: 'EMP26006', full_name: 'Rakhee devi', role: 'Counsellor', staffType: 'Counsellor', branch: 'Head Office', email: 'rakheedevi387@gmail.com', phone: '9519738468' },
+  { id: 'AP-DELHI01', employee_id: 'AP-DELHI01', full_name: 'Apex Education Consultants', role: 'Associate Partner', staffType: 'Associate Partner', branch: 'Connaught Place, New Delhi', email: 'apex.consultants@eduvision.world', phone: '9811223344' }
 ];
 
 let drawerWorkingRolePerms = {};
@@ -17899,8 +17898,7 @@ function getMembersForRole(roleKey) {
       }));
     }
     return [
-      { id: 'TL001', name: 'Vikram Malhotra', role: 'Team Leader', roleTitle: 'Team Leader - North & West', branch: 'Delhi Head Office', isSuperAdmin: false },
-      { id: 'TL002', name: 'Ananya Deshmukh', role: 'Team Leader', roleTitle: 'Team Leader - South & East', branch: 'Bangalore Branch', isSuperAdmin: false }
+      { id: 'CNS260001', name: 'Farda Singh (Acting Lead)', role: 'Senior Counsellor', roleTitle: 'Senior Admissions Lead', branch: 'Head Office', isSuperAdmin: false }
     ];
   }
 
@@ -17923,8 +17921,7 @@ function getMembersForRole(roleKey) {
       }));
     } else {
       list = [
-        { id: 'SR001', name: 'Amitabh Sen', role: 'Senior Counsellor', roleTitle: 'Sr. Admissions Specialist', branch: 'Delhi Head Office', isSuperAdmin: false },
-        { id: 'SR002', name: 'Sunita Rao', role: 'Senior Counsellor', roleTitle: 'Sr. Study Abroad Counsellor', branch: 'Mumbai Branch', isSuperAdmin: false }
+        { id: 'CNS260001', name: 'Farda Singh', role: 'Senior Counsellor', roleTitle: 'Senior Counsellor', branch: 'Head Office', isSuperAdmin: false }
       ];
     }
     // Check if active counsellor is Senior Counsellor
@@ -17964,15 +17961,15 @@ function getMembersForRole(roleKey) {
         role: 'Counsellor',
         roleTitle: c.designation || 'Study Abroad Counsellor',
         branch: c.branch || 'Delhi Head Office',
-        team_leader_name: c.team_leader_name || 'Vikram Malhotra',
+        team_leader_name: c.team_leader_name || 'Farda Singh',
         isSuperAdmin: false
       }));
     } else {
       list = [
-        { id: 'CNS001', name: 'Neha Sharma', role: 'Counsellor', roleTitle: 'Study Abroad Counsellor', branch: 'Delhi Head Office', team_leader_name: 'Vikram Malhotra', isSuperAdmin: false },
-        { id: 'CNS002', name: 'Rahul Verma', role: 'Counsellor', roleTitle: 'Admissions Counsellor', branch: 'Delhi Head Office', team_leader_name: 'Vikram Malhotra', isSuperAdmin: false },
-        { id: 'CNS003', name: 'Pooja Iyer', role: 'Counsellor', roleTitle: 'Visa Specialist Counsellor', branch: 'Bangalore Branch', team_leader_name: 'Ananya Deshmukh', isSuperAdmin: false },
-        { id: 'CNS004', name: 'Karan Mehra', role: 'Counsellor', roleTitle: 'Lead Counsellor', branch: 'Mumbai Branch', team_leader_name: 'Ananya Deshmukh', isSuperAdmin: false }
+        { id: 'CNS260002', name: 'Sahil dehngal', role: 'Counsellor', roleTitle: 'Admissions Counsellor', branch: 'Head Office', team_leader_name: 'Farda Singh', isSuperAdmin: false },
+        { id: 'CNS260003', name: 'Hemlata maurya', role: 'Counsellor', roleTitle: 'Admissions Counsellor', branch: 'Head Office', team_leader_name: 'Farda Singh', isSuperAdmin: false },
+        { id: 'CA260001', name: 'Govind kumar', role: 'CA_Accounts', roleTitle: 'Accounts & Finance Lead', branch: 'Head Office', team_leader_name: 'Farda Singh', isSuperAdmin: false },
+        { id: 'CNS260005', name: 'Rakhee devi', role: 'Counsellor', roleTitle: 'Admissions Counsellor', branch: 'Head Office', team_leader_name: 'Farda Singh', isSuperAdmin: false }
       ];
     }
     // Check if active counsellor is standard counsellor
@@ -17989,7 +17986,7 @@ function getMembersForRole(roleKey) {
             role: 'Counsellor',
             roleTitle: c.designation || 'Counsellor',
             branch: c.branch || 'Head Office',
-            team_leader_name: c.team_leader_name || 'Vikram Malhotra',
+            team_leader_name: c.team_leader_name || 'Farda Singh',
             isSuperAdmin: false
           });
         }
@@ -18011,9 +18008,7 @@ function getMembersForRole(roleKey) {
       }));
     }
     return [
-      { id: 'PRT001', name: 'Apex Global Edu Solutions', contact_person: 'Vikram Singh', role: 'Associate Partner', roleTitle: 'Gold Agency', branch: 'Jaipur Partner Hub', isSuperAdmin: false },
-      { id: 'PRT002', name: 'Zenith Overseas Advisory', contact_person: 'Ramesh Patel', role: 'Associate Partner', roleTitle: 'Premium Agency', branch: 'Ahmedabad Branch', isSuperAdmin: false },
-      { id: 'PRT003', name: 'Global Pathways Consultancy', contact_person: 'Meera Nair', role: 'Associate Partner', roleTitle: 'Silver Agency', branch: 'Kochi Branch', isSuperAdmin: false }
+      { id: 'AP-DELHI01', name: 'Apex Education Consultants', contact_person: 'Vikramaditya Sharma', role: 'Associate Partner', roleTitle: 'Platinum Partner', branch: 'Connaught Place, New Delhi', isSuperAdmin: false }
     ];
   }
 
@@ -18030,10 +18025,7 @@ function getMembersForRole(roleKey) {
       }));
     }
     return [
-      { id: 'STU001', name: 'Aarav Sharma', email: 'aarav.sharma@example.com', role: 'Student', roleTitle: 'Applicant (United Kingdom)', branch: 'Delhi', isSuperAdmin: false },
-      { id: 'STU002', name: 'Diya Patel', email: 'diya.patel@example.com', role: 'Student', roleTitle: 'Applicant (Canada)', branch: 'Ahmedabad', isSuperAdmin: false },
-      { id: 'STU003', name: 'Rohan Gupta', email: 'rohan.gupta@example.com', role: 'Student', roleTitle: 'Applicant (Australia)', branch: 'Mumbai', isSuperAdmin: false },
-      { id: 'STU004', name: 'Ananya Roy', email: 'ananya.roy@example.com', role: 'Student', roleTitle: 'Applicant (USA)', branch: 'Kolkata', isSuperAdmin: false }
+      { id: 'EDU260001', name: 'Yatham Bhavana', email: 'ybhavanareddy2@gmail.com', role: 'Student', roleTitle: 'Degree Program (Enrolled)', branch: 'Partner University', isSuperAdmin: false }
     ];
   }
 
@@ -20424,9 +20416,9 @@ window.renderCtoInfraTelemetry = function() {
   // Populate primary database table counters strip
   const tableStrip = document.getElementById('infraTableCountersStrip');
   if (tableStrip) {
-    const studentsCount = (window.allStudents && window.allStudents.length) || 128;
-    const staffCount = (window.allStaff && window.allStaff.length) || 18;
-    const partnersCount = (window.allPartners && window.allPartners.length) || 12;
+    const studentsCount = (window.allStudents && window.allStudents.length) || (typeof allStudents !== 'undefined' && allStudents ? allStudents.length : 1);
+    const staffCount = (window.allStaff && window.allStaff.length) || (typeof allStaff !== 'undefined' && allStaff ? allStaff.length : 6);
+    const partnersCount = (window.allPartners && window.allPartners.length) || (typeof allPartners !== 'undefined' && allPartners ? allPartners.length : 1);
     const modulesCount = (ctoMasterMatrix.modules && ctoMasterMatrix.modules.length) || 35;
     const guardedCount = (window.EduPageGuard && window.EduPageGuard.PAGES_CATALOG && window.EduPageGuard.PAGES_CATALOG.length) || 28;
 
